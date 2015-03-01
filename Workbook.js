@@ -39,7 +39,7 @@ var Workbook = function (data) {
 /**
  * Gets the sheet with the provided name or index (0-based).
  * @param {string|number} sheetNameOrIndex
- * @returns {*}
+ * @returns {Sheet}
  */
 Workbook.prototype.getSheet = function (sheetNameOrIndex) {
     if (Number.isInteger(sheetNameOrIndex)) return this.sheets[sheetNameOrIndex];
@@ -88,7 +88,7 @@ Workbook.prototype.output = function () {
 /**
  * Writes to file with the given path.
  * @param {string} path
- * @param cb
+ * @param {function} cb
  */
 Workbook.prototype.toFile = function (path, cb) {
     fs.writeFile(path, this.output(), cb);
@@ -105,7 +105,7 @@ Workbook.prototype.toFileSync = function (path) {
 /**
  * Creates a Workbook from the file with the given path.
  * @param {string} path
- * @param cb
+ * @param {function} cb
  */
 Workbook.fromFile = function (path, cb) {
     fs.readFile(path, function (err, data) {
