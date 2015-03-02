@@ -11,6 +11,7 @@ Node.js module to populate Excel XLSX templates. This module does not parse Exce
     $ npm install xlsx-populate
 
 ## Usage
+Here is a basic example:
 ```js
 var Workbook = require('xlsx-populate');
 
@@ -22,6 +23,40 @@ workbook.getSheet("Sheet1").getCell("A1").setValue("This is neat!");
 
 // Write to file.
 workbook.toFileSync("./out.xlsx");
+```
+
+### Getting Sheets
+You can get sheets from a Workbook object by either name or index (0-based):
+```js
+// Get sheet with name "Sheet1".
+var sheet = workbook.getSheet("Sheet1");
+
+// Get the first sheet.
+var sheet = workbook.getSheet(0);
+```
+
+### Getting Cells
+You can get a cell from a sheet by either address or row and column:
+```js
+// Get cell "A5" by address.
+var cell = sheet.getCell("A5");
+
+// Get cell "A5" by row and column.
+var cell = sheet.getCell(5, 1);
+```
+
+You can also get named cells directly from the Workbook:
+```js
+// Get cell named "Foo".
+var cell = sheet.getNamedCell("Foo");
+```
+
+### Setting Cell Contents
+You can set the cell value or formula:
+```js
+cell.setValue("foo");
+cell.setValue(5.6);
+cell.setFormula("SUM(A1:A5)");
 ```
 
 ## Classes
