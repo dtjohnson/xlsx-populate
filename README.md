@@ -59,6 +59,26 @@ cell.setValue(5.6);
 cell.setFormula("SUM(A1:A5)");
 ```
 
+### Serving from Express
+You can serve the workbook with [express](http://expressjs.com/) with a route like this:
+```js
+router.get("/download", function (req, res) {
+    // Open the workbook.
+    var workbook = Workbook.fromFile("input.xlsx", function (err, workbook) {
+        if (err) return res.status(500).send(err);
+
+        // Make edits.
+        workbook.getSheet(0).getCell("A1").setValue("foo");
+
+        // Set the output file name.
+        res.attachment("output.xlsx");
+
+        // Send the workbook.
+        res.send(workbook.output());
+    });
+});
+```
+
 ## Classes
 <dl>
 <dt><a href="#Workbook">Workbook</a></dt>
@@ -69,6 +89,7 @@ cell.setFormula("SUM(A1:A5)");
 <dd></dd>
 </dl>
 <a name="Workbook"></a>
+
 ## Workbook
 **Kind**: global class
 
