@@ -7,12 +7,22 @@ var addressRegex = /^\s*(?:'?(.+?)'?\!)?\$?([A-Z]+)\$?(\d+)\s*$/i;
 
 module.exports = {
     /**
+     * Checks if a number is an integer. Taken from here:
+     * http://stackoverflow.com/questions/3885817/how-to-check-if-a-number-is-float-or-integer#3885844
+     * @param {*} value
+     * @returns {boolean}
+     */
+    isInteger: function (value) {
+        return value === +value && value === (value|0);
+    },
+
+    /**
      * Converts a column number to column name (e.g. 2 -> "B").
      * @param {number} number
      * @returns {string}
      */
     columnNumberToName: function (number) {
-        if (!Number.isInteger(number) || number <= 0) return;
+        if (!this.isInteger(number) || number <= 0) return;
 
         var dividend = number;
         var name = '';
@@ -53,7 +63,7 @@ module.exports = {
      * @returns {string}
      */
     rowAndColumnToAddress: function (row, column, sheet) {
-        if (!Number.isInteger(row) || !Number.isInteger(column) || row <= 0 || column <= 0) return;
+        if (!this.isInteger(row) || !this.isInteger(column) || row <= 0 || column <= 0) return;
         var address = this.columnNumberToName(column) + row;
         if (sheet) address = "'" + sheet + "'!" + address;
         return address;

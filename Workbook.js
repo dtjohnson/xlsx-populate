@@ -42,7 +42,7 @@ var Workbook = function (data) {
  * @returns {Sheet}
  */
 Workbook.prototype.getSheet = function (sheetNameOrIndex) {
-    if (Number.isInteger(sheetNameOrIndex)) return this.sheets[sheetNameOrIndex];
+    if (utils.isInteger(sheetNameOrIndex)) return this.sheets[sheetNameOrIndex];
 
     for (var i = 0; i < this.sheets.length; i++) {
         var sheet = this.sheets[i];

@@ -3,6 +3,26 @@
 var utils = require('../utils');
 
 describe("utils", function() {
+    describe("isInteger", function () {
+        it("should return true for ints", function () {
+            expect(utils.isInteger(4)).toBe(true);
+            expect(utils.isInteger(0)).toBe(true);
+            expect(utils.isInteger(-6)).toBe(true);
+        });
+
+        it("should return false for non-ints", function () {
+            expect(utils.isInteger(4.7)).toBe(false);
+            expect(utils.isInteger("foo")).toBe(false);
+            expect(utils.isInteger("4")).toBe(false);
+            expect(utils.isInteger("")).toBe(false);
+            expect(utils.isInteger(null)).toBe(false);
+            expect(utils.isInteger(NaN)).toBe(false);
+            expect(utils.isInteger(Infinity)).toBe(false);
+            expect(utils.isInteger(true)).toBe(false);
+            expect(utils.isInteger(undefined)).toBe(false);
+        });
+    });
+
     describe("columnNumberToName", function () {
         it("should convert valid column number to name", function () {
             expect(utils.columnNumberToName(1)).toBe("A");
