@@ -18,6 +18,12 @@ var Workbook = function (data) {
 
     this.sheets = [];
     var sheetNodes = this._workbookXML.findall("*/sheet");
+
+    var removeValueNode = function (formulaParent) {
+        var vNode = formulaParent.find("v");
+        if (vNode) formulaParent.remove(vNode);
+    };
+
     for (var i = 0; i < sheetNodes.length; i++) {
         var index = i + 1;
         var sheetText = this._zip.file("xl/worksheets/sheet" + index + ".xml").asText();
@@ -26,10 +32,7 @@ var Workbook = function (data) {
         // This is a blunt way to make sure formula values get updated.
         // It just clears all stored values in case the referenced cell values change.
         var formulaParents = sheetXML.findall("sheetData/row/c/f/..");
-        formulaParents.forEach(function (formulaParent) {
-            var vNode = formulaParent.find("v");
-            if (vNode) formulaParent.remove(vNode);
-        });
+        formulaParents.forEach(removeValueNode);
 
         var sheet = new Sheet(this, sheetNodes[i], sheetXML);
         this.sheets.push(sheet);
@@ -76,7 +79,7 @@ Workbook.prototype.output = function () {
     for (var i = 0; i < this.sheets.length; i++) {
         var index = i + 1;
         var sheet = this.sheets[i];
-        this._zip.file("xl/worksheets/sheet" + index + ".xml", sheet._sheetXML.write())
+        this._zip.file("xl/worksheets/sheet" + index + ".xml", sheet._sheetXML.write());
     }
 
     // Kill the calc chain since this will corrupt the file is formulas are removed.

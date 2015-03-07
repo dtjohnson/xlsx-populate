@@ -1,8 +1,10 @@
+/* jshint jasmine: true */
+
 "use strict";
 
 var utils = require('../utils');
 
-describe("utils", function() {
+describe("utils", function () {
     describe("isInteger", function () {
         it("should return true for ints", function () {
             expect(utils.isInteger(4)).toBe(true);
@@ -47,7 +49,7 @@ describe("utils", function() {
     });
 
     describe("columnNameToNumber", function () {
-        it("should convert valid column name to number", function() {
+        it("should convert valid column name to number", function () {
             expect(utils.columnNameToNumber("A")).toBe(1);
             expect(utils.columnNameToNumber("C")).toBe(3);
             expect(utils.columnNameToNumber("Z")).toBe(26);
@@ -55,7 +57,7 @@ describe("utils", function() {
             expect(utils.columnNameToNumber("AD")).toBe(30);
         });
 
-        it("should convert lowercase column name the same as uppercase", function() {
+        it("should convert lowercase column name the same as uppercase", function () {
             expect(utils.columnNameToNumber("a")).toBe(utils.columnNameToNumber("A"));
             expect(utils.columnNameToNumber("c")).toBe(utils.columnNameToNumber("C"));
             expect(utils.columnNameToNumber("z")).toBe(utils.columnNameToNumber("Z"));
@@ -63,7 +65,7 @@ describe("utils", function() {
             expect(utils.columnNameToNumber("ad")).toBe(utils.columnNameToNumber("AD"));
         });
 
-        it("should convert invalid column name to undefined", function() {
+        it("should convert invalid column name to undefined", function () {
             expect(utils.columnNameToNumber("")).toBe(undefined);
             expect(utils.columnNameToNumber(null)).toBe(undefined);
             expect(utils.columnNameToNumber(false)).toBe(undefined);
