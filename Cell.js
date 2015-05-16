@@ -74,7 +74,7 @@ Cell.prototype.setValue = function (value) {
         tNode.text = value;
     } else {
         var vNode = subelement(this._cellNode, "v");
-        vNode.text = value;
+        vNode.text = value.toString();
     }
 
     return this;
