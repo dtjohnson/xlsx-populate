@@ -81,6 +81,11 @@ router.get("/download", function (req, res) {
 
 ## Development
 
+### Running Tests
+Tests are run automatically on [Travis CI](https://travis-ci.org/dtjohnson/xlsx-populate). They can (and should) be triggered locally with:
+    
+    $ npm test
+
 ### Code Linting
 [JSHint](http://jshint.com/) and [JSCS](http://jscs.info/) are used to ensure code quality. To run these, run:
     
