@@ -2,7 +2,10 @@
 
 "use strict";
 
-var Cell = require('../lib/Cell');
+var Cell = require('../lib/Cell'),
+    etree = require('elementtree'),
+    element = etree.Element,
+    subelement = etree.SubElement;
 
 describe("Cell", function () {
     describe("getSheet", function () {
@@ -54,5 +57,19 @@ describe("Cell", function () {
     });
 
     describe("_clearContents", function () {
+        it("should clear the node contents", function () {
+            var c = element('c');
+            c.attrib.t = "inlineStr";
+            var isNode = subelement(c, "is");
+            var tNode = subelement(isNode, "t");
+            tNode.text = "Foo";
+            expect(c.findall('*').length).toBe(1);
+            expect(c.attrib.t).toBeTruthy();
+
+            var cell = new Cell(null, null, null, c);
+            cell._clearContents();
+            expect(c.findall('*').length).toBe(0);
+            expect(c.attrib.t).toBeUndefined();
+        });
     });
 });
