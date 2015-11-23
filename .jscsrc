@@ -1,5 +1,6 @@
 {
   "disallowFunctionDeclarations": true,
+  "disallowIdentifierNames": [],
   "disallowKeywordsOnNewLine": ["else"],
   "disallowKeywords": ["with"],
   "disallowMixedSpacesAndTabs": true,
@@ -46,7 +47,7 @@
   "requireSpacesInNamedFunctionExpression": {
     "beforeOpeningCurlyBrace": true
   },
-  "requireSpacesInsideObjectBrackets": "allButNested",
+  "requireSpacesInsideObjectBrackets": "all",
   "validateIndentation": 4,
   "validateParameterSeparator": ", "
 }
