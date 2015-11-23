@@ -2,7 +2,7 @@
 
 "use strict";
 
-var utils = require('../utils');
+var utils = require('../lib/utils');
 
 describe("utils", function () {
     describe("isInteger", function () {
