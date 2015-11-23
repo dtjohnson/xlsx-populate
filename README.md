@@ -226,6 +226,8 @@ Gets the cell with either the provided row and column or address.
   * _static_
     * [.fromFile(path, cb)](#Workbook.fromFile)
     * [.fromFileSync(path)](#Workbook.fromFileSync) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.fromBlank(cb)](#Workbook.fromBlank)
+    * [.fromBlankSync()](#Workbook.fromBlankSync) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="new_Workbook_new"></a>
 ### new Workbook(data)
@@ -303,3 +305,18 @@ Creates a Workbook from the file with the given path synchronously.
 | --- |
 | path | 
 
+<a name="Workbook.fromBlank"></a>
+### Workbook.fromBlank(cb)
+Creates a blank Workbook.
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+
+| Param | Type |
+| --- | --- |
+| cb | <code>function</code> | 
+
+<a name="Workbook.fromBlankSync"></a>
+### Workbook.fromBlankSync() ⇒ <code>[Workbook](#Workbook)</code>
+Creates a blank Workbook synchronously.
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
