@@ -11,8 +11,9 @@
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "license": "MIT",
   "dependencies": {
-    "elementtree": "^0.1.6",
-    "jszip": "^2.4.0"
+    "jszip": "^2.4.0",
+    "xmldom": "^0.1.22",
+    "xpath": "0.0.22"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "eslint": "^2.6.0",
     "jasmine": "^2.4.1",
-    "jsdoc-to-markdown": "^1.2.1"
+    "jsdoc-to-markdown": "^1.2.1",
+    "proxyquire": "^1.7.4"
   }
 }

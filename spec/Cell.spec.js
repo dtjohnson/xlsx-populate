@@ -1,5 +1,5 @@
 /* jshint jasmine: true */
-
+return;
 "use strict";
 
 var Cell = require('../lib/Cell'),
