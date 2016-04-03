@@ -1,45 +1,34 @@
-/* jshint jasmine: true */
-return;
 "use strict";
 
-var Cell = require('../lib/Cell'),
-    etree = require('elementtree'),
-    element = etree.Element,
-    subelement = etree.SubElement;
+var xpath = require('xpath');
+var DOMParser = require('xmldom').DOMParser;
+var parser = new DOMParser();
+var Cell = require("../lib/Cell");
 
 describe("Cell", function () {
-    var cell;
-    var sheetMock = {
-        getName: function () {
-            return "Foo";
-        }
-    };
+    var row, sheet, cellNode, cell;
 
     beforeEach(function () {
-        var c = element('c');
-        c.attrib.t = "inlineStr";
-        c.attrib.r = "C5";
-        var isNode = subelement(c, "is");
-        var tNode = subelement(isNode, "t");
-        tNode.text = "Foo";
-        cell = new Cell(sheetMock, 5, 3, c);
+        sheet = {
+            getName: jasmine.createSpy("sheet.getName").and.returnValue("Foo")
+        };
+        row = {
+            getSheet: jasmine.createSpy("row.getSheet").and.returnValue(sheet)
+        };
+        cellNode = parser.parseFromString('<c r="C5" t="b"><v>1</v></c>').documentElement;
+        cell = new Cell(row, cellNode);
     });
 
     describe("getSheet", function () {
-        it("should return the parent sheet object", function () {
-            expect(cell.getSheet()).toBe(sheetMock);
+        it("should return the sheet", function () {
+            expect(cell.getSheet()).toBe(sheet);
+            expect(row.getSheet).toHaveBeenCalledWith();
         });
     });
 
     describe("getRow", function () {
         it("should return the row", function () {
-            expect(cell.getRow()).toBe(5);
-        });
-    });
-
-    describe("getColumn", function () {
-        it("should return the column", function () {
-            expect(cell.getColumn()).toBe(3);
+            expect(cell.getRow()).toBe(row);
         });
     });
 
@@ -49,25 +38,83 @@ describe("Cell", function () {
         });
     });
 
+    describe("getRowNumber", function () {
+        it("should return the row number", function () {
+            expect(cell.getRowNumber()).toBe(5);
+        });
+    });
+
+    describe("getColumnNumber", function () {
+        it("should return the column number", function () {
+            expect(cell.getColumnNumber()).toBe(3);
+        });
+    });
+
+    describe("getColumnName", function () {
+        it("should return the column name", function () {
+            expect(cell.getColumnName()).toBe("C");
+        });
+    });
+
     describe("getFullAddress", function () {
         it("should return the full address", function () {
             expect(cell.getFullAddress()).toBe("'Foo'!C5");
+            expect(sheet.getName).toHaveBeenCalledWith();
         });
     });
 
     describe("setValue", function () {
+        it("should return the cell after setting the value", function () {
+            expect(cell.setValue(5)).toBe(cell);
+        });
+
+        it("should store a number", function () {
+            cell.setValue(57.8);
+            expect(cellNode.toString()).toBe('<c r="C5"><v>57.8</v></c>');
+
+            cell.setValue(-6);
+            expect(cellNode.toString()).toBe('<c r="C5"><v>-6</v></c>');
+
+            cell.setValue(0);
+            expect(cellNode.toString()).toBe('<c r="C5"><v>0</v></c>');
+        });
+
+        it("should store a boolean", function () {
+            cell.setValue(true);
+            expect(cellNode.toString()).toBe('<c r="C5" t="b"><v>1</v></c>');
+
+            cell.setValue(false);
+            expect(cellNode.toString()).toBe('<c r="C5" t="b"><v>0</v></c>');
+        });
+
+        it("should store a string", function () {
+            cell.setValue("some string");
+            expect(cellNode.toString()).toBe('<c r="C5" t="inlineStr"><is>some string</is></c>');
+        });
+
+        xit("should store a date", function () {
+            cell.setValue(new Date('2016-01-01T00:00:00'));
+            expect(cellNode.toString()).toBe('<c r="C5"><v>42370</v></c>');
+        });
+
+        it("should clear the cell if null or undefined", function () {
+            cell.setValue(null);
+            expect(cellNode.toString()).toBe('<c r="C5"/>');
+
+            cell.setValue();
+            expect(cellNode.toString()).toBe('<c r="C5"/>');
+        });
     });
 
     describe("setFormula", function () {
-    });
+        it("should set the formula", function () {
+            cell.setFormula('5+6');
+            expect(cellNode.toString()).toBe('<c r="C5"><f>5+6</f></c>');
+        });
 
-    describe("_clearContents", function () {
-        it("should clear the node contents", function () {
-            expect(cell._cellNode.findall('*').length).toBe(1);
-            expect(cell._cellNode.attrib.t).toBeTruthy();
-            cell._clearContents();
-            expect(cell._cellNode.findall('*').length).toBe(0);
-            expect(cell._cellNode.attrib.t).toBeUndefined();
+        it("should set the formula with a precalculated value", function () {
+            cell.setFormula('ISNUMBER("foo")', false);
+            expect(cellNode.toString()).toBe('<c r="C5" t="b"><v>0</v><f>ISNUMBER(\"foo\")</f></c>');
         });
     });
 });
