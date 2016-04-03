@@ -4,10 +4,9 @@
   "description": "Node.js module to populate XLSX templates.",
   "main": "lib/Workbook.js",
   "scripts": {
-    "test": "jasmine-node test/",
+    "test": "jasmine",
     "docs": "node docs/generate",
-    "jshint": "jshint --reporter=node_modules/jshint-stylish lib/",
-    "jscs": "jscs lib/"
+    "eslint": "eslint lib"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "license": "MIT",
@@ -21,10 +20,8 @@
   },
   "bugs": "https://github.com/dtjohnson/xlsx-populate/issues",
   "devDependencies": {
-    "jasmine-node": "^1.14.5",
-    "jscs": "^2.6.0",
-    "jsdoc-to-markdown": "^1.2.1",
-    "jshint": "^2.9.1-rc1",
-    "jshint-stylish": "^2.1.0"
+    "eslint": "^2.6.0",
+    "jasmine": "^2.4.1",
+    "jsdoc-to-markdown": "^1.2.1"
   }
 }
