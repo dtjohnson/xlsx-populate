@@ -1,5 +1,3 @@
-/* jshint jasmine: true */
-
 "use strict";
 
 var utils = require('../lib/utils');
@@ -89,6 +87,12 @@ describe("utils", function () {
             expect(utils.rowAndColumnToAddress(0, 1)).toBe(undefined);
             expect(utils.rowAndColumnToAddress(1, 0)).toBe(undefined);
             expect(utils.rowAndColumnToAddress(0, 0)).toBe(undefined);
+        });
+    });
+
+    describe("addressToFullAddress", function () {
+        it("should convert an address and sheet name to a full address", function () {
+            expect(utils.addressToFullAddress("Sheet1", "F8")).toBe("'Sheet1'!F8");
         });
     });
 
