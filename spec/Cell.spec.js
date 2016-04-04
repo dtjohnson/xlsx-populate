@@ -15,7 +15,7 @@ describe("Cell", function () {
         row = {
             getSheet: jasmine.createSpy("row.getSheet").and.returnValue(sheet)
         };
-        cellNode = parser.parseFromString('<c r="C5" t="b"><v>1</v></c>').documentElement;
+        cellNode = parser.parseFromString('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>1</v></c>').documentElement;
         cell = new Cell(row, cellNode);
     });
 
@@ -70,51 +70,51 @@ describe("Cell", function () {
 
         it("should store a number", function () {
             cell.setValue(57.8);
-            expect(cellNode.toString()).toBe('<c r="C5"><v>57.8</v></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>57.8</v></c>');
 
             cell.setValue(-6);
-            expect(cellNode.toString()).toBe('<c r="C5"><v>-6</v></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>-6</v></c>');
 
             cell.setValue(0);
-            expect(cellNode.toString()).toBe('<c r="C5"><v>0</v></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>0</v></c>');
         });
 
         it("should store a boolean", function () {
             cell.setValue(true);
-            expect(cellNode.toString()).toBe('<c r="C5" t="b"><v>1</v></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>1</v></c>');
 
             cell.setValue(false);
-            expect(cellNode.toString()).toBe('<c r="C5" t="b"><v>0</v></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>0</v></c>');
         });
 
         it("should store a string", function () {
             cell.setValue("some string");
-            expect(cellNode.toString()).toBe('<c r="C5" t="inlineStr"><is>some string</is></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="inlineStr"><is><t>some string</t></is></c>');
         });
 
         xit("should store a date", function () {
             cell.setValue(new Date('2016-01-01T00:00:00'));
-            expect(cellNode.toString()).toBe('<c r="C5"><v>42370</v></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>42370</v></c>');
         });
 
         it("should clear the cell if null or undefined", function () {
             cell.setValue(null);
-            expect(cellNode.toString()).toBe('<c r="C5"/>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"/>');
 
             cell.setValue();
-            expect(cellNode.toString()).toBe('<c r="C5"/>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"/>');
         });
     });
 
     describe("setFormula", function () {
         it("should set the formula", function () {
             cell.setFormula('5+6');
-            expect(cellNode.toString()).toBe('<c r="C5"><f>5+6</f></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><f>5+6</f></c>');
         });
 
         it("should set the formula with a precalculated value", function () {
             cell.setFormula('ISNUMBER("foo")', false);
-            expect(cellNode.toString()).toBe('<c r="C5" t="b"><v>0</v><f>ISNUMBER(\"foo\")</f></c>');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>0</v><f>ISNUMBER(\"foo\")</f></c>');
         });
     });
 });

@@ -12,8 +12,8 @@ describe("Sheet", function () {
         Row = jasmine.createSpy("Row");
         Sheet = proxyquire("../lib/Sheet", { './Row': Row });
         workbook = {};
-        sheetNode = parser.parseFromString('<sheet name="Sheet1" sheetId="1"/>').documentElement;
-        sheetXML = parser.parseFromString('<worksheet><sheetData><row r="1"/></sheetData></worksheet>').documentElement;
+        sheetNode = parser.parseFromString('<sheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" name="Sheet1" sheetId="1"/>').documentElement;
+        sheetXML = parser.parseFromString('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"/></sheetData></worksheet>').documentElement;
         sheet = new Sheet(workbook, sheetNode, sheetXML);
     });
 
@@ -32,7 +32,7 @@ describe("Sheet", function () {
     describe("getName", function () {
         it("should set the sheet name", function () {
             sheet.setName("some name");
-            expect(sheetNode.toString()).toBe('<sheet name="some name" sheetId="1"/>');
+            expect(sheetNode.toString()).toBe('<sheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" name="some name" sheetId="1"/>');
         });
     });
 
@@ -40,13 +40,13 @@ describe("Sheet", function () {
         it("should create a new row node if it doesn't exist", function () {
             sheet.getRow(3);
             expect(Row).toHaveBeenCalledWith(sheet, sheetXML.firstChild.lastChild);
-            expect(sheetXML.toString()).toBe('<worksheet><sheetData><row r="1"/><row r="3"/></sheetData></worksheet>');
+            expect(sheetXML.toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"/><row r="3"/></sheetData></worksheet>');
         });
 
         it("should use an existing row node if it does exist", function () {
             sheet.getRow(1);
             expect(Row).toHaveBeenCalledWith(sheet, sheetXML.firstChild.firstChild);
-            expect(sheetXML.toString()).toBe('<worksheet><sheetData><row r="1"/></sheetData></worksheet>');
+            expect(sheetXML.toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"/></sheetData></worksheet>');
         });
     });
 

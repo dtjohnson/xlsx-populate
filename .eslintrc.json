@@ -119,7 +119,7 @@
     "no-path-concat": 2,
     "no-process-exit": 2,
     //"no-restricted-modules"
-    "no-sync": 2,
+    //"no-sync"
 
     /* Stylistic Issues */
     "array-bracket-spacing": 2,
