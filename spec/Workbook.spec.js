@@ -7,13 +7,13 @@ var DOMParser = require('xmldom').DOMParser;
 var parser = new DOMParser();
 
 describe("Workbook", function () {
-    var Workbook, fs, Row, JSZip;
+    var Workbook, fs, JSZip, Sheet;
 
     beforeEach(function () {
         fs = jasmine.createSpyObj("fs", ["readFile", "readFileSync", "writeFile", "writeFileSync"]);
-        JSZip = {};
-        Row = {};
-        Workbook = proxyquire("../lib/Workbook", { fs: fs, jszip: JSZip, './Row': Row });
+        JSZip = jasmine.createSpy("JSZip");
+        Sheet = jasmine.createSpy("Sheet");
+        Workbook = proxyquire("../lib/Workbook", { fs: fs, jszip: JSZip, './Sheet': Sheet });
     });
 
     describe("static", function () {
@@ -68,46 +68,141 @@ describe("Workbook", function () {
         });
     });
 
+    describe("constructor", function () {
+        it("should initialize the workbook and create the sheet objects", function () {
+            var workbookText = '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheets><sheet name="Tom"/><sheet name="Jerry"/></sheets></workbook>';
+            var sheetText = [
+                '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><v>56</v></c></row></sheetData></worksheet>',
+                '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><v>56</v><f>7*8</f></c></row></sheetData></worksheet>'
+            ];
+
+            var files = {
+                "xl/workbook.xml": workbookText,
+                "xl/worksheets/sheet1.xml": sheetText[0],
+                "xl/worksheets/sheet2.xml": sheetText[1]
+            };
+
+            JSZip.prototype.file = function (fileName) {
+                return {
+                    asText: function () {
+                        return files[fileName];
+                    }
+                };
+            };
+
+            var data = {};
+            var workbook = new Workbook(data);
+
+            expect(workbook._workbookXML.toString()).toBe(workbookText);
+            expect(workbook._sheets.length).toBe(2);
+            var firstCallArgs = Sheet.calls.first().args;
+            expect(firstCallArgs[0]).toBe(workbook);
+            expect(firstCallArgs[1].toString()).toBe('<sheet name="Tom"/>');
+            expect(firstCallArgs[2].toString()).toBe(sheetText[0]);
+
+            var secondCallArgs = Sheet.calls.mostRecent().args;
+            expect(secondCallArgs[0]).toBe(workbook);
+            expect(secondCallArgs[1].toString()).toBe('<sheet name="Jerry"/>');
+            expect(secondCallArgs[2].toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><f>7*8</f></c></row></sheetData></worksheet>'); // Formula values removed.
+        });
+    });
+
     describe("instance", function () {
         beforeEach(function () {
-
-        });
-
-        describe("constructor", function () {
-            // TODO
+            Workbook.prototype._initialize = jasmine.createSpy("_initialize");
         });
 
         describe("getSheet", function () {
-            // TODO
+            var workbook;
+            beforeEach(function () {
+                workbook = new Workbook();
+                workbook._sheets = [{
+                    getName: function () {
+                        return "Foo";
+                    }
+                }, {
+                    getName: function () {
+                        return "Bar";
+                    }
+                }];
+            });
+
+            it("should return the sheet with the given index", function () {
+                expect(workbook.getSheet(0)).toBe(workbook._sheets[0]);
+                expect(workbook.getSheet(1)).toBe(workbook._sheets[1]);
+            });
+
+            it("should return the sheet with the given name", function () {
+                expect(workbook.getSheet("Bar")).toBe(workbook._sheets[1]);
+                expect(workbook.getSheet("Foo")).toBe(workbook._sheets[0]);
+            });
         });
 
         describe("getNamedCell", function () {
-            // TODO
+            var workbook;
+            beforeEach(function () {
+                workbook = new Workbook();
+                workbook._workbookXML = parser.parseFromString('<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><definedNames><definedName name="foo">Sheet2!B3</definedName></definedNames></workbook>').documentElement;
+            });
+
+            it("should return the cell with the given name", function () {
+                var cell = {};
+                var getCell = jasmine.createSpy("getCell").and.returnValue(cell);
+                workbook.getSheet = jasmine.createSpy("getSheet").and.returnValue({ getCell: getCell });
+
+                var c = workbook.getNamedCell("foo");
+                expect(c).toBe(cell);
+                expect(getCell).toHaveBeenCalledWith(3, 2);
+                expect(workbook.getSheet).toHaveBeenCalledWith("Sheet2");
+            });
+
+            it("should return undefined if no matching cell found", function () {
+                var c = workbook.getNamedCell("bar");
+                expect(c).toBeUndefined();
+            });
         });
 
         describe("output", function () {
-            // TODO
-        });
-    });
+            it("should output the XML", function () {
+                var workbook = new Workbook();
+                workbook._workbookXML = parser.parseFromString('<workbook/>').documentElement;
+                workbook._sheets = [{
+                    _sheetXML: parser.parseFromString('<sheet id="1"/>').documentElement
+                }, {
+                    _sheetXML: parser.parseFromString('<sheet id="2"/>').documentElement
+                }];
 
-    describe("toFile", function () {
-        it("should call writeFile with the output", function () {
-            Workbook.prototype._initialize = jasmine.createSpy("_initialize");
-            Workbook.prototype.output = jasmine.createSpy("output").and.returnValue("some output");
-            var cb = function () {};
-            var workbook = new Workbook();
-            workbook.toFile("some/path.xlsx", cb);
-            expect(fs.writeFile).toHaveBeenCalledWith("some/path.xlsx", "some output", cb);
-        });
-    });
+                var generated = {};
+                workbook._zip = jasmine.createSpyObj("_zip", ["file", "generate", "remove"]);
+                workbook._zip.generate.and.returnValue(generated);
 
-    describe("toFileSync", function () {
-        it("should call writeFileSync with the output", function () {
-            Workbook.prototype._initialize = jasmine.createSpy("_initialize");
-            Workbook.prototype.output = jasmine.createSpy("output").and.returnValue("some output");
-            var workbook = new Workbook();
-            workbook.toFileSync("some/path.xlsx");
-            expect(fs.writeFileSync).toHaveBeenCalledWith("some/path.xlsx", "some output");
+                var output = workbook.output();
+                expect(output).toBe(generated);
+                expect(workbook._zip.file).toHaveBeenCalledWith("xl/workbook.xml", '<workbook/>');
+                expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet1.xml", '<sheet id="1"/>');
+                expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet2.xml", '<sheet id="2"/>');
+                expect(workbook._zip.remove).toHaveBeenCalledWith("xl/calcChain.xml");
+                expect(workbook._zip.generate).toHaveBeenCalledWith({ type: "nodebuffer" });
+            });
+        });
+
+        describe("toFile", function () {
+            it("should call writeFile with the output", function () {
+                Workbook.prototype.output = jasmine.createSpy("output").and.returnValue("some output");
+                var cb = function () {};
+                var workbook = new Workbook();
+                workbook.toFile("some/path.xlsx", cb);
+                expect(fs.writeFile).toHaveBeenCalledWith("some/path.xlsx", "some output", cb);
+            });
+        });
+
+        describe("toFileSync", function () {
+            it("should call writeFileSync with the output", function () {
+                Workbook.prototype.output = jasmine.createSpy("output").and.returnValue("some output");
+                var workbook = new Workbook();
+                workbook.toFileSync("some/path.xlsx");
+                expect(fs.writeFileSync).toHaveBeenCalledWith("some/path.xlsx", "some output");
+            });
         });
     });
 });
