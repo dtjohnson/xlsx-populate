@@ -59,6 +59,19 @@ cell.setValue(5.6);
 cell.setFormula("SUM(A1:A5)");
 ```
 
+### Populating Lots of Data
+If you need to populate lots of data, you should cache references to sheets and rows as each get method adds execution time:
+```js
+var sheet = workbook.getSheet("Sheet1");
+for (var rowNum = 1; rowNum < 1000; rowNum++) {
+    var row = sheet.getRow(rowNum);
+    for (var colNum = 1; colNum < 100; colNum++) {
+        var cell = row.getCell(colNum);
+        cell.setValue("foo");
+    }
+}
+```
+
 ### Serving from Express
 You can serve the workbook with [express](http://expressjs.com/) with a route like this:
 ```js
