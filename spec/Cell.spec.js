@@ -92,8 +92,8 @@ describe("Cell", function () {
             expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="inlineStr"><is><t>some string</t></is></c>');
         });
 
-        xit("should store a date", function () {
-            cell.setValue(new Date('2016-01-01T00:00:00'));
+        it("should store a date", function () {
+            cell.setValue(new Date('01 Jan 2016 00:00:00'));
             expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>42370</v></c>');
         });
 

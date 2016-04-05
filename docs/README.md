@@ -72,6 +72,9 @@ for (var rowNum = 1; rowNum < 1000; rowNum++) {
 }
 ```
 
+### Setting Date Values
+Excel stores date/times as the number of days since 1/1/1900 ([almost](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. Number formats are not yet supported by xlsx-populate so if you set a date value in a cell without a date format already, it will likely appear as a number. The solution is to simply apply the appropriate date/time format to the cell in your template before populating with xlsx-populate.
+
 ### Serving from Express
 You can serve the workbook with [express](http://expressjs.com/) with a route like this:
 ```js
