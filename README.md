@@ -372,6 +372,7 @@ Gets the cell with the given row and column numbers.
 * [Workbook](#Workbook)
     * [new Workbook(data)](#new_Workbook_new)
     * _instance_
+        * [.createSheet(sheetName, [index])](#Workbook+createSheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.getSheet(sheetNameOrIndex)](#Workbook+getSheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.getNamedCell(cellName)](#Workbook+getNamedCell) ⇒ <code>[Cell](#Cell)</code>
         * [.output()](#Workbook+output) ⇒ <code>Buffer</code>
@@ -392,6 +393,19 @@ Initializes a new Workbook.
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>Buffer</code> | File buffer of the Excel workbook. |
+
+<a name="Workbook+createSheet"></a>
+
+### workbook.createSheet(sheetName, [index]) ⇒ <code>[Sheet](#Sheet)</code>
+Create a new sheet.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The new sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sheetName | <code>string</code> | The name of the sheet. Must be unique. |
+| [index] | <code>number</code> | The position of the sheet (0-based). Omit to insert at the end. |
 
 <a name="Workbook+getSheet"></a>
 

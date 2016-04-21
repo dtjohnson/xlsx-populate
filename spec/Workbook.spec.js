@@ -71,6 +71,7 @@ describe("Workbook", function () {
     describe("constructor", function () {
         it("should initialize the workbook and create the sheet objects", function () {
             var workbookText = '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheets><sheet name="Tom"/><sheet name="Jerry"/></sheets></workbook>';
+            var relsText = '<Relationships/>';
             var sheetText = [
                 '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><v>56</v></c></row></sheetData></worksheet>',
                 '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><v>56</v><f>7*8</f></c></row></sheetData></worksheet>'
@@ -78,6 +79,7 @@ describe("Workbook", function () {
 
             var files = {
                 "xl/workbook.xml": workbookText,
+                "xl/_rels/workbook.xml.rels": relsText,
                 "xl/worksheets/sheet1.xml": sheetText[0],
                 "xl/worksheets/sheet2.xml": sheetText[1]
             };
@@ -94,6 +96,8 @@ describe("Workbook", function () {
             var workbook = new Workbook(data);
 
             expect(workbook._workbookXML.toString()).toBe(workbookText);
+            expect(workbook._relsXML.toString()).toBe(relsText);
+            expect(workbook._sheetsNode.toString()).toBe('<sheets><sheet name="Tom"/><sheet name="Jerry"/></sheets>');
             expect(workbook._sheets.length).toBe(2);
             var firstCallArgs = Sheet.calls.first().args;
             expect(firstCallArgs[0]).toBe(workbook);
@@ -110,6 +114,61 @@ describe("Workbook", function () {
     describe("instance", function () {
         beforeEach(function () {
             Workbook.prototype._initialize = jasmine.createSpy("_initialize");
+        });
+
+        describe("createSheet", function () {
+            var workbook, initialSheet;
+            beforeEach(function () {
+                initialSheet = {};
+                workbook = new Workbook();
+                workbook._sheets = [initialSheet];
+                workbook._sheetsNode = parser.parseFromString('<sheets xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets>').documentElement;
+                workbook._relsXML = parser.parseFromString('<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>').documentElement;
+            });
+
+            it("should throw an error if the sheet index is less than 0", function () {
+                expect(function () {
+                    workbook.createSheet("foo", -1);
+                }).toThrow();
+            });
+
+            it("should throw an error if the sheet index is not a number", function () {
+                expect(function () {
+                    workbook.createSheet("foo", "bar");
+                }).toThrow();
+            });
+
+            it("should throw an error if the sheet index is greater than the number of sheets", function () {
+                expect(function () {
+                    workbook.createSheet("foo", 3);
+                }).toThrow();
+            });
+
+            it("should create a new sheet at the end of the workbook", function () {
+                var sheet = workbook.createSheet("foo");
+                expect(workbook._sheetsNode.toString()).toBe('<sheets xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheet name="Sheet1" sheetId="1" r:id="xpopId1"/><sheet name="foo" sheetId="2" r:id="xpopId2"/></sheets>');
+                expect(workbook._sheets).toEqual([initialSheet, sheet]);
+                expect(workbook._relsXML.toString()).toBe('<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="xpopId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="xpopId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/></Relationships>');
+
+                var args = Sheet.calls.argsFor(0);
+                expect(args.length).toBe(3);
+                expect(args[0]).toBe(workbook);
+                expect(args[1].toString()).toBe('<sheet name="foo" sheetId="2" r:id="xpopId2"/>');
+                expect(args[2].toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData/></worksheet>');
+            });
+
+            it("should create a new sheet at the beginning of the workbook", function () {
+                var sheet = workbook.createSheet("bar", 0);
+                expect(workbook._sheetsNode.toString()).toBe('<sheets xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheet name="bar" sheetId="1" r:id="xpopId1"/><sheet name="Sheet1" sheetId="2" r:id="xpopId2"/></sheets>');
+                expect(workbook._sheets).toEqual([sheet, initialSheet]);
+                expect(workbook._relsXML.toString()).toBe('<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/><Relationship Id="xpopId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="xpopId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet2.xml"/></Relationships>');
+
+                var args = Sheet.calls.argsFor(0);
+                expect(args.length).toBe(3);
+                expect(args[0]).toBe(workbook);
+                expect(args[1].toString()).toBe('<sheet name="bar" sheetId="1" r:id="xpopId1"/>');
+                expect(args[2].toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData/></worksheet>');
+            });
         });
 
         describe("getSheet", function () {
@@ -166,6 +225,7 @@ describe("Workbook", function () {
             it("should output the XML", function () {
                 var workbook = new Workbook();
                 workbook._workbookXML = parser.parseFromString('<workbook/>').documentElement;
+                workbook._relsXML = parser.parseFromString('<Relationships/>').documentElement;
                 workbook._sheets = [{
                     _sheetXML: parser.parseFromString('<sheet id="1"/>').documentElement
                 }, {
@@ -179,6 +239,7 @@ describe("Workbook", function () {
                 var output = workbook.output();
                 expect(output).toBe(generated);
                 expect(workbook._zip.file).toHaveBeenCalledWith("xl/workbook.xml", '<workbook/>');
+                expect(workbook._zip.file).toHaveBeenCalledWith("xl/_rels/workbook.xml.rels", '<Relationships/>');
                 expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet1.xml", '<sheet id="1"/>');
                 expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet2.xml", '<sheet id="2"/>');
                 expect(workbook._zip.remove).toHaveBeenCalledWith("xl/calcChain.xml");
