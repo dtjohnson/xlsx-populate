@@ -24,6 +24,7 @@
     "eslint": "^2.6.0",
     "jasmine": "^2.4.1",
     "jsdoc-to-markdown": "^1.3.3",
-    "proxyquire": "^1.7.4"
+    "proxyquire": "^1.7.4",
+    "replacestream": "^4.0.0"
   }
 }
