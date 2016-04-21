@@ -1,6 +1,6 @@
 {
   "name": "xlsx-populate",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Node.js module to populate XLSX templates.",
   "main": "lib/Workbook.js",
   "scripts": {
