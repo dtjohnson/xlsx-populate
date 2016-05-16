@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jasmine",
     "docs": "node docs/generate",
-    "eslint": "eslint lib"
+    "eslint": "eslint */*.js"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "license": "MIT",
