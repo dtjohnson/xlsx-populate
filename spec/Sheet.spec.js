@@ -74,9 +74,15 @@ describe("Sheet", function () {
             expect(Row).toHaveBeenCalledWith(sheet, sheetXML.firstChild.firstChild);
             expect(sheetXML.toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"/></sheetData></worksheet>');
         });
+
+        it("should create rows in order", function () {
+            sheet.getRow(3);
+            sheet.getRow(2);
+            expect(sheetXML.toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"/><row r="2"/><row r="3"/></sheetData></worksheet>');
+        });
     });
 
-    describe("getCell (basic test)", function () {
+    describe("getCell", function () {
         var getCell;
         beforeEach(function () {
             getCell = jasmine.createSpy("getCell");
@@ -94,9 +100,15 @@ describe("Sheet", function () {
             expect(sheet.getRow).toHaveBeenCalledWith(11);
             expect(getCell).toHaveBeenCalledWith(8);
         });
+
+        it("should call getRow and getCell with the row and column corresponding to a lowercase address", function () {
+            sheet.getCell("g9");
+            expect(sheet.getRow).toHaveBeenCalledWith(9);
+            expect(getCell).toHaveBeenCalledWith(7);
+        });
     });
 
-    describe("getCell (advanced test)", function () {
+    xdescribe("getCell (advanced test)", function () {
         var workbook, sheet;
         beforeEach(function () {
             workbook = Workbook.fromBlankSync();
