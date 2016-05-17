@@ -22,6 +22,8 @@
   "bugs": "https://github.com/dtjohnson/xlsx-populate/issues",
   "devDependencies": {
     "eslint": "^2.6.0",
+    "gulp": "^3.9.1",
+    "gulp-jasmine": "^2.3.0",
     "jasmine": "^2.4.1",
     "jsdoc-to-markdown": "^1.3.3",
     "proxyquire": "^1.7.4",

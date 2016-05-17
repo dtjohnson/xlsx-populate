@@ -102,6 +102,10 @@ Tests are run automatically on [Travis CI](https://travis-ci.org/dtjohnson/xlsx-
     
     $ npm test
 
+Or they can be run when files change using [gulp.js](http://gulpjs.com/):
+
+    $ gulp
+
 ### Code Linting
 [ESLint](http://eslint.org/)is used to ensure code quality. To run this:
 
