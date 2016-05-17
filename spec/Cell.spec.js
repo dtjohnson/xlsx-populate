@@ -117,4 +117,14 @@ describe("Cell", function () {
             expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>0</v><f>ISNUMBER(\"foo\")</f></c>');
         });
     });
+
+    describe("_clearContents", function () {
+        it("should clear the node contents", function () {
+            expect(cell._cellNode.childNodes.length).toBe(1);
+            expect(cell._cellNode.getAttribute("t")).toBeTruthy();
+            cell._clearContents();
+            expect(cell._cellNode.childNodes.length).toBe(0);
+            expect(cell._cellNode.getAttribute("t")).toBe("");
+        });
+    });
 });
