@@ -4,6 +4,7 @@ var gulp = require("gulp");
 var jasmine = require('gulp-jasmine');
 
 var unitTests = "spec/**/*.spec.js";
+var jsFiles = "lib/**/*.js";
 
 gulp.task('unit', function () {
     return gulp.src(unitTests)
@@ -11,7 +12,7 @@ gulp.task('unit', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(unitTests, ['unit']);
+    gulp.watch([jsFiles, unitTests], ['unit']);
 });
 
 gulp.task('default', ['unit', 'watch']);

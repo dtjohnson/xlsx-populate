@@ -11,7 +11,7 @@ describe("Row", function () {
         Cell = jasmine.createSpy("Cell");
         Row = proxyquire("../lib/Row", { './Cell': Cell });
         sheet = {};
-        rowNode = parser.parseFromString('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="A1"/><c r="K7"/></row>').documentElement;
+        rowNode = parser.parseFromString('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="K7"/></row>').documentElement;
         row = new Row(sheet, rowNode);
     });
 
@@ -29,15 +29,20 @@ describe("Row", function () {
 
     describe("getCell", function () {
         it("should create a new cell node if it doesn't exist", function () {
-            row.getCell(7);
+            row.getCell(12);
             expect(Cell).toHaveBeenCalledWith(row, rowNode.lastChild);
-            expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="A1"/><c r="K7"/><c r="G7"/></row>');
+            expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="K7"/><c r="L7"/></row>');
         });
 
         it("should use an existing cell node if it does exist", function () {
             row.getCell(11);
             expect(Cell).toHaveBeenCalledWith(row, rowNode.lastChild);
-            expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="A1"/><c r="K7"/></row>');
+            expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="K7"/></row>');
+        });
+
+        it("should create a new cells in order", function () {
+            row.getCell(7);
+            expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="G7"/><c r="K7"/></row>');
         });
     });
 });
