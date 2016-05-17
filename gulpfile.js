@@ -1,18 +1,35 @@
 "use strict";
 
 var gulp = require("gulp");
-var jasmine = require('gulp-jasmine');
+var cached = require("gulp-cached");
+var eslint = require("gulp-eslint");
+var jasmine = require("gulp-jasmine");
 
-var unitTests = "spec/**/*.spec.js";
-var jsFiles = "lib/**/*.js";
+var TEST = "spec/**/*.spec.js";
+var LIB = "lib/**/*.js";
+var EXAMPLES = "examples/**/*.js";
+var SRC = [LIB, TEST, EXAMPLES];
 
-gulp.task('unit', function () {
-    return gulp.src(unitTests)
-        .pipe(jasmine());
+gulp.task("lint", function () {
+    return gulp
+        .src(SRC)
+        .pipe(cached("lint"))
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+        ;
 });
 
-gulp.task('watch', function () {
-    gulp.watch([jsFiles, unitTests], ['unit']);
+gulp.task("unit", ["lint"], function () {
+    return gulp
+        .src(TEST)
+        .pipe(cached("unit"))
+        .pipe(jasmine())
+        ;
 });
 
-gulp.task('default', ['unit', 'watch']);
+gulp.task("watch", function () {
+    gulp.watch(SRC, ["unit"]);
+});
+
+gulp.task("default", ["watch"]);
