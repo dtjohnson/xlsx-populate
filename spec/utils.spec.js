@@ -124,4 +124,24 @@ describe("utils", function () {
             expect(utils.dateToExcelNumber(new Date('07 Mar 2015 13:23:00'))).toBeCloseTo(42070.56);
         });
     });
+
+    describe("binarySearch", function () {
+        it("should return not found result if array is empty", function () {
+            expect(utils.binarySearch(3, [])).toEqual({
+                found: false,
+                index: 0
+            });
+        });
+
+        it("should return index as the number of elements less than the target value, and set found to true only when target found is found", function () {
+            var x = [0, 3, 4, 6, 6, 9, 20];
+            expect(utils.binarySearch(-123, x)).toEqual({ found: false, index: 0 });
+            expect(utils.binarySearch(5, x)).toEqual({ found: false, index: 3 });
+            expect(utils.binarySearch(6, x)).toEqual({ found: true, index: 3 });
+            expect(utils.binarySearch(10, x)).toEqual({ found: false, index: 6 });
+            expect(utils.binarySearch(111, x)).toEqual({ found: false, index: 7 });
+            expect(utils.binarySearch(19, x)).toEqual({ found: false, index: 6 });
+            expect(utils.binarySearch(20, x)).toEqual({ found: true, index: 6 });
+        });
+    });
 });
