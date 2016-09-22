@@ -107,6 +107,16 @@ describe("Cell", function () {
     });
 
     describe("setFormula", function () {
+        it("should clear the formula if set to nothing", function () {
+            cell.setFormula();
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><f/></c>');
+        });
+
+        it("should clear the formula if set to empty string", function () {
+            cell.setFormula('');
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><f/></c>');
+        });
+
         it("should set the formula", function () {
             cell.setFormula('5+6');
             expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><f>5+6</f></c>');
