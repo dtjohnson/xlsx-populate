@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils.js" />
+		<script src="bundle.js"></script>
+		<script>
+			var blank_url = 'https://github.com/dtjohnson/xlsx-populate/blob/master/lib/blank.xlsx?raw=true';
+			window.onload = function () {
+				JSZipUtils.getBinaryContent(blank_url, function(err, data) {
+					if (err) {
+						alert(err);
+					}
+					else {
+						var workbook = new Workbook(data);
+
+						// Modify the workbook
+						workbook.getSheet("Sheet1").getCell("A1").setValue("Wow, you can do this on client side!");
+
+						// Create anchor with payload
+						var payload = workbook.output();
+						var anchor = document.createElement('a');
+						anchor.setAttribute('href', 'data:application/octet-stream,' + encodeURIComponent(payload));
+						anchor.innerHTML = 'Download XLSX';
+						var body = document.getElementsByTagName('body')[0];
+						body.appendChild(anchor);
+					}
+				});
+			};
+		</script>
+	</head>
+</html>
