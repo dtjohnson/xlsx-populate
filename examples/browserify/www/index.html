@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <script src="/bundle.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils.min.js"></script>
+        <!--[if IE]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils-ie.min.js"></script>
+        <![endif]-->
+        <script>
+            window.onload = function () {
+                JSZipUtils.getBinaryContent('/blank.xlsx', function(err, data) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        var workbook = new Workbook(data);
+
+                        // Modify the workbook
+                        workbook
+                            .getSheet("Sheet1")
+                            .getCell("A1")
+                            .setValue("Wow, you can do this on client side!")
+                            ;
+
+                        // Convert to blob and save
+                        saveAs(workbook.toBlob(), 'workbook.xlsx');
+                    }
+                });
+            };
+        </script>
+    </head>
+    <body>
+        <p>This is a client-side demo of xlsx-populate. Lunch the demo via console:</p>
+        <code>
+        node ./examples/browserify/
+        </code>
+    </body>
+</html>
