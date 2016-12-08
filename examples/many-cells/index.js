@@ -3,7 +3,7 @@
 var Workbook = require('../../lib/Workbook');
 
 // Load the input workbook from file.
-var workbook = Workbook.fromBlankSync();
+var workbook = new Workbook();
 
 // For performance, you want to 'get' the objects a little as possible and hold onto references.
 var sheet = workbook.getSheet("Sheet1");

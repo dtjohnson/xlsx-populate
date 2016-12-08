@@ -383,14 +383,13 @@ Gets the cell with the given row and column numbers.
         * [.createSheet(sheetName, [index])](#Workbook+createSheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.getSheet(sheetNameOrIndex)](#Workbook+getSheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.getNamedCell(cellName)](#Workbook+getNamedCell) ⇒ <code>[Cell](#Cell)</code>
-        * [.output()](#Workbook+output) ⇒ <code>Buffer</code>
+        * [.output([options])](#Workbook+output) ⇒ <code>Buffer</code>
         * [.toFile(path, cb)](#Workbook+toFile) ⇒ <code>undefined</code>
         * [.toFileSync(path)](#Workbook+toFileSync) ⇒ <code>undefined</code>
+        * [.toBlob()](#Workbook+toBlob)
     * _static_
         * [.fromFile(path, cb)](#Workbook.fromFile) ⇒ <code>undefined</code>
         * [.fromFileSync(path)](#Workbook.fromFileSync) ⇒ <code>[Workbook](#Workbook)</code>
-        * [.fromBlank(cb)](#Workbook.fromBlank) ⇒ <code>undefined</code>
-        * [.fromBlankSync()](#Workbook.fromBlankSync) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="new_Workbook_new"></a>
 
@@ -431,11 +430,16 @@ Get a named cell. (Assumes names with workbook scope pointing to single cells.)
 
 <a name="Workbook+output"></a>
 
-### workbook.output() ⇒ <code>Buffer</code>
+### workbook.output([options]) ⇒ <code>Buffer</code>
 Gets the output.
 
 **Kind**: instance method of <code>[Workbook](#Workbook)</code>  
 **Returns**: <code>Buffer</code> - A node buffer for the generated Excel workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [options] | <code>Object</code> | The options for JSZip generate. |
+
 <a name="Workbook+toFile"></a>
 
 ### workbook.toFile(path, cb) ⇒ <code>undefined</code>
@@ -459,6 +463,13 @@ Writes to file with the given path synchronously.
 | --- | --- | --- |
 | path | <code>string</code> | The path of the file. |
 
+<a name="Workbook+toBlob"></a>
+
+### workbook.toBlob()
+Generates javascript blob object, to be used for client-side.
+returns {Blob}
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
 <a name="Workbook.fromFile"></a>
 
 ### Workbook.fromFile(path, cb) ⇒ <code>undefined</code>
@@ -483,21 +494,3 @@ Creates a Workbook from the file with the given path synchronously.
 | --- | --- | --- |
 | path | <code>string</code> | The path of the file. |
 
-<a name="Workbook.fromBlank"></a>
-
-### Workbook.fromBlank(cb) ⇒ <code>undefined</code>
-Creates a blank Workbook.
-
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cb | <code>function</code> | A callback with the new workbook. |
-
-<a name="Workbook.fromBlankSync"></a>
-
-### Workbook.fromBlankSync() ⇒ <code>[Workbook](#Workbook)</code>
-Creates a blank Workbook synchronously.
-
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
-**Returns**: <code>[Workbook](#Workbook)</code> - The new workbook.  

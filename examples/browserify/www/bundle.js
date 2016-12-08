@@ -575,7 +575,7 @@ Sheet.prototype.getCell = function () {
 module.exports = Sheet;
 
 },{"./Row":2,"./utils":5,"./xpath":6}],4:[function(require,module,exports){
-(function (__dirname){
+(function (Buffer){
 "use strict";
 
 var fs = require('fs');
@@ -589,10 +589,23 @@ var xpath = require("./xpath");
 
 /**
  * Initializes a new Workbook.
- * @param {Buffer} data - File buffer of the Excel workbook.
+ * @param {Buffer} [data] - File buffer of the Excel workbook (optional).
  * @constructor
  */
 var Workbook = function (data) {
+    /*
+    This base64 string can be generated with the following code:
+
+    var fs = require('fs');
+    var blankDataString = fs
+        .readFileSync('./lib/blank.xlsx')
+        .toString('base64')
+        ;
+    */
+    data = data || Buffer.from(
+        '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',
+        'base64'
+    );
     this._initialize(data);
 };
 
@@ -711,7 +724,7 @@ Workbook.prototype.getNamedCell = function (cellName) {
 
 /**
  * Gets the output.
- * @param {Object} options - The options for JSZip generate.
+ * @param {Object} [options] - The options for JSZip generate.
  * @returns {Buffer} A node buffer for the generated Excel workbook.
  */
 Workbook.prototype.output = function (options) {
@@ -754,7 +767,7 @@ Workbook.prototype.toFileSync = function (path) {
 };
 
 /**
- * Generates a blob-compatible javascript.
+ * Generates javascript blob object, to be used for client-side.
  * returns {Blob}
  */
 Workbook.prototype.toBlob = function () {
@@ -771,10 +784,16 @@ Workbook.prototype.toBlob = function () {
  * @returns {undefined}
  */
 Workbook.fromFile = function (path, cb) {
-    fs.readFile(path, function (err, data) {
-        if (err) return cb(err);
-        cb(null, new Workbook(data));
-    });
+    var x = function(err, data) {
+        cb(err, new Workbook(data));
+    };
+    if (utils.isBrowser()) {
+        var JSZipUtils = require('jszip-utils');
+        JSZipUtils.getBinaryContent(path, x);
+    }
+    else {
+        fs.readFile(path, x);
+    }
 };
 
 /**
@@ -783,32 +802,20 @@ Workbook.fromFile = function (path, cb) {
  * @returns {Workbook} The parsed workbook.
  */
 Workbook.fromFileSync = function (path) {
-    var data = fs.readFileSync(path);
-    return new Workbook(data);
-};
-
-/**
- * Creates a blank Workbook.
- * @param {function} cb - A callback with the new workbook.
- * @returns {undefined}
- */
-Workbook.fromBlank = function (cb) {
-    Workbook.fromFile(path.join(__dirname, "blank.xlsx"), cb);
-};
-
-/**
- * Creates a blank Workbook synchronously.
- * @returns {Workbook} The new workbook.
- */
-Workbook.fromBlankSync = function () {
-    return Workbook.fromFileSync(path.join(__dirname, "blank.xlsx"));
+    if (utils.isBrowser()) {
+        throw new Error('fromFileSync is unavailable to client-side applications');
+    }
+    else {
+        var data = fs.readFileSync(path);
+        return new Workbook(data);
+    }
 };
 
 module.exports = Workbook;
 
-
-}).call(this,"/lib")
-},{"./Sheet":3,"./utils":5,"./xpath":6,"fs":55,"jszip":19,"path":60,"xmldom":51}],5:[function(require,module,exports){
+}).call(this,require("buffer").Buffer)
+},{"./Sheet":3,"./utils":5,"./xpath":6,"buffer":58,"fs":56,"jszip":20,"jszip-utils":10,"path":61,"xmldom":52}],5:[function(require,module,exports){
+(function (process){
 "use strict";
 
 /**
@@ -836,6 +843,13 @@ var incorrectLeapDate = new Date(1900, 1, 28);
 var millisecondsInDay = 1000 * 60 * 60 * 24;
 
 module.exports = {
+    /**
+     * Helper function detects client and server side execution.
+     * @returns {boolean} Indicates if program is running on browser.
+     */
+    isBrowser: function () {
+        return process.browser === true;
+    },
     /**
       * This callback is part of the binarySearch function.
       * @callback binarySearch~getComparableValue
@@ -1045,7 +1059,8 @@ module.exports = {
     }
 };
 
-},{}],6:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"_process":62}],6:[function(require,module,exports){
 "use strict";
 
 var xpath = require('xpath');
@@ -1053,7 +1068,7 @@ module.exports = xpath.useNamespaces({
     sml: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
 });
 
-},{"xpath":54}],7:[function(require,module,exports){
+},{"xpath":55}],7:[function(require,module,exports){
 var Workbook = require('./lib/Workbook');
 exports.Workbook = Workbook;
 window.Workbook = Workbook;
@@ -1439,7 +1454,112 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":34}],10:[function(require,module,exports){
+},{"ms":35}],10:[function(require,module,exports){
+'use strict';
+
+var JSZipUtils = {};
+// just use the responseText with xhr1, response with xhr2.
+// The transformation doesn't throw away high-order byte (with responseText)
+// because JSZip handles that case. If not used with JSZip, you may need to
+// do it, see https://developer.mozilla.org/En/Using_XMLHttpRequest#Handling_binary_data
+JSZipUtils._getBinaryFromXHR = function (xhr) {
+    // for xhr.responseText, the 0xFF mask is applied by JSZip
+    return xhr.response || xhr.responseText;
+};
+
+// taken from jQuery
+function createStandardXHR() {
+    try {
+        return new window.XMLHttpRequest();
+    } catch( e ) {}
+}
+
+function createActiveXHR() {
+    try {
+        return new window.ActiveXObject("Microsoft.XMLHTTP");
+    } catch( e ) {}
+}
+
+// Create the request object
+var createXHR = window.ActiveXObject ?
+    /* Microsoft failed to properly
+     * implement the XMLHttpRequest in IE7 (can't request local files),
+     * so we use the ActiveXObject when it is available
+     * Additionally XMLHttpRequest can be disabled in IE7/IE8 so
+     * we need a fallback.
+     */
+    function() {
+    return createStandardXHR() || createActiveXHR();
+} :
+    // For all other browsers, use the standard XMLHttpRequest object
+    createStandardXHR;
+
+
+
+JSZipUtils.getBinaryContent = function(path, callback) {
+    /*
+     * Here is the tricky part : getting the data.
+     * In firefox/chrome/opera/... setting the mimeType to 'text/plain; charset=x-user-defined'
+     * is enough, the result is in the standard xhr.responseText.
+     * cf https://developer.mozilla.org/En/XMLHttpRequest/Using_XMLHttpRequest#Receiving_binary_data_in_older_browsers
+     * In IE <= 9, we must use (the IE only) attribute responseBody
+     * (for binary data, its content is different from responseText).
+     * In IE 10, the 'charset=x-user-defined' trick doesn't work, only the
+     * responseType will work :
+     * http://msdn.microsoft.com/en-us/library/ie/hh673569%28v=vs.85%29.aspx#Binary_Object_upload_and_download
+     *
+     * I'd like to use jQuery to avoid this XHR madness, but it doesn't support
+     * the responseType attribute : http://bugs.jquery.com/ticket/11461
+     */
+    try {
+
+        var xhr = createXHR();
+
+        xhr.open('GET', path, true);
+
+        // recent browsers
+        if ("responseType" in xhr) {
+            xhr.responseType = "arraybuffer";
+        }
+
+        // older browser
+        if(xhr.overrideMimeType) {
+            xhr.overrideMimeType("text/plain; charset=x-user-defined");
+        }
+
+        xhr.onreadystatechange = function(evt) {
+            var file, err;
+            // use `xhr` and not `this`... thanks IE
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200 || xhr.status === 0) {
+                    file = null;
+                    err = null;
+                    try {
+                        file = JSZipUtils._getBinaryFromXHR(xhr);
+                    } catch(e) {
+                        err = new Error(e);
+                    }
+                    callback(err, file);
+                } else {
+                    callback(new Error("Ajax error for " + path + " : " + this.status + " " + this.statusText), null);
+                }
+            }
+        };
+
+        xhr.send();
+
+    } catch (e) {
+        callback(new Error(e), null);
+    }
+};
+
+// export
+module.exports = JSZipUtils;
+
+// enforcing Stuk's coding style
+// vim: set shiftwidth=4 softtabstop=4:
+
+},{}],11:[function(require,module,exports){
 'use strict';
 var DataReader = require('./dataReader');
 
@@ -1492,7 +1612,7 @@ ArrayReader.prototype.readData = function(size) {
 };
 module.exports = ArrayReader;
 
-},{"./dataReader":15}],11:[function(require,module,exports){
+},{"./dataReader":16}],12:[function(require,module,exports){
 'use strict';
 // private property
 var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -1564,7 +1684,7 @@ exports.decode = function(input, utf8) {
 
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 function CompressedObject() {
     this.compressedSize = 0;
@@ -1594,7 +1714,7 @@ CompressedObject.prototype = {
 };
 module.exports = CompressedObject;
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 exports.STORE = {
     magic: "\x00\x00",
@@ -1609,7 +1729,7 @@ exports.STORE = {
 };
 exports.DEFLATE = require('./flate');
 
-},{"./flate":18}],14:[function(require,module,exports){
+},{"./flate":19}],15:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -1713,7 +1833,7 @@ module.exports = function crc32(input, crc) {
 };
 // vim: set shiftwidth=4 softtabstop=4:
 
-},{"./utils":31}],15:[function(require,module,exports){
+},{"./utils":32}],16:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 
@@ -1823,7 +1943,7 @@ DataReader.prototype = {
 };
 module.exports = DataReader;
 
-},{"./utils":31}],16:[function(require,module,exports){
+},{"./utils":32}],17:[function(require,module,exports){
 'use strict';
 exports.base64 = false;
 exports.binary = false;
@@ -1836,7 +1956,7 @@ exports.comment = null;
 exports.unixPermissions = null;
 exports.dosPermissions = null;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 var utils = require('./utils');
 
@@ -1943,7 +2063,7 @@ exports.isRegExp = function (object) {
 };
 
 
-},{"./utils":31}],18:[function(require,module,exports){
+},{"./utils":32}],19:[function(require,module,exports){
 'use strict';
 var USE_TYPEDARRAY = (typeof Uint8Array !== 'undefined') && (typeof Uint16Array !== 'undefined') && (typeof Uint32Array !== 'undefined');
 
@@ -1961,7 +2081,7 @@ exports.uncompress =  function(input) {
     return pako.inflateRaw(input);
 };
 
-},{"pako":35}],19:[function(require,module,exports){
+},{"pako":36}],20:[function(require,module,exports){
 'use strict';
 
 var base64 = require('./base64');
@@ -2042,7 +2162,7 @@ JSZip.base64 = {
 JSZip.compressions = require('./compressions');
 module.exports = JSZip;
 
-},{"./base64":11,"./compressions":13,"./defaults":16,"./deprecatedPublicUtils":17,"./load":20,"./object":23,"./support":27}],20:[function(require,module,exports){
+},{"./base64":12,"./compressions":14,"./defaults":17,"./deprecatedPublicUtils":18,"./load":21,"./object":24,"./support":28}],21:[function(require,module,exports){
 'use strict';
 var base64 = require('./base64');
 var utf8 = require('./utf8');
@@ -2083,7 +2203,7 @@ module.exports = function(data, options) {
     return this;
 };
 
-},{"./base64":11,"./utf8":30,"./utils":31,"./zipEntries":32}],21:[function(require,module,exports){
+},{"./base64":12,"./utf8":31,"./utils":32,"./zipEntries":33}],22:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 module.exports = function(data, encoding){
@@ -2094,7 +2214,7 @@ module.exports.test = function(b){
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":57}],22:[function(require,module,exports){
+},{"buffer":58}],23:[function(require,module,exports){
 'use strict';
 var Uint8ArrayReader = require('./uint8ArrayReader');
 
@@ -2117,7 +2237,7 @@ NodeBufferReader.prototype.readData = function(size) {
 };
 module.exports = NodeBufferReader;
 
-},{"./uint8ArrayReader":28}],23:[function(require,module,exports){
+},{"./uint8ArrayReader":29}],24:[function(require,module,exports){
 'use strict';
 var support = require('./support');
 var utils = require('./utils');
@@ -2989,7 +3109,7 @@ var out = {
 };
 module.exports = out;
 
-},{"./base64":11,"./compressedObject":12,"./compressions":13,"./crc32":14,"./defaults":16,"./nodeBuffer":21,"./signature":24,"./stringWriter":26,"./support":27,"./uint8ArrayWriter":29,"./utf8":30,"./utils":31}],24:[function(require,module,exports){
+},{"./base64":12,"./compressedObject":13,"./compressions":14,"./crc32":15,"./defaults":17,"./nodeBuffer":22,"./signature":25,"./stringWriter":27,"./support":28,"./uint8ArrayWriter":30,"./utf8":31,"./utils":32}],25:[function(require,module,exports){
 'use strict';
 exports.LOCAL_FILE_HEADER = "PK\x03\x04";
 exports.CENTRAL_FILE_HEADER = "PK\x01\x02";
@@ -2998,7 +3118,7 @@ exports.ZIP64_CENTRAL_DIRECTORY_LOCATOR = "PK\x06\x07";
 exports.ZIP64_CENTRAL_DIRECTORY_END = "PK\x06\x06";
 exports.DATA_DESCRIPTOR = "PK\x07\x08";
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 'use strict';
 var DataReader = require('./dataReader');
 var utils = require('./utils');
@@ -3037,7 +3157,7 @@ StringReader.prototype.readData = function(size) {
 };
 module.exports = StringReader;
 
-},{"./dataReader":15,"./utils":31}],26:[function(require,module,exports){
+},{"./dataReader":16,"./utils":32}],27:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -3069,7 +3189,7 @@ StringWriter.prototype = {
 
 module.exports = StringWriter;
 
-},{"./utils":31}],27:[function(require,module,exports){
+},{"./utils":32}],28:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 exports.base64 = true;
@@ -3107,7 +3227,7 @@ else {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":57}],28:[function(require,module,exports){
+},{"buffer":58}],29:[function(require,module,exports){
 'use strict';
 var ArrayReader = require('./arrayReader');
 
@@ -3135,7 +3255,7 @@ Uint8ArrayReader.prototype.readData = function(size) {
 };
 module.exports = Uint8ArrayReader;
 
-},{"./arrayReader":10}],29:[function(require,module,exports){
+},{"./arrayReader":11}],30:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -3173,7 +3293,7 @@ Uint8ArrayWriter.prototype = {
 
 module.exports = Uint8ArrayWriter;
 
-},{"./utils":31}],30:[function(require,module,exports){
+},{"./utils":32}],31:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -3382,7 +3502,7 @@ exports.utf8decode = function utf8decode(buf) {
 };
 // vim: set shiftwidth=4 softtabstop=4:
 
-},{"./nodeBuffer":21,"./support":27,"./utils":31}],31:[function(require,module,exports){
+},{"./nodeBuffer":22,"./support":28,"./utils":32}],32:[function(require,module,exports){
 'use strict';
 var support = require('./support');
 var compressions = require('./compressions');
@@ -3728,7 +3848,7 @@ exports.extend = function() {
 };
 
 
-},{"./compressions":13,"./nodeBuffer":21,"./support":27}],32:[function(require,module,exports){
+},{"./compressions":14,"./nodeBuffer":22,"./support":28}],33:[function(require,module,exports){
 'use strict';
 var StringReader = require('./stringReader');
 var NodeBufferReader = require('./nodeBufferReader');
@@ -4010,7 +4130,7 @@ ZipEntries.prototype = {
 // }}} end of ZipEntries
 module.exports = ZipEntries;
 
-},{"./arrayReader":10,"./nodeBufferReader":22,"./object":23,"./signature":24,"./stringReader":25,"./support":27,"./uint8ArrayReader":28,"./utils":31,"./zipEntry":33}],33:[function(require,module,exports){
+},{"./arrayReader":11,"./nodeBufferReader":23,"./object":24,"./signature":25,"./stringReader":26,"./support":28,"./uint8ArrayReader":29,"./utils":32,"./zipEntry":34}],34:[function(require,module,exports){
 'use strict';
 var StringReader = require('./stringReader');
 var utils = require('./utils');
@@ -4331,7 +4451,7 @@ ZipEntry.prototype = {
 };
 module.exports = ZipEntry;
 
-},{"./compressedObject":12,"./object":23,"./stringReader":25,"./support":27,"./utils":31}],34:[function(require,module,exports){
+},{"./compressedObject":13,"./object":24,"./stringReader":26,"./support":28,"./utils":32}],35:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -4458,7 +4578,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's';
 }
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 // Top level file is just a mixin of submodules & constants
 'use strict';
 
@@ -4474,7 +4594,7 @@ assign(pako, deflate, inflate, constants);
 
 module.exports = pako;
 
-},{"./lib/deflate":36,"./lib/inflate":37,"./lib/utils/common":38,"./lib/zlib/constants":41}],36:[function(require,module,exports){
+},{"./lib/deflate":37,"./lib/inflate":38,"./lib/utils/common":39,"./lib/zlib/constants":42}],37:[function(require,module,exports){
 'use strict';
 
 
@@ -4876,7 +4996,7 @@ exports.deflate = deflate;
 exports.deflateRaw = deflateRaw;
 exports.gzip = gzip;
 
-},{"./utils/common":38,"./utils/strings":39,"./zlib/deflate":43,"./zlib/messages":48,"./zlib/zstream":50}],37:[function(require,module,exports){
+},{"./utils/common":39,"./utils/strings":40,"./zlib/deflate":44,"./zlib/messages":49,"./zlib/zstream":51}],38:[function(require,module,exports){
 'use strict';
 
 
@@ -5296,7 +5416,7 @@ exports.inflate = inflate;
 exports.inflateRaw = inflateRaw;
 exports.ungzip  = inflate;
 
-},{"./utils/common":38,"./utils/strings":39,"./zlib/constants":41,"./zlib/gzheader":44,"./zlib/inflate":46,"./zlib/messages":48,"./zlib/zstream":50}],38:[function(require,module,exports){
+},{"./utils/common":39,"./utils/strings":40,"./zlib/constants":42,"./zlib/gzheader":45,"./zlib/inflate":47,"./zlib/messages":49,"./zlib/zstream":51}],39:[function(require,module,exports){
 'use strict';
 
 
@@ -5400,7 +5520,7 @@ exports.setTyped = function (on) {
 
 exports.setTyped(TYPED_OK);
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 // String encode/decode helpers
 'use strict';
 
@@ -5587,7 +5707,7 @@ exports.utf8border = function (buf, max) {
   return (pos + _utf8len[buf[pos]] > max) ? pos : max;
 };
 
-},{"./common":38}],40:[function(require,module,exports){
+},{"./common":39}],41:[function(require,module,exports){
 'use strict';
 
 // Note: adler32 takes 12% for level 0 and 2% for level 6.
@@ -5621,7 +5741,7 @@ function adler32(adler, buf, len, pos) {
 
 module.exports = adler32;
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 
@@ -5673,7 +5793,7 @@ module.exports = {
   //Z_NULL:                 null // Use -1 or null inline, depending on var type
 };
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 // Note: we can't get significant speed boost here.
@@ -5716,7 +5836,7 @@ function crc32(crc, buf, len, pos) {
 
 module.exports = crc32;
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 var utils   = require('../utils/common');
@@ -7573,7 +7693,7 @@ exports.deflatePrime = deflatePrime;
 exports.deflateTune = deflateTune;
 */
 
-},{"../utils/common":38,"./adler32":40,"./crc32":42,"./messages":48,"./trees":49}],44:[function(require,module,exports){
+},{"../utils/common":39,"./adler32":41,"./crc32":43,"./messages":49,"./trees":50}],45:[function(require,module,exports){
 'use strict';
 
 
@@ -7615,7 +7735,7 @@ function GZheader() {
 
 module.exports = GZheader;
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 // See state defs from inflate.js
@@ -7943,7 +8063,7 @@ module.exports = function inflate_fast(strm, start) {
   return;
 };
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 
@@ -9483,7 +9603,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":38,"./adler32":40,"./crc32":42,"./inffast":45,"./inftrees":47}],47:[function(require,module,exports){
+},{"../utils/common":39,"./adler32":41,"./crc32":43,"./inffast":46,"./inftrees":48}],48:[function(require,module,exports){
 'use strict';
 
 
@@ -9812,7 +9932,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":38}],48:[function(require,module,exports){
+},{"../utils/common":39}],49:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9827,7 +9947,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 
@@ -11031,7 +11151,7 @@ exports._tr_flush_block  = _tr_flush_block;
 exports._tr_tally = _tr_tally;
 exports._tr_align = _tr_align;
 
-},{"../utils/common":38}],50:[function(require,module,exports){
+},{"../utils/common":39}],51:[function(require,module,exports){
 'use strict';
 
 
@@ -11062,7 +11182,7 @@ function ZStream() {
 
 module.exports = ZStream;
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 function DOMParser(options){
 	this.options = options ||{locator:{}};
 	
@@ -11313,7 +11433,7 @@ if(typeof require == 'function'){
 	exports.DOMParser = DOMParser;
 }
 
-},{"./dom":52,"./sax":53}],52:[function(require,module,exports){
+},{"./dom":53,"./sax":54}],53:[function(require,module,exports){
 /*
  * DOM Level 2
  * Object DOMException
@@ -12462,7 +12582,7 @@ if(typeof require == 'function'){
 	exports.XMLSerializer = XMLSerializer;
 }
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 //[4]   	NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
 //[4a]   	NameChar	   ::=   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
 //[5]   	Name	   ::=   	NameStartChar (NameChar)*
@@ -13050,7 +13170,7 @@ if(typeof require == 'function'){
 }
 
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 /*
  * xpath.js
  *
@@ -17745,9 +17865,9 @@ exports.select1 = function(e, doc) {
 // end non-node wrapper
 })(xpath);
 
-},{}],55:[function(require,module,exports){
-
 },{}],56:[function(require,module,exports){
+
+},{}],57:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -17863,7 +17983,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -19656,7 +19776,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":56,"ieee754":58,"isarray":59}],58:[function(require,module,exports){
+},{"base64-js":57,"ieee754":59,"isarray":60}],59:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -19742,14 +19862,14 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -19977,7 +20097,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":61}],61:[function(require,module,exports){
+},{"_process":62}],62:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
