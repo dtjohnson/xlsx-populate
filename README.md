@@ -434,7 +434,7 @@ Get a named cell. (Assumes names with workbook scope pointing to single cells.)
 Gets the output.
 
 **Kind**: instance method of <code>[Workbook](#Workbook)</code>  
-**Returns**: <code>Buffer</code> - A node buffer for the generated Excel workbook.  
+**Returns**: <code>Buffer</code> - A buffer for the generated Excel workbook.  
 
 | Param | Type | Description |
 | --- | --- | --- |
