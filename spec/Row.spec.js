@@ -4,7 +4,7 @@ var proxyquire = require("proxyquire").noCallThru();
 var DOMParser = require('xmldom').DOMParser;
 var parser = new DOMParser();
 
-describe("Row", function () {
+xdescribe("Row", function () {
     var Cell, Row, sheet, rowNode, row;
 
     beforeEach(function () {

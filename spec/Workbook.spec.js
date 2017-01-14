@@ -6,7 +6,7 @@ var xpath = require('xpath');
 var DOMParser = require('xmldom').DOMParser;
 var parser = new DOMParser();
 
-describe("Workbook", function () {
+xdescribe("Workbook", function () {
     var Workbook, fs, JSZip, Sheet;
 
     beforeEach(function () {

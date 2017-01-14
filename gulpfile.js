@@ -20,7 +20,10 @@ gulp.task("lint", function () {
 gulp.task("unit", function () {
     return gulp
         .src(TEST)
-        .pipe(jasmine());
+        .pipe(jasmine({
+            includeStackTrace: false,
+            errorOnFail: false
+        }));
 });
 
 gulp.task("test", function (cb) {

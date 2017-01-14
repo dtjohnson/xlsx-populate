@@ -2,7 +2,7 @@
 
 var utils = require('../lib/utils');
 
-describe("utils", function () {
+xdescribe("utils", function () {
     describe("isInteger", function () {
         it("should return true for ints", function () {
             expect(utils.isInteger(4)).toBe(true);
