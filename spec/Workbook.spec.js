@@ -171,7 +171,7 @@ describe("Workbook", function () {
             });
         });
 
-        describe("getSheet", function () {
+        describe("sheet", function () {
             var workbook;
             beforeEach(function () {
                 workbook = new Workbook();
@@ -187,17 +187,17 @@ describe("Workbook", function () {
             });
 
             it("should return the sheet with the given index", function () {
-                expect(workbook.getSheet(0)).toBe(workbook._sheets[0]);
-                expect(workbook.getSheet(1)).toBe(workbook._sheets[1]);
+                expect(workbook.sheet(0)).toBe(workbook._sheets[0]);
+                expect(workbook.sheet(1)).toBe(workbook._sheets[1]);
             });
 
             it("should return the sheet with the given name", function () {
-                expect(workbook.getSheet("Bar")).toBe(workbook._sheets[1]);
-                expect(workbook.getSheet("Foo")).toBe(workbook._sheets[0]);
+                expect(workbook.sheet("Bar")).toBe(workbook._sheets[1]);
+                expect(workbook.sheet("Foo")).toBe(workbook._sheets[0]);
             });
         });
 
-        describe("getNamedCell", function () {
+        describe("namedCell", function () {
             var workbook;
             beforeEach(function () {
                 workbook = new Workbook();
@@ -207,16 +207,16 @@ describe("Workbook", function () {
             it("should return the cell with the given name", function () {
                 var cell = {};
                 var getCell = jasmine.createSpy("getCell").and.returnValue(cell);
-                workbook.getSheet = jasmine.createSpy("getSheet").and.returnValue({ getCell: getCell });
+                workbook.sheet = jasmine.createSpy("sheet").and.returnValue({ getCell: getCell });
 
-                var c = workbook.getNamedCell("foo");
+                var c = workbook.namedCell("foo");
                 expect(c).toBe(cell);
                 expect(getCell).toHaveBeenCalledWith(3, 2);
-                expect(workbook.getSheet).toHaveBeenCalledWith("Sheet2");
+                expect(workbook.sheet).toHaveBeenCalledWith("Sheet2");
             });
 
             it("should return undefined if no matching cell found", function () {
-                var c = workbook.getNamedCell("bar");
+                var c = workbook.namedCell("bar");
                 expect(c).toBeUndefined();
             });
         });

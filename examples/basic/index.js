@@ -6,7 +6,7 @@ var Workbook = require('../../lib/Workbook');
 Workbook.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
-        workbook.getSheet("Sheet1").getCell("A1").setValue("This is neat!");
+        workbook.sheet("Sheet1").cell("A1").value("This is neat!");
 
         // Write to file.
         workbook.toFileAsync("./out.xlsx");

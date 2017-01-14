@@ -15,33 +15,33 @@ describe("Row", function () {
         row = new Row(sheet, rowNode);
     });
 
-    describe("getSheet", function () {
+    describe("sheet", function () {
         it("should return the sheet", function () {
-            expect(row.getSheet()).toBe(sheet);
+            expect(row.sheet()).toBe(sheet);
         });
     });
 
-    describe("getRowNumber", function () {
+    describe("rowNumber", function () {
         it("should return the row number", function () {
-            expect(row.getRowNumber()).toBe(7);
+            expect(row.rowNumber()).toBe(7);
         });
     });
 
-    describe("getCell", function () {
+    describe("cell", function () {
         it("should create a new cell node if it doesn't exist", function () {
-            row.getCell(12);
+            row.cell(12);
             expect(Cell).toHaveBeenCalledWith(row, rowNode.lastChild);
             expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="K7"/><c r="L7"/></row>');
         });
 
         it("should use an existing cell node if it does exist", function () {
-            row.getCell(11);
+            row.cell(11);
             expect(Cell).toHaveBeenCalledWith(row, rowNode.lastChild);
             expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="K7"/></row>');
         });
 
         it("should create a new cells in order", function () {
-            row.getCell(7);
+            row.cell(7);
             expect(rowNode.toString()).toBe('<row xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="7"><c r="G7"/><c r="K7"/></row>');
         });
     });
