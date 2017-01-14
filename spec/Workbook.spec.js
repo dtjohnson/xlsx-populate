@@ -97,16 +97,16 @@ describe("Workbook", function () {
 
             expect(workbook._workbookXML.toString()).toBe(workbookText);
             expect(workbook._relsXML.toString()).toBe(relsText);
-            expect(workbook._sheetsNode.toString()).toBe('<sheets><sheet name="Tom"/><sheet name="Jerry"/></sheets>');
+            expect(workbook._sheetsNode.toString()).toBe('<sheets xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheet name="Tom"/><sheet name="Jerry"/></sheets>');
             expect(workbook._sheets.length).toBe(2);
             var firstCallArgs = Sheet.calls.first().args;
             expect(firstCallArgs[0]).toBe(workbook);
-            expect(firstCallArgs[1].toString()).toBe('<sheet name="Tom"/>');
+            expect(firstCallArgs[1].toString()).toBe('<sheet name="Tom" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>');
             expect(firstCallArgs[2].toString()).toBe(sheetText[0]);
 
             var secondCallArgs = Sheet.calls.mostRecent().args;
             expect(secondCallArgs[0]).toBe(workbook);
-            expect(secondCallArgs[1].toString()).toBe('<sheet name="Jerry"/>');
+            expect(secondCallArgs[1].toString()).toBe('<sheet name="Jerry" xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>');
             expect(secondCallArgs[2].toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><f>7*8</f></c></row></sheetData></worksheet>'); // Formula values removed.
         });
     });

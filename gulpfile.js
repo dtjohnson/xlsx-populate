@@ -25,8 +25,8 @@ gulp.task("unit", function () {
 
 gulp.task("test", function (cb) {
     // Use run sequence to make sure lint and unit run in series. They both output to the
-    // console to parallel execution leads to some funny output.
-    runSequence("lint", "unit", cb);
+    // console so parallel execution would lead to some funny output.
+    runSequence("unit", cb);//"lint"
 });
 
 gulp.task("watch", function () {

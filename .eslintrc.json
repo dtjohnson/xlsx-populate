@@ -60,7 +60,7 @@
     "no-floating-decimal": 2,
     //"no-implicit-coercion"
     "no-implied-eval": 2,
-    //"no-invalid-this"
+    "no-invalid-this": 2,
     "no-iterator": 2,
     "no-labels": 2,
     "no-lone-blocks": 2,
@@ -78,7 +78,7 @@
     //"no-process-env"
     "no-proto": 2,
     "no-redeclare": 2,
-    "no-return-assign": 2,
+    //"no-return-assign"
     "no-script-url": 2,
     "no-self-compare": 2,
     "no-sequences": 2,
@@ -119,7 +119,7 @@
     "no-path-concat": 2,
     "no-process-exit": 2,
     //"no-restricted-modules"
-    //"no-sync"
+    "no-sync": 2,
 
     /* Stylistic Issues */
     "array-bracket-spacing": 2,
@@ -194,27 +194,27 @@
     "space-in-parens": 2,
     "space-infix-ops": 2,
     "space-unary-ops": 2,
-    "spaced-comment": 2
+    "spaced-comment": 2,
     //"wrap-regex"
 
     /* ECMAScript 6 */
     //"arrow-body-style"
-    //"arrow-parens"
-    //"arrow-spacing"
-    //"constructor-super"
-    //"generator-star-spacing"
-    //"no-class-assign"
-    //"no-confusing-arrow"
-    //"no-const-assign"
-    //"no-dupe-class-members"
-    //"no-this-before-super"
-    //"no-var"
-    //"object-shorthand"
-    //"prefer-arrow-callback"
-    //"prefer-const"
-    //"prefer-reflect"
-    //"prefer-spread"
-    //"prefer-template"
-    //"require-yield"
+    "arrow-parens": [2, "as-needed"],
+    "arrow-spacing": 2,
+    "constructor-super": 2,
+    "generator-star-spacing": 2,
+    "no-class-assign": 2,
+    "no-confusing-arrow": 2,
+    "no-const-assign": 2,
+    "no-dupe-class-members": 2,
+    "no-this-before-super": 2,
+    "no-var": 2,
+    "object-shorthand": 2,
+    "prefer-arrow-callback": 2,
+    "prefer-const": 2,
+    //"prefer-reflect" // Not yet supported in Node.js
+    "prefer-spread": 2,
+    "prefer-template": 2,
+    "require-yield": 2
   }
 }
