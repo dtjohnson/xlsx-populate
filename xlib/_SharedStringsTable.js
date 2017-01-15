@@ -5,7 +5,7 @@ const parser = new DOMParser();
 
 // TODO: Add support for rich text. (Which is why we have to add to the XML doc instead of completely parsing/generating the doc.)
 
-class SharedStringsTable {
+class _SharedStringsTable {
     constructor(sharedStringsXML) {
         this._stringArray = [];
         this._indexMap = {};
@@ -59,4 +59,4 @@ class SharedStringsTable {
     }
 }
 
-module.exports = SharedStringsTable;
+module.exports = _SharedStringsTable;
