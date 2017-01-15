@@ -9,21 +9,24 @@ describe("Cell", () => {
     let Cell, utils, row, sheet, cellNode, cell;
 
     beforeEach(() => {
-        utils = jasmine.createSpyObj("utils", ["addressToRowAndColumn", "columnNumberToName"]);
+        utils = jasmine.createSpyObj("utils", ["addressToRowAndColumn", "columnNumberToName", "addressToFullAddress", "dateToExcelNumber"]);
         utils.addressToRowAndColumn.and.returnValue({ row: "ROW", column: "COLUMN" });
         utils.columnNumberToName.and.returnValue("NAME");
+        utils.addressToFullAddress.and.returnValue("FULL_ADDRESS");
+        utils.dateToExcelNumber.and.returnValue("EXCEL_NUMBER");
 
         Cell = proxyquire("../lib/Cell", {
             './utils': utils
         });
 
-        sheet = {
-            name: jasmine.createSpy("sheet.name").and.returnValue("SHEET_NAME")
-        };
-        row = {
-            sheet: jasmine.createSpy("row.sheet").and.returnValue(sheet),
-            workbook: jasmine.createSpy("sheet.name").and.returnValue("WORKBOOK")
-        };
+        sheet = jasmine.createSpyObj("sheet", ["name", "cell"]);
+        sheet.name.and.returnValue("SHEET_NAME");
+        sheet.cell.and.returnValue("CELL");
+
+        row = jasmine.createSpyObj("row", ["sheet", "workbook"]);
+        row.sheet.and.returnValue(sheet);
+        row.workbook.and.returnValue("WORKBOOK");
+
         cellNode = parser.parseFromString('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>1</v></c>').documentElement;
         cell = new Cell(row, cellNode);
     });
@@ -42,6 +45,16 @@ describe("Cell", () => {
 
         it("should throw an error if a value is provided", () => {
             expect(() => cell.address("foo")).toThrow();
+        });
+    });
+
+    describe("clear", () => {
+        it("should clear the node contents", () => {
+            expect(cell._cellNode.childNodes.length).toBe(1);
+            expect(cell._cellNode.getAttribute("t")).toBeTruthy();
+            expect(cell.clear()).toBe(cell);
+            expect(cell._cellNode.childNodes.length).toBe(0);
+            expect(cell._cellNode.getAttribute("t")).toBe("");
         });
     });
 
@@ -64,6 +77,41 @@ describe("Cell", () => {
 
         it("should throw an error if a value is provided", () => {
             expect(() => cell.columnNumber("foo")).toThrow();
+        });
+    });
+
+    describe("fullAddress", () => {
+        it("should return the full address", () => {
+            expect(cell.fullAddress()).toBe("FULL_ADDRESS");
+            expect(utils.addressToFullAddress).toHaveBeenCalledWith("SHEET_NAME", "C5");
+        });
+
+        it("should throw an error if a value is provided", () => {
+            expect(() => cell.fullAddress("foo")).toThrow();
+        });
+    });
+
+    describe("relativeCell", () => {
+        beforeEach(() => {
+            spyOn(cell, "rowNumber").and.returnValue(5);
+            spyOn(cell, "columnNumber").and.returnValue(6);
+        });
+
+        it("should throw an error if the row or column offset is not an integer", () => {
+            expect(() => cell.relativeCell()).toThrow();
+            expect(() => cell.relativeCell("foo", 1)).toThrow();
+            expect(() => cell.relativeCell(1, "foo")).toThrow();
+            expect(() => cell.relativeCell(2.5, 1)).toThrow();
+            expect(() => cell.relativeCell(1, 2.5)).toThrow();
+        });
+
+        it("should throw an error if the row or column absolute position is less than 0", () => {
+            expect(() => cell.relativeCell(-100, -100)).toThrow();
+        });
+
+        it("should return a cell relative to this one", () => {
+            expect(cell.relativeCell(3, 7)).toBe("CELL");
+            expect(sheet.cell).toHaveBeenCalledWith(8, 13);
         });
     });
 
@@ -99,6 +147,55 @@ describe("Cell", () => {
         });
     });
 
+    describe("value", () => {
+        it("should return the cell after setting the value", () => {
+            expect(cell.value(5)).toBe(cell);
+        });
+
+        it("should store a number", () => {
+            cell.value(57.8);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>57.8</v></c>');
+
+            cell.value(-6);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>-6</v></c>');
+
+            cell.value(0);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>0</v></c>');
+        });
+
+        it("should store a boolean", () => {
+            cell.value(true);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>1</v></c>');
+
+            cell.value(false);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>0</v></c>');
+        });
+
+        it("should store a string", () => {
+            cell.value("some string");
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="inlineStr"><is><t>some string</t></is></c>');
+        });
+
+        it("should store a date", () => {
+            const date = new Date('01 Jan 2016 00:00:00');
+            cell.value(date);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>EXCEL_NUMBER</v></c>');
+            expect(utils.dateToExcelNumber).toHaveBeenCalledWith(date);
+        });
+
+        it("should clear the cell if null or undefined", () => {
+            cell.value(null);
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"/>');
+
+            cell.value();
+            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"/>');
+        });
+
+        it("should throw and error is a different value is set", () => {
+            expect(() => cell.value({})).toThrow();
+        });
+    });
+
     describe("workbook", () => {
         it("should return the sheet", () => {
             expect(cell.workbook()).toBe("WORKBOOK");
@@ -120,55 +217,9 @@ describe("Cell", () => {
 
 
 
-    xdescribe("fullAddress", function () {
-        it("should return the full address", function () {
-            expect(cell.fullAddress()).toBe("'Foo'!C5");
-            expect(sheet.getName).toHaveBeenCalledWith();
-        });
-    });
 
-    xdescribe("value", function () {
-        it("should return the cell after setting the value", function () {
-            expect(cell.value(5)).toBe(cell);
-        });
 
-        it("should store a number", function () {
-            cell.value(57.8);
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>57.8</v></c>');
 
-            cell.value(-6);
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>-6</v></c>');
-
-            cell.value(0);
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>0</v></c>');
-        });
-
-        it("should store a boolean", function () {
-            cell.value(true);
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>1</v></c>');
-
-            cell.value(false);
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>0</v></c>');
-        });
-
-        it("should store a string", function () {
-            cell.value("some string");
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="inlineStr"><is><t>some string</t></is></c>');
-        });
-
-        it("should store a date", function () {
-            cell.value(new Date('01 Jan 2016 00:00:00'));
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"><v>42370</v></c>');
-        });
-
-        it("should clear the cell if null or undefined", function () {
-            cell.value(null);
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"/>');
-
-            cell.value();
-            expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5"/>');
-        });
-    });
 
     xdescribe("formula", function () {
         it("should clear the formula if set to nothing", function () {
@@ -189,16 +240,6 @@ describe("Cell", () => {
         it("should set the formula with a precalculated value", function () {
             cell.formula('ISNUMBER("foo")', false);
             expect(cellNode.toString()).toBe('<c xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" r="C5" t="b"><v>0</v><f>ISNUMBER(\"foo\")</f></c>');
-        });
-    });
-
-    xdescribe("clear", function () {
-        it("should clear the node contents", function () {
-            expect(cell._cellNode.childNodes.length).toBe(1);
-            expect(cell._cellNode.getAttribute("t")).toBeTruthy();
-            cell.clear();
-            expect(cell._cellNode.childNodes.length).toBe(0);
-            expect(cell._cellNode.getAttribute("t")).toBe("");
         });
     });
 });

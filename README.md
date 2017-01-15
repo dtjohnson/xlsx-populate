@@ -21,15 +21,16 @@ A workbook cell.
 * [Cell](#Cell)
     * [new Cell(row, cellNode)](#new_Cell_new)
     * [.address()](#Cell+address) ⇒ <code>string</code>
-    * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
-    * [.sheet()](#Cell+sheet) ⇒ <code>[Sheet](#Sheet)</code>
-    * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
-    * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
-    * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
+    * [.clear()](#Cell+clear) ⇒ <code>[Cell](#Cell)</code>
     * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
+    * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
     * [.fullAddress()](#Cell+fullAddress) ⇒ <code>string</code>
-    * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
     * [.relativeCell(rowOffset, columnOffset)](#Cell+relativeCell) ⇒ <code>[Cell](#Cell)</code>
+    * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
+    * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
+    * [.sheet()](#Cell+sheet) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.value([value])](#Cell+value) ⇒ <code>\*</code> &#124; <code>[Cell](#Cell)</code>
+    * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
     * [.formula(formula, [calculatedValue], [sharedIndex], [sharedRef])](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
     * [.shareFormulaUntil(lastSharedCell)](#Cell+shareFormulaUntil) ⇒ <code>[Cell](#Cell)</code>
     * [.toString()](#Cell+toString) ⇒ <code>string</code>
@@ -52,41 +53,13 @@ Gets the address of the cell (e.g. "A5").
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>string</code> - The cell address.  
-<a name="Cell+row"></a>
+<a name="Cell+clear"></a>
 
-### cell.row() ⇒ <code>[Row](#Row)</code>
-Gets the parent row of the cell.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>[Row](#Row)</code> - The parent row.  
-<a name="Cell+sheet"></a>
-
-### cell.sheet() ⇒ <code>[Sheet](#Sheet)</code>
-Gets the parent sheet.
+### cell.clear() ⇒ <code>[Cell](#Cell)</code>
+Clears the contents from the cell.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
-<a name="Cell+workbook"></a>
-
-### cell.workbook() ⇒ <code>Workbook</code>
-Gets the parent workbook.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>Workbook</code> - The parent workbook.  
-<a name="Cell+rowNumber"></a>
-
-### cell.rowNumber() ⇒ <code>number</code>
-Gets the row number of the cell.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>number</code> - The row number.  
-<a name="Cell+columnNumber"></a>
-
-### cell.columnNumber() ⇒ <code>number</code>
-Gets the column number of the cell.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>number</code> - The column number.  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
 <a name="Cell+columnName"></a>
 
 ### cell.columnName() ⇒ <code>number</code>
@@ -94,6 +67,13 @@ Gets the column name of the cell.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>number</code> - The column name.  
+<a name="Cell+columnNumber"></a>
+
+### cell.columnNumber() ⇒ <code>number</code>
+Gets the column number of the cell (1-based).
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>number</code> - The column number.  
 <a name="Cell+fullAddress"></a>
 
 ### cell.fullAddress() ⇒ <code>string</code>
@@ -101,31 +81,59 @@ Gets the full address of the cell including sheet (e.g. "Sheet1!A5").
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>string</code> - The full address.  
-<a name="Cell+value"></a>
-
-### cell.value(value) ⇒ <code>[Cell](#Cell)</code>
-Sets the value of the cell.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>[Cell](#Cell)</code> - The cell.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>\*</code> | The value to set. |
-
 <a name="Cell+relativeCell"></a>
 
 ### cell.relativeCell(rowOffset, columnOffset) ⇒ <code>[Cell](#Cell)</code>
-Returns a cell with a relative position to the offsets provided.
+Returns a cell with a relative position given the offsets provided.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>[Cell](#Cell)</code> - The relative cell.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| rowOffset | <code>number</code> | Offset from this.rowNumber(). |
-| columnOffset | <code>number</code> | Offset from this.columnNumber(). |
+| rowOffset | <code>number</code> | The row offset (0 for the current row). |
+| columnOffset | <code>number</code> | The column offset (0 for the current column). |
 
+<a name="Cell+row"></a>
+
+### cell.row() ⇒ <code>[Row](#Row)</code>
+Gets the parent row of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Row](#Row)</code> - The parent row.  
+<a name="Cell+rowNumber"></a>
+
+### cell.rowNumber() ⇒ <code>number</code>
+Gets the row number of the cell (1-based).
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>number</code> - The row number.  
+<a name="Cell+sheet"></a>
+
+### cell.sheet() ⇒ <code>[Sheet](#Sheet)</code>
+Gets the parent sheet.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
+<a name="Cell+value"></a>
+
+### cell.value([value]) ⇒ <code>\*</code> &#124; <code>[Cell](#Cell)</code>
+Gets or sets the value of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>\*</code> &#124; <code>[Cell](#Cell)</code> - The value of the cell or the cell if setting.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [value] | <code>\*</code> | The value to set. |
+
+<a name="Cell+workbook"></a>
+
+### cell.workbook() ⇒ <code>Workbook</code>
+Gets the parent workbook.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>Workbook</code> - The parent workbook.  
 <a name="Cell+formula"></a>
 
 ### cell.formula(formula, [calculatedValue], [sharedIndex], [sharedRef]) ⇒ <code>[Cell](#Cell)</code>
