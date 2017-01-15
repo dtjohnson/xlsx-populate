@@ -34,7 +34,7 @@ describe("Cell", () => {
     describe("constructor", () => {
         it("should save the row and cell node", () => {
             expect(cell._row).toBe(row);
-            expect(cell._cellNode).toBe(cellNode);
+            expect(cell._node).toBe(cellNode);
         });
     });
 
@@ -50,11 +50,11 @@ describe("Cell", () => {
 
     describe("clear", () => {
         it("should clear the node contents", () => {
-            expect(cell._cellNode.childNodes.length).toBe(1);
-            expect(cell._cellNode.getAttribute("t")).toBeTruthy();
+            expect(cell._node.childNodes.length).toBe(1);
+            expect(cell._node.getAttribute("t")).toBeTruthy();
             expect(cell.clear()).toBe(cell);
-            expect(cell._cellNode.childNodes.length).toBe(0);
-            expect(cell._cellNode.getAttribute("t")).toBe("");
+            expect(cell._node.childNodes.length).toBe(0);
+            expect(cell._node.getAttribute("t")).toBe("");
         });
     });
 

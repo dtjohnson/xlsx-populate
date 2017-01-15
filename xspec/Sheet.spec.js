@@ -124,9 +124,9 @@ xdescribe("Sheet", function () {
                 expect(upperCaseCell.fullAddress()).toBe(rowAndColumnCell.fullAddress());
                 var num = Math.random();
                 upperCaseCell.value(num);
-                var upperCaseVNode = findChildNodes(upperCaseCell._cellNode, "v")[0];
-                var lowerCaseVNode = findChildNodes(lowerCaseCell._cellNode, "v")[0];
-                var rowAndColumnVNode = findChildNodes(rowAndColumnCell._cellNode, "v")[0];
+                var upperCaseVNode = findChildNodes(upperCaseCell._node, "v")[0];
+                var lowerCaseVNode = findChildNodes(lowerCaseCell._node, "v")[0];
+                var rowAndColumnVNode = findChildNodes(rowAndColumnCell._node, "v")[0];
                 expect(upperCaseVNode).not.toBeNull("A1 value node should not be null");
                 expect(lowerCaseVNode).not.toBeNull("a1 value node should not be null");
                 expect(rowAndColumnVNode).not.toBeNull("1,1 value node should not be null");

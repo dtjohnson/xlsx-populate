@@ -16,7 +16,7 @@ class Cell {
      */
     constructor(row, cellNode) {
         this._row = row;
-        this._cellNode = cellNode;
+        this._node = cellNode;
     }
 
     /**
@@ -25,7 +25,7 @@ class Cell {
      */
     address() {
         if (arguments.length > 0) throw new Error('Cell.address: Cannot be set.');
-        return this._cellNode.getAttribute("r");
+        return this._node.getAttribute("r");
     }
 
     /**
@@ -33,11 +33,11 @@ class Cell {
      * @returns {Cell} The cell.
      */
     clear() {
-        while (this._cellNode.firstChild) {
-            this._cellNode.removeChild(this._cellNode.firstChild);
+        while (this._node.firstChild) {
+            this._node.removeChild(this._node.firstChild);
         }
 
-        this._cellNode.removeAttribute("t");
+        this._node.removeAttribute("t");
 
         return this;
     }
@@ -124,7 +124,7 @@ class Cell {
     value(value) {
         if (arguments.length === 0) {
             // Getter
-            const type = this._cellNode.getAttribute("t");
+            const type = this._node.getAttribute("t");
 
         } else if (arguments.length === 1) {
             // Setter
@@ -133,7 +133,7 @@ class Cell {
             let type, text;
             if (typeof value === "string") {
                 type = "s";
-                text = this.workbook()._sharedStringsTable.getIndexForString(value);
+                text = this.workbook()._sharedStrings.getIndexForString(value);
             } else if (typeof value === "boolean") {
                 type = "b";
                 text = value ? 1 : 0;
@@ -148,10 +148,10 @@ class Cell {
                 return this;
             }
 
-            if (type) this._cellNode.setAttribute("t", type);
-            const vNode = this._cellNode.ownerDocument.createElement("v");
-            this._cellNode.appendChild(vNode);
-            const textNode = this._cellNode.ownerDocument.createTextNode(text);
+            if (type) this._node.setAttribute("t", type);
+            const vNode = this._node.ownerDocument.createElement("v");
+            this._node.appendChild(vNode);
+            const textNode = this._node.ownerDocument.createTextNode(text);
             vNode.appendChild(textNode);
 
             return this;
@@ -197,12 +197,12 @@ class Cell {
     xformula(formula, calculatedValue, sharedIndex, sharedRef) {
         this.value(calculatedValue);
 
-        var fNode = this._cellNode.ownerDocument.createElement('f');
-        this._cellNode.appendChild(fNode);
+        var fNode = this._node.ownerDocument.createElement('f');
+        this._node.appendChild(fNode);
 
         if (typeof formula === 'string') {
             if (formula.length > 0) {
-                var textNode = this._cellNode.ownerDocument.createTextNode(formula);
+                var textNode = this._node.ownerDocument.createTextNode(formula);
                 fNode.appendChild(textNode);
             }
         }
@@ -243,11 +243,11 @@ class Cell {
         </sheetData>
         */
 
-        var fNode = this._cellNode.getElementsByTagName('f')[0];
+        var fNode = this._node.getElementsByTagName('f')[0];
         if (!fNode) {
             debug('Cell %s', this);
             debug('Node <f> (formula) not found');
-            debug('Node %s', utils.getNodeInfo(this._cellNode));
+            debug('Node %s', utils.getNodeInfo(this._node));
             return false;
         }
         if (isSource) {
@@ -296,7 +296,7 @@ class Cell {
         if (this._isSharedFormula(true) === false) {
             throw new Error('Expected cell to be a shared formula source');
         }
-        var fNode = this._cellNode.getElementsByTagName('f')[0];
+        var fNode = this._node.getElementsByTagName('f')[0];
         var sharedIndex = parseInt(fNode.getAttribute('si'));
         if (!utils.isInteger(sharedIndex) || sharedIndex < 0) {
             throw new Error(
@@ -353,7 +353,7 @@ class Cell {
      * @returns {string} The cell information.
      */
     xtoString() {
-        return utils.getNodeInfo(this._cellNode, {
+        return utils.getNodeInfo(this._node, {
             address: this.fullAddress()
         });
     }

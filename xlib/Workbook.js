@@ -39,7 +39,7 @@ class Workbook {
                 this._relsXML = parser.parseFromString(relsText).documentElement;
 
                 const sharedStringsXML = sharedStringsText && parser.parseFromString(sharedStringsText).documentElement;
-                this._sharedStringsTable = new _SharedStringsTable(sharedStringsXML);
+                this._sharedStrings = new _SharedStringsTable(sharedStringsXML);
 
                 this._sheets = [];
                 this._sheetsNode = xpath("sml:sheets", this._workbookXML)[0];
@@ -159,7 +159,7 @@ class Workbook {
     outputAsync() {
         this._zip.file("xl/workbook.xml", this._workbookXML.toString());
         this._zip.file("xl/_rels/workbook.xml.rels", this._relsXML.toString());
-        this._zip.file("xl/sharedStrings.xml", this._sharedStringsTable.toString());
+        this._zip.file("xl/sharedStrings.xml", this._sharedStrings.toString());
 
         for (var i = 0; i < this._sheets.length; i++) {
             var index = i + 1;
