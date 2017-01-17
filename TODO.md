@@ -1,6 +1,3 @@
-* Cell.value getter
-* Shared string support?
-* Search for value
 * Active cell in sheet
 
 ```
@@ -26,3 +23,9 @@
     ...
 </workbook>
 ```
+
+* Support rich text
+* Merge
+* Border color
+* Dashed borders
+* Diagonal borders

@@ -1,36 +1,17 @@
 "use strict";
 
-var path = require('path');
-
 // Load the input workbook from file.
-var Workbook = require('../../lib/Workbook');
+const Workbook = require('../../lib/Workbook');
 
 // Get template workbook and sheet.
-var workbook = Workbook.fromFileSync(path.join(__dirname, 'template.xlsx'));
-var sheet = workbook.sheet('ClickThroughRateSheet');
+Workbook.fromFileAsync('./template.xlsx')
+    .then(workbook => {
+        // Randomly generate 10 rows of data.
+        const sheet = workbook.sheet('ClickThroughRateSheet');
+        sheet.range("B3:B13").iterateCells(cell => cell.value(parseInt(1e3 * Math.random())));
+        sheet.range("C3:C13").iterateCells(cell => cell.value(parseInt(1e6 * Math.random())));
+        sheet.range("D3:D13").formula("B3/C3");
 
-// Get header cells.
-var clicksHeader = sheet.cell('B2');
-var impressionsHeader = sheet.cell('C2');
-var ctrHeader = sheet.cell('D2');
-
-// Randomly generate 10 rows of data.
-var r = 0;
-while (r < 10) {
-    r++; // Skip header
-    
-    var clickValue = parseInt(1e3 * Math.random());
-    var impressionValue = parseInt(1e6 * Math.random());
-
-    clicksHeader.relativeCell(r, 0).value(clickValue);
-    impressionsHeader.relativeCell(r, 0).value(impressionValue);
-}
-
-// Assign shared formulas.
-ctrHeader
-	.relativeCell(1, 0) // Start from the first cell below header
-	.shareFormulaUntil(ctrHeader.relativeCell(r, 0)) // End at the last modifed row
-	;
-
-// Write to file.
-workbook.toFileSync('./out.xlsx');
+        // Write to file.
+        return workbook.toFileAsync('./out.xlsx');
+    });
