@@ -10,10 +10,10 @@ Workbook.fromBlankAsync("./row col size.xlsx")
 
         console.log(JSON.stringify(sheet.column('A').width(15).width()));
 
-        console.log(JSON.stringify(sheet.cell("A1").value("bold").style({ bold: true }).style("bold")));
-        // console.log(JSON.stringify(sheet.cell("A2").value("italic").style().italic(true).italic()));
-        // console.log(JSON.stringify(sheet.cell("A3").value("underline").style().underline(true).underline()));
-        // console.log(JSON.stringify(sheet.cell("A4").value("strikethrough").style().strikethrough(true).strikethrough()));
+        console.log(JSON.stringify(sheet.cell("A1").value("bold").style("bold", true).style("bold")));
+        console.log(JSON.stringify(sheet.cell("A2").value("italic").style("italic", true).style("italic")));
+        console.log(JSON.stringify(sheet.cell("A3").value("underline").style("underline", true).style("underline")));
+        console.log(JSON.stringify(sheet.cell("A4").value("strikethrough").style("strikethrough", true).style("strikethrough")));
         // console.log(JSON.stringify(sheet.cell("A5").value("superscript").style().superscript(true).superscript()));
         // console.log(JSON.stringify(sheet.cell("A6").value("subscript").style().subscript(true).subscript()));
         // console.log(JSON.stringify(sheet.cell("A7").value("larger").style().fontSize(14).fontSize()));
