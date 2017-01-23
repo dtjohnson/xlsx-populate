@@ -27,6 +27,7 @@
   },
   "bugs": "https://github.com/dtjohnson/xlsx-populate/issues",
   "devDependencies": {
+    "browserify": "^13.3.0",
     "eslint": "^2.6.0",
     "express": "^4.14.0",
     "gulp": "^3.9.1",
