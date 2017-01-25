@@ -19,7 +19,7 @@ const PATHS = {
     spec: "./spec/**/*.js",
     examples: "./examples/**/*.js",
     browserify: {
-        source: "./lib/browser.js",
+        source: "./lib/Workbook.js",
         base: "./browser",
         bundle: "xlsx-populate.js",
         sourceMap: "./"

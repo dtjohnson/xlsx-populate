@@ -2,14 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>xlsx-populate Browser Example</title>
 </head>
 <body>
 
-<script type="text/javascript">
-    localStorage.debug = 'xlsx-populate:*'
-</script>
+<button onclick="generate()">Generate</button>
+
 <script type="text/javascript" src="../../browser/xlsx-populate.js"></script>
+<script type="text/javascript">
+localStorage.debug = 'xlsx-populate:*';
+
+function generate() {
+    XLSXPopulate.fromBlankAsync()
+        .then(function (workbook) {
+            workbook.sheet("Sheet1").cell("A1").value("This was created in the browser!").style("fontColor", "ff0000");
+            return workbook.outputAsync("base64");
+        })
+        .then(function (content) {
+            location.href = "data:" + XLSXPopulate.MIME_TYPE + ";base64," + content;
+        });
+}
+</script>
 
 </body>
 </html>
