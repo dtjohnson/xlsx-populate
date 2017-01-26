@@ -70,7 +70,7 @@ gulp.task("test", cb => {
 });
 
 gulp.task('watch', ['build'], () => {
-    gulp.watch(PATHS.lib, ['build']);
+    // gulp.watch(PATHS.lib, ['build']);
     gulp.watch(PATHS.testSources, ["test"]);
 });
 
