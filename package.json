@@ -16,7 +16,7 @@
   "dependencies": {
     "debug": "^2.2.0",
     "jszip": "^2.4.0",
-    "xmldom": "^0.1.22",
+    "xmldom": "0.1.22",
     "xpath": "0.0.22"
   },
   "repository": {
