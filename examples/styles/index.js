@@ -45,16 +45,16 @@ Workbook.fromBlankAsync("./row col size.xlsx")
         console.log(JSON.stringify(sheet.cell("A33").value("verticalText").style("verticalText", true).style("verticalText")));
         console.log(JSON.stringify(sheet.cell("A34").value("rotate text up").style("rotateTextUp", true).style("rotateTextUp")));
         console.log(JSON.stringify(sheet.cell("A35").value("rotate text down").style("rotateTextDown", true).style("rotateTextDown")));
-        // sheet.cell("A36").value("number").relativeCell(0, 1).value(1.2).style().numberFormat(2);
-        // sheet.cell("A37").value("currency").relativeCell(0, 1).value(1.2).style().numberFormat(`$#,##0.00`);
-        // sheet.cell("A38").value("accounting").relativeCell(0, 1).value(1.2).style().numberFormat(`_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`);
-        // sheet.cell("A39").value("short date").relativeCell(0, 1).value(1.2).style().numberFormat(14);
-        // sheet.cell("A40").value("long date").relativeCell(0, 1).value(1.2).style().numberFormat(`[$-x-sysdate]dddd, mmmm dd, yyyy`);
-        // sheet.cell("A41").value("time").relativeCell(0, 1).value(1.2).style().numberFormat(`[$-x-systime]h:mm:ss AM/PM`);
-        // sheet.cell("A42").value("percentage").relativeCell(0, 1).value(1.2).style().numberFormat(10);
-        // sheet.cell("A43").value("fraction").relativeCell(0, 1).value(1.2).style().numberFormat(12);
-        // sheet.cell("A44").value("scientific").relativeCell(0, 1).value(1.2).style().numberFormat(11);
-        // sheet.cell("A45").value("text").relativeCell(0, 1).value(1.2).style().numberFormat(49);
+        console.log(JSON.stringify(sheet.cell("A36").value("number").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00").style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A37").value("currency").relativeCell(0, 1).value(1.2).style("numberFormat", `$#,##0.00`).style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A38").value("accounting").relativeCell(0, 1).value(1.2).style("numberFormat", `_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`).style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A39").value("short date").relativeCell(0, 1).value(1.2).style("numberFormat", "m/d/yyyy").style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A40").value("long date").relativeCell(0, 1).value(1.2).style("numberFormat", `[$-x-sysdate]dddd, mmmm dd, yyyy`).style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A41").value("time").relativeCell(0, 1).value(1.2).style("numberFormat", `[$-x-systime]h:mm:ss AM/PM`).style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A42").value("percentage").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00%").style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A43").value("fraction").relativeCell(0, 1).value(1.2).style("numberFormat", "# ?/?").style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A44").value("scientific").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00E+00").style("numberFormat")));
+        console.log(JSON.stringify(sheet.cell("A45").value("text").relativeCell(0, 1).value(1.2).style("numberFormat", "@").style("numberFormat")));
 
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
