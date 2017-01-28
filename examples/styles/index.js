@@ -8,53 +8,100 @@ Workbook.fromBlankAsync("./row col size.xlsx")
         // // Modify the workbook.
         const sheet = workbook.sheet("Sheet1");
 
-        console.log(JSON.stringify(sheet.column('A').width(15).width()));
+        sheet.column('A').width(15);
+        sheet.column('B').width(25);
 
-        console.log(JSON.stringify(sheet.cell("A1").value("bold").style("bold", true).style("bold")));
-        console.log(JSON.stringify(sheet.cell("A2").value("italic").style("italic", true).style("italic")));
-        console.log(JSON.stringify(sheet.cell("A3").value("underline").style("underline", true).style("underline")));
-        console.log(JSON.stringify(sheet.cell("A4").value("double underline").style("underline", "double").style("underline")));
-        console.log(JSON.stringify(sheet.cell("A5").value("strikethrough").style("strikethrough", true).style("strikethrough")));
-        console.log(JSON.stringify(sheet.cell("A6").value("font vertical alignment").style("fontVerticalAlignment", "superscript").style("fontVerticalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A7").value("superscript").style("superscript", true).style("superscript")));
-        console.log(JSON.stringify(sheet.cell("A8").value("subscript").style("subscript", true).style("subscript")));
-        console.log(JSON.stringify(sheet.cell("A9").value("larger").style("fontSize", 14).style("fontSize")));
-        console.log(JSON.stringify(sheet.cell("A10").value("smaller").style("fontSize", 8).style("fontSize")));
-        console.log(JSON.stringify(sheet.cell("A11").value("comic sans").style("fontFamily", "Comic Sans MS").style("fontFamily")));
-        console.log(JSON.stringify(sheet.cell("A12").value("left").style("horizontalAlignment", "left").style("horizontalAlignment", null).style("horizontalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A13").value("center").style("horizontalAlignment", "center").style("horizontalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A14").value("right").style("horizontalAlignment", "right").style("horizontalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A15").value("top").style("verticalAlignment", "top").style("verticalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A16").value("middle").style("verticalAlignment", "center").style("verticalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A17").value("bottom").style("verticalAlignment", "bottom").style("verticalAlignment")));
-        console.log(JSON.stringify(sheet.cell("A18").value("this is wrapped text").style("wrappedText", true).style("wrappedText")));
-        // // sheet.cell("A19").value("background color").style().fillBackgroundColor("ff0000");
-        console.log(JSON.stringify(sheet.cell("A20").value("rgb font color").style("fontColor", "ff0000").style("fontColor")));
-        console.log(JSON.stringify(sheet.cell("A21").value("indexed font color").style("fontColor", 4).style("fontColor")));
-        console.log(JSON.stringify(sheet.cell("A22").value("top border").style("topBorderStyle", "thin").style("topBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A23").value("left border").style("leftBorderStyle", "thin").style("leftBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A24").value("right border").style("rightBorderStyle", "thin").style("rightBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A25").value("bottom border").style("bottomBorderStyle", "thin").style("bottomBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A26").value("double bottom border").style("bottomBorderStyle", "double").style("bottomBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A27").value("medium bottom border").style("bottomBorderStyle", "medium").style("bottomBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A28").value("thick bottom border").style("bottomBorderStyle", "thick").style("bottomBorderStyle")));
-        console.log(JSON.stringify(sheet.cell("A29").value("indent").style("indent", 2).style("indent")));
-        console.log(JSON.stringify(sheet.cell("A30").value("text rotation").style("textRotation", 20).style("textRotation")));
-        console.log(JSON.stringify(sheet.cell("A31").value("angle counterclockwise").style("angleTextCounterclockwise", true).style("angleTextCounterclockwise")));
-        console.log(JSON.stringify(sheet.cell("A32").value("angle clockwise").style("angleTextClockwise", true).style("angleTextClockwise")));
-        console.log(JSON.stringify(sheet.cell("A33").value("verticalText").style("verticalText", true).style("verticalText")));
-        console.log(JSON.stringify(sheet.cell("A34").value("rotate text up").style("rotateTextUp", true).style("rotateTextUp")));
-        console.log(JSON.stringify(sheet.cell("A35").value("rotate text down").style("rotateTextDown", true).style("rotateTextDown")));
-        console.log(JSON.stringify(sheet.cell("A36").value("number").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00").style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A37").value("currency").relativeCell(0, 1).value(1.2).style("numberFormat", `$#,##0.00`).style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A38").value("accounting").relativeCell(0, 1).value(1.2).style("numberFormat", `_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`).style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A39").value("short date").relativeCell(0, 1).value(1.2).style("numberFormat", "m/d/yyyy").style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A40").value("long date").relativeCell(0, 1).value(1.2).style("numberFormat", `[$-x-sysdate]dddd, mmmm dd, yyyy`).style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A41").value("time").relativeCell(0, 1).value(1.2).style("numberFormat", `[$-x-systime]h:mm:ss AM/PM`).style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A42").value("percentage").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00%").style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A43").value("fraction").relativeCell(0, 1).value(1.2).style("numberFormat", "# ?/?").style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A44").value("scientific").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00E+00").style("numberFormat")));
-        console.log(JSON.stringify(sheet.cell("A45").value("text").relativeCell(0, 1).value(1.2).style("numberFormat", "@").style("numberFormat")));
+        sheet.cell("A1").value("bold").style("bold", true)
+            .relativeCell(1, 0).value("italic").style("italic", true)
+            .relativeCell(1, 0).value("underline").style("underline", true)
+            .relativeCell(1, 0).value("double underline").style("underline", "double")
+            .relativeCell(1, 0).value("strikethrough").style("strikethrough", true)
+            .relativeCell(1, 0).value("font vertical alignment").style("fontVerticalAlignment", "superscript")
+            .relativeCell(1, 0).value("superscript").style("superscript", true)
+            .relativeCell(1, 0).value("subscript").style("subscript", true)
+            .relativeCell(1, 0).value("larger").style("fontSize", 14)
+            .relativeCell(1, 0).value("smaller").style("fontSize", 8)
+            .relativeCell(1, 0).value("comic sans").style("fontFamily", "Comic Sans MS")
+            .relativeCell(1, 0).value("left").style("horizontalAlignment", "left")
+            .relativeCell(1, 0).value("center").style("horizontalAlignment", "center")
+            .relativeCell(1, 0).value("right").style("horizontalAlignment", "right")
+            .relativeCell(1, 0).value("top").style("verticalAlignment", "top")
+            .relativeCell(1, 0).value("middle").style("verticalAlignment", "center")
+            .relativeCell(1, 0).value("bottom").style("verticalAlignment", "bottom")
+            .relativeCell(1, 0).value("this is wrapped text").style("wrappedText", true)
+            .relativeCell(1, 0)//.value("background color").style().fillBackgroundColor("ff0000");
+            .relativeCell(1, 0).value("rgb font color").style("fontColor", "ff0000")
+            .relativeCell(1, 0).value("indexed font color").style("fontColor", 4)
+            .relativeCell(1, 0).value("top border").style("topBorderStyle", "thin")
+            .relativeCell(1, 0).value("left border").style("leftBorderStyle", "thin")
+            .relativeCell(1, 0).value("right border").style("rightBorderStyle", "thin")
+            .relativeCell(1, 0).value("bottom border").style("bottomBorderStyle", "thin")
+            .relativeCell(1, 0).value("double bottom border").style("bottomBorderStyle", "double")
+            .relativeCell(1, 0).value("medium bottom border").style("bottomBorderStyle", "medium")
+            .relativeCell(1, 0).value("thick bottom border").style("bottomBorderStyle", "thick")
+            .relativeCell(1, 0).value("indent").style("indent", 2)
+            .relativeCell(1, 0).value("text rotation").style("textRotation", 20)
+            .relativeCell(1, 0).value("angle counterclockwise").style("angleTextCounterclockwise", true)
+            .relativeCell(1, 0).value("angle clockwise").style("angleTextClockwise", true)
+            .relativeCell(1, 0).value("verticalText").style("verticalText", true)
+            .relativeCell(1, 0).value("rotate text up").style("rotateTextUp", true)
+            .relativeCell(1, 0).value("rotate text down").style("rotateTextDown", true)
+            .relativeCell(1, 0).value("number").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00")
+            .relativeCell(1, -1).value("currency").relativeCell(0, 1).value(1.2).style("numberFormat", `$#,##0.00`)
+            .relativeCell(1, -1).value("accounting").relativeCell(0, 1).value(1.2).style("numberFormat", `_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`)
+            .relativeCell(1, -1).value("short date").relativeCell(0, 1).value(1.2).style("numberFormat", "m/d/yyyy")
+            .relativeCell(1, -1).value("long date").relativeCell(0, 1).value(1.2).style("numberFormat", `[$-x-sysdate]dddd, mmmm dd, yyyy`)
+            .relativeCell(1, -1).value("time").relativeCell(0, 1).value(1.2).style("numberFormat", `[$-x-systime]h:mm:ss AM/PM`)
+            .relativeCell(1, -1).value("percentage").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00%")
+            .relativeCell(1, -1).value("fraction").relativeCell(0, 1).value(1.2).style("numberFormat", "# ?/?")
+            .relativeCell(1, -1).value("scientific").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00E+00")
+            .relativeCell(1, -1).value("text").relativeCell(0, 1).value(1.2).style("numberFormat", "@");
+
+        sheet.cell("A1").call(cell => console.log(cell.value(), cell.style(["bold"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["italic"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["underline"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["underline"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["strikethrough"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontVerticalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["superscript"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["subscript"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontSize"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontSize"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontFamily"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["horizontalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["horizontalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["horizontalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["verticalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["verticalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["verticalAlignment"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["wrappedText"])))
+            .relativeCell(1, 0)//.call(cell => console.log(cell.value(), cell.style(["backgroundColor"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["topBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["leftBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["rightBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["indent"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["textRotation"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["angleTextCounterclockwise"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["angleTextClockwise"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["verticalText"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["rotateTextUp"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["rotateTextDown"])))
+            .relativeCell(1, 1).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
 
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
