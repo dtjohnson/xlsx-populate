@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jasmine",
     "docs": "node docs/generate",
+    "blank": "node blank/generate",
     "eslint": "eslint */*.js"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
@@ -29,7 +30,6 @@
     "babel": "^6.5.2",
     "babel-preset-es2015": "^6.22.0",
     "babelify": "^7.3.0",
-    "brfs": "^1.4.3",
     "browserify": "^13.3.0",
     "eslint": "^3.13.1",
     "gulp": "^3.9.1",

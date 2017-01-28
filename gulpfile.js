@@ -36,7 +36,6 @@ gulp.task('build', () => {
         standalone: BROWSERIFY_STANDALONE_NAME
     })
         .transform("babelify", { presets: BABEL_PRESETS })
-        .transform("brfs")
         .bundle()
         .pipe(source(PATHS.browserify.bundle))
         .pipe(buffer())
