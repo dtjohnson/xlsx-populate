@@ -11,6 +11,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const eslint = require("gulp-eslint");
 const jasmine = require("gulp-jasmine");
 const runSequence = require('run-sequence').use(gulp);
+const jasmineConfig = require('./spec/support/jasmine.json')
 
 const BROWSERIFY_STANDALONE_NAME = "XLSXPopulate";
 const BABEL_PRESETS = ["es2015"];
@@ -56,6 +57,7 @@ gulp.task("unit", () => {
     return gulp
         .src(PATHS.spec)
         .pipe(jasmine({
+            config: jasmineConfig,
             includeStackTrace: false,
             errorOnFail: false
         }));
