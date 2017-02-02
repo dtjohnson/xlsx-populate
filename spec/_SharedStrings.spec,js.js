@@ -1,47 +1,27 @@
 "use strict";
 
 const proxyquire = require("proxyquire").noCallThru();
-const DOMParser = require('xmldom').DOMParser;
-const parser = new DOMParser();
 
-xdescribe("_SharedStrings", () => {
-    let _SharedStrings, sharedStrings, sharedStringsText;
+describe("_SharedStrings", () => {
+    let _SharedStrings, sharedStrings, sharedStringsNode;
 
     beforeEach(() => {
         _SharedStrings = proxyquire("../lib/_SharedStrings", {});
-        sharedStrings = new _SharedStrings();
-    });
 
-    describe("constructor", () => {
-        it("should create an XML doc if no text passed in", () => {
-            expect(sharedStrings._xml.toString()).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>`);
-            expect(sharedStrings._stringArray).toEqual([]);
-            expect(sharedStrings._indexMap).toEqual({});
-        });
+        sharedStringsNode = {
+            sst: {
+                $: {
+                    xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+                    count: 3,
+                    unique: 7
+                },
+                si: [
+                    { t: ["foo"] }
+                ]
+            }
+        };
 
-        it("should remove the counts and cache the values", () => {
-            sharedStrings = new _SharedStrings(`
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="13" uniqueCount="4">
-	<si>
-		<t>Foo</t>
-	</si>
-	<si>
-		<r>
-			<t>s</t>
-		</r>
-	</si>
-	<si>
-		<t>Bar</t>
-	</si>
-</sst>
-`);
-
-            expect(sharedStrings._xml.documentElement.hasAttribute("count")).toBe(false);
-            expect(sharedStrings._xml.documentElement.hasAttribute("uniqueCount")).toBe(false);
-            expect(sharedStrings._stringArray).toEqual(["Foo", null, "Bar"]);
-            expect(sharedStrings._indexMap).toEqual({ Foo: 0, Bar: 2 });
-        });
+        sharedStrings = new _SharedStrings(sharedStringsNode);
     });
 
     describe("getIndexForString", () => {
@@ -59,7 +39,9 @@ xdescribe("_SharedStrings", () => {
             expect(sharedStrings.getIndexForString("baz")).toBe(2);
             expect(sharedStrings._stringArray).toEqual(["foo", "bar", "baz"]);
             expect(sharedStrings._indexMap).toEqual({ foo: 0, bar: 1, baz: 2 });
-            expect(sharedStrings._xml.toString()).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><si><t>baz</t></si></sst>`);
+            expect(sharedStringsNode.sst.si[sharedStringsNode.sst.si.length - 1]).toEqualJson({
+                t: ["baz"]
+            });
         });
     });
 
@@ -73,9 +55,66 @@ xdescribe("_SharedStrings", () => {
         });
     });
 
-    describe("toString", () => {
-        it("should export to the XML string", () => {
-            expect(sharedStrings.toString().trim()).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"/>`);
+    describe("toObject", () => {
+        it("should return the node as is", () => {
+            expect(sharedStrings.toObject()).toBe(sharedStringsNode);
+        });
+    });
+
+    describe("_cacheExistingSharedStrings", () => {
+        it("should cache the existing shared strings", () => {
+            sharedStrings._siNode = [
+                { t: ["foo"] },
+                { t: ["bar"] },
+                { r: [{}] },
+                { t: ["baz"] }
+            ];
+
+            sharedStrings._stringArray = [];
+            sharedStrings._indexMap = {};
+            sharedStrings._cacheExistingSharedStrings();
+
+            expect(sharedStrings._stringArray).toEqualJson([
+                "foo",
+                "bar",
+                { r: [{}] },
+                "baz"
+            ]);
+            expect(sharedStrings._indexMap).toEqualJson({
+                foo: 0,
+                bar: 1,
+                baz: 3
+            });
+        });
+    });
+
+    describe("_initNode", () => {
+        it("should create the node if needed", () => {
+            sharedStrings._initNode(null);
+            expect(sharedStrings._node).toEqualJson({
+                sst: {
+                    $: {
+                        xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+                    },
+                    si: []
+                }
+            });
+        });
+
+        it("should set the _siNode and clear the counts", () => {
+            expect(sharedStrings._siNode).toEqualJson([
+                { t: ["foo"] }
+            ]);
+            expect(sharedStrings._node).toEqualJson({
+                sst: {
+                    $: {
+                        xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+                    },
+                    si: [
+                        { t: ["foo"] }
+                    ]
+                }
+            });
         });
     });
 });

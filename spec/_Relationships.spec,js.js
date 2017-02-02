@@ -2,7 +2,7 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-fdescribe("_Relationships", () => {
+describe("_Relationships", () => {
     let _Relationships, relationships, relationshipsNode;
 
     beforeEach(() => {
