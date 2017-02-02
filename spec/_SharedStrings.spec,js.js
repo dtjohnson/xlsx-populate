@@ -4,7 +4,7 @@ const proxyquire = require("proxyquire").noCallThru();
 const DOMParser = require('xmldom').DOMParser;
 const parser = new DOMParser();
 
-describe("_SharedStrings", () => {
+xdescribe("_SharedStrings", () => {
     let _SharedStrings, sharedStrings, sharedStringsText;
 
     beforeEach(() => {

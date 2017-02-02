@@ -5,7 +5,8 @@ const DOMParser = require('xmldom').DOMParser;
 const parser = new DOMParser();
 const xq = require("../lib/xq");
 
-fdescribe("_StyleSheet", () => {
+return;
+xdescribe("_StyleSheet", () => {
     let _Style, _StyleSheet, styleSheet, styleSheetText;
 
     beforeEach(() => {

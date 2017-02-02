@@ -2,7 +2,7 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-fdescribe("_ContentTypes", () => {
+describe("_ContentTypes", () => {
     let _ContentTypes, contentTypes, contentTypesNode;
 
     beforeEach(() => {
