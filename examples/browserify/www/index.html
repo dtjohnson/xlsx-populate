@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <script src="bundle.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils.min.js"></script>
+        <!--[if IE]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip-utils/0.0.2/jszip-utils-ie.min.js"></script>
+        <![endif]-->
+        <script>
+            var editAndSaveWorkbook = function (workbook) {
+                // Modify the workbook
+                workbook
+                    .getSheet('Sheet1')
+                    .getCell('A1')
+                    .setValue('Wow, you can do this on client side!')
+                    ;
+
+                // Convert to blob and save
+                saveAs(workbook.toBlob(), 'workbook.xlsx');
+            };
+            window.onload = function () {
+                // Example 1: (Recommended - purely client) Load blank workbook using constructor
+                editAndSaveWorkbook(new Workbook());
+
+                /*
+                // Example 2: (Recommended - client and server) Load file using static method fromFile
+                Workbook.fromFile('/xlsx-populate/lib/blank.xlsx', function (err, workbook) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        editAndSaveWorkbook(workbook);
+                    }
+                });
+                */
+
+                /*
+                // Example 3: (client and server) Load file using JSZipUtils
+                JSZipUtils.getBinaryContent('/xlsx-populate/lib/blank.xlsx', function(err, data) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        editAndSaveWorkbook(new Workbook(data));
+                    }
+                });
+                */
+            };
+        </script>
+    </head>
+    <body>
+        <p>This is a client-side demo of xlsx-populate.</p>
+        <p>A blank xlsx-populate workbook can be obtained via the <i>Workbook</i> constructor. That is to say: an entire xlsx application can be written inside this html document as a standalone application without the need for a server to provide the application a xlsx file.</p>
+        <p>If an application requires a custom xlsx template, then there are two options:</p>
+        <ul>
+            <li>Use a http server to serve the xlsx file to the application.</li>
+            <li>Convert the xlsx template into a node buffer, and pass it to the <i>Workbook</i> constructor.</li>
+        </ul>
+        Start the demo server via console:</p>
+        <code>
+        node ./examples/browserify/
+        </code>
+        <p>Or, run the application purely on client side by opening:</p>
+        <code>
+        examples/browserify/www/index.html
+        </code>
+    </body>
+</html>

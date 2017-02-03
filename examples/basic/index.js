@@ -3,7 +3,7 @@
 var Workbook = require('../../lib/Workbook');
 
 // Load the input workbook from file.
-var workbook = Workbook.fromBlankSync();
+var workbook = new Workbook();
 
 // Modify the workbook.
 workbook.getSheet("Sheet1").getCell("A1").setValue("This is neat!");

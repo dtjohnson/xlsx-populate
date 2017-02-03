@@ -49,23 +49,6 @@ describe("Workbook", function () {
                 expect(cb).toHaveBeenCalled();
             });
         });
-
-        describe("fromBlankSync", function () {
-            it("should call fromFileSync with the blank workbook path", function () {
-                Workbook.fromFileSync = jasmine.createSpy("fromFileSync");
-                var workbook = Workbook.fromBlankSync();
-                expect(Workbook.fromFileSync).toHaveBeenCalledWith(path.join(__dirname, "../lib/blank.xlsx"));
-            });
-        });
-
-        describe("fromBlank", function () {
-            it("should call fromFile with the blank workbook path", function () {
-                Workbook.fromFile = jasmine.createSpy("fromFile");
-                var cb = function () {};
-                Workbook.fromBlank(cb);
-                expect(Workbook.fromFile).toHaveBeenCalledWith(path.join(__dirname, "../lib/blank.xlsx"), cb);
-            });
-        });
     });
 
     describe("constructor", function () {
@@ -108,6 +91,15 @@ describe("Workbook", function () {
             expect(secondCallArgs[0]).toBe(workbook);
             expect(secondCallArgs[1].toString()).toBe('<sheet name="Jerry"/>');
             expect(secondCallArgs[2].toString()).toBe('<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1"><c r="A1"><f>7*8</f></c></row></sheetData></worksheet>'); // Formula values removed.
+        });
+
+        it('should match the blank workbook file if no arguments are provided', function () {
+            Workbook = require('../lib/Workbook');
+            var workbookBlank = new Workbook();
+            var workbookFromFile = Workbook.fromFileSync(path.join(__dirname, '../lib/blank.xlsx'));
+            expect(workbookBlank.output().toString('base64')).toBe(
+                workbookFromFile.output().toString('base64')
+            );
         });
     });
 
