@@ -11,15 +11,20 @@ TODO
 
 ## Styles
 
-* bold: true, false
-* italic: true, false
-* underline: true, false, 'double'
-* strikethough: true, false
-* subscript: true, false
-* superscript: true, false
+* bold: Boolean
+* italic: Boolean
+* underline: Boolean or 'double'
+* strikethough: Boolean
+* subscript: Boolean
+* superscript: Boolean
 * fontSize: Number
 * fontFamily: String
-* horizontalAlignment: 
+* wrapText: Boolean
+* shrinkToFit: Boolean
+* horizontalAlignment: left, center, right, fill, justify, centerContinuous, distributed
+* justifyLastLine: Boolean
+* verticalAlignment: top, middle, bottom, justify, distributed
+* textDirection: 'left-to-right', 'right-to-left'
 * borderStyle: hair, dotted, dashDotDot, dashed, mediumDashDotDot, thin, slantDashDot, mediumDashDot, mediumDashed, medium, thick, double
 
 
