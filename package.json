@@ -4,10 +4,7 @@
   "description": "Node.js module to populate XLSX templates.",
   "main": "lib/Workbook.js",
   "scripts": {
-    "test": "jasmine",
-    "docs": "node docs/generate",
-    "blank": "node blank/generate",
-    "eslint": "eslint */*.js"
+    "test": "jasmine"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [
@@ -42,6 +39,8 @@
     "jasmine": "^2.5.3",
     "jsdoc-to-markdown": "^2.0.1",
     "jsondiffpatch": "^0.2.4",
+    "markdown-include": "^0.4.3",
+    "markdown-toc": "^1.1.0",
     "proxyquire": "^1.7.10",
     "replacestream": "^4.0.2",
     "run-sequence": "^1.2.2",
