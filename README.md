@@ -12,19 +12,18 @@ TODO
 
 ## Styles
 
-borderStyles:
-hair
-dotted
-dashDotDot
-dashed
-mediumDashDotDot
- thin
- slantDashDot
- mediumDashDot
- mediumDashed
- medium
- thick
- double
+* bold: true, false
+* italic: true, false
+* underline: true, false, 'double'
+* strikethough: true, false
+* subscript: true, false
+* superscript: true, false
+* fontSize: Number
+* fontFamily: String
+* horizontalAlignment: 
+* borderStyle: hair, dotted, dashDotDot, dashed, mediumDashDotDot, thin, slantDashDot, mediumDashDot, mediumDashed, medium, thick, double
+
+
  
 ```js
 cell.style("border", true);
