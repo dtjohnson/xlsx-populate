@@ -36,6 +36,8 @@ TODO
 * rotateTextDown: Boolean. textRotation = -90
 * verticalText: Boolean. Special rotation that shows text vertical but individual letters are oriented normally 
 
+* fill pattern: gray125, darkGray, mediumGray, lightGray, gray0625, darkHorizontal, darkVertical, darkDown, darkUp, darkGrid, darkTrellis, lightHorizontal, lightVertical, lightDown, lightUp, lightGrid, lightTrellis
+* path gradient: A box is drawn between top, left, right, and bottom. That is used to draw gradient
 
 * borderStyle: hair, dotted, dashDotDot, dashed, mediumDashDotDot, thin, slantDashDot, mediumDashDot, mediumDashed, medium, thick, double
 

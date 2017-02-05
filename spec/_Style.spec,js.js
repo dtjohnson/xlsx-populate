@@ -321,4 +321,219 @@ describe("_Style", () => {
             expect(fontNode).toEqualJson({});
         });
     });
+
+    describe("fill", () => {
+        it("should get/set solid fill", () => {
+            expect(style.style("fill")).toBe(undefined);
+
+            style.style("fill", "ff0000");
+            expect(style.style("fill")).toEqualJson({
+                type: "solid",
+                color: "FF0000"
+            });
+            expect(fillNode).toEqualJson({
+                patternFill: [{
+                    $: { patternType: "solid" },
+                    fgColor: [{
+                        $: { rgb: "FF0000" }
+                    }]
+                }]
+            });
+
+            style.style("fill", 5);
+            expect(style.style("fill")).toEqualJson({
+                type: "solid",
+                color: 5
+            });
+            expect(fillNode).toEqualJson({
+                patternFill: [{
+                    $: { patternType: "solid" },
+                    fgColor: [{
+                        $: { theme: 5 }
+                    }]
+                }]
+            });
+
+            style.style("fill", {
+                color: 6,
+                tint: -0.25
+            });
+            expect(style.style("fill")).toEqualJson({
+                type: "solid",
+                color: 6,
+                tint: -0.25
+            });
+            expect(fillNode).toEqualJson({
+                patternFill: [{
+                    $: { patternType: "solid" },
+                    fgColor: [{
+                        $: { theme: 6, tint: -0.25 }
+                    }]
+                }]
+            });
+
+            style.style("fill", undefined);
+            expect(style.style("fill")).toBe(undefined);
+            expect(fillNode).toEqualJson({});
+        });
+
+        it("should get/set pattern fill", () => {
+            expect(style.style("fill")).toBe(undefined);
+
+            style.style("fill", {
+                type: "pattern",
+                pattern: "darkVertical",
+                foreground: "FF0000",
+                background: 7
+            });
+            expect(style.style("fill")).toEqualJson({
+                type: "pattern",
+                pattern: "darkVertical",
+                foreground: {
+                    color: "FF0000"
+                },
+                background: {
+                    color: 7
+                }
+            });
+            expect(fillNode).toEqualJson({
+                patternFill: [{
+                    $: { patternType: "darkVertical" },
+                    fgColor: [{
+                        $: { rgb: "FF0000" }
+                    }],
+                    bgColor: [{
+                        $: { theme: 7 }
+                    }]
+                }]
+            });
+
+            style.style("fill", {
+                type: "pattern",
+                pattern: "gray0625",
+                foreground: { color: "aa0000", tint: -1 },
+                background: { color: 3, tint: 1 }
+            });
+            expect(style.style("fill")).toEqualJson({
+                type: "pattern",
+                pattern: "gray0625",
+                foreground: {
+                    color: "AA0000",
+                    tint: -1
+                },
+                background: {
+                    color: 3,
+                    tint: 1
+                }
+            });
+            expect(fillNode).toEqualJson({
+                patternFill: [{
+                    $: { patternType: "gray0625" },
+                    fgColor: [{
+                        $: { rgb: "AA0000", tint: -1 }
+                    }],
+                    bgColor: [{
+                        $: { theme: 3, tint: 1 }
+                    }]
+                }]
+            });
+
+            style.style("fill", undefined);
+            expect(style.style("fill")).toBe(undefined);
+            expect(fillNode).toEqualJson({});
+        });
+
+        it("should get/set gradient fill", () => {
+            expect(style.style("fill")).toBe(undefined);
+
+            style.style("fill", {
+                type: "gradient",
+                angle: 27,
+                stops: [
+                    { position: 0, color: "ffffff" },
+                    { position: 0.5, color: 7 },
+                    { position: 1, color: "000000", tint: 0.5 }
+                ]
+            });
+            expect(style.style("fill")).toEqualJson({
+                type: "gradient",
+                gradientType: "linear",
+                angle: 27,
+                stops: [
+                    { position: 0, color: "FFFFFF" },
+                    { position: 0.5, color: 7 },
+                    { position: 1, color: "000000", tint: 0.5 }
+                ]
+            });
+            expect(fillNode).toEqualJson({
+                gradientFill: [{
+                    $: { degree: 27 },
+                    stop: [
+                        {
+                            $: { position: 0 },
+                            color: [{ $: { rgb: "FFFFFF" } }]
+                        },
+                        {
+                            $: { position: 0.5 },
+                            color: [{ $: { theme: 7 } }]
+                        },
+                        {
+                            $: { position: 1 },
+                            color: [{ $: { rgb: "000000", tint: 0.5 } }]
+                        }
+                    ]
+                }]
+            });
+
+            style.style("fill", {
+                type: "gradient",
+                gradientType: "path",
+                top: 0.1,
+                bottom: 0.2,
+                left: 0.3,
+                right: 0.4,
+                stops: [
+                    { position: 0, color: 0, tint: -0.3 },
+                    { position: 1, color: "acacac" }
+                ]
+            });
+            expect(style.style("fill")).toEqualJson({
+                type: "gradient",
+                gradientType: "path",
+                top: 0.1,
+                bottom: 0.2,
+                left: 0.3,
+                right: 0.4,
+                stops: [
+                    { position: 0, color: 0, tint: -0.3 },
+                    { position: 1, color: "ACACAC" }
+                ]
+            });
+            expect(fillNode).toEqualJson({
+                gradientFill: [{
+                    $: {
+                        type: "path",
+                        top: 0.1,
+                        bottom: 0.2,
+                        left: 0.3,
+                        right: 0.4
+                    },
+                    stop: [
+                        {
+                            $: { position: 0 },
+                            color: [{ $: { theme: 0, tint: -0.3 } }]
+                        },
+                        {
+                            $: { position: 1 },
+                            color: [{ $: { rgb: "ACACAC" } }]
+                        }
+                    ]
+                }]
+            });
+
+            style.style("fill", undefined);
+            expect(style.style("fill")).toBe(undefined);
+            expect(fillNode).toEqualJson({});
+        });
+    });
 });

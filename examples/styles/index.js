@@ -1,5 +1,7 @@
 "use strict";
 
+/* eslint no-console:off */
+
 const Workbook = require('../../lib/Workbook');
 
 // Load the input workbook from file.
@@ -37,14 +39,52 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).value("rotate text up").style("rotateTextUp", true)
             .relativeCell(1, 0).value("rotate text down").style("rotateTextDown", true)
             .relativeCell(1, 0).value("verticalText").style("verticalText", true)
-            .relativeCell(1, 0).value("background color").style("fill", "ff0000")
-            .relativeCell(1, 0).value("top border").style("topBorderStyle", "thin")
-            .relativeCell(1, 0).value("left border").style("leftBorderStyle", "thin")
-            .relativeCell(1, 0).value("right border").style("rightBorderStyle", "thin")
-            .relativeCell(1, 0).value("bottom border").style("bottomBorderStyle", "thin")
-            .relativeCell(1, 0).value("double bottom border").style("bottomBorderStyle", "double")
-            .relativeCell(1, 0).value("medium bottom border").style("bottomBorderStyle", "medium")
-            .relativeCell(1, 0).value("thick bottom border").style("bottomBorderStyle", "thick")
+            .relativeCell(1, 0).value("rgb solid fill").style("fill", "ff0000")
+            .relativeCell(1, 0).value("theme solid fill").style("fill", 5)
+            .relativeCell(1, 0).value("tinted theme solid fill").style("fill", { color: 5, tint: 0.25 })
+            .relativeCell(1, 0).value("pattern fill").style("fill", {
+                type: "pattern",
+                pattern: "darkDown",
+                foreground: "ff0000",
+                background: {
+                    color: 3,
+                    tint: 0.4
+                }
+            })
+            .relativeCell(1, 0).value("linear gradient fill").style("fill", {
+                type: "gradient",
+                angle: 10,
+                stops: [
+                    { position: 0, color: "ff0000" },
+                    { position: 0.5, color: "00ff00" },
+                    { position: 1, color: "0000ff" }
+                ]
+            })
+            .relativeCell(1, 0).value("path gradient fill").style("fill", {
+                type: "gradient",
+                gradientType: "path",
+                left: 0.1,
+                right: 0.3,
+                top: 0.5,
+                bottom: 0.7,
+                stops: [
+                    { position: 0, color: "ff0000" },
+                    { position: 1, color: "0000ff" }
+                ]
+            })
+            .relativeCell(1, 0).value("thin border").style("border", true)
+            .relativeCell(1, 0).value("thick border").style("border", "thick")
+            .relativeCell(1, 0).value("right red border").style("rightBorder", true).style("borderColor", "ff0000")
+            .relativeCell(1, 0).value("theme diagonal up border").style("diagonalBorder", { style: "dashed", color: 6, tint: -0.1, direction: "up" })
+            .relativeCell(1, 0).value("various styles border").style("borderStyle", { top: "hair", right: "thin", bottom: "medium", left: "thick" })
+            .relativeCell(1, 0).value("various colors border").style("border", "thick").style("borderColor", { top: "ff0000", right: "00ff00", bottom: "0000ff", left: "ffff00" })
+            .relativeCell(1, 0).value("complex border").style("border", {
+                top: true,
+                right: "thick",
+                bottom: { style: "dotted", color: "ff0000" },
+                left: { style: "mediumDashed", theme: 5 },
+                diagonal: { style: "thick", color: "0000ff", direction: "both" }
+            })
             .relativeCell(1, 0).value("number").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00")
             .relativeCell(1, -1).value("currency").relativeCell(0, 1).value(1.2).style("numberFormat", `$#,##0.00`)
             .relativeCell(1, -1).value("accounting").relativeCell(0, 1).value(1.2).style("numberFormat", `_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`)
@@ -83,13 +123,18 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["rotateTextDown"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["verticalText"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["topBorderStyle"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["leftBorderStyle"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["rightBorderStyle"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["bottomBorderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["border"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["border"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["rightBorder", "borderColor"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["diagonalBorder"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["borderStyle"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["border"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["border"])))
             .relativeCell(1, 1).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
             .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
             .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
@@ -99,7 +144,7 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
             .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
             .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.relativeCell(0, -1).value(), cell.style(["numberFormat"])));
 
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
