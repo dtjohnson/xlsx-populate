@@ -107,7 +107,12 @@ describe("_StyleSheet", () => {
                         }, {
                             $: {
                                 foo: "bar"
-                            }
+                            },
+                            left: [{}],
+                            right: [{}],
+                            top: [{}],
+                            bottom: [{}],
+                            diagonal: [{}]
                         }]
                     }],
                     cellStyleXfs: [{
@@ -191,11 +196,11 @@ describe("_StyleSheet", () => {
                                 foo: "bar"
                             }
                         }, {
-                            left: [],
-                            right: [],
-                            top: [],
-                            bottom: [],
-                            diagonal: []
+                            left: [{}],
+                            right: [{}],
+                            top: [{}],
+                            bottom: [{}],
+                            diagonal: [{}]
                         }]
                     }],
                     cellStyleXfs: [{

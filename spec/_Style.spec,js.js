@@ -5,7 +5,7 @@
 const proxyquire = require("proxyquire").noCallThru();
 
 describe("_Style", () => {
-    let _Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode;
+    let _Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode, emptyBorderNode;
 
     beforeEach(() => {
         _Style = proxyquire("../lib/_Style", {});
@@ -14,7 +14,8 @@ describe("_Style", () => {
         xfNode = {};
         fontNode = {};
         fillNode = {};
-        borderNode = {};
+        borderNode = { left: [{}], right: [{}], top: [{}], bottom: [{}], diagonal: [{}] };
+        emptyBorderNode = { left: [{}], right: [{}], top: [{}], bottom: [{}], diagonal: [{}] };
         style = new _Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode);
     });
 
@@ -534,6 +535,95 @@ describe("_Style", () => {
             style.style("fill", undefined);
             expect(style.style("fill")).toBe(undefined);
             expect(fillNode).toEqualJson({});
+        });
+    });
+
+    describe("border", () => {
+        describe("border", () => {
+
+        });
+
+        describe("borderColor", () => {
+            it("should get/set borderColor", () => {
+                expect(style.style("borderColor")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
+
+                style.style("borderColor", {
+                    left: 1,
+                    right: "ff0000"
+                });
+                expect(style.style("borderColor")).toEqualJson({
+                    left: 1,
+                    right: "FF0000"
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ color: [{ $: { theme: 1 } }] }],
+                    right: [{ color: [{ $: { rgb: "FF0000" } }] }],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+
+                style.style("borderColor", "ff0000");
+                expect(style.style("borderColor")).toEqualJson({
+                    left: "FF0000",
+                    right: "FF0000",
+                    top: "FF0000",
+                    bottom: "FF0000",
+                    diagonal: "FF0000"
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ color: [{ $: { rgb: "FF0000" } }] }],
+                    right: [{ color: [{ $: { rgb: "FF0000" } }] }],
+                    top: [{ color: [{ $: { rgb: "FF0000" } }] }],
+                    bottom: [{ color: [{ $: { rgb: "FF0000" } }] }],
+                    diagonal: [{ color: [{ $: { rgb: "FF0000" } }] }]
+                });
+
+                style.style("borderColor", 0);
+                expect(style.style("borderColor")).toEqualJson({
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    diagonal: 0
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ color: [{ $: { theme: 0 } }] }],
+                    right: [{ color: [{ $: { theme: 0 } }] }],
+                    top: [{ color: [{ $: { theme: 0 } }] }],
+                    bottom: [{ color: [{ $: { theme: 0 } }] }],
+                    diagonal: [{ color: [{ $: { theme: 0 } }] }]
+                });
+
+                style.style("borderColor", undefined);
+                expect(style.style("borderColor")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
+            });
+        });
+
+        describe("borderStyle", () => {
+
+        });
+
+        describe("diagonalBorderDirection", () => {
+
+        });
+
+        describe("sideBorder", () => {
+
+        });
+
+        describe("sideBorderColor", () => {
+
+        });
+
+        describe("sideBorderTint", () => {
+
+        });
+
+        describe("sideBorderStyle", () => {
+
         });
     });
 });
