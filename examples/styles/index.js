@@ -3,7 +3,7 @@
 const Workbook = require('../../lib/Workbook');
 
 // Load the input workbook from file.
-Workbook.fromBlankAsync("./row col size.xlsx")
+Workbook.fromBlankAsync()
     .then(workbook => {
         // // Modify the workbook.
         const sheet = workbook.sheet("Sheet1");
@@ -31,7 +31,7 @@ Workbook.fromBlankAsync("./row col size.xlsx")
             .relativeCell(1, 0).value("this text is shrink to fit").style("shrinkToFit", true)
             .relativeCell(1, 0).value("left-to-right").style("textDirection", "left-to-right")
             .relativeCell(1, 0).value("right-to-right").style("textDirection", "right-to-left")
-            .relativeCell(1, 0)//.value("background color").style().fillBackgroundColor("ff0000");
+            .relativeCell(1, 0).value("background color").style("fill", "ff0000")
             .relativeCell(1, 0).value("rgb font color").style("fontColor", "ff0000")
             .relativeCell(1, 0).value("indexed font color").style("fontColor", 4)
             .relativeCell(1, 0).value("top border").style("topBorderStyle", "thin")
@@ -79,7 +79,7 @@ Workbook.fromBlankAsync("./row col size.xlsx")
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["shrinkToFit"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["textDirection"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["textDirection"])))
-            .relativeCell(1, 0)//.call(cell => console.log(cell.value(), cell.style(["backgroundColor"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fill"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["topBorderStyle"])))
