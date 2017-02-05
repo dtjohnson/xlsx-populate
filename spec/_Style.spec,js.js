@@ -33,7 +33,7 @@ describe("_Style", () => {
     });
 
     describe("bold", () => {
-        it("should get/set whether the cell is bold", () => {
+        it("should get/set bold", () => {
             expect(style.style("bold")).toBe(false);
             style.style("bold", true);
             expect(style.style("bold")).toBe(true);
@@ -45,7 +45,7 @@ describe("_Style", () => {
     });
 
     describe("italic", () => {
-        it("should get/set whether the cell is italic", () => {
+        it("should get/set italic", () => {
             expect(style.style("italic")).toBe(false);
             style.style("italic", true);
             expect(style.style("italic")).toBe(true);
@@ -57,7 +57,7 @@ describe("_Style", () => {
     });
 
     describe("underline", () => {
-        it("should get/set whether the cell is underline", () => {
+        it("should get/set underline", () => {
             expect(style.style("underline")).toBe(false);
             style.style("underline", true);
             expect(style.style("underline")).toBe(true);
@@ -72,7 +72,7 @@ describe("_Style", () => {
     });
 
     describe("strikethrough", () => {
-        it("should get/set whether the cell is strikethrough", () => {
+        it("should get/set strikethrough", () => {
             expect(style.style("strikethrough")).toBe(false);
             style.style("strikethrough", true);
             expect(style.style("strikethrough")).toBe(true);
@@ -84,7 +84,7 @@ describe("_Style", () => {
     });
 
     describe("subscript", () => {
-        it("should get/set whether the cell is subscript", () => {
+        it("should get/set subscript", () => {
             expect(style.style("subscript")).toBe(false);
             style.style("subscript", true);
             expect(style.style("subscript")).toBe(true);
@@ -96,13 +96,228 @@ describe("_Style", () => {
     });
 
     describe("superscript", () => {
-        it("should get/set whether the cell is superscript", () => {
+        it("should get/set superscript", () => {
             expect(style.style("superscript")).toBe(false);
             style.style("superscript", true);
             expect(style.style("superscript")).toBe(true);
             expect(fontNode).toEqualJson({ vertAlign: [{ $: { val: "superscript" } }] });
             style.style("superscript", false);
             expect(style.style("superscript")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("fontSize", () => {
+        it("should get/set fontSize", () => {
+            expect(style.style("fontSize")).toBe(undefined);
+            style.style("fontSize", 17);
+            expect(style.style("fontSize")).toBe(17);
+            expect(fontNode).toEqualJson({ sz: [{ $: { val: 17 } }] });
+            style.style("fontSize", undefined);
+            expect(style.style("fontSize")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("fontFamily", () => {
+        it("should get/set fontFamily", () => {
+            expect(style.style("fontFamily")).toBe(undefined);
+            style.style("fontFamily", "Comic Sans MS");
+            expect(style.style("fontFamily")).toBe("Comic Sans MS");
+            expect(fontNode).toEqualJson({ name: [{ $: { val: "Comic Sans MS" } }] });
+            style.style("fontFamily", undefined);
+            expect(style.style("fontFamily")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("fontColor", () => {
+        it("should get/set fontColor", () => {
+            expect(style.style("fontColor")).toBe(undefined);
+            style.style("fontColor", "ff0000");
+            expect(style.style("fontColor")).toBe("FF0000");
+            expect(fontNode).toEqualJson({ color: [{ $: { rgb: "FF0000" } }] });
+            style.style("fontColor", 5);
+            expect(style.style("fontColor")).toBe(5);
+            expect(fontNode).toEqualJson({ color: [{ $: { theme: 5 } }] });
+            style.style("fontColor", undefined);
+            expect(style.style("fontColor")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+            fontNode.color = [{ $: { indexed: 7 } }];
+            expect(style.style("fontColor")).toBe("00FFFF");
+        });
+    });
+
+    describe("fontTint", () => {
+        it("should get/set fontTint", () => {
+            expect(style.style("fontTint")).toBe(undefined);
+            style.style("fontTint", -0.5);
+            expect(style.style("fontTint")).toBe(-0.5);
+            expect(fontNode).toEqualJson({ color: [{ $: { tint: -0.5 } }] });
+            style.style("fontTint", undefined);
+            expect(style.style("fontTint")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("horizontalAlignment", () => {
+        it("should get/set horizontalAlignment", () => {
+            expect(style.style("horizontalAlignment")).toBe(undefined);
+            style.style("horizontalAlignment", "center");
+            expect(style.style("horizontalAlignment")).toBe("center");
+            expect(xfNode).toEqualJson({ alignment: [{ $: { horizontal: "center" } }] });
+            style.style("horizontalAlignment", undefined);
+            expect(style.style("horizontalAlignment")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("justifyLastLine", () => {
+        it("should get/set justifyLastLine", () => {
+            expect(style.style("justifyLastLine")).toBe(false);
+            style.style("justifyLastLine", true);
+            expect(style.style("justifyLastLine")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { justifyLastLine: 1 } }] });
+            style.style("justifyLastLine", false);
+            expect(style.style("justifyLastLine")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("indent", () => {
+        it("should get/set indent", () => {
+            expect(style.style("indent")).toBe(undefined);
+            style.style("indent", 3);
+            expect(style.style("indent")).toBe(3);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { indent: 3 } }] });
+            style.style("indent", undefined);
+            expect(style.style("indent")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("verticalAlignment", () => {
+        it("should get/set verticalAlignment", () => {
+            expect(style.style("verticalAlignment")).toBe(undefined);
+            style.style("verticalAlignment", "center");
+            expect(style.style("verticalAlignment")).toBe("center");
+            expect(xfNode).toEqualJson({ alignment: [{ $: { vertical: "center" } }] });
+            style.style("verticalAlignment", undefined);
+            expect(style.style("verticalAlignment")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("wrapText", () => {
+        it("should get/set wrapText", () => {
+            expect(style.style("wrapText")).toBe(false);
+            style.style("wrapText", true);
+            expect(style.style("wrapText")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { wrapText: 1 } }] });
+            style.style("wrapText", false);
+            expect(style.style("wrapText")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("shrinkToFit", () => {
+        it("should get/set shrinkToFit", () => {
+            expect(style.style("shrinkToFit")).toBe(false);
+            style.style("shrinkToFit", true);
+            expect(style.style("shrinkToFit")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { shrinkToFit: 1 } }] });
+            style.style("shrinkToFit", false);
+            expect(style.style("shrinkToFit")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("textDirection", () => {
+        it("should get/set textDirection", () => {
+            expect(style.style("textDirection")).toBe(undefined);
+            style.style("textDirection", "left-to-right");
+            expect(style.style("textDirection")).toBe("left-to-right");
+            expect(xfNode).toEqualJson({ alignment: [{ $: { readingOrder: 1 } }] });
+            style.style("textDirection", "right-to-left");
+            expect(style.style("textDirection")).toBe("right-to-left");
+            expect(xfNode).toEqualJson({ alignment: [{ $: { readingOrder: 2 } }] });
+            style.style("textDirection", undefined);
+            expect(style.style("textDirection")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("textRotation", () => {
+        it("should get/set indent", () => {
+            expect(style.style("textRotation")).toBe(undefined);
+            style.style("textRotation", 15);
+            expect(style.style("textRotation")).toBe(15);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 15 } }] });
+            style.style("textRotation", -25);
+            expect(style.style("textRotation")).toBe(-25);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 115 } }] });
+            style.style("textRotation", undefined);
+            expect(style.style("textRotation")).toBe(undefined);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("angleTextCounterclockwise", () => {
+        it("should get/set angleTextCounterclockwise", () => {
+            expect(style.style("angleTextCounterclockwise")).toBe(false);
+            style.style("angleTextCounterclockwise", true);
+            expect(style.style("angleTextCounterclockwise")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 45 } }] });
+            style.style("angleTextCounterclockwise", false);
+            expect(style.style("angleTextCounterclockwise")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("angleTextClockwise", () => {
+        it("should get/set angleTextClockwise", () => {
+            expect(style.style("angleTextClockwise")).toBe(false);
+            style.style("angleTextClockwise", true);
+            expect(style.style("angleTextClockwise")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 90 + 45 } }] });
+            style.style("angleTextClockwise", false);
+            expect(style.style("angleTextClockwise")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("rotateTextUp", () => {
+        it("should get/set rotateTextUp", () => {
+            expect(style.style("rotateTextUp")).toBe(false);
+            style.style("rotateTextUp", true);
+            expect(style.style("rotateTextUp")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 90 } }] });
+            style.style("rotateTextUp", false);
+            expect(style.style("rotateTextUp")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("rotateTextDown", () => {
+        it("should get/set rotateTextDown", () => {
+            expect(style.style("rotateTextDown")).toBe(false);
+            style.style("rotateTextDown", true);
+            expect(style.style("rotateTextDown")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 90 + 90 } }] });
+            style.style("rotateTextDown", false);
+            expect(style.style("rotateTextDown")).toBe(false);
+            expect(fontNode).toEqualJson({});
+        });
+    });
+
+    describe("verticalText", () => {
+        it("should get/set verticalText", () => {
+            expect(style.style("verticalText")).toBe(false);
+            style.style("verticalText", true);
+            expect(style.style("verticalText")).toBe(true);
+            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 255 } }] });
+            style.style("verticalText", false);
+            expect(style.style("verticalText")).toBe(false);
             expect(fontNode).toEqualJson({});
         });
     });

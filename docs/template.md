@@ -17,14 +17,25 @@ TODO
 * strikethough: Boolean
 * subscript: Boolean
 * superscript: Boolean
-* fontSize: Number
+* fontSize: Number > 0
 * fontFamily: String
+* fontColor: hex String or theme Number
+* fontTint: Number [-1, 1] The tint value is stored as a double from -1.0 .. 1.0, where -1.0 means 100% darken and 1.0 means 100% lighten. Also, 0.0 means no change.
+* horizontalAlignment: left, center, right, fill, justify, centerContinuous, distributed
+* justifyLastLine: Boolean (akak 'Justified Distributed'. Only applies when horizontalAlignment === 'distributed') A boolean value indicating if the cells justified or distributed alignment should be used on the last line of text. (This is typical for East Asian alignments but not typical in other contexts.)
+* indent: Number > 0
+* verticalAlignment: top, center, bottom, justify, distributed
 * wrapText: Boolean
 * shrinkToFit: Boolean
-* horizontalAlignment: left, center, right, fill, justify, centerContinuous, distributed
-* justifyLastLine: Boolean
-* verticalAlignment: top, middle, bottom, justify, distributed
 * textDirection: 'left-to-right', 'right-to-left'
+* textRotation: Number [-90, 90] counter clockwise rotation (negatives are clockwise)
+* angleTextCounterclockwise: Boolean. textRotation = 45
+* angleTextClockwise: Boolean. textRotation = -45
+* rotateTextUp: Boolean. textRotation = 90
+* rotateTextDown: Boolean. textRotation = -90
+* verticalText: Boolean. Special rotation that shows text vertical but individual letters are oriented normally 
+
+
 * borderStyle: hair, dotted, dashDotDot, dashed, mediumDashDotDot, thin, slantDashDot, mediumDashDot, mediumDashed, medium, thick, double
 
 
