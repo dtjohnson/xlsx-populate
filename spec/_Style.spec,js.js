@@ -566,8 +566,8 @@ describe("_Style", () => {
                     right: "ff0000"
                 });
                 expect(style.style("borderColor")).toEqualJson({
-                    left: 1,
-                    right: "FF0000"
+                    left: { theme: 1 },
+                    right: { rgb: "FF0000" }
                 });
                 expect(borderNode).toEqualJson({
                     left: [{ color: [{ $: { theme: 1 } }] }],
@@ -579,11 +579,11 @@ describe("_Style", () => {
 
                 style.style("borderColor", "ff0000");
                 expect(style.style("borderColor")).toEqualJson({
-                    left: "FF0000",
-                    right: "FF0000",
-                    top: "FF0000",
-                    bottom: "FF0000",
-                    diagonal: "FF0000"
+                    left: { rgb: "FF0000" },
+                    right: { rgb: "FF0000" },
+                    top: { rgb: "FF0000" },
+                    bottom: { rgb: "FF0000" },
+                    diagonal: { rgb: "FF0000" }
                 });
                 expect(borderNode).toEqualJson({
                     left: [{ color: [{ $: { rgb: "FF0000" } }] }],
@@ -595,11 +595,11 @@ describe("_Style", () => {
 
                 style.style("borderColor", 0);
                 expect(style.style("borderColor")).toEqualJson({
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    diagonal: 0
+                    left: { theme: 0 },
+                    right: { theme: 0 },
+                    top: { theme: 0 },
+                    bottom: { theme: 0 },
+                    diagonal: { theme: 0 }
                 });
                 expect(borderNode).toEqualJson({
                     left: [{ color: [{ $: { theme: 0 } }] }],
@@ -616,11 +616,85 @@ describe("_Style", () => {
         });
 
         describe("borderStyle", () => {
+            it("should get/set borderStyle", () => {
+                expect(style.style("borderStyle")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
 
+                style.style("borderStyle", {
+                    left: "thin",
+                    right: "thick"
+                });
+                expect(style.style("borderStyle")).toEqualJson({
+                    left: "thin",
+                    right: "thick"
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ $: { style: "thin" } }],
+                    right: [{ $: { style: "thick" } }],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+
+                style.style("borderStyle", "dashed");
+                expect(style.style("borderStyle")).toEqualJson({
+                    left: "dashed",
+                    right: "dashed",
+                    top: "dashed",
+                    bottom: "dashed"
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ $: { style: "dashed" } }],
+                    right: [{ $: { style: "dashed" } }],
+                    top: [{ $: { style: "dashed" } }],
+                    bottom: [{ $: { style: "dashed" } }],
+                    diagonal: [{}]
+                });
+
+                style.style("borderStyle", undefined);
+                expect(style.style("borderStyle")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
+            });
         });
 
         describe("diagonalBorderDirection", () => {
+            it("should get/set diagonalBorderDirection", () => {
+                expect(style.style("diagonalBorderDirection")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
 
+                style.style("diagonalBorderDirection", "up");
+                expect(style.style("diagonalBorderDirection")).toBe("up");
+                expect(borderNode).toEqualJson({
+                    $: { diagonalUp: 1 },
+                    left: [{}],
+                    right: [{}],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+
+                style.style("diagonalBorderDirection", "down");
+                expect(style.style("diagonalBorderDirection")).toBe("down");
+                expect(borderNode).toEqualJson({
+                    $: { diagonalDown: 1 },
+                    left: [{}],
+                    right: [{}],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+
+                style.style("diagonalBorderDirection", "both");
+                expect(style.style("diagonalBorderDirection")).toBe("both");
+                expect(borderNode).toEqualJson({
+                    $: { diagonalUp: 1, diagonalDown: 1 },
+                    left: [{}],
+                    right: [{}],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+            });
         });
 
         describe("sideBorder", () => {
@@ -628,10 +702,6 @@ describe("_Style", () => {
         });
 
         describe("sideBorderColor", () => {
-
-        });
-
-        describe("sideBorderTint", () => {
 
         });
 

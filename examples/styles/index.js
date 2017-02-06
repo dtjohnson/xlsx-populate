@@ -25,7 +25,7 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).value("comic sans").style("fontFamily", "Comic Sans MS")
             .relativeCell(1, 0).value("rgb font color").style("fontColor", "ff0000")
             .relativeCell(1, 0).value("theme font color").style("fontColor", 4)
-            .relativeCell(1, 0).value("tinted theme font color").style({ fontColor: 4, fontTint: -0.5 })
+            .relativeCell(1, 0).value("tinted theme font color").style("fontColor", { theme: 4, tint: -0.5 })
             .relativeCell(1, 0).value("horizontal center").style("horizontalAlignment", "center")
             .relativeCell(1, 0).value("this text is justified distributed").style({ horizontalAlignment: "distributed", justifyLastLine: true })
             .relativeCell(1, 0).value("indent").style("indent", 2)
@@ -41,13 +41,13 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).value("verticalText").style("verticalText", true)
             .relativeCell(1, 0).value("rgb solid fill").style("fill", "ff0000")
             .relativeCell(1, 0).value("theme solid fill").style("fill", 5)
-            .relativeCell(1, 0).value("tinted theme solid fill").style("fill", { color: 5, tint: 0.25 })
+            .relativeCell(1, 0).value("tinted theme solid fill").style("fill", { theme: 5, tint: 0.25 })
             .relativeCell(1, 0).value("pattern fill").style("fill", {
                 type: "pattern",
                 pattern: "darkDown",
                 foreground: "ff0000",
                 background: {
-                    color: 3,
+                    theme: 3,
                     tint: 0.4
                 }
             })
@@ -75,7 +75,7 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).value("thin border").style("border", true)
             .relativeCell(1, 0).value("thick border").style("border", "thick")
             .relativeCell(1, 0).value("right red border").style("rightBorder", true).style("borderColor", "ff0000")
-            .relativeCell(1, 0).value("theme diagonal up border").style("diagonalBorder", { style: "dashed", color: 6, tint: -0.1, direction: "up" })
+            .relativeCell(1, 0).value("theme diagonal up border").style("diagonalBorder", { style: "dashed", color: { theme: 6, tint: -0.1 }, direction: "up" })
             .relativeCell(1, 0).value("various styles border").style("borderStyle", { top: "hair", right: "thin", bottom: "medium", left: "thick" })
             .relativeCell(1, 0).value("various colors border").style("border", "thick").style("borderColor", { top: "ff0000", right: "00ff00", bottom: "0000ff", left: "ffff00" })
             .relativeCell(1, 0).value("complex border").style("border", {
@@ -108,7 +108,7 @@ Workbook.fromBlankAsync()
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontFamily"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
-            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor", "fontTint"])))
+            .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["fontColor"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["horizontalAlignment"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["horizontalAlignment", "justifyLastLine"])))
             .relativeCell(1, 0).call(cell => console.log(cell.value(), cell.style(["indent"])))
