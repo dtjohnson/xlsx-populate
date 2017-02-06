@@ -135,29 +135,25 @@ describe("_Style", () => {
     describe("fontColor", () => {
         it("should get/set fontColor", () => {
             expect(style.style("fontColor")).toBe(undefined);
+
             style.style("fontColor", "ff0000");
-            expect(style.style("fontColor")).toBe("FF0000");
+            expect(style.style("fontColor")).toEqualJson({ rgb: "FF0000" });
             expect(fontNode).toEqualJson({ color: [{ $: { rgb: "FF0000" } }] });
+
             style.style("fontColor", 5);
-            expect(style.style("fontColor")).toBe(5);
+            expect(style.style("fontColor")).toEqualJson({ theme: 5 });
             expect(fontNode).toEqualJson({ color: [{ $: { theme: 5 } }] });
+
+            style.style("fontColor", { theme: 3, tint: -0.2 });
+            expect(style.style("fontColor")).toEqualJson({ theme: 3, tint: -0.2 });
+            expect(fontNode).toEqualJson({ color: [{ $: { theme: 3, tint: -0.2 } }] });
+
             style.style("fontColor", undefined);
             expect(style.style("fontColor")).toBe(undefined);
             expect(fontNode).toEqualJson({});
-            fontNode.color = [{ $: { indexed: 7 } }];
-            expect(style.style("fontColor")).toBe("00FFFF");
-        });
-    });
 
-    describe("fontTint", () => {
-        it("should get/set fontTint", () => {
-            expect(style.style("fontTint")).toBe(undefined);
-            style.style("fontTint", -0.5);
-            expect(style.style("fontTint")).toBe(-0.5);
-            expect(fontNode).toEqualJson({ color: [{ $: { tint: -0.5 } }] });
-            style.style("fontTint", undefined);
-            expect(style.style("fontTint")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            fontNode.color = [{ $: { indexed: 7 } }];
+            expect(style.style("fontColor")).toEqualJson({ rgb: "00FFFF" });
         });
     });
 
@@ -330,7 +326,7 @@ describe("_Style", () => {
             style.style("fill", "ff0000");
             expect(style.style("fill")).toEqualJson({
                 type: "solid",
-                color: "FF0000"
+                color: { rgb: "FF0000" }
             });
             expect(fillNode).toEqualJson({
                 patternFill: [{
@@ -344,7 +340,7 @@ describe("_Style", () => {
             style.style("fill", 5);
             expect(style.style("fill")).toEqualJson({
                 type: "solid",
-                color: 5
+                color: { theme: 5 }
             });
             expect(fillNode).toEqualJson({
                 patternFill: [{
@@ -356,19 +352,35 @@ describe("_Style", () => {
             });
 
             style.style("fill", {
-                color: 6,
+                theme: 6,
                 tint: -0.25
             });
             expect(style.style("fill")).toEqualJson({
                 type: "solid",
-                color: 6,
-                tint: -0.25
+                color: { theme: 6, tint: -0.25 }
             });
             expect(fillNode).toEqualJson({
                 patternFill: [{
                     $: { patternType: "solid" },
                     fgColor: [{
                         $: { theme: 6, tint: -0.25 }
+                    }]
+                }]
+            });
+
+            style.style("fill", {
+                type: "solid",
+                color: { rgb: "ff00ff", tint: 0.7 }
+            });
+            expect(style.style("fill")).toEqualJson({
+                type: "solid",
+                color: { rgb: "FF00FF", tint: 0.7 }
+            });
+            expect(fillNode).toEqualJson({
+                patternFill: [{
+                    $: { patternType: "solid" },
+                    fgColor: [{
+                        $: { rgb: "FF00FF", tint: 0.7 }
                     }]
                 }]
             });
@@ -391,10 +403,10 @@ describe("_Style", () => {
                 type: "pattern",
                 pattern: "darkVertical",
                 foreground: {
-                    color: "FF0000"
+                    rgb: "FF0000"
                 },
                 background: {
-                    color: 7
+                    theme: 7
                 }
             });
             expect(fillNode).toEqualJson({
@@ -409,21 +421,22 @@ describe("_Style", () => {
                 }]
             });
 
+
             style.style("fill", {
                 type: "pattern",
                 pattern: "gray0625",
-                foreground: { color: "aa0000", tint: -1 },
-                background: { color: 3, tint: 1 }
+                foreground: { rgb: "aa0000", tint: -1 },
+                background: { theme: 3, tint: 1 }
             });
             expect(style.style("fill")).toEqualJson({
                 type: "pattern",
                 pattern: "gray0625",
                 foreground: {
-                    color: "AA0000",
+                    rgb: "AA0000",
                     tint: -1
                 },
                 background: {
-                    color: 3,
+                    theme: 3,
                     tint: 1
                 }
             });
@@ -453,7 +466,7 @@ describe("_Style", () => {
                 stops: [
                     { position: 0, color: "ffffff" },
                     { position: 0.5, color: 7 },
-                    { position: 1, color: "000000", tint: 0.5 }
+                    { position: 1, color: { rgb: "000000", tint: 0.5 } }
                 ]
             });
             expect(style.style("fill")).toEqualJson({
@@ -461,9 +474,9 @@ describe("_Style", () => {
                 gradientType: "linear",
                 angle: 27,
                 stops: [
-                    { position: 0, color: "FFFFFF" },
-                    { position: 0.5, color: 7 },
-                    { position: 1, color: "000000", tint: 0.5 }
+                    { position: 0, color: { rgb: "FFFFFF" } },
+                    { position: 0.5, color: { theme: 7 } },
+                    { position: 1, color: { rgb: "000000", tint: 0.5 } }
                 ]
             });
             expect(fillNode).toEqualJson({
@@ -494,7 +507,7 @@ describe("_Style", () => {
                 left: 0.3,
                 right: 0.4,
                 stops: [
-                    { position: 0, color: 0, tint: -0.3 },
+                    { position: 0, color: { theme: 0, tint: -0.3 } },
                     { position: 1, color: "acacac" }
                 ]
             });
@@ -506,8 +519,8 @@ describe("_Style", () => {
                 left: 0.3,
                 right: 0.4,
                 stops: [
-                    { position: 0, color: 0, tint: -0.3 },
-                    { position: 1, color: "ACACAC" }
+                    { position: 0, color: { theme: 0, tint: -0.3 } },
+                    { position: 1, color: { rgb: "ACACAC" } }
                 ]
             });
             expect(fillNode).toEqualJson({
