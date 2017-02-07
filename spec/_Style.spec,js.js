@@ -553,7 +553,57 @@ describe("_Style", () => {
 
     describe("border", () => {
         describe("border", () => {
+            it("should get/set border", () => {
+                expect(style.style("borderColor")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
 
+                style.style("border", "thin");
+                expect(style.style("border")).toEqualJson({
+                    left: { style: "thin" },
+                    right: { style: "thin" },
+                    top: { style: "thin" },
+                    bottom: { style: "thin" }
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ $: { style: "thin" } }],
+                    right: [{ $: { style: "thin" } }],
+                    top: [{ $: { style: "thin" } }],
+                    bottom: [{ $: { style: "thin" } }],
+                    diagonal: [{}]
+                });
+
+                style.style("border", undefined);
+                expect(style.style("border")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
+
+                style.style("border", { style: "medium", color: { rgb: "acacac" } });
+                expect(style.style("border")).toEqualJson({
+                    left: { style: "medium", color: { rgb: "ACACAC" } },
+                    right: { style: "medium", color: { rgb: "ACACAC" } },
+                    top: { style: "medium", color: { rgb: "ACACAC" } },
+                    bottom: { style: "medium", color: { rgb: "ACACAC" } }
+                });
+                expect(borderNode).toEqualJson({
+                    left: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
+                    right: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
+                    top: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
+                    bottom: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
+                    diagonal: [{}]
+                });
+
+                style.style("border", undefined);
+                expect(style.style("border")).toEqualJson({});
+                expect(borderNode).toEqualJson(emptyBorderNode);
+
+                style.style("border", {
+                    left: { color: 0 },
+                    top: "dashed"
+                });
+                expect(style.style("border")).toEqualJson({
+                    left: { color: { theme: 0 } },
+                    top: { style: "dashed" }
+                });
+            });
         });
 
         describe("borderColor", () => {
@@ -694,19 +744,84 @@ describe("_Style", () => {
                     diagonal: [{}],
                     top: [{}]
                 });
+
+                style.style("diagonalBorderDirection", undefined);
+                expect(style.style("diagonalBorderDirection")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
             });
         });
 
         describe("sideBorder", () => {
+            it("should get/set sideBorder", () => {
+                expect(style.style("topBorder")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
 
+                style.style("topBorder", "thin");
+                expect(style.style("topBorder")).toEqualJson({ style: "thin" });
+                expect(borderNode).toEqualJson({
+                    left: [{}],
+                    right: [{}],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{ $: { style: "thin" } }]
+                });
+
+                style.style("bottomBorder", { style: "double", color: 6 });
+                expect(style.style("bottomBorder")).toEqualJson({ style: "double", color: { theme: 6 } });
+                expect(borderNode).toEqualJson({
+                    left: [{}],
+                    right: [{}],
+                    bottom: [{ $: { style: "double" }, color: [{ $: { theme: 6 } }] }],
+                    diagonal: [{}],
+                    top: [{ $: { style: "thin" } }]
+                });
+
+                style.style("topBorder", undefined).style("bottomBorder", undefined);
+                expect(style.style("topBorder")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
+            });
         });
 
         describe("sideBorderColor", () => {
+            it("should get/set sideBorderColor", () => {
+                expect(style.style("rightBorderColor")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
 
+                style.style("rightBorderColor", "ff0000");
+                expect(style.style("rightBorderColor")).toEqualJson({ rgb: "FF0000" });
+                expect(borderNode).toEqualJson({
+                    left: [{}],
+                    right: [{ color: [{ $: { rgb: "FF0000" } }] }],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+
+                style.style("rightBorderColor", undefined);
+                expect(style.style("rightBorderColor")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
+            });
         });
 
         describe("sideBorderStyle", () => {
+            it("should get/set sideBorderStyle", () => {
+                expect(style.style("leftBorderStyle")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
 
+                style.style("leftBorderStyle", "thick");
+                expect(style.style("leftBorderStyle")).toBe("thick");
+                expect(borderNode).toEqualJson({
+                    left: [{ $: { style: "thick" } }],
+                    right: [{}],
+                    bottom: [{}],
+                    diagonal: [{}],
+                    top: [{}]
+                });
+
+                style.style("leftBorderStyle", undefined);
+                expect(style.style("leftBorderStyle")).toBe(undefined);
+                expect(borderNode).toEqualJson(emptyBorderNode);
+            });
         });
     });
 });
