@@ -37,11 +37,10 @@ describe("_Relationships", () => {
 
     describe("add", () => {
         it("should add a new relationship", () => {
-            spyOn(Date, "now").and.returnValue(12345);
             relationships.add("TYPE", "TARGET");
             expect(relationshipsNode.Relationships.Relationship[2]).toEqualJson({
                 $: {
-                    Id: "rId12345",
+                    Id: "rId3",
                     Type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/TYPE",
                     Target: "TARGET"
                 }
