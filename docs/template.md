@@ -9,6 +9,46 @@ TODO
 ## Table of Contents
 <!-- toc -->
 
+## Setup Development Environment
+
+To contribute, ensure that npm (node package manager) and git are installed. Then continue with the following instructions.
+
+### Install node and gulp globally
+```bash
+npm install --global node gulp
+```
+
+### Git clone the project
+```bash
+git clone git@github.com:dtjohnson/xlsx-populate.git
+cd xlsx-populate
+```
+
+### Install xlsx-populate libraries
+```bash
+npm install
+npm install --only=dev # Install dev tools
+alias node="node --harmony"  # Run node in ES6 mode
+```
+
+### Gulp tasks
+
+* __browserify__ - build client-side javascript project bundle
+* __lint__ - check project source code style
+* __unit__ - unit test project
+* __blank__ - build blank xlsx files for default load
+* __docs__ - build docs: generate README.md from docs/template.md and source code
+* __test__ - run lint and unit test project
+* __watch__ - listen for new project changes and then run associated gulp task
+* __default__ - run all gulp tasks
+
+Please review [gulp documentation](https://github.com/gulpjs/gulp) to learn more. Here are a few examples:
+
+```
+gulp lint  # checks code style
+gulp browserify  # outputs browser/xlsx-populate.js for web applications
+```
+
 ## Styles
 
 * bold: Boolean
@@ -34,14 +74,10 @@ TODO
 * rotateTextUp: Boolean. textRotation = 90
 * rotateTextDown: Boolean. textRotation = -90
 * verticalText: Boolean. Special rotation that shows text vertical but individual letters are oriented normally 
-
 * fill pattern: gray125, darkGray, mediumGray, lightGray, gray0625, darkHorizontal, darkVertical, darkDown, darkUp, darkGrid, darkTrellis, lightHorizontal, lightVertical, lightDown, lightUp, lightGrid, lightTrellis
 * path gradient: A box is drawn between top, left, right, and bottom. That is used to draw gradient
-
 * borderStyle: hair, dotted, dashDotDot, dashed, mediumDashDotDot, thin, slantDashDot, mediumDashDot, mediumDashed, medium, thick, double
 
-
- 
 ```js
 cell.style("border", true);
 cell.style("border", "thin");
