@@ -1,0 +1,10 @@
+diff a/lib/Workbook.js b/lib/Workbook.js	(rejected hunks)
+@@ -65,7 +65,7 @@
+                 this._relationships = new _Relationships(relationshipsNode);
+                 this._sharedStrings = new _SharedStrings(sharedStringsNode);
+                 this._styleSheet = new _StyleSheet(styleSheetNode);
+-                this._xml = parser.parseFromString(workbookText);
++                this._node = workbookNode;
+ 
+                 if (!this._relationships.findByType("sharedStrings")) {
+                     this._relationships.add("sharedStrings", "sharedStrings.xml");

@@ -39,7 +39,7 @@ alias node="node --harmony"  # Run node in ES6 mode
 
 ### Gulp tasks
 
-* __browserify__ - build client-side javascript xlsx-populate bundle
+* __browserify__ - build client-side javascript project bundle
 * __lint__ - check project source code style
 * __unit__ - unit test project
 * __blank__ - build blank xlsx files for default load
@@ -52,7 +52,7 @@ Please review [gulp documentation](https://github.com/gulpjs/gulp) to learn more
 
 ```
 gulp lint  # checks code style
-gulp browserify  # outputs bundle.js for web development
+gulp browserify  # outputs browser/xlsx-populate.js for web applications
 ```
 
 ## Styles

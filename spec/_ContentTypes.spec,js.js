@@ -9,34 +9,33 @@ describe("_ContentTypes", () => {
         _ContentTypes = proxyquire("../lib/_ContentTypes", {});
 
         contentTypesNode = {
-            Types: {
-                $: {
-                    xmlns: "http://schemas.openxmlformats.org/package/2006/content-types"
+            name: "Types",
+            attributes: {
+                xmlns: "http://schemas.openxmlformats.org/package/2006/content-types"
+            },
+            children: [
+                {
+                    name: "Default",
+                    attributes: {
+                        Extension: "bin",
+                        ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.printerSettings"
+                    }
                 },
-                Default: [
-                    {
-                        $: {
-                            Extension: "rels",
-                            ContentType: "application/vnd.openxmlformats-package.relationships+xml"
-                        }
+                {
+                    name: "Override",
+                    attributes: {
+                        PartName: "/xl/workbook.xml",
+                        ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"
                     }
-                ],
-                Override: [
-                    {
-                        $: {
-                            PartName: "/xl/workbook.xml",
-                            ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml                            "
-                        }
-                    },
-                    {
-                        $: {
-                            PartName: "/xl/worksheets/sheet1.xml",
-                            ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"
-
-                        }
+                },
+                {
+                    name: "Override",
+                    attributes: {
+                        PartName: "/xl/worksheets/sheet1.xml",
+                        ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"
                     }
-                ]
-            }
+                }
+            ]
         };
 
         contentTypes = new _ContentTypes(contentTypesNode);
@@ -45,8 +44,9 @@ describe("_ContentTypes", () => {
     describe("add", () => {
         it("should add a new part", () => {
             contentTypes.add("NEW_PART_NAME", "NEW_CONTENT_TYPE");
-            expect(contentTypesNode.Types.Override[2]).toEqualJson({
-                $: {
+            expect(contentTypesNode.children[3]).toEqualJson({
+                name: "Override",
+                attributes: {
                     PartName: "NEW_PART_NAME",
                     ContentType: "NEW_CONTENT_TYPE"
                 }
@@ -56,8 +56,8 @@ describe("_ContentTypes", () => {
 
     describe("findByPartName", () => {
         it("should return the part if matched", () => {
-            expect(contentTypes.findByPartName("/xl/worksheets/sheet1.xml")).toBe(contentTypesNode.Types.Override[1]);
-            expect(contentTypes.findByPartName("/xl/workbook.xml")).toBe(contentTypesNode.Types.Override[0]);
+            expect(contentTypes.findByPartName("/xl/worksheets/sheet1.xml")).toBe(contentTypesNode.children[2]);
+            expect(contentTypes.findByPartName("/xl/workbook.xml")).toBe(contentTypesNode.children[1]);
         });
 
         it("should return undefined if not matched", () => {
