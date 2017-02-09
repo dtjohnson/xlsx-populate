@@ -9,16 +9,23 @@ describe("_SharedStrings", () => {
         _SharedStrings = proxyquire("../lib/_SharedStrings", {});
 
         sharedStringsNode = {
-            sst: {
-                $: {
-                    xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
-                    count: 3,
-                    unique: 7
-                },
-                si: [
-                    { t: ["foo"] }
-                ]
-            }
+            name: "sst",
+            attributes: {
+                xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+                count: 3,
+                unique: 7
+            },
+            children: [
+                {
+                    name: "si",
+                    children: [
+                        {
+                            name: "t",
+                            children: ["foo"]
+                        }
+                    ]
+                }
+            ]
         };
 
         sharedStrings = new _SharedStrings(sharedStringsNode);
@@ -39,8 +46,14 @@ describe("_SharedStrings", () => {
             expect(sharedStrings.getIndexForString("baz")).toBe(2);
             expect(sharedStrings._stringArray).toEqual(["foo", "bar", "baz"]);
             expect(sharedStrings._indexMap).toEqual({ foo: 0, bar: 1, baz: 2 });
-            expect(sharedStringsNode.sst.si[sharedStringsNode.sst.si.length - 1]).toEqualJson({
-                t: ["baz"]
+            expect(sharedStringsNode.children[sharedStringsNode.children.length - 1]).toEqualJson({
+                name: "si",
+                children: [
+                    {
+                        name: "t",
+                        children: ["baz"]
+                    }
+                ]
             });
         });
     });
@@ -63,11 +76,11 @@ describe("_SharedStrings", () => {
 
     describe("_cacheExistingSharedStrings", () => {
         it("should cache the existing shared strings", () => {
-            sharedStrings._siNode = [
-                { t: ["foo"] },
-                { t: ["bar"] },
-                { r: [{}] },
-                { t: ["baz"] }
+            sharedStrings._node.children = [
+                { name: "si", children: [{ name: "t", children: ["foo"] }] },
+                { name: "si", children: [{ name: "t", children: ["bar"] }] },
+                { name: "si", children: [{ name: "r", children: [{}] }] },
+                { name: "si", children: [{ name: "t", children: ["baz"] }] }
             ];
 
             sharedStrings._stringArray = [];
@@ -77,7 +90,7 @@ describe("_SharedStrings", () => {
             expect(sharedStrings._stringArray).toEqualJson([
                 "foo",
                 "bar",
-                { r: [{}] },
+                { name: "r", children: [{}] },
                 "baz"
             ]);
             expect(sharedStrings._indexMap).toEqualJson({
@@ -92,28 +105,17 @@ describe("_SharedStrings", () => {
         it("should create the node if needed", () => {
             sharedStrings._initNode(null);
             expect(sharedStrings._node).toEqualJson({
-                sst: {
-                    $: {
-                        xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
-                    },
-                    si: []
-                }
+                name: "sst",
+                attributes: {
+                    xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+                },
+                children: []
             });
         });
 
-        it("should set the _siNode and clear the counts", () => {
-            expect(sharedStrings._siNode).toEqualJson([
-                { t: ["foo"] }
-            ]);
-            expect(sharedStrings._node).toEqualJson({
-                sst: {
-                    $: {
-                        xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
-                    },
-                    si: [
-                        { t: ["foo"] }
-                    ]
-                }
+        it("should clear the counts", () => {
+            expect(sharedStrings._node.attributes).toEqualJson({
+                xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
             });
         });
     });
