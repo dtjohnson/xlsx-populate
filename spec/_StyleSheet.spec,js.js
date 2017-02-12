@@ -12,62 +12,68 @@ describe("_StyleSheet", () => {
         });
 
         styleSheetNode = {
-            styleSheet: {
-                $: {
-                    xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+            name: "styleSheet",
+            attributes: {
+                xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+            },
+            children: [{
+                name: "fonts",
+                attributes: {
+                    count: 1,
+                    'x14ac:knownFonts': 1
                 },
-                fonts: [{
-                    $: {
-                        count: 1,
-                        'x14ac:knownFonts': 1
+                children: []
+            }, {
+                name: "fills",
+                attributes: {
+                    count: 11
+                },
+                children: []
+            }, {
+                name: "borders",
+                attributes: {
+                    count: 10
+                },
+                children: [{
+                    name: "border",
+                    attributes: {
+                        foo: "bar"
                     },
-                    font: []
-                }],
-                fills: [{
-                    $: {
-                        count: 11
-                    },
-                    fill: []
-                }],
-                borders: [{
-                    $: {
-                        count: 10
-                    },
-                    border: [{
-                        $: {
-                            foo: "bar"
-                        }
-                    }]
-                }],
-                cellStyleXfs: [{
-                    $: {
-                        count: 1
-                    },
-                    xf: [{
-                        $: {
-                            numFmtId: 0,
-                            fontId: 0,
-                            fillId: 0,
-                            borderId: 0
-                        }
-                    }]
-                }],
-                cellXfs: [{
-                    $: {
-                        count: 19
-                    },
-                    xf: [{
-                        $: {
-                            numFmtId: 0,
-                            fontId: 0,
-                            fillId: 0,
-                            borderId: 0,
-                            applyBorder: 1,
-                            xfId: 0
-                        }
-                    }]
+                    children: []
                 }]
-            }
+            }, {
+                name: "cellStyleXfs",
+                attributes: {
+                    count: 1
+                },
+                children: [{
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 0
+                    },
+                    children: []
+                }]
+            }, {
+                name: "cellXfs",
+                attributes: {
+                    count: 19
+                },
+                children: [{
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 0,
+                        applyBorder: 1,
+                        xfId: 0
+                    },
+                    children: []
+                }]
+            }]
         };
         styleSheet = new _StyleSheet(styleSheetNode);
     });
@@ -76,177 +82,190 @@ describe("_StyleSheet", () => {
         it("should clone an existing style", () => {
             const style = styleSheet.createStyle(0);
             expect(style.constructor).toBe(_Style);
-            expect(styleSheet._node).toEqualJson({
-                styleSheet: {
-                    $: {
-                        xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+            expect(styleSheet._node.children).toEqualJson([{
+                name: "numFmts",
+                attributes: {},
+                children: []
+            }, {
+                name: "fonts",
+                attributes: {
+                    'x14ac:knownFonts': 1
+                },
+                children: [
+                    { name: "font", attributes: {}, children: [] }
+                ]
+            }, {
+                name: "fills",
+                attributes: {},
+                children: [
+                    { name: "fill", attributes: {}, children: [] }
+                ]
+            }, {
+                name: "borders",
+                attributes: {},
+                children: [{
+                    name: "border",
+                    attributes: {
+                        foo: "bar"
                     },
-                    numFmts: [{
-                        numFmt: []
-                    }],
-                    fonts: [{
-                        $: {
-                            'x14ac:knownFonts': 1
-                        },
-                        font: [
-                            {}
-                        ]
-                    }],
-                    fills: [{
-                        $: {},
-                        fill: [
-                            {}
-                        ]
-                    }],
-                    borders: [{
-                        $: {},
-                        border: [{
-                            $: {
-                                foo: "bar"
-                            }
-                        }, {
-                            $: {
-                                foo: "bar"
-                            },
-                            left: [{}],
-                            right: [{}],
-                            top: [{}],
-                            bottom: [{}],
-                            diagonal: [{}]
-                        }]
-                    }],
-                    cellStyleXfs: [{
-                        $: {
-                            count: 1
-                        },
-                        xf: [{
-                            $: {
-                                numFmtId: 0,
-                                fontId: 0,
-                                fillId: 0,
-                                borderId: 0
-                            }
-                        }]
-                    }],
-                    cellXfs: [{
-                        $: {},
-                        xf: [{
-                            $: {
-                                numFmtId: 0,
-                                fontId: 0,
-                                fillId: 0,
-                                borderId: 0,
-                                applyBorder: 1,
-                                xfId: 0
-                            }
-                        }, {
-                            $: {
-                                numFmtId: 0,
-                                fontId: 0,
-                                fillId: 0,
-                                borderId: 1,
-                                applyFill: 1,
-                                applyFont: 1,
-                                applyBorder: 1,
-                                xfId: 0
-                            }
-                        }]
-                    }]
-                }
-            });
+                    children: []
+                }, {
+                    name: "border",
+                    attributes: {
+                        foo: "bar"
+                    },
+                    children: [
+                        { name: "left", attributes: {}, children: [] },
+                        { name: "right", attributes: {}, children: [] },
+                        { name: "top", attributes: {}, children: [] },
+                        { name: "bottom", attributes: {}, children: [] },
+                        { name: "diagonal", attributes: {}, children: [] }
+                    ]
+                }]
+            }, {
+                name: "cellStyleXfs",
+                attributes: {
+                    count: 1
+                },
+                children: [{
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 0
+                    },
+                    children: []
+                }]
+            }, {
+                name: "cellXfs",
+                attributes: {},
+                children: [{
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 0,
+                        applyBorder: 1,
+                        xfId: 0
+                    },
+                    children: []
+                }, {
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 1,
+                        applyFill: 1,
+                        applyFont: 1,
+                        applyBorder: 1,
+                        xfId: 0
+                    },
+                    children: []
+                }]
+            }]);
             expect(_Style).toHaveBeenCalledWith(
                 styleSheet,
                 1,
-                styleSheetNode.styleSheet.cellXfs[0].xf[1],
-                styleSheetNode.styleSheet.fonts[0].font[0],
-                styleSheetNode.styleSheet.fills[0].fill[0],
-                styleSheetNode.styleSheet.borders[0].border[1]
+                styleSheet._cellXfsNode.children[1],
+                styleSheet._fontsNode.children[0],
+                styleSheet._fillsNode.children[0],
+                styleSheet._bordersNode.children[1]
             );
         });
 
         it("should create a new style", () => {
             const style = styleSheet.createStyle(undefined);
             expect(style.constructor).toBe(_Style);
-            expect(styleSheet._node).toEqualJson({
-                styleSheet: {
-                    $: {
-                        xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+            expect(styleSheet._node.children).toEqualJson([{
+                name: "numFmts",
+                attributes: {},
+                children: []
+            }, {
+                name: "fonts",
+                attributes: {
+                    'x14ac:knownFonts': 1
+                },
+                children: [
+                    { name: "font", attributes: {}, children: [] }
+                ]
+            }, {
+                name: "fills",
+                attributes: {},
+                children: [
+                    { name: "fill", attributes: {}, children: [] }
+                ]
+            }, {
+                name: "borders",
+                attributes: {},
+                children: [{
+                    name: "border",
+                    attributes: {
+                        foo: "bar"
                     },
-                    numFmts: [{
-                        numFmt: []
-                    }],
-                    fonts: [{
-                        $: {
-                            'x14ac:knownFonts': 1
-                        },
-                        font: [
-                            {}
-                        ]
-                    }],
-                    fills: [{
-                        $: {},
-                        fill: [
-                            {}
-                        ]
-                    }],
-                    borders: [{
-                        $: {},
-                        border: [{
-                            $: {
-                                foo: "bar"
-                            }
-                        }, {
-                            left: [{}],
-                            right: [{}],
-                            top: [{}],
-                            bottom: [{}],
-                            diagonal: [{}]
-                        }]
-                    }],
-                    cellStyleXfs: [{
-                        $: {
-                            count: 1
-                        },
-                        xf: [{
-                            $: {
-                                numFmtId: 0,
-                                fontId: 0,
-                                fillId: 0,
-                                borderId: 0
-                            }
-                        }]
-                    }],
-                    cellXfs: [{
-                        $: {},
-                        xf: [{
-                            $: {
-                                numFmtId: 0,
-                                fontId: 0,
-                                fillId: 0,
-                                borderId: 0,
-                                applyBorder: 1,
-                                xfId: 0
-                            }
-                        }, {
-                            $: {
-                                fontId: 0,
-                                fillId: 0,
-                                borderId: 1,
-                                applyFill: 1,
-                                applyFont: 1,
-                                applyBorder: 1
-                            }
-                        }]
-                    }]
-                }
-            });
+                    children: []
+                }, {
+                    name: "border",
+                    attributes: {},
+                    children: [
+                        { name: "left", attributes: {}, children: [] },
+                        { name: "right", attributes: {}, children: [] },
+                        { name: "top", attributes: {}, children: [] },
+                        { name: "bottom", attributes: {}, children: [] },
+                        { name: "diagonal", attributes: {}, children: [] }
+                    ]
+                }]
+            }, {
+                name: "cellStyleXfs",
+                attributes: {
+                    count: 1
+                },
+                children: [{
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 0
+                    },
+                    children: []
+                }]
+            }, {
+                name: "cellXfs",
+                attributes: {},
+                children: [{
+                    name: "xf",
+                    attributes: {
+                        numFmtId: 0,
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 0,
+                        applyBorder: 1,
+                        xfId: 0
+                    },
+                    children: []
+                }, {
+                    name: "xf",
+                    attributes: {
+                        fontId: 0,
+                        fillId: 0,
+                        borderId: 1,
+                        applyFill: 1,
+                        applyFont: 1,
+                        applyBorder: 1
+                    },
+                    children: []
+                }]
+            }]);
             expect(_Style).toHaveBeenCalledWith(
                 styleSheet,
                 1,
-                styleSheetNode.styleSheet.cellXfs[0].xf[1],
-                styleSheetNode.styleSheet.fonts[0].font[0],
-                styleSheetNode.styleSheet.fills[0].fill[0],
-                styleSheetNode.styleSheet.borders[0].border[1]
+                styleSheet._cellXfsNode.children[1],
+                styleSheet._fontsNode.children[0],
+                styleSheet._fillsNode.children[0],
+                styleSheet._bordersNode.children[1]
             );
         });
     });
@@ -265,16 +284,15 @@ describe("_StyleSheet", () => {
         });
 
         it("should add a custom format node if code doesn't exist", () => {
-            expect(styleSheet._numFmtsNode).toEqualJson({ numFmt: [] });
+            expect(styleSheet._numFmtsNode.children).toEqualJson([]);
             expect(styleSheet.getNumberFormatId('foo')).toBe(164);
-            expect(styleSheet._numFmtsNode).toEqualJson({
-                numFmt: [{
-                    $: {
-                        formatCode: "foo",
-                        numFmtId: 164
-                    }
-                }]
-            });
+            expect(styleSheet._numFmtsNode.children).toEqualJson([{
+                name: 'numFmt',
+                attributes: {
+                    formatCode: "foo",
+                    numFmtId: 164
+                }
+            }]);
         });
     });
 
@@ -299,11 +317,11 @@ describe("_StyleSheet", () => {
 
     describe("_initNode", () => {
         it("should add the numFmts node and clear the counts", () => {
-            expect(styleSheetNode.styleSheet.numFmts).toEqualJson([{ numFmt: [] }]);
-            expect(styleSheetNode.styleSheet.fonts[0].$.count).toBeUndefined();
-            expect(styleSheetNode.styleSheet.fills[0].$.count).toBeUndefined();
-            expect(styleSheetNode.styleSheet.borders[0].$.count).toBeUndefined();
-            expect(styleSheetNode.styleSheet.cellXfs[0].$.count).toBeUndefined();
+            expect(styleSheet._numFmtsNode).toEqualJson({ name: "numFmts", attributes: {}, children: [] });
+            expect(styleSheet._fontsNode.attributes.count).toBeUndefined();
+            expect(styleSheet._fillsNode.attributes.count).toBeUndefined();
+            expect(styleSheet._bordersNode.attributes.count).toBeUndefined();
+            expect(styleSheet._cellXfsNode.attributes.count).toBeUndefined();
         });
     });
 });

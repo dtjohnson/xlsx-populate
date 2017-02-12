@@ -3,19 +3,30 @@
 /* eslint camelcase:off */
 
 const proxyquire = require("proxyquire").noCallThru();
+const _ = require("lodash");
 
 describe("_Style", () => {
     let _Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode, emptyBorderNode;
 
     beforeEach(() => {
         _Style = proxyquire("../lib/_Style", {});
-        styleSheet = {};
+        styleSheet = jasmine.createSpyObj("styleSheet", ['getNumberFormatCode', 'getNumberFormatId']);
         id = "ID";
-        xfNode = {};
-        fontNode = {};
-        fillNode = {};
-        borderNode = { left: [{}], right: [{}], top: [{}], bottom: [{}], diagonal: [{}] };
-        emptyBorderNode = { left: [{}], right: [{}], top: [{}], bottom: [{}], diagonal: [{}] };
+        xfNode = { name: "xf", attributes: {}, children: [] };
+        fontNode = { name: "font", attributes: {}, children: [] };
+        fillNode = { name: "fill", attributes: {}, children: [] };
+        borderNode = {
+            name: "border",
+            attributes: {},
+            children: [
+                { name: "left", attributes: {}, children: [] },
+                { name: "right", attributes: {}, children: [] },
+                { name: "top", attributes: {}, children: [] },
+                { name: "bottom", attributes: {}, children: [] },
+                { name: "diagonal", attributes: {}, children: [] }
+            ]
+        };
+        emptyBorderNode = _.cloneDeep(borderNode);
         style = new _Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode);
     });
 
@@ -38,10 +49,10 @@ describe("_Style", () => {
             expect(style.style("bold")).toBe(false);
             style.style("bold", true);
             expect(style.style("bold")).toBe(true);
-            expect(fontNode).toEqualJson({ b: [{}] });
+            expect(fontNode.children).toEqualJson([{ name: "b", attributes: {}, children: [] }]);
             style.style("bold", false);
             expect(style.style("bold")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -50,10 +61,10 @@ describe("_Style", () => {
             expect(style.style("italic")).toBe(false);
             style.style("italic", true);
             expect(style.style("italic")).toBe(true);
-            expect(fontNode).toEqualJson({ i: [{}] });
+            expect(fontNode.children).toEqualJson([{ name: "i", attributes: {}, children: [] }]);
             style.style("italic", false);
             expect(style.style("italic")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -62,13 +73,16 @@ describe("_Style", () => {
             expect(style.style("underline")).toBe(false);
             style.style("underline", true);
             expect(style.style("underline")).toBe(true);
-            expect(fontNode).toEqualJson({ u: [{}] });
+            expect(fontNode.children).toEqualJson([{ name: "u", attributes: {}, children: [] }]);
             style.style("underline", "double");
             expect(style.style("underline")).toBe("double");
-            expect(fontNode).toEqualJson({ u: [{ $: { val: "double" } }] });
+            expect(fontNode.children).toEqualJson([{ name: "u", attributes: { val: "double" }, children: [] }]);
+            style.style("underline", true);
+            expect(style.style("underline")).toBe(true);
+            expect(fontNode.children).toEqualJson([{ name: "u", attributes: {}, children: [] }]);
             style.style("underline", false);
             expect(style.style("underline")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -77,10 +91,10 @@ describe("_Style", () => {
             expect(style.style("strikethrough")).toBe(false);
             style.style("strikethrough", true);
             expect(style.style("strikethrough")).toBe(true);
-            expect(fontNode).toEqualJson({ strike: [{}] });
+            expect(fontNode.children).toEqualJson([{ name: 'strike', attributes: {}, children: [] }]);
             style.style("strikethrough", false);
             expect(style.style("strikethrough")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -89,10 +103,10 @@ describe("_Style", () => {
             expect(style.style("subscript")).toBe(false);
             style.style("subscript", true);
             expect(style.style("subscript")).toBe(true);
-            expect(fontNode).toEqualJson({ vertAlign: [{ $: { val: "subscript" } }] });
+            expect(fontNode.children).toEqualJson([{ name: "vertAlign", attributes: { val: "subscript" }, children: [] }]);
             style.style("subscript", false);
             expect(style.style("subscript")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -101,10 +115,10 @@ describe("_Style", () => {
             expect(style.style("superscript")).toBe(false);
             style.style("superscript", true);
             expect(style.style("superscript")).toBe(true);
-            expect(fontNode).toEqualJson({ vertAlign: [{ $: { val: "superscript" } }] });
+            expect(fontNode.children).toEqualJson([{ name: "vertAlign", attributes: { val: "superscript" }, children: [] }]);
             style.style("superscript", false);
             expect(style.style("superscript")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -113,10 +127,10 @@ describe("_Style", () => {
             expect(style.style("fontSize")).toBe(undefined);
             style.style("fontSize", 17);
             expect(style.style("fontSize")).toBe(17);
-            expect(fontNode).toEqualJson({ sz: [{ $: { val: 17 } }] });
+            expect(fontNode.children).toEqualJson([{ name: 'sz', attributes: { val: 17 }, children: [] }]);
             style.style("fontSize", undefined);
             expect(style.style("fontSize")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -125,10 +139,10 @@ describe("_Style", () => {
             expect(style.style("fontFamily")).toBe(undefined);
             style.style("fontFamily", "Comic Sans MS");
             expect(style.style("fontFamily")).toBe("Comic Sans MS");
-            expect(fontNode).toEqualJson({ name: [{ $: { val: "Comic Sans MS" } }] });
+            expect(fontNode.children).toEqualJson([{ name: 'name', attributes: { val: "Comic Sans MS" }, children: [] }]);
             style.style("fontFamily", undefined);
             expect(style.style("fontFamily")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
         });
     });
 
@@ -138,21 +152,21 @@ describe("_Style", () => {
 
             style.style("fontColor", "ff0000");
             expect(style.style("fontColor")).toEqualJson({ rgb: "FF0000" });
-            expect(fontNode).toEqualJson({ color: [{ $: { rgb: "FF0000" } }] });
+            expect(fontNode.children).toEqualJson([{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }]);
 
             style.style("fontColor", 5);
             expect(style.style("fontColor")).toEqualJson({ theme: 5 });
-            expect(fontNode).toEqualJson({ color: [{ $: { theme: 5 } }] });
+            expect(fontNode.children).toEqualJson([{ name: 'color', attributes: { theme: 5 }, children: [] }]);
 
             style.style("fontColor", { theme: 3, tint: -0.2 });
             expect(style.style("fontColor")).toEqualJson({ theme: 3, tint: -0.2 });
-            expect(fontNode).toEqualJson({ color: [{ $: { theme: 3, tint: -0.2 } }] });
+            expect(fontNode.children).toEqualJson([{ name: 'color', attributes: { theme: 3, tint: -0.2 }, children: [] }]);
 
             style.style("fontColor", undefined);
             expect(style.style("fontColor")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(fontNode.children).toEqualJson([]);
 
-            fontNode.color = [{ $: { indexed: 7 } }];
+            fontNode.children = [{ name: 'color', attributes: { indexed: 7 }, children: [] }];
             expect(style.style("fontColor")).toEqualJson({ rgb: "00FFFF" });
         });
     });
@@ -162,10 +176,10 @@ describe("_Style", () => {
             expect(style.style("horizontalAlignment")).toBe(undefined);
             style.style("horizontalAlignment", "center");
             expect(style.style("horizontalAlignment")).toBe("center");
-            expect(xfNode).toEqualJson({ alignment: [{ $: { horizontal: "center" } }] });
+            expect(xfNode.children).toEqualJson([{ name: "alignment", attributes: { horizontal: "center" }, children: [] }]);
             style.style("horizontalAlignment", undefined);
             expect(style.style("horizontalAlignment")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -174,10 +188,10 @@ describe("_Style", () => {
             expect(style.style("justifyLastLine")).toBe(false);
             style.style("justifyLastLine", true);
             expect(style.style("justifyLastLine")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { justifyLastLine: 1 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { justifyLastLine: 1 }, children: [] }]);
             style.style("justifyLastLine", false);
             expect(style.style("justifyLastLine")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -186,10 +200,10 @@ describe("_Style", () => {
             expect(style.style("indent")).toBe(undefined);
             style.style("indent", 3);
             expect(style.style("indent")).toBe(3);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { indent: 3 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { indent: 3 }, children: [] }]);
             style.style("indent", undefined);
             expect(style.style("indent")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -198,10 +212,10 @@ describe("_Style", () => {
             expect(style.style("verticalAlignment")).toBe(undefined);
             style.style("verticalAlignment", "center");
             expect(style.style("verticalAlignment")).toBe("center");
-            expect(xfNode).toEqualJson({ alignment: [{ $: { vertical: "center" } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { vertical: "center" }, children: [] }]);
             style.style("verticalAlignment", undefined);
             expect(style.style("verticalAlignment")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -210,10 +224,10 @@ describe("_Style", () => {
             expect(style.style("wrapText")).toBe(false);
             style.style("wrapText", true);
             expect(style.style("wrapText")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { wrapText: 1 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { wrapText: 1 }, children: [] }]);
             style.style("wrapText", false);
             expect(style.style("wrapText")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -222,10 +236,10 @@ describe("_Style", () => {
             expect(style.style("shrinkToFit")).toBe(false);
             style.style("shrinkToFit", true);
             expect(style.style("shrinkToFit")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { shrinkToFit: 1 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { shrinkToFit: 1 }, children: [] }]);
             style.style("shrinkToFit", false);
             expect(style.style("shrinkToFit")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -234,13 +248,13 @@ describe("_Style", () => {
             expect(style.style("textDirection")).toBe(undefined);
             style.style("textDirection", "left-to-right");
             expect(style.style("textDirection")).toBe("left-to-right");
-            expect(xfNode).toEqualJson({ alignment: [{ $: { readingOrder: 1 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { readingOrder: 1 }, children: [] }]);
             style.style("textDirection", "right-to-left");
             expect(style.style("textDirection")).toBe("right-to-left");
-            expect(xfNode).toEqualJson({ alignment: [{ $: { readingOrder: 2 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { readingOrder: 2 }, children: [] }]);
             style.style("textDirection", undefined);
             expect(style.style("textDirection")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -249,13 +263,13 @@ describe("_Style", () => {
             expect(style.style("textRotation")).toBe(undefined);
             style.style("textRotation", 15);
             expect(style.style("textRotation")).toBe(15);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 15 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 15 }, children: [] }]);
             style.style("textRotation", -25);
             expect(style.style("textRotation")).toBe(-25);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 115 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 115 }, children: [] }]);
             style.style("textRotation", undefined);
             expect(style.style("textRotation")).toBe(undefined);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -264,10 +278,10 @@ describe("_Style", () => {
             expect(style.style("angleTextCounterclockwise")).toBe(false);
             style.style("angleTextCounterclockwise", true);
             expect(style.style("angleTextCounterclockwise")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 45 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 45 }, children: [] }]);
             style.style("angleTextCounterclockwise", false);
             expect(style.style("angleTextCounterclockwise")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -276,10 +290,10 @@ describe("_Style", () => {
             expect(style.style("angleTextClockwise")).toBe(false);
             style.style("angleTextClockwise", true);
             expect(style.style("angleTextClockwise")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 90 + 45 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 90 + 45 }, children: [] }]);
             style.style("angleTextClockwise", false);
             expect(style.style("angleTextClockwise")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -288,10 +302,10 @@ describe("_Style", () => {
             expect(style.style("rotateTextUp")).toBe(false);
             style.style("rotateTextUp", true);
             expect(style.style("rotateTextUp")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 90 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 90 }, children: [] }]);
             style.style("rotateTextUp", false);
             expect(style.style("rotateTextUp")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -300,10 +314,10 @@ describe("_Style", () => {
             expect(style.style("rotateTextDown")).toBe(false);
             style.style("rotateTextDown", true);
             expect(style.style("rotateTextDown")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 90 + 90 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 90 + 90 }, children: [] }]);
             style.style("rotateTextDown", false);
             expect(style.style("rotateTextDown")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -312,10 +326,10 @@ describe("_Style", () => {
             expect(style.style("verticalText")).toBe(false);
             style.style("verticalText", true);
             expect(style.style("verticalText")).toBe(true);
-            expect(xfNode).toEqualJson({ alignment: [{ $: { textRotation: 255 } }] });
+            expect(xfNode.children).toEqualJson([{ name: 'alignment', attributes: { textRotation: 255 }, children: [] }]);
             style.style("verticalText", false);
             expect(style.style("verticalText")).toBe(false);
-            expect(fontNode).toEqualJson({});
+            expect(xfNode.children).toEqualJson([]);
         });
     });
 
@@ -328,28 +342,30 @@ describe("_Style", () => {
                 type: "solid",
                 color: { rgb: "FF0000" }
             });
-            expect(fillNode).toEqualJson({
-                patternFill: [{
-                    $: { patternType: "solid" },
-                    fgColor: [{
-                        $: { rgb: "FF0000" }
-                    }]
+            expect(fillNode.children).toEqualJson([{
+                name: 'patternFill',
+                attributes: { patternType: "solid" },
+                children: [{
+                    name: 'fgColor',
+                    attributes: { rgb: "FF0000" },
+                    children: []
                 }]
-            });
+            }]);
 
             style.style("fill", 5);
             expect(style.style("fill")).toEqualJson({
                 type: "solid",
                 color: { theme: 5 }
             });
-            expect(fillNode).toEqualJson({
-                patternFill: [{
-                    $: { patternType: "solid" },
-                    fgColor: [{
-                        $: { theme: 5 }
-                    }]
+            expect(fillNode.children).toEqualJson([{
+                name: 'patternFill',
+                attributes: { patternType: "solid" },
+                children: [{
+                    name: 'fgColor',
+                    attributes: { theme: 5 },
+                    children: []
                 }]
-            });
+            }]);
 
             style.style("fill", {
                 theme: 6,
@@ -359,14 +375,15 @@ describe("_Style", () => {
                 type: "solid",
                 color: { theme: 6, tint: -0.25 }
             });
-            expect(fillNode).toEqualJson({
-                patternFill: [{
-                    $: { patternType: "solid" },
-                    fgColor: [{
-                        $: { theme: 6, tint: -0.25 }
-                    }]
+            expect(fillNode.children).toEqualJson([{
+                name: 'patternFill',
+                attributes: { patternType: "solid" },
+                children: [{
+                    name: 'fgColor',
+                    attributes: { theme: 6, tint: -0.25 },
+                    children: []
                 }]
-            });
+            }]);
 
             style.style("fill", {
                 type: "solid",
@@ -376,18 +393,19 @@ describe("_Style", () => {
                 type: "solid",
                 color: { rgb: "FF00FF", tint: 0.7 }
             });
-            expect(fillNode).toEqualJson({
-                patternFill: [{
-                    $: { patternType: "solid" },
-                    fgColor: [{
-                        $: { rgb: "FF00FF", tint: 0.7 }
-                    }]
+            expect(fillNode.children).toEqualJson([{
+                name: 'patternFill',
+                attributes: { patternType: "solid" },
+                children: [{
+                    name: 'fgColor',
+                    attributes: { rgb: "FF00FF", tint: 0.7 },
+                    children: []
                 }]
-            });
+            }]);
 
             style.style("fill", undefined);
             expect(style.style("fill")).toBe(undefined);
-            expect(fillNode).toEqualJson({});
+            expect(fillNode.children).toEqualJson([]);
         });
 
         it("should get/set pattern fill", () => {
@@ -409,18 +427,19 @@ describe("_Style", () => {
                     theme: 7
                 }
             });
-            expect(fillNode).toEqualJson({
-                patternFill: [{
-                    $: { patternType: "darkVertical" },
-                    fgColor: [{
-                        $: { rgb: "FF0000" }
-                    }],
-                    bgColor: [{
-                        $: { theme: 7 }
-                    }]
+            expect(fillNode.children).toEqualJson([{
+                name: 'patternFill',
+                attributes: { patternType: "darkVertical" },
+                children: [{
+                    name: 'fgColor',
+                    attributes: { rgb: "FF0000" },
+                    children: []
+                }, {
+                    name: 'bgColor',
+                    attributes: { theme: 7 },
+                    children: []
                 }]
-            });
-
+            }]);
 
             style.style("fill", {
                 type: "pattern",
@@ -440,21 +459,23 @@ describe("_Style", () => {
                     tint: 1
                 }
             });
-            expect(fillNode).toEqualJson({
-                patternFill: [{
-                    $: { patternType: "gray0625" },
-                    fgColor: [{
-                        $: { rgb: "AA0000", tint: -1 }
-                    }],
-                    bgColor: [{
-                        $: { theme: 3, tint: 1 }
-                    }]
+            expect(fillNode.children).toEqualJson([{
+                name: 'patternFill',
+                attributes: { patternType: "gray0625" },
+                children: [{
+                    name: 'fgColor',
+                    attributes: { rgb: "AA0000", tint: -1 },
+                    children: []
+                }, {
+                    name: 'bgColor',
+                    attributes: { theme: 3, tint: 1 },
+                    children: []
                 }]
-            });
+            }]);
 
             style.style("fill", undefined);
             expect(style.style("fill")).toBe(undefined);
-            expect(fillNode).toEqualJson({});
+            expect(fillNode.children).toEqualJson([]);
         });
 
         it("should get/set gradient fill", () => {
@@ -479,25 +500,27 @@ describe("_Style", () => {
                     { position: 1, color: { rgb: "000000", tint: 0.5 } }
                 ]
             });
-            expect(fillNode).toEqualJson({
-                gradientFill: [{
-                    $: { degree: 27 },
-                    stop: [
-                        {
-                            $: { position: 0 },
-                            color: [{ $: { rgb: "FFFFFF" } }]
-                        },
-                        {
-                            $: { position: 0.5 },
-                            color: [{ $: { theme: 7 } }]
-                        },
-                        {
-                            $: { position: 1 },
-                            color: [{ $: { rgb: "000000", tint: 0.5 } }]
-                        }
-                    ]
-                }]
-            });
+            expect(fillNode.children).toEqualJson([{
+                name: 'gradientFill',
+                attributes: { degree: 27 },
+                children: [
+                    {
+                        name: 'stop',
+                        attributes: { position: 0 },
+                        children: [{ name: 'color', attributes: { rgb: "FFFFFF" }, children: [] }]
+                    },
+                    {
+                        name: 'stop',
+                        attributes: { position: 0.5 },
+                        children: [{ name: 'color', attributes: { theme: 7 }, children: [] }]
+                    },
+                    {
+                        name: 'stop',
+                        attributes: { position: 1 },
+                        children: [{ name: 'color', attributes: { rgb: "000000", tint: 0.5 }, children: [] }]
+                    }
+                ]
+            }]);
 
             style.style("fill", {
                 type: "gradient",
@@ -523,31 +546,32 @@ describe("_Style", () => {
                     { position: 1, color: { rgb: "ACACAC" } }
                 ]
             });
-            expect(fillNode).toEqualJson({
-                gradientFill: [{
-                    $: {
-                        type: "path",
-                        top: 0.1,
-                        bottom: 0.2,
-                        left: 0.3,
-                        right: 0.4
+            expect(fillNode.children).toEqualJson([{
+                name: 'gradientFill',
+                attributes: {
+                    type: "path",
+                    top: 0.1,
+                    bottom: 0.2,
+                    left: 0.3,
+                    right: 0.4
+                },
+                children: [
+                    {
+                        name: 'stop',
+                        attributes: { position: 0 },
+                        children: [{ name: 'color', attributes: { theme: 0, tint: -0.3 }, children: [] }]
                     },
-                    stop: [
-                        {
-                            $: { position: 0 },
-                            color: [{ $: { theme: 0, tint: -0.3 } }]
-                        },
-                        {
-                            $: { position: 1 },
-                            color: [{ $: { rgb: "ACACAC" } }]
-                        }
-                    ]
-                }]
-            });
+                    {
+                        name: 'stop',
+                        attributes: { position: 1 },
+                        children: [{ name: 'color', attributes: { rgb: "ACACAC" }, children: [] }]
+                    }
+                ]
+            }]);
 
             style.style("fill", undefined);
             expect(style.style("fill")).toBe(undefined);
-            expect(fillNode).toEqualJson({});
+            expect(fillNode.children).toEqualJson([]);
         });
     });
 
@@ -565,11 +589,15 @@ describe("_Style", () => {
                     bottom: { style: "thin" }
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ $: { style: "thin" } }],
-                    right: [{ $: { style: "thin" } }],
-                    top: [{ $: { style: "thin" } }],
-                    bottom: [{ $: { style: "thin" } }],
-                    diagonal: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: { style: "thin" }, children: [] },
+                        { name: 'right', attributes: { style: "thin" }, children: [] },
+                        { name: 'top', attributes: { style: "thin" }, children: [] },
+                        { name: 'bottom', attributes: { style: "thin" }, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("border", undefined);
@@ -584,11 +612,15 @@ describe("_Style", () => {
                     bottom: { style: "medium", color: { rgb: "ACACAC" } }
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
-                    right: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
-                    top: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
-                    bottom: [{ $: { style: "medium" }, color: [{ $: { rgb: "ACACAC" } }] }],
-                    diagonal: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: { style: "medium" }, children: [{ name: 'color', attributes: { rgb: "ACACAC" }, children: [] }] },
+                        { name: 'right', attributes: { style: "medium" }, children: [{ name: 'color', attributes: { rgb: "ACACAC" }, children: [] }] },
+                        { name: 'top', attributes: { style: "medium" }, children: [{ name: 'color', attributes: { rgb: "ACACAC" }, children: [] }] },
+                        { name: 'bottom', attributes: { style: "medium" }, children: [{ name: 'color', attributes: { rgb: "ACACAC" }, children: [] }] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("border", undefined);
@@ -620,11 +652,15 @@ describe("_Style", () => {
                     right: { rgb: "FF0000" }
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ color: [{ $: { theme: 1 } }] }],
-                    right: [{ color: [{ $: { rgb: "FF0000" } }] }],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: {}, children: [{ name: 'color', attributes: { theme: 1 }, children: [] }] },
+                        { name: 'right', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("borderColor", "ff0000");
@@ -636,11 +672,15 @@ describe("_Style", () => {
                     diagonal: { rgb: "FF0000" }
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ color: [{ $: { rgb: "FF0000" } }] }],
-                    right: [{ color: [{ $: { rgb: "FF0000" } }] }],
-                    top: [{ color: [{ $: { rgb: "FF0000" } }] }],
-                    bottom: [{ color: [{ $: { rgb: "FF0000" } }] }],
-                    diagonal: [{ color: [{ $: { rgb: "FF0000" } }] }]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] },
+                        { name: 'right', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] },
+                        { name: 'top', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] },
+                        { name: 'bottom', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] },
+                        { name: 'diagonal', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] }
+                    ]
                 });
 
                 style.style("borderColor", 0);
@@ -652,11 +692,15 @@ describe("_Style", () => {
                     diagonal: { theme: 0 }
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ color: [{ $: { theme: 0 } }] }],
-                    right: [{ color: [{ $: { theme: 0 } }] }],
-                    top: [{ color: [{ $: { theme: 0 } }] }],
-                    bottom: [{ color: [{ $: { theme: 0 } }] }],
-                    diagonal: [{ color: [{ $: { theme: 0 } }] }]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: {}, children: [{ name: 'color', attributes: { theme: 0 }, children: [] }] },
+                        { name: 'right', attributes: {}, children: [{ name: 'color', attributes: { theme: 0 }, children: [] }] },
+                        { name: 'top', attributes: {}, children: [{ name: 'color', attributes: { theme: 0 }, children: [] }] },
+                        { name: 'bottom', attributes: {}, children: [{ name: 'color', attributes: { theme: 0 }, children: [] }] },
+                        { name: 'diagonal', attributes: {}, children: [{ name: 'color', attributes: { theme: 0 }, children: [] }] }
+                    ]
                 });
 
                 style.style("borderColor", undefined);
@@ -679,11 +723,15 @@ describe("_Style", () => {
                     right: "thick"
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ $: { style: "thin" } }],
-                    right: [{ $: { style: "thick" } }],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: { style: "thin" }, children: [] },
+                        { name: 'right', attributes: { style: "thick" }, children: [] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("borderStyle", "dashed");
@@ -694,11 +742,15 @@ describe("_Style", () => {
                     bottom: "dashed"
                 });
                 expect(borderNode).toEqualJson({
-                    left: [{ $: { style: "dashed" } }],
-                    right: [{ $: { style: "dashed" } }],
-                    top: [{ $: { style: "dashed" } }],
-                    bottom: [{ $: { style: "dashed" } }],
-                    diagonal: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: { style: "dashed" }, children: [] },
+                        { name: 'right', attributes: { style: "dashed" }, children: [] },
+                        { name: 'top', attributes: { style: "dashed" }, children: [] },
+                        { name: 'bottom', attributes: { style: "dashed" }, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("borderStyle", undefined);
@@ -715,34 +767,43 @@ describe("_Style", () => {
                 style.style("diagonalBorderDirection", "up");
                 expect(style.style("diagonalBorderDirection")).toBe("up");
                 expect(borderNode).toEqualJson({
-                    $: { diagonalUp: 1 },
-                    left: [{}],
-                    right: [{}],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: { diagonalUp: 1 },
+                    children: [
+                        { name: 'left', attributes: {}, children: [] },
+                        { name: 'right', attributes: {}, children: [] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("diagonalBorderDirection", "down");
                 expect(style.style("diagonalBorderDirection")).toBe("down");
                 expect(borderNode).toEqualJson({
-                    $: { diagonalDown: 1 },
-                    left: [{}],
-                    right: [{}],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: { diagonalDown: 1 },
+                    children: [
+                        { name: 'left', attributes: {}, children: [] },
+                        { name: 'right', attributes: {}, children: [] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("diagonalBorderDirection", "both");
                 expect(style.style("diagonalBorderDirection")).toBe("both");
                 expect(borderNode).toEqualJson({
-                    $: { diagonalUp: 1, diagonalDown: 1 },
-                    left: [{}],
-                    right: [{}],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: { diagonalUp: 1, diagonalDown: 1 },
+                    children: [
+                        { name: 'left', attributes: {}, children: [] },
+                        { name: 'right', attributes: {}, children: [] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("diagonalBorderDirection", undefined);
@@ -759,21 +820,29 @@ describe("_Style", () => {
                 style.style("topBorder", "thin");
                 expect(style.style("topBorder")).toEqualJson({ style: "thin" });
                 expect(borderNode).toEqualJson({
-                    left: [{}],
-                    right: [{}],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{ $: { style: "thin" } }]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: {}, children: [] },
+                        { name: 'right', attributes: {}, children: [] },
+                        { name: 'top', attributes: { style: "thin" }, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("bottomBorder", { style: "double", color: 6 });
                 expect(style.style("bottomBorder")).toEqualJson({ style: "double", color: { theme: 6 } });
                 expect(borderNode).toEqualJson({
-                    left: [{}],
-                    right: [{}],
-                    bottom: [{ $: { style: "double" }, color: [{ $: { theme: 6 } }] }],
-                    diagonal: [{}],
-                    top: [{ $: { style: "thin" } }]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: {}, children: [] },
+                        { name: 'right', attributes: {}, children: [] },
+                        { name: 'top', attributes: { style: "thin" }, children: [] },
+                        { name: 'bottom', attributes: { style: "double" }, children: [{ name: 'color', attributes: { theme: 6 }, children: [] }] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("topBorder", undefined).style("bottomBorder", undefined);
@@ -790,11 +859,15 @@ describe("_Style", () => {
                 style.style("rightBorderColor", "ff0000");
                 expect(style.style("rightBorderColor")).toEqualJson({ rgb: "FF0000" });
                 expect(borderNode).toEqualJson({
-                    left: [{}],
-                    right: [{ color: [{ $: { rgb: "FF0000" } }] }],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: {}, children: [] },
+                        { name: 'right', attributes: {}, children: [{ name: 'color', attributes: { rgb: "FF0000" }, children: [] }] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("rightBorderColor", undefined);
@@ -811,17 +884,37 @@ describe("_Style", () => {
                 style.style("leftBorderStyle", "thick");
                 expect(style.style("leftBorderStyle")).toBe("thick");
                 expect(borderNode).toEqualJson({
-                    left: [{ $: { style: "thick" } }],
-                    right: [{}],
-                    bottom: [{}],
-                    diagonal: [{}],
-                    top: [{}]
+                    name: 'border',
+                    attributes: {},
+                    children: [
+                        { name: 'left', attributes: { style: "thick" }, children: [] },
+                        { name: 'right', attributes: {}, children: [] },
+                        { name: 'top', attributes: {}, children: [] },
+                        { name: 'bottom', attributes: {}, children: [] },
+                        { name: 'diagonal', attributes: {}, children: [] }
+                    ]
                 });
 
                 style.style("leftBorderStyle", undefined);
                 expect(style.style("leftBorderStyle")).toBe(undefined);
                 expect(borderNode).toEqualJson(emptyBorderNode);
             });
+        });
+    });
+
+    describe("numberFormat", () => {
+        it("should get/set numberFormat", () => {
+            styleSheet.getNumberFormatCode.and.returnValue("foo");
+            styleSheet.getNumberFormatId.and.returnValue(7);
+
+            expect(style.style("numberFormat")).toBe("foo");
+            expect(styleSheet.getNumberFormatCode).toHaveBeenCalledWith(0);
+
+            style.style("numberFormat", "bar");
+            expect(styleSheet.getNumberFormatId).toHaveBeenCalledWith('bar');
+            expect(xfNode).toEqualJson({ name: "xf", attributes: { numFmtId: 7 }, children: [] });
+            expect(style.style("numberFormat")).toBe("foo");
+            expect(styleSheet.getNumberFormatCode).toHaveBeenCalledWith(7);
         });
     });
 });
