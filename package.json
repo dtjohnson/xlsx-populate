@@ -18,9 +18,7 @@
     "jszip": "^3.1.3",
     "lodash": "^4.17.4",
     "sax": "^1.2.2",
-    "xml2js": "^0.4.17",
-    "xmlbuilder": "^8.2.2",
-    "xmldom": "^0.1.27"
+    "xmlbuilder": "^8.2.2"
   },
   "repository": {
     "type": "git",
