@@ -2,13 +2,13 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-describe("_StyleSheet", () => {
-    let _Style, _StyleSheet, styleSheet, styleSheetNode;
+describe("StyleSheet", () => {
+    let Style, StyleSheet, styleSheet, styleSheetNode;
 
     beforeEach(() => {
-        _Style = jasmine.createSpy("_Style");
-        _StyleSheet = proxyquire("../lib/_StyleSheet", {
-            "./_Style": _Style
+        Style = jasmine.createSpy("_Style");
+        StyleSheet = proxyquire("../lib/StyleSheet", {
+            "./Style": Style
         });
 
         styleSheetNode = {
@@ -75,13 +75,13 @@ describe("_StyleSheet", () => {
                 }]
             }]
         };
-        styleSheet = new _StyleSheet(styleSheetNode);
+        styleSheet = new StyleSheet(styleSheetNode);
     });
 
     describe("createStyle", () => {
         it("should clone an existing style", () => {
             const style = styleSheet.createStyle(0);
-            expect(style.constructor).toBe(_Style);
+            expect(style.constructor).toBe(Style);
             expect(styleSheet._node.children).toEqualJson([{
                 name: "numFmts",
                 attributes: {},
@@ -166,7 +166,7 @@ describe("_StyleSheet", () => {
                     children: []
                 }]
             }]);
-            expect(_Style).toHaveBeenCalledWith(
+            expect(Style).toHaveBeenCalledWith(
                 styleSheet,
                 1,
                 styleSheet._cellXfsNode.children[1],
@@ -178,7 +178,7 @@ describe("_StyleSheet", () => {
 
         it("should create a new style", () => {
             const style = styleSheet.createStyle(undefined);
-            expect(style.constructor).toBe(_Style);
+            expect(style.constructor).toBe(Style);
             expect(styleSheet._node.children).toEqualJson([{
                 name: "numFmts",
                 attributes: {},
@@ -259,7 +259,7 @@ describe("_StyleSheet", () => {
                     children: []
                 }]
             }]);
-            expect(_Style).toHaveBeenCalledWith(
+            expect(Style).toHaveBeenCalledWith(
                 styleSheet,
                 1,
                 styleSheet._cellXfsNode.children[1],

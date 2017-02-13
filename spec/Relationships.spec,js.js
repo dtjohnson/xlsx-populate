@@ -2,11 +2,11 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-describe("_Relationships", () => {
-    let _Relationships, relationships, relationshipsNode;
+describe("Relationships", () => {
+    let Relationships, relationships, relationshipsNode;
 
     beforeEach(() => {
-        _Relationships = proxyquire("../lib/_Relationships", {});
+        Relationships = proxyquire("../lib/Relationships", {});
 
         relationshipsNode = {
             name: "Relationships",
@@ -33,7 +33,7 @@ describe("_Relationships", () => {
             ]
         };
 
-        relationships = new _Relationships(relationshipsNode);
+        relationships = new Relationships(relationshipsNode);
     });
 
     describe("add", () => {

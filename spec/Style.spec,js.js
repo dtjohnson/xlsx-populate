@@ -5,11 +5,11 @@
 const proxyquire = require("proxyquire").noCallThru();
 const _ = require("lodash");
 
-describe("_Style", () => {
-    let _Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode, emptyBorderNode;
+describe("Style", () => {
+    let Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode, emptyBorderNode;
 
     beforeEach(() => {
-        _Style = proxyquire("../lib/_Style", {});
+        Style = proxyquire("../lib/Style", {});
         styleSheet = jasmine.createSpyObj("styleSheet", ['getNumberFormatCode', 'getNumberFormatId']);
         id = "ID";
         xfNode = { name: "xf", attributes: {}, children: [] };
@@ -27,7 +27,7 @@ describe("_Style", () => {
             ]
         };
         emptyBorderNode = _.cloneDeep(borderNode);
-        style = new _Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode);
+        style = new Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode);
     });
 
     describe("style", () => {

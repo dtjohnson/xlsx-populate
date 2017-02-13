@@ -2,11 +2,11 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-describe("_SharedStrings", () => {
-    let _SharedStrings, sharedStrings, sharedStringsNode;
+describe("SharedStrings", () => {
+    let SharedStrings, sharedStrings, sharedStringsNode;
 
     beforeEach(() => {
-        _SharedStrings = proxyquire("../lib/_SharedStrings", {});
+        SharedStrings = proxyquire("../lib/SharedStrings", {});
 
         sharedStringsNode = {
             name: "sst",
@@ -28,7 +28,7 @@ describe("_SharedStrings", () => {
             ]
         };
 
-        sharedStrings = new _SharedStrings(sharedStringsNode);
+        sharedStrings = new SharedStrings(sharedStringsNode);
     });
 
     describe("getIndexForString", () => {

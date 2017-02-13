@@ -109,8 +109,35 @@ cell.style("border", {
 <dt><a href="#Cell">Cell</a></dt>
 <dd><p>A cell</p>
 </dd>
+<dt><a href="#ContentTypes">ContentTypes</a></dt>
+<dd><p>A content type collection.</p>
+</dd>
+<dt><a href="#Relationships">Relationships</a></dt>
+<dd><p>A relationship collection.</p>
+</dd>
 <dt><a href="#Row">Row</a></dt>
 <dd><p>A row.</p>
+</dd>
+<dt><a href="#SharedStrings">SharedStrings</a></dt>
+<dd><p>The shared strings table.</p>
+</dd>
+<dt><a href="#Style">Style</a></dt>
+<dd><p>A style.</p>
+</dd>
+<dt><a href="#_StyleSheet">_StyleSheet</a></dt>
+<dd><p>A style sheet.</p>
+</dd>
+</dl>
+
+### Constants
+
+<dl>
+<dt><a href="#STANDARD_CODES">STANDARD_CODES</a></dt>
+<dd><p>Standard number format codes
+Taken from <a href="http://polymathprogrammer.com/2011/02/15/built-in-styles-for-excel-open-xml/">http://polymathprogrammer.com/2011/02/15/built-in-styles-for-excel-open-xml/</a></p>
+</dd>
+<dt><a href="#STARTING_CUSTOM_NUMBER_FORMAT_ID">STARTING_CUSTOM_NUMBER_FORMAT_ID</a></dt>
+<dd><p>The starting ID for custom number formats. The first 163 indexes are reserved.</p>
 </dd>
 </dl>
 
@@ -222,10 +249,292 @@ Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>Workbook</code> - The parent workbook.  
+<a name="ContentTypes"></a>
+
+### ContentTypes
+A content type collection.
+
+**Kind**: global class  
+
+* [ContentTypes](#ContentTypes)
+    * [new ContentTypes(node)](#new_ContentTypes_new)
+    * [.add(partName, contentType)](#ContentTypes+add) ⇒ <code>Object</code>
+    * [.findByPartName(partName)](#ContentTypes+findByPartName) ⇒ <code>Object</code> &#124; <code>undefined</code>
+    * [.toObject()](#ContentTypes+toObject) ⇒ <code>Object</code>
+
+<a name="new_ContentTypes_new"></a>
+
+#### new ContentTypes(node)
+Creates a new instance of _ContentTypes
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| node | <code>Object</code> | The node. |
+
+<a name="ContentTypes+add"></a>
+
+#### contentTypes.add(partName, contentType) ⇒ <code>Object</code>
+Add a new content type.
+
+**Kind**: instance method of <code>[ContentTypes](#ContentTypes)</code>  
+**Returns**: <code>Object</code> - The new content type.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| partName | <code>string</code> | The part name. |
+| contentType | <code>string</code> | The content type. |
+
+<a name="ContentTypes+findByPartName"></a>
+
+#### contentTypes.findByPartName(partName) ⇒ <code>Object</code> &#124; <code>undefined</code>
+Find a content type by part name.
+
+**Kind**: instance method of <code>[ContentTypes](#ContentTypes)</code>  
+**Returns**: <code>Object</code> &#124; <code>undefined</code> - The matching content type or undefined if not found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| partName | <code>string</code> | The part name. |
+
+<a name="ContentTypes+toObject"></a>
+
+#### contentTypes.toObject() ⇒ <code>Object</code>
+Convert the collection to an object.
+
+**Kind**: instance method of <code>[ContentTypes](#ContentTypes)</code>  
+**Returns**: <code>Object</code> - The object.  
+<a name="Relationships"></a>
+
+### Relationships
+A relationship collection.
+
+**Kind**: global class  
+
+* [Relationships](#Relationships)
+    * [new Relationships(node)](#new_Relationships_new)
+    * [.add(type, target)](#Relationships+add) ⇒ <code>Object</code>
+    * [.findByType(type)](#Relationships+findByType) ⇒ <code>Object</code> &#124; <code>undefined</code>
+    * [.toObject()](#Relationships+toObject) ⇒ <code>Object</code>
+
+<a name="new_Relationships_new"></a>
+
+#### new Relationships(node)
+Creates a new instance of _Relationships.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| node | <code>Object</code> | The node. |
+
+<a name="Relationships+add"></a>
+
+#### relationships.add(type, target) ⇒ <code>Object</code>
+Add a new relationship.
+
+**Kind**: instance method of <code>[Relationships](#Relationships)</code>  
+**Returns**: <code>Object</code> - The new relationship.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>string</code> | The type of relationship. |
+| target | <code>string</code> | The target of the relationship. |
+
+<a name="Relationships+findByType"></a>
+
+#### relationships.findByType(type) ⇒ <code>Object</code> &#124; <code>undefined</code>
+Find a relationship by type.
+
+**Kind**: instance method of <code>[Relationships](#Relationships)</code>  
+**Returns**: <code>Object</code> &#124; <code>undefined</code> - The matching relationship or undefined if not found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| type | <code>string</code> | The type to search for. |
+
+<a name="Relationships+toObject"></a>
+
+#### relationships.toObject() ⇒ <code>Object</code>
+Convert the collection to an object.
+
+**Kind**: instance method of <code>[Relationships](#Relationships)</code>  
+**Returns**: <code>Object</code> - The object.  
 <a name="Row"></a>
 
 ### Row
 A row.
 
 **Kind**: global class  
+<a name="SharedStrings"></a>
+
+### SharedStrings
+The shared strings table.
+
+**Kind**: global class  
+
+* [SharedStrings](#SharedStrings)
+    * [new SharedStrings(node)](#new_SharedStrings_new)
+    * [.getIndexForString(string)](#SharedStrings+getIndexForString) ⇒ <code>number</code>
+    * [.getStringByIndex(index)](#SharedStrings+getStringByIndex) ⇒ <code>string</code>
+    * [.toObject()](#SharedStrings+toObject) ⇒ <code>Object</code>
+
+<a name="new_SharedStrings_new"></a>
+
+#### new SharedStrings(node)
+Constructs a new instance of _SharedStrings.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| node | <code>Object</code> | The node. |
+
+<a name="SharedStrings+getIndexForString"></a>
+
+#### sharedStrings.getIndexForString(string) ⇒ <code>number</code>
+Gets the index for a string
+
+**Kind**: instance method of <code>[SharedStrings](#SharedStrings)</code>  
+**Returns**: <code>number</code> - The index  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| string | <code>string</code> | The string |
+
+<a name="SharedStrings+getStringByIndex"></a>
+
+#### sharedStrings.getStringByIndex(index) ⇒ <code>string</code>
+Get the string for a given index
+
+**Kind**: instance method of <code>[SharedStrings](#SharedStrings)</code>  
+**Returns**: <code>string</code> - The string  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | The index |
+
+<a name="SharedStrings+toObject"></a>
+
+#### sharedStrings.toObject() ⇒ <code>Object</code>
+Convert the collection to an object.
+
+**Kind**: instance method of <code>[SharedStrings](#SharedStrings)</code>  
+**Returns**: <code>Object</code> - The object.  
+<a name="Style"></a>
+
+### Style
+A style.
+
+**Kind**: global class  
+
+* [Style](#Style)
+    * [new Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode)](#new_Style_new)
+    * [.style(name, [value])](#Style+style) ⇒ <code>\*</code> &#124; <code>[Style](#Style)</code>
+
+<a name="new_Style_new"></a>
+
+#### new Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode)
+Creates a new instance of _Style.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| styleSheet | <code>StyleSheet</code> | The styleSheet. |
+| id | <code>number</code> | The style ID. |
+| xfNode | <code>Object</code> | The xf node. |
+| fontNode | <code>Object</code> | The font node. |
+| fillNode | <code>Object</code> | The fill node. |
+| borderNode | <code>Object</code> | The border node. |
+
+<a name="Style+style"></a>
+
+#### style.style(name, [value]) ⇒ <code>\*</code> &#124; <code>[Style](#Style)</code>
+Gets or sets a style.
+
+**Kind**: instance method of <code>[Style](#Style)</code>  
+**Returns**: <code>\*</code> &#124; <code>[Style](#Style)</code> - The value if getting or the style if setting.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The style name. |
+| [value] | <code>\*</code> | The value to set. |
+
+<a name="_StyleSheet"></a>
+
+### _StyleSheet
+A style sheet.
+
+**Kind**: global class  
+
+* [_StyleSheet](#_StyleSheet)
+    * [new _StyleSheet(node)](#new__StyleSheet_new)
+    * [.createStyle([sourceId])](#_StyleSheet+createStyle) ⇒ <code>[Style](#Style)</code>
+    * [.getNumberFormatCode(id)](#_StyleSheet+getNumberFormatCode) ⇒ <code>string</code>
+    * [.getNumberFormatId(code)](#_StyleSheet+getNumberFormatId) ⇒ <code>number</code>
+    * [.toObject()](#_StyleSheet+toObject) ⇒ <code>string</code>
+
+<a name="new__StyleSheet_new"></a>
+
+#### new _StyleSheet(node)
+Creates an instance of _StyleSheet.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| node | <code>string</code> | The style sheet node |
+
+<a name="_StyleSheet+createStyle"></a>
+
+#### _StyleSheet.createStyle([sourceId]) ⇒ <code>[Style](#Style)</code>
+Create a style.
+
+**Kind**: instance method of <code>[_StyleSheet](#_StyleSheet)</code>  
+**Returns**: <code>[Style](#Style)</code> - The style.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [sourceId] | <code>number</code> | The source style ID to copy, if provided. |
+
+<a name="_StyleSheet+getNumberFormatCode"></a>
+
+#### _StyleSheet.getNumberFormatCode(id) ⇒ <code>string</code>
+Get the number format code for a given ID.
+
+**Kind**: instance method of <code>[_StyleSheet](#_StyleSheet)</code>  
+**Returns**: <code>string</code> - The format code.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>number</code> | The number format ID. |
+
+<a name="_StyleSheet+getNumberFormatId"></a>
+
+#### _StyleSheet.getNumberFormatId(code) ⇒ <code>number</code>
+Get the nuumber format ID for a given code.
+
+**Kind**: instance method of <code>[_StyleSheet](#_StyleSheet)</code>  
+**Returns**: <code>number</code> - The number format ID.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| code | <code>string</code> | The format code. |
+
+<a name="_StyleSheet+toObject"></a>
+
+#### _StyleSheet.toObject() ⇒ <code>string</code>
+Convert the style sheet to an XML string.
+
+**Kind**: instance method of <code>[_StyleSheet](#_StyleSheet)</code>  
+**Returns**: <code>string</code> - The XML string.  
+<a name="STANDARD_CODES"></a>
+
+### STANDARD_CODES
+Standard number format codesTaken from http://polymathprogrammer.com/2011/02/15/built-in-styles-for-excel-open-xml/
+
+**Kind**: global constant  
+<a name="STARTING_CUSTOM_NUMBER_FORMAT_ID"></a>
+
+### STARTING_CUSTOM_NUMBER_FORMAT_ID
+The starting ID for custom number formats. The first 163 indexes are reserved.
+
+**Kind**: global constant  
 

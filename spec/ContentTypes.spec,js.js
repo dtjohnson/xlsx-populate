@@ -2,11 +2,11 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-describe("_ContentTypes", () => {
-    let _ContentTypes, contentTypes, contentTypesNode;
+describe("ContentTypes", () => {
+    let ContentTypes, contentTypes, contentTypesNode;
 
     beforeEach(() => {
-        _ContentTypes = proxyquire("../lib/_ContentTypes", {});
+        ContentTypes = proxyquire("../lib/ContentTypes", {});
 
         contentTypesNode = {
             name: "Types",
@@ -38,7 +38,7 @@ describe("_ContentTypes", () => {
             ]
         };
 
-        contentTypes = new _ContentTypes(contentTypesNode);
+        contentTypes = new ContentTypes(contentTypesNode);
     });
 
     describe("add", () => {
