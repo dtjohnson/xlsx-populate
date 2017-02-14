@@ -314,3 +314,71 @@ A row.
 
 **Kind**: global class  
 
+* [Row](#Row)
+    * [.address([opts])](#Row+address) ⇒ <code>string</code>
+    * [.cell(columnNameOrNumber)](#Row+cell) ⇒ <code>[Cell](#Cell)</code>
+    * [.height([height])](#Row+height) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code>
+    * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
+    * [.sheet()](#Row+sheet) ⇒ <code>Sheet</code>
+    * [.workbook()](#Row+workbook) ⇒ <code>Workbook</code>
+
+<a name="Row+address"></a>
+
+#### row.address([opts]) ⇒ <code>string</code>
+Get the address of the row.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>string</code> - The address  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Options |
+| [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
+| [opts.anchored] | <code>boolean</code> | Anchor the address. |
+
+<a name="Row+cell"></a>
+
+#### row.cell(columnNameOrNumber) ⇒ <code>[Cell](#Cell)</code>
+Get a cell in the row.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| columnNameOrNumber | <code>string</code> &#124; <code>number</code> | The name or number of the column. |
+
+<a name="Row+height"></a>
+
+#### row.height([height]) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code>
+Gets or sets the row height.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code> - The height (or undefined) if getting, the row if setting.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [height] | <code>number</code> | The height of the row. |
+
+<a name="Row+rowNumber"></a>
+
+#### row.rowNumber() ⇒ <code>number</code>
+Gets the row number.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>number</code> - The row number.  
+<a name="Row+sheet"></a>
+
+#### row.sheet() ⇒ <code>Sheet</code>
+Gets the parent sheet of the row.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>Sheet</code> - The parent sheet.  
+<a name="Row+workbook"></a>
+
+#### row.workbook() ⇒ <code>Workbook</code>
+Get the parent workbook.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>Workbook</code> - The parent workbook.  
+

@@ -60,7 +60,7 @@
     "no-floating-decimal": 2,
     //"no-implicit-coercion"
     "no-implied-eval": 2,
-    "no-invalid-this": 2,
+    //"no-invalid-this",
     "no-iterator": 2,
     "no-labels": 2,
     "no-lone-blocks": 2,
