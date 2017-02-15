@@ -111,7 +111,7 @@
     "no-use-before-define": 2,
 
     /* Node.js and CommonJS */
-    "callback-return": 2,
+    //"callback-return"
     "global-require": 2,
     "handle-callback-err": 2,
     "no-mixed-requires": 2,

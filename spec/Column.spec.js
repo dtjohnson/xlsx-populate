@@ -51,6 +51,33 @@ describe("Column", () => {
         });
     });
 
+    describe("hidden", () => {
+        it("should get/set hidden", () => {
+            expect(column.hidden()).toBe(false);
+
+            column.hidden(true);
+            expect(column.hidden()).toBe(true);
+            expect(columnNode).toEqualJson({
+                name: 'col',
+                attributes: {
+                    min: 5,
+                    max: 5,
+                    hidden: 1
+                }
+            });
+
+            column.hidden(false);
+            expect(column.hidden()).toBe(false);
+            expect(columnNode).toEqualJson({
+                name: 'col',
+                attributes: {
+                    min: 5,
+                    max: 5
+                }
+            });
+        });
+    });
+
     describe("sheet", () => {
         it("should return the sheet", () => {
             expect(column.sheet()).toBe(sheet);

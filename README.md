@@ -237,6 +237,7 @@ A column.
     * [.cell(rowNumber)](#Column+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.columnName()](#Column+columnName) ⇒ <code>string</code>
     * [.columnNumber()](#Column+columnNumber) ⇒ <code>number</code>
+    * [.hidden([hidden])](#Column+hidden) ⇒ <code>boolean</code> &#124; <code>[Column](#Column)</code>
     * [.sheet()](#Column+sheet) ⇒ <code>Sheet</code>
     * [.width([width])](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Column](#Column)</code>
     * [.workbook()](#Column+workbook) ⇒ <code>Workbook</code>
@@ -281,6 +282,18 @@ Get the number of the column.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
 **Returns**: <code>number</code> - The column number.  
+<a name="Column+hidden"></a>
+
+#### column.hidden([hidden]) ⇒ <code>boolean</code> &#124; <code>[Column](#Column)</code>
+Gets or sets whether the column is hidden.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>boolean</code> &#124; <code>[Column](#Column)</code> - A flag indicating whether the column is hidden if getting, the column if setting.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [hidden] | <code>boolean</code> | A flag indicating whether to hide the column. |
+
 <a name="Column+sheet"></a>
 
 #### column.sheet() ⇒ <code>Sheet</code>
@@ -318,6 +331,7 @@ A row.
     * [.address([opts])](#Row+address) ⇒ <code>string</code>
     * [.cell(columnNameOrNumber)](#Row+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.height([height])](#Row+height) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code>
+    * [.hidden([hidden])](#Row+hidden) ⇒ <code>boolean</code> &#124; <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
     * [.sheet()](#Row+sheet) ⇒ <code>Sheet</code>
     * [.workbook()](#Row+workbook) ⇒ <code>Workbook</code>
@@ -359,6 +373,18 @@ Gets or sets the row height.
 | Param | Type | Description |
 | --- | --- | --- |
 | [height] | <code>number</code> | The height of the row. |
+
+<a name="Row+hidden"></a>
+
+#### row.hidden([hidden]) ⇒ <code>boolean</code> &#124; <code>[Row](#Row)</code>
+Gets or sets whether the row is hidden.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>boolean</code> &#124; <code>[Row](#Row)</code> - A flag indicating whether the row is hidden if getting, the row if setting.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [hidden] | <code>boolean</code> | A flag indicating whether to hide the row. |
 
 <a name="Row+rowNumber"></a>
 

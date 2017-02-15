@@ -109,6 +109,25 @@ describe("Row", () => {
         });
     });
 
+    describe("hidden", () => {
+        it("should get/set hidden", () => {
+            expect(row.hidden()).toBe(false);
+
+            row.hidden(true);
+            expect(row.hidden()).toBe(true);
+            expect(rowNode.attributes).toEqualJson({
+                r: 7,
+                hidden: 1
+            });
+
+            row.hidden(false);
+            expect(row.hidden()).toBe(false);
+            expect(rowNode.attributes).toEqualJson({
+                r: 7
+            });
+        });
+    });
+
     describe("rowNumber", () => {
         it("should return the row number", () => {
             expect(row.rowNumber()).toBe(7);
