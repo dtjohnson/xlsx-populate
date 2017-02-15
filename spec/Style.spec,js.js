@@ -30,6 +30,12 @@ describe("Style", () => {
         style = new Style(styleSheet, id, xfNode, fontNode, fillNode, borderNode);
     });
 
+    describe("id", () => {
+        it("should return the ID", () => {
+            expect(style.id()).toBe("ID");
+        });
+    });
+
     describe("style", () => {
         it("should get the style with the given name", () => {
             style._get_foo = jasmine.createSpy("_get_foo").and.returnValue("FOO");

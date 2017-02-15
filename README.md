@@ -125,11 +125,10 @@ A cell
 **Kind**: global class  
 
 * [Cell](#Cell)
-    * [.address()](#Cell+address) ⇒ <code>string</code>
+    * [.address([opts])](#Cell+address) ⇒ <code>string</code>
     * [.clear()](#Cell+clear) ⇒ <code>[Cell](#Cell)</code>
     * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
     * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
-    * [.fullAddress()](#Cell+fullAddress) ⇒ <code>string</code>
     * [.relativeCell(rowOffset, columnOffset)](#Cell+relativeCell) ⇒ <code>[Cell](#Cell)</code>
     * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
@@ -139,11 +138,18 @@ A cell
 
 <a name="Cell+address"></a>
 
-#### cell.address() ⇒ <code>string</code>
-Gets the address of the cell (e.g. "A5").
+#### cell.address([opts]) ⇒ <code>string</code>
+Get the address of the column.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>string</code> - The cell address.  
+**Returns**: <code>string</code> - The address  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Options |
+| [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
+| [opts.anchored] | <code>boolean</code> | Anchor the address. |
+
 <a name="Cell+clear"></a>
 
 #### cell.clear() ⇒ <code>[Cell](#Cell)</code>
@@ -165,13 +171,6 @@ Gets the column number of the cell (1-based).
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>number</code> - The column number.  
-<a name="Cell+fullAddress"></a>
-
-#### cell.fullAddress() ⇒ <code>string</code>
-Gets the full address of the cell including sheet (e.g. "Sheet1!A5").
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>string</code> - The full address.  
 <a name="Cell+relativeCell"></a>
 
 #### cell.relativeCell(rowOffset, columnOffset) ⇒ <code>[Cell](#Cell)</code>
