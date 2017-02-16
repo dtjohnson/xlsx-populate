@@ -18,7 +18,7 @@ describe("Row", () => {
         Cell.prototype.replace = jasmine.createSpy('replace');
 
         Row = proxyquire("../lib/Row", { './Cell': Cell });
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook']);
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId']);
         sheet.name.and.returnValue('NAME');
         sheet.workbook.and.returnValue('WORKBOOK');
 
@@ -48,20 +48,21 @@ describe("Row", () => {
     });
 
     describe("cell", () => {
-        it("should return an existing cell", () => {
+        beforeEach(() => {
             Cell.calls.reset();
+        });
+
+        it("should return an existing cell", () => {
             expect(row.cell(2)).toEqual(jasmine.any(Cell));
             expect(Cell).not.toHaveBeenCalled();
         });
 
         it("should return an existing cell", () => {
-            Cell.calls.reset();
             expect(row.cell('B')).toEqual(jasmine.any(Cell));
             expect(Cell).not.toHaveBeenCalled();
         });
 
         it("should create a new cell as needed", () => {
-            Cell.calls.reset();
             expect(row.cell(5)).toEqual(jasmine.any(Cell));
             expect(Cell).toHaveBeenCalledWith(row, {
                 name: 'c', attributes: { r: "E7" }, children: []
@@ -69,10 +70,25 @@ describe("Row", () => {
         });
 
         it("should create a new cell as needed", () => {
-            Cell.calls.reset();
             expect(row.cell('C')).toEqual(jasmine.any(Cell));
             expect(Cell).toHaveBeenCalledWith(row, {
                 name: 'c', attributes: { r: "C7" }, children: []
+            });
+        });
+
+        it("should create a new cell with an existing column style id", () => {
+            sheet.existingColumnStyleId.and.returnValue(5);
+            expect(row.cell('C')).toEqual(jasmine.any(Cell));
+            expect(Cell).toHaveBeenCalledWith(row, {
+                name: 'c', attributes: { r: "C7", s: 5 }, children: []
+            });
+        });
+
+        it("should create a new cell with an existing row style id", () => {
+            rowNode.attributes.s = 3;
+            expect(row.cell('C')).toEqual(jasmine.any(Cell));
+            expect(Cell).toHaveBeenCalledWith(row, {
+                name: 'c', attributes: { r: "C7", s: 3 }, children: []
             });
         });
     });

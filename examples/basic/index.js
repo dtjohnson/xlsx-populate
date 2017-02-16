@@ -6,10 +6,7 @@ const Workbook = require('../../lib/Workbook');
 Workbook.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
-        const r = workbook.sheet("Sheet1").range("A1:B2").value(() => Math.random());
-
-
-        // workbook.sheet("Sheet1").row(3).hidden(true).hidden(false);
+        workbook.sheet("Sheet1").cell("A1").value("This is neat!");
 
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
