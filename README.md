@@ -226,7 +226,7 @@ Find the given pattern in the cell and optionally replace it.
 | Param | Type | Description |
 | --- | --- | --- |
 | pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
-| [replacement] | <code>string</code> | The text to replace. If pattern is a string, all occurences of the pattern in the cell will be replaced. |
+| [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in the cell will be replaced. |
 
 <a name="Cell+groupWith"></a>
 
