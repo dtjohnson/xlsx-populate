@@ -165,7 +165,8 @@ Get the address of the column.
 | --- | --- | --- |
 | [opts] | <code>Object</code> | Options |
 | [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
-| [opts.anchored] | <code>boolean</code> | Anchor the address. |
+| [opts.rowAnchored] | <code>boolean</code> | Anchor the row. |
+| [opts.columnAnchored] | <code>boolean</code> | Anchor the column. |
 
 <a name="Cell+column"></a>
 
