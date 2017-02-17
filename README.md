@@ -125,16 +125,33 @@ A cell
 **Kind**: global class  
 
 * [Cell](#Cell)
-    * [.address([opts])](#Cell+address) ⇒ <code>string</code>
-    * [.clear()](#Cell+clear) ⇒ <code>[Cell](#Cell)</code>
-    * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
-    * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
-    * [.relativeCell(rowOffset, columnOffset)](#Cell+relativeCell) ⇒ <code>[Cell](#Cell)</code>
-    * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
-    * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
-    * [.sheet()](#Cell+sheet) ⇒ <code>Sheet</code>
-    * [.value([value])](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>null</code> &#124; <code>[Cell](#Cell)</code>
-    * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
+    * _instance_
+        * [.address([opts])](#Cell+address) ⇒ <code>string</code>
+        * [.column()](#Cell+column) ⇒ <code>[Column](#Column)</code>
+        * [.clear()](#Cell+clear) ⇒ <code>[Cell](#Cell)</code>
+        * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
+        * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
+        * [.formula()](#Cell+formula) ⇒ <code>string</code>
+        * [.formula(formula)](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
+        * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
+        * [.groupWith(selections)](#Cell+groupWith) ⇒ <code>Group</code>
+        * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
+        * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
+        * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>Range</code>
+        * [.relativeCell(rowOffset, columnOffset)](#Cell+relativeCell) ⇒ <code>[Cell](#Cell)</code>
+        * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
+        * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
+        * [.sheet()](#Cell+sheet) ⇒ <code>Sheet</code>
+        * [.style(name)](#Cell+style) ⇒ <code>\*</code>
+        * [.style(names)](#Cell+style) ⇒ <code>object.&lt;string, \*&gt;</code>
+        * [.style(name, value)](#Cell+style) ⇒ <code>[Cell](#Cell)</code>
+        * [.style(styles)](#Cell+style) ⇒ <code>[Cell](#Cell)</code>
+        * [.value()](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
+        * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
+        * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
+    * _inner_
+        * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
+        * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
 
 <a name="Cell+address"></a>
 
@@ -150,6 +167,13 @@ Get the address of the column.
 | [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
 | [opts.anchored] | <code>boolean</code> | Anchor the address. |
 
+<a name="Cell+column"></a>
+
+#### cell.column() ⇒ <code>[Column](#Column)</code>
+Gets the parent column of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Column](#Column)</code> - The parent column.  
 <a name="Cell+clear"></a>
 
 #### cell.clear() ⇒ <code>[Cell](#Cell)</code>
@@ -171,6 +195,86 @@ Gets the column number of the cell (1-based).
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>number</code> - The column number.  
+<a name="Cell+formula"></a>
+
+#### cell.formula() ⇒ <code>string</code>
+Gets the formula in the cell. Note that if a formula was set as part of a range, the getter will return 'SHARED'. This is a limitation that may be addressed in a future release.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>string</code> - - The formula in the cell.  
+<a name="Cell+formula"></a>
+
+#### cell.formula(formula) ⇒ <code>[Cell](#Cell)</code>
+Sets the formula in the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| formula | <code>string</code> | The formula to set. |
+
+<a name="Cell+find"></a>
+
+#### cell.find(pattern, [replacement]) ⇒ <code>boolean</code>
+Find the given pattern in the cell and optionally replace it.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>boolean</code> - A flag indicating if the pattern was found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
+| [replacement] | <code>string</code> | The text to replace. If pattern is a string, all occurences of the pattern in the cell will be replaced. |
+
+<a name="Cell+groupWith"></a>
+
+#### cell.groupWith(selections) ⇒ <code>Group</code>
+Create a Group with this cell and other selections.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>Group</code> - The group.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| selections | <code>[Cell](#Cell)</code> &#124; <code>Range</code> &#124; <code>Group</code> | The selections. |
+
+<a name="Cell+tap"></a>
+
+#### cell.tap(callback) ⇒ <code>[Cell](#Cell)</code>
+Invoke a callback on the cell and return the cell. Useful for method chaining.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[tapCallback](#Cell..tapCallback)</code> | The callback function. |
+
+<a name="Cell+thru"></a>
+
+#### cell.thru(callback) ⇒ <code>\*</code>
+Invoke a callback on the cell and return the value provided by the callback. Useful for method chaining.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>\*</code> - The return value of the callaback.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[thruCallback](#Cell..thruCallback)</code> | The callback function. |
+
+<a name="Cell+rangeTo"></a>
+
+#### cell.rangeTo(cell) ⇒ <code>Range</code>
+Create a range from this cell and another.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>Range</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | <code>[Cell](#Cell)</code> | The other cell to range to. |
+
 <a name="Cell+relativeCell"></a>
 
 #### cell.relativeCell(rowOffset, columnOffset) ⇒ <code>[Cell](#Cell)</code>
@@ -205,17 +309,73 @@ Gets the parent sheet.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>Sheet</code> - The parent sheet.  
-<a name="Cell+value"></a>
+<a name="Cell+style"></a>
 
-#### cell.value([value]) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>null</code> &#124; <code>[Cell](#Cell)</code>
-Gets or sets the value of the cell.
+#### cell.style(name) ⇒ <code>\*</code>
+Gets an individual style.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>null</code> &#124; <code>[Cell](#Cell)</code> - The value of the cell or the cell if setting.  
+**Returns**: <code>\*</code> - The style.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [value] | <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>null</code> &#124; <code>undefined</code> | The value to set. |
+| name | <code>string</code> | The name of the style. |
+
+<a name="Cell+style"></a>
+
+#### cell.style(names) ⇒ <code>object.&lt;string, \*&gt;</code>
+Gets multiple styles.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>object.&lt;string, \*&gt;</code> - Object whose keys are the style names and values are the styles.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;string&gt;</code> | The names of the style. |
+
+<a name="Cell+style"></a>
+
+#### cell.style(name, value) ⇒ <code>[Cell](#Cell)</code>
+Sets an individual style.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Cell+style"></a>
+
+#### cell.style(styles) ⇒ <code>[Cell](#Cell)</code>
+Sets multiple styles.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
+
+<a name="Cell+value"></a>
+
+#### cell.value() ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
+Gets the value of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code> - The value of the cell.  
+<a name="Cell+value"></a>
+
+#### cell.value(value) ⇒ <code>[Cell](#Cell)</code>
+Sets the value of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>null</code> &#124; <code>undefined</code> | The value to set. |
 
 <a name="Cell+workbook"></a>
 
@@ -224,6 +384,29 @@ Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>Workbook</code> - The parent workbook.  
+<a name="Cell..tapCallback"></a>
+
+#### Cell~tapCallback ⇒ <code>undefined</code>
+Callback used by tap.
+
+**Kind**: inner typedef of <code>[Cell](#Cell)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | <code>[Cell](#Cell)</code> | The cell |
+
+<a name="Cell..thruCallback"></a>
+
+#### Cell~thruCallback ⇒ <code>\*</code>
+Callback used by thru.
+
+**Kind**: inner typedef of <code>[Cell](#Cell)</code>  
+**Returns**: <code>\*</code> - The value to return from thru.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | <code>[Cell](#Cell)</code> | The cell |
+
 <a name="Column"></a>
 
 ### Column
