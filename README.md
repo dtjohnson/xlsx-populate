@@ -112,6 +112,9 @@ cell.style("border", {
 <dt><a href="#Column">Column</a></dt>
 <dd><p>A column.</p>
 </dd>
+<dt><a href="#Range">Range</a></dt>
+<dd><p>A range of cells.</p>
+</dd>
 <dt><a href="#Row">Row</a></dt>
 <dd><p>A row.</p>
 </dd>
@@ -137,7 +140,7 @@ A cell
         * [.groupWith(selections)](#Cell+groupWith) ⇒ <code>Group</code>
         * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
-        * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>Range</code>
+        * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>[Range](#Range)</code>
         * [.relativeCell(rowOffset, columnOffset)](#Cell+relativeCell) ⇒ <code>[Cell](#Cell)</code>
         * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
         * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
@@ -238,7 +241,7 @@ Create a Group with this cell and other selections.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| selections | <code>[Cell](#Cell)</code> &#124; <code>Range</code> &#124; <code>Group</code> | The selections. |
+| selections | <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>Group</code> | The selections. |
 
 <a name="Cell+tap"></a>
 
@@ -258,7 +261,7 @@ Invoke a callback on the cell and return the cell. Useful for method chaining.
 Invoke a callback on the cell and return the value provided by the callback. Useful for method chaining.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>\*</code> - The return value of the callaback.  
+**Returns**: <code>\*</code> - The return value of the callback.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -266,11 +269,11 @@ Invoke a callback on the cell and return the value provided by the callback. Use
 
 <a name="Cell+rangeTo"></a>
 
-#### cell.rangeTo(cell) ⇒ <code>Range</code>
+#### cell.rangeTo(cell) ⇒ <code>[Range](#Range)</code>
 Create a range from this cell and another.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>Range</code> - The range.  
+**Returns**: <code>[Range](#Range)</code> - The range.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -503,6 +506,427 @@ Get the parent workbook.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
 **Returns**: <code>Workbook</code> - The parent workbook.  
+<a name="Range"></a>
+
+### Range
+A range of cells.
+
+**Kind**: global class  
+
+* [Range](#Range)
+    * _instance_
+        * [.address([opts])](#Range+address) ⇒ <code>string</code>
+        * [.clear()](#Range+clear) ⇒ <code>[Range](#Range)</code>
+        * [.endCell()](#Range+endCell) ⇒ <code>[Cell](#Cell)</code>
+        * [.forEach(callback)](#Range+forEach) ⇒ <code>[Range](#Range)</code>
+        * [.formula()](#Range+formula) ⇒ <code>string</code> &#124; <code>undefined</code>
+        * [.formula(formula)](#Range+formula) ⇒ <code>[Range](#Range)</code>
+        * [.groupWith(selections)](#Range+groupWith) ⇒ <code>Group</code>
+        * [.map(callback)](#Range+map) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+        * [.merged()](#Range+merged) ⇒ <code>boolean</code>
+        * [.merged(merged)](#Range+merged) ⇒ <code>[Range](#Range)</code>
+        * [.numColumns()](#Range+numColumns) ⇒ <code>number</code>
+        * [.numRows()](#Range+numRows) ⇒ <code>number</code>
+        * [.reduce(callback, [initialValue])](#Range+reduce) ⇒ <code>\*</code>
+        * [.relativeCell(ri, ci)](#Range+relativeCell) ⇒ <code>[Cell](#Cell)</code>
+        * [.sheet()](#Range+sheet) ⇒ <code>Sheet</code>
+        * [.startCell()](#Range+startCell) ⇒ <code>[Cell](#Cell)</code>
+        * [.style(name)](#Range+style) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+        * [.style(names)](#Range+style) ⇒ <code>Object.&lt;string, Array.&lt;Array.&lt;\*&gt;&gt;&gt;</code>
+        * [.style(name)](#Range+style) ⇒ <code>[Range](#Range)</code>
+        * [.style(name)](#Range+style) ⇒ <code>[Range](#Range)</code>
+        * [.style(name, value)](#Range+style) ⇒ <code>[Range](#Range)</code>
+        * [.style(styles)](#Range+style) ⇒ <code>[Range](#Range)</code>
+        * [.tap(callback)](#Range+tap) ⇒ <code>[Range](#Range)</code>
+        * [.thru(callback)](#Range+thru) ⇒ <code>\*</code>
+        * [.value()](#Range+value) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.value(value)](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.workbook()](#Range+workbook) ⇒ <code>Workbook</code>
+    * _inner_
+        * [~forEachCallback](#Range..forEachCallback) ⇒ <code>undefined</code>
+        * [~mapCallback](#Range..mapCallback) ⇒ <code>\*</code>
+        * [~reduceCallback](#Range..reduceCallback) ⇒ <code>\*</code>
+        * [~tapCallback](#Range..tapCallback) ⇒ <code>undefined</code>
+        * [~thruCallback](#Range..thruCallback) ⇒ <code>\*</code>
+
+<a name="Range+address"></a>
+
+#### range.address([opts]) ⇒ <code>string</code>
+Get the address of the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>string</code> - The address.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [opts] | <code>Object</code> | Options |
+| [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
+| [opts.startRowAnchored] | <code>boolean</code> | Anchor the start row. |
+| [opts.startColumnAnchored] | <code>boolean</code> | Anchor the start column. |
+| [opts.endRowAnchored] | <code>boolean</code> | Anchor the end row. |
+| [opts.endColumnAnchored] | <code>boolean</code> | Anchor the end column. |
+
+<a name="Range+clear"></a>
+
+#### range.clear() ⇒ <code>[Range](#Range)</code>
+Clear the contents of all the cells in the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+<a name="Range+endCell"></a>
+
+#### range.endCell() ⇒ <code>[Cell](#Cell)</code>
+Get the end cell of the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The end cell.  
+<a name="Range+forEach"></a>
+
+#### range.forEach(callback) ⇒ <code>[Range](#Range)</code>
+Call a function for each cell in the range. Goes by row then column.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[forEachCallback](#Range..forEachCallback)</code> | Function called for each cell in the range. |
+
+<a name="Range+formula"></a>
+
+#### range.formula() ⇒ <code>string</code> &#124; <code>undefined</code>
+Gets the formula shared across the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>string</code> &#124; <code>undefined</code> - The shared formula.  
+<a name="Range+formula"></a>
+
+#### range.formula(formula) ⇒ <code>[Range](#Range)</code>
+Sets the shared formula in the range. The formula will be translated for each cell.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| formula | <code>string</code> | The formula to set. |
+
+<a name="Range+groupWith"></a>
+
+#### range.groupWith(selections) ⇒ <code>Group</code>
+Group the range with other selections.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Group</code> - The group.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| selections | <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>Group</code> | The selections. |
+
+<a name="Range+map"></a>
+
+#### range.map(callback) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Creates a 2D array of values by running each cell through a callback.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - The 2D array of return values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[mapCallback](#Range..mapCallback)</code> | Function called for each cell in the range. |
+
+<a name="Range+merged"></a>
+
+#### range.merged() ⇒ <code>boolean</code>
+Gets a value indicating whether the cells in the range are merged.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>boolean</code> - The value.  
+<a name="Range+merged"></a>
+
+#### range.merged(merged) ⇒ <code>[Range](#Range)</code>
+Sets a value indicating whether the cells in the range should be merged.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| merged | <code>boolean</code> | True to merge, false to unmerge. |
+
+<a name="Range+numColumns"></a>
+
+#### range.numColumns() ⇒ <code>number</code>
+Gets the number of columns in the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>number</code> - - The number of columns.  
+<a name="Range+numRows"></a>
+
+#### range.numRows() ⇒ <code>number</code>
+Gets the number of rows in the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>number</code> - - The number of rows.  
+<a name="Range+reduce"></a>
+
+#### range.reduce(callback, [initialValue]) ⇒ <code>\*</code>
+Reduces the range to a single value accumulated from the result of a function called for each cell.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>\*</code> - The accumulated value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[reduceCallback](#Range..reduceCallback)</code> | Function called for each cell in the range. |
+| [initialValue] | <code>\*</code> | The initial value. |
+
+<a name="Range+relativeCell"></a>
+
+#### range.relativeCell(ri, ci) ⇒ <code>[Cell](#Cell)</code>
+Gets a cell within the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ri | <code>number</code> | Row index relative to the start cell. |
+| ci | <code>number</code> | Column index relative to the start cell. |
+
+<a name="Range+sheet"></a>
+
+#### range.sheet() ⇒ <code>Sheet</code>
+Gets the parent sheet of the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Sheet</code> - The parent sheet.  
+<a name="Range+startCell"></a>
+
+#### range.startCell() ⇒ <code>[Cell](#Cell)</code>
+Gets the start cell of the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The start cell.  
+<a name="Range+style"></a>
+
+#### range.style(name) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Gets a single style for each cell.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - 2D array of style values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+
+<a name="Range+style"></a>
+
+#### range.style(names) ⇒ <code>Object.&lt;string, Array.&lt;Array.&lt;\*&gt;&gt;&gt;</code>
+Gets multiple styles for each cell.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Object.&lt;string, Array.&lt;Array.&lt;\*&gt;&gt;&gt;</code> - Object whose keys are style names and values are 2D arrays of style values.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;string&gt;</code> | The names of the styles. |
+
+<a name="Range+style"></a>
+
+#### range.style(name) ⇒ <code>[Range](#Range)</code>
+Set the style in each cell to the result of a function called for each.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+|  | <code>[mapCallback](#Range..mapCallback)</code> | The callback to provide value for the cell. |
+
+<a name="Range+style"></a>
+
+#### range.style(name) ⇒ <code>[Range](#Range)</code>
+Sets the style in each cell to the corresponding value in the given 2D array of values.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The style values to set. |
+
+<a name="Range+style"></a>
+
+#### range.style(name, value) ⇒ <code>[Range](#Range)</code>
+Set the style of all cells in the range to a single style value.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Range+style"></a>
+
+#### range.style(styles) ⇒ <code>[Range](#Range)</code>
+Set multiple styles for the cells in the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| styles | <code>object.&lt;string, (Range~mapCallback\|Array.&lt;Array.&lt;\*&gt;&gt;\|\*)&gt;</code> | Object whose keys are style names and values are either function callbacks, 2D arrays of style values, or a single value for all the cells. |
+
+<a name="Range+tap"></a>
+
+#### range.tap(callback) ⇒ <code>[Range](#Range)</code>
+Invoke a callback on the range and return the range. Useful for method chaining.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[tapCallback](#Range..tapCallback)</code> | The callback function. |
+
+<a name="Range+thru"></a>
+
+#### range.thru(callback) ⇒ <code>\*</code>
+Invoke a callback on the range and return the value provided by the callback. Useful for method chaining.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>\*</code> - The return value of the callback.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| callback | <code>[thruCallback](#Range..thruCallback)</code> | The callback function. |
+
+<a name="Range+value"></a>
+
+#### range.value() ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+Get the values of each cell in the range as a 2D array.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - The values.  
+<a name="Range+value"></a>
+
+#### range.value() ⇒ <code>[Range](#Range)</code>
+Set the values in each cell to the result of a function called for each.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+|  | <code>[mapCallback](#Range..mapCallback)</code> | The callback to provide value for the cell. |
+
+<a name="Range+value"></a>
+
+#### range.value() ⇒ <code>[Range](#Range)</code>
+Sets the value in each cell to the corresponding value in the given 2D array of values.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The values to set. |
+
+<a name="Range+value"></a>
+
+#### range.value(value) ⇒ <code>[Range](#Range)</code>
+Set the value of all cells in the range to a single value.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Range+workbook"></a>
+
+#### range.workbook() ⇒ <code>Workbook</code>
+Gets the parent workbook.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Workbook</code> - The parent workbook.  
+<a name="Range..forEachCallback"></a>
+
+#### Range~forEachCallback ⇒ <code>undefined</code>
+Callback used by forEach.
+
+**Kind**: inner typedef of <code>[Range](#Range)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | <code>[Cell](#Cell)</code> | The cell. |
+| ri | <code>number</code> | The relative row index. |
+| ci | <code>number</code> | The relative column index. |
+| range | <code>[Range](#Range)</code> | The range. |
+
+<a name="Range..mapCallback"></a>
+
+#### Range~mapCallback ⇒ <code>\*</code>
+Callback used by map.
+
+**Kind**: inner typedef of <code>[Range](#Range)</code>  
+**Returns**: <code>\*</code> - The value to map to.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | <code>[Cell](#Cell)</code> | The cell. |
+| ri | <code>number</code> | The relative row index. |
+| ci | <code>number</code> | The relative column index. |
+| range | <code>[Range](#Range)</code> | The range. |
+
+<a name="Range..reduceCallback"></a>
+
+#### Range~reduceCallback ⇒ <code>\*</code>
+Callback used by reduce.
+
+**Kind**: inner typedef of <code>[Range](#Range)</code>  
+**Returns**: <code>\*</code> - The value to map to.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| accumulator | <code>\*</code> | The accumulated value. |
+| cell | <code>[Cell](#Cell)</code> | The cell. |
+| ri | <code>number</code> | The relative row index. |
+| ci | <code>number</code> | The relative column index. |
+| range | <code>[Range](#Range)</code> | The range. |
+
+<a name="Range..tapCallback"></a>
+
+#### Range~tapCallback ⇒ <code>undefined</code>
+Callback used by tap.
+
+**Kind**: inner typedef of <code>[Range](#Range)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| range | <code>[Range](#Range)</code> | The range. |
+
+<a name="Range..thruCallback"></a>
+
+#### Range~thruCallback ⇒ <code>\*</code>
+Callback used by thru.
+
+**Kind**: inner typedef of <code>[Range](#Range)</code>  
+**Returns**: <code>\*</code> - The value to return from thru.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| range | <code>[Range](#Range)</code> | The range. |
+
 <a name="Row"></a>
 
 ### Row
