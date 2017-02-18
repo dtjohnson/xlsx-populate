@@ -2,23 +2,41 @@
 
 const proxyquire = require("proxyquire").noCallThru();
 
-fdescribe("Cell", () => {
-    let Cell, cell, cellNode, row, sheet;
+describe("Cell", () => {
+    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style;
 
     beforeEach(() => {
         Cell = proxyquire("../lib/Cell", {});
+
+        style = jasmine.createSpyObj("style", ["style", "id"]);
+        style.id.and.returnValue(4);
+        style.style.and.callFake(name => `STYLE:${name}`);
+
+        styleSheet = jasmine.createSpyObj("styleSheet", ["createStyle"]);
+        styleSheet.createStyle.and.returnValue(style);
+
+        sharedStrings = jasmine.createSpyObj("sharedStrings", ['getIndexForString', 'getStringByIndex']);
+        sharedStrings.getIndexForString.and.returnValue(7);
+        sharedStrings.getStringByIndex.and.returnValue("STRING");
+
+        workbook = jasmine.createSpyObj("workbook", ["sharedStrings", "styleSheet"]);
+        workbook.sharedStrings.and.returnValue(sharedStrings);
+        workbook.styleSheet.and.returnValue(styleSheet);
+
         sheet = jasmine.createSpyObj('sheet', ['createStyle', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell']);
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
+
         row = jasmine.createSpyObj('row', ['sheet', 'workbook']);
         row.sheet.and.returnValue(sheet);
-        row.workbook.and.returnValue("WORKBOOK");
+        row.workbook.and.returnValue(workbook);
 
         cellNode = {
             name: 'c',
             attributes: {
                 r: "C7"
-            }
+            },
+            children: []
         };
 
         cell = new Cell(row, cellNode);
@@ -245,25 +263,186 @@ fdescribe("Cell", () => {
     });
 
     describe("style", () => {
+        it("should create a new style without a style ID", () => {
+            expect(cell._style).toBeUndefined();
+            cell.style("foo");
+            expect(styleSheet.createStyle).toHaveBeenCalledWith(undefined);
+            expect(cell._style).toBe(style);
+            expect(cellNode.attributes.s).toBe(4);
+        });
 
+        it("should create a new style with a style ID", () => {
+            cellNode.attributes.s = 2;
+            expect(cell._style).toBeUndefined();
+            cell.style("foo");
+            expect(styleSheet.createStyle).toHaveBeenCalledWith(2);
+            expect(cell._style).toBe(style);
+            expect(cellNode.attributes.s).toBe(4);
+        });
+
+        it("should not create a style if one already exists", () => {
+            cell._style = style;
+            cell.style("foo");
+            expect(styleSheet.createStyle).not.toHaveBeenCalled();
+        });
+
+        it("should get a single style", () => {
+            expect(cell.style("foo")).toBe("STYLE:foo");
+            expect(style.style).toHaveBeenCalledWith("foo");
+        });
+
+        it("should get multiple styles", () => {
+            expect(cell.style(["foo", "bar", "baz"])).toEqualJson({
+                foo: "STYLE:foo", bar: "STYLE:bar", baz: "STYLE:baz"
+            });
+            expect(style.style).toHaveBeenCalledWith("foo");
+            expect(style.style).toHaveBeenCalledWith("bar");
+            expect(style.style).toHaveBeenCalledWith("baz");
+        });
+
+        it("should set a single style", () => {
+            expect(cell.style("foo", "value")).toBe(cell);
+            expect(style.style).toHaveBeenCalledWith("foo", "value");
+        });
+
+        it("should set multiple styles", () => {
+            expect(cell.style({
+                foo: "FOO", bar: "BAR", baz: "BAZ"
+            })).toBe(cell);
+            expect(style.style).toHaveBeenCalledWith("foo", "FOO");
+            expect(style.style).toHaveBeenCalledWith("bar", "BAR");
+            expect(style.style).toHaveBeenCalledWith("baz", "BAZ");
+        });
     });
 
     describe("value", () => {
+        it("should get/set the value", () => {
+            expect(cell.value()).toBeUndefined();
 
+            cell.value(5);
+            expect(cell.value()).toBe(5);
+            expect(cellNode.attributes.t).toBeUndefined();
+            expect(cellNode.children).toEqualJson([{
+                name: 'v',
+                attributes: {},
+                children: [5]
+            }]);
+
+            cell.value(-3.7);
+            expect(cell.value()).toBe(-3.7);
+            expect(cellNode.attributes.t).toBeUndefined();
+            expect(cellNode.children).toEqualJson([{
+                name: 'v',
+                attributes: {},
+                children: [-3.7]
+            }]);
+
+            cell.value(true);
+            expect(cell.value()).toBe(true);
+            expect(cellNode.attributes.t).toBe('b');
+            expect(cellNode.children).toEqualJson([{
+                name: 'v',
+                attributes: {},
+                children: [1]
+            }]);
+
+            cell.value(false);
+            expect(cell.value()).toBe(false);
+            expect(cellNode.attributes.t).toBe('b');
+            expect(cellNode.children).toEqualJson([{
+                name: 'v',
+                attributes: {},
+                children: [0]
+            }]);
+
+            cell.value(new Date(2017, 0, 1));
+            expect(cell.value()).toBe(42736);
+            expect(cellNode.attributes.t).toBeUndefined();
+            expect(cellNode.children).toEqualJson([{
+                name: 'v',
+                attributes: {},
+                children: [42736]
+            }]);
+
+            cell.value("some string");
+            expect(cell.value()).toBe("STRING");
+            expect(cellNode.attributes.t).toBe('s');
+            expect(cellNode.children).toEqualJson([{
+                name: 'v',
+                attributes: {},
+                children: [7]
+            }]);
+            expect(sharedStrings.getStringByIndex).toHaveBeenCalledWith(7);
+            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith("some string");
+
+            cellNode.attributes.t = "inlineStr";
+            cellNode.children = [{
+                name: 'is',
+                attributes: {},
+                children: [{
+                    name: 't',
+                    attributes: {},
+                    children: ["inline string"]
+                }]
+            }];
+            expect(cell.value()).toBe("inline string");
+
+            cell.value(undefined);
+            expect(cell.value()).toBeUndefined();
+            expect(cellNode.attributes.t).toBeUndefined();
+            expect(cellNode.children).toEqualJson([]);
+        });
     });
 
     describe("workbook", () => {
         it("should return the workbook from the row", () => {
-            expect(cell.workbook()).toBe("WORKBOOK");
+            expect(cell.workbook()).toBe(workbook);
         });
     });
 
     describe("sharesFormula", () => {
+        it("should return true/false if shares a given formula or not", () => {
+            cellNode.children = [{
+                name: 'f',
+                attributes: {
+                    si: 6
+                }
+            }];
 
+            expect(cell.sharesFormula(6)).toBe(true);
+            expect(cell.sharesFormula(3)).toBe(false);
+        });
+
+        it("should return undefined if doesn't share any formula", () => {
+            expect(cell.sharesFormula(6)).toBeUndefined();
+        });
     });
 
     describe("setSharedFormula", () => {
+        it("should set a ref shared formula", () => {
+            cell.setSharedFormula(3, "A1*A2", "A1:C1");
+            expect(cellNode.children).toEqualJson([{
+                name: 'f',
+                attributes: {
+                    t: "shared",
+                    si: 3,
+                    ref: "A1:C1"
+                },
+                children: ["A1*A2"]
+            }]);
+        });
 
+        it("should set a dependent shared formula", () => {
+            cell.setSharedFormula(3);
+            expect(cellNode.children).toEqualJson([{
+                name: 'f',
+                attributes: {
+                    t: "shared",
+                    si: 3
+                },
+                children: []
+            }]);
+        });
     });
 
     describe("toObject", () => {
@@ -295,6 +474,42 @@ fdescribe("Cell", () => {
     });
 
     describe("_initNode", () => {
+        it("should parse the address", () => {
+            cell._initNode(cellNode);
+            expect(cell._ref).toEqualJson({
+                type: 'cell',
+                columnName: 'C',
+                columnNumber: 3,
+                columnAnchored: false,
+                rowNumber: 7,
+                rowAnchored: false
+            });
+        });
 
+        it("should update the sheet max shared formula ID", () => {
+            spyOn(cell, '_getSharedFormulaRefId').and.returnValue("REF_ID");
+            cell._initNode(cellNode);
+            expect(sheet.updateMaxSharedFormulaId).toHaveBeenCalledWith("REF_ID");
+        });
+
+        it("should clear and stored formula values", () => {
+            cellNode.children = [{
+                name: 'f',
+                attributes: {},
+                children: []
+            }, {
+                name: 'v',
+                attributes: {},
+                children: ["VALUE"]
+            }];
+
+            cell._initNode(cellNode);
+
+            expect(cellNode.children).toEqualJson([{
+                name: 'f',
+                attributes: {},
+                children: []
+            }]);
+        });
     });
 });
