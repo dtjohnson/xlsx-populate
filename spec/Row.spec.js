@@ -156,6 +156,22 @@ describe("Row", () => {
         });
     });
 
+    describe("minUsedColumnNumber", () => {
+        it("should return the min column number", () => {
+            row._cells = [];
+            row._cells[5] = row._cells[7] = {};
+            expect(row.minUsedColumnNumber()).toBe(5);
+        });
+    });
+
+    describe("maxUsedColumnNumber", () => {
+        it("should return the max column number", () => {
+            row._cells = [];
+            row._cells[5] = row._cells[7] = {};
+            expect(row.maxUsedColumnNumber()).toBe(7);
+        });
+    });
+
     describe("toObject", () => {
         it("should return the object representation with children in order", () => {
             row.cell(3);
