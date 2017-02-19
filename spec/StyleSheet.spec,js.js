@@ -315,7 +315,7 @@ describe("StyleSheet", () => {
         });
     });
 
-    describe("_initNode", () => {
+    describe("_init", () => {
         it("should add the numFmts node and clear the counts", () => {
             expect(styleSheet._numFmtsNode).toEqualJson({ name: "numFmts", attributes: {}, children: [] });
             expect(styleSheet._fontsNode.attributes.count).toBeUndefined();

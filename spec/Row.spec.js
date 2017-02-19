@@ -172,7 +172,7 @@ describe("Row", () => {
         });
     });
 
-    describe("_initNode", () => {
+    describe("_init", () => {
         it("should store existing rows", () => {
             expect(row._cells).toEqual([undefined, undefined, jasmine.any(Cell)]);
             expect(Cell).toHaveBeenCalledWith(row, rowNode.children[0]);

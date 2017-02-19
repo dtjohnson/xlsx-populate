@@ -101,9 +101,9 @@ describe("SharedStrings", () => {
         });
     });
 
-    describe("_initNode", () => {
+    describe("_init", () => {
         it("should create the node if needed", () => {
-            sharedStrings._initNode(null);
+            sharedStrings._init(null);
             expect(sharedStrings._node).toEqualJson({
                 name: "sst",
                 attributes: {

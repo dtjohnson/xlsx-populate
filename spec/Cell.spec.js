@@ -496,9 +496,9 @@ describe("Cell", () => {
         });
     });
 
-    describe("_initNode", () => {
+    describe("_init", () => {
         it("should parse the address", () => {
-            cell._initNode(cellNode);
+            cell._init(cellNode);
             expect(cell._ref).toEqualJson({
                 type: 'cell',
                 columnName: 'C',
@@ -511,7 +511,7 @@ describe("Cell", () => {
 
         it("should update the sheet max shared formula ID", () => {
             spyOn(cell, '_getSharedFormulaRefId').and.returnValue("REF_ID");
-            cell._initNode(cellNode);
+            cell._init(cellNode);
             expect(sheet.updateMaxSharedFormulaId).toHaveBeenCalledWith("REF_ID");
         });
 
@@ -526,7 +526,7 @@ describe("Cell", () => {
                 children: ["VALUE"]
             }];
 
-            cell._initNode(cellNode);
+            cell._init(cellNode);
 
             expect(cellNode.children).toEqualJson([{
                 name: 'f',
