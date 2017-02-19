@@ -118,6 +118,9 @@ cell.style("border", {
 <dt><a href="#Row">Row</a></dt>
 <dd><p>A row.</p>
 </dd>
+<dt><a href="#Sheet">Sheet</a></dt>
+<dd><p>A worksheet.</p>
+</dd>
 </dl>
 
 <a name="Cell"></a>
@@ -134,9 +137,9 @@ A cell
         * [.clear()](#Cell+clear) ⇒ <code>[Cell](#Cell)</code>
         * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
         * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
+        * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
         * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
-        * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
         * [.groupWith(selections)](#Cell+groupWith) ⇒ <code>Group</code>
         * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
@@ -144,7 +147,7 @@ A cell
         * [.relativeCell(rowOffset, columnOffset)](#Cell+relativeCell) ⇒ <code>[Cell](#Cell)</code>
         * [.row()](#Cell+row) ⇒ <code>[Row](#Row)</code>
         * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
-        * [.sheet()](#Cell+sheet) ⇒ <code>Sheet</code>
+        * [.sheet()](#Cell+sheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.style(name)](#Cell+style) ⇒ <code>\*</code>
         * [.style(names)](#Cell+style) ⇒ <code>object.&lt;string, \*&gt;</code>
         * [.style(name, value)](#Cell+style) ⇒ <code>[Cell](#Cell)</code>
@@ -199,6 +202,19 @@ Gets the column number of the cell (1-based).
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>number</code> - The column number.  
+<a name="Cell+find"></a>
+
+#### cell.find(pattern, [replacement]) ⇒ <code>boolean</code>
+Find the given pattern in the cell and optionally replace it.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>boolean</code> - A flag indicating if the pattern was found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
+| [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in the cell will be replaced. |
+
 <a name="Cell+formula"></a>
 
 #### cell.formula() ⇒ <code>string</code>
@@ -217,19 +233,6 @@ Sets the formula in the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | formula | <code>string</code> | The formula to set. |
-
-<a name="Cell+find"></a>
-
-#### cell.find(pattern, [replacement]) ⇒ <code>boolean</code>
-Find the given pattern in the cell and optionally replace it.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>boolean</code> - A flag indicating if the pattern was found.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
-| [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in the cell will be replaced. |
 
 <a name="Cell+groupWith"></a>
 
@@ -308,11 +311,11 @@ Gets the row number of the cell (1-based).
 **Returns**: <code>number</code> - The row number.  
 <a name="Cell+sheet"></a>
 
-#### cell.sheet() ⇒ <code>Sheet</code>
+#### cell.sheet() ⇒ <code>[Sheet](#Sheet)</code>
 Gets the parent sheet.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>Sheet</code> - The parent sheet.  
+**Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Cell+style"></a>
 
 #### cell.style(name) ⇒ <code>\*</code>
@@ -425,7 +428,7 @@ A column.
     * [.columnNumber()](#Column+columnNumber) ⇒ <code>number</code>
     * [.hidden()](#Column+hidden) ⇒ <code>boolean</code>
     * [.hidden(hidden)](#Column+hidden) ⇒ <code>[Column](#Column)</code>
-    * [.sheet()](#Column+sheet) ⇒ <code>Sheet</code>
+    * [.sheet()](#Column+sheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.width()](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code>
     * [.width(width)](#Column+width) ⇒ <code>[Column](#Column)</code>
     * [.workbook()](#Column+workbook) ⇒ <code>Workbook</code>
@@ -491,11 +494,11 @@ Sets whether the column is hidden.
 
 <a name="Column+sheet"></a>
 
-#### column.sheet() ⇒ <code>Sheet</code>
+#### column.sheet() ⇒ <code>[Sheet](#Sheet)</code>
 Get the parent sheet.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
-**Returns**: <code>Sheet</code> - The parent sheet.  
+**Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Column+width"></a>
 
 #### column.width() ⇒ <code>undefined</code> &#124; <code>number</code>
@@ -543,7 +546,7 @@ A range of cells.
         * [.merged()](#Range+merged) ⇒ <code>boolean</code>
         * [.merged(merged)](#Range+merged) ⇒ <code>[Range](#Range)</code>
         * [.reduce(callback, [initialValue])](#Range+reduce) ⇒ <code>\*</code>
-        * [.sheet()](#Range+sheet) ⇒ <code>Sheet</code>
+        * [.sheet()](#Range+sheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.startCell()](#Range+startCell) ⇒ <code>[Cell](#Cell)</code>
         * [.style(name)](#Range+style) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
         * [.style(names)](#Range+style) ⇒ <code>Object.&lt;string, Array.&lt;Array.&lt;\*&gt;&gt;&gt;</code>
@@ -698,11 +701,11 @@ Reduces the range to a single value accumulated from the result of a function ca
 
 <a name="Range+sheet"></a>
 
-#### range.sheet() ⇒ <code>Sheet</code>
+#### range.sheet() ⇒ <code>[Sheet](#Sheet)</code>
 Gets the parent sheet of the range.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>Sheet</code> - The parent sheet.  
+**Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Range+startCell"></a>
 
 #### range.startCell() ⇒ <code>[Cell](#Cell)</code>
@@ -942,7 +945,7 @@ A row.
     * [.hidden()](#Row+hidden) ⇒ <code>boolean</code>
     * [.hidden(hidden)](#Row+hidden) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
-    * [.sheet()](#Row+sheet) ⇒ <code>Sheet</code>
+    * [.sheet()](#Row+sheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.workbook()](#Row+workbook) ⇒ <code>Workbook</code>
 
 <a name="Row+address"></a>
@@ -1018,11 +1021,11 @@ Gets the row number.
 **Returns**: <code>number</code> - The row number.  
 <a name="Row+sheet"></a>
 
-#### row.sheet() ⇒ <code>Sheet</code>
+#### row.sheet() ⇒ <code>[Sheet](#Sheet)</code>
 Gets the parent sheet of the row.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
-**Returns**: <code>Sheet</code> - The parent sheet.  
+**Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Row+workbook"></a>
 
 #### row.workbook() ⇒ <code>Workbook</code>
@@ -1030,4 +1033,88 @@ Get the parent workbook.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
 **Returns**: <code>Workbook</code> - The parent workbook.  
+<a name="Sheet"></a>
+
+### Sheet
+A worksheet.
+
+**Kind**: global class  
+
+* [Sheet](#Sheet)
+    * [.cell(address)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
+    * [.cell(rowNumber, columnNameOrNumber)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
+    * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
+    * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
+    * [.name()](#Sheet+name) ⇒ <code>string</code>
+    * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
+
+<a name="Sheet+cell"></a>
+
+#### sheet.cell(address) ⇒ <code>[Cell](#Cell)</code>
+Gets the cell with the given address.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the cell. |
+
+<a name="Sheet+cell"></a>
+
+#### sheet.cell(rowNumber, columnNameOrNumber) ⇒ <code>[Cell](#Cell)</code>
+Gets the cell with the given row and column numbers.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rowNumber | <code>number</code> | The row number of the cell. |
+| columnNameOrNumber | <code>string</code> &#124; <code>number</code> | The column name or number of the cell. |
+
+<a name="Sheet+column"></a>
+
+#### sheet.column(columnNameOrNumber) ⇒ <code>[Column](#Column)</code>
+Gets a column in the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Column](#Column)</code> - The column.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| columnNameOrNumber | <code>string</code> &#124; <code>number</code> | The name or number of the column. |
+
+<a name="Sheet+find"></a>
+
+#### sheet.find(pattern, [replacement]) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
+Find the given pattern in the sheet and optionally replace it.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Array.&lt;Cell&gt;](#Cell)</code> - The matching cells.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
+| [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in each cell will be replaced. |
+
+<a name="Sheet+name"></a>
+
+#### sheet.name() ⇒ <code>string</code>
+Get the name of the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>string</code> - The sheet name.  
+<a name="Sheet+row"></a>
+
+#### sheet.row(rowNumber) ⇒ <code>[Row](#Row)</code>
+Gets the row with the given number.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Row](#Row)</code> - The row with the given number.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rowNumber | <code>number</code> | The row number. |
+
 

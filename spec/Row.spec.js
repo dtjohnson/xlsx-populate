@@ -15,7 +15,6 @@ describe("Row", () => {
             return this.id;
         });
         Cell.prototype.find = jasmine.createSpy('find');
-        Cell.prototype.replace = jasmine.createSpy('replace');
 
         Row = proxyquire("../lib/Row", { './Cell': Cell });
         sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId']);
@@ -93,18 +92,6 @@ describe("Row", () => {
         });
     });
 
-    describe("find", () => {
-        it("should return the matches", () => {
-            Cell.prototype.find.and.returnValue(true);
-            expect(row.find('foo')).toEqual([row.cell(2)]);
-            expect(Cell.prototype.find).toHaveBeenCalledWith(/foo/gim, undefined);
-
-            Cell.prototype.find.and.returnValue(false);
-            expect(row.find('bar', 'baz')).toEqual([]);
-            expect(Cell.prototype.find).toHaveBeenCalledWith(/bar/gim, 'baz');
-        });
-    });
-
     describe("height", () => {
         it("should get/set the height", () => {
             expect(row.height()).toBeUndefined();
@@ -153,6 +140,18 @@ describe("Row", () => {
     describe("sheet", () => {
         it("should return the sheet", () => {
             expect(row.sheet()).toBe(sheet);
+        });
+    });
+
+    describe("find", () => {
+        it("should return the matches", () => {
+            Cell.prototype.find.and.returnValue(true);
+            expect(row.find('foo')).toEqual([row.cell(2)]);
+            expect(Cell.prototype.find).toHaveBeenCalledWith(/foo/gim, undefined);
+
+            Cell.prototype.find.and.returnValue(false);
+            expect(row.find('bar', 'baz')).toEqual([]);
+            expect(Cell.prototype.find).toHaveBeenCalledWith(/bar/gim, 'baz');
         });
     });
 
