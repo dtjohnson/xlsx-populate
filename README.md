@@ -152,7 +152,6 @@ A cell
         * [.value()](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
         * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
-        * [.getSharedRefFormula()](#Cell+getSharedRefFormula) ⇒ <code>string</code> &#124; <code>undefined</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -389,13 +388,6 @@ Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>Workbook</code> - The parent workbook.  
-<a name="Cell+getSharedRefFormula"></a>
-
-#### cell.getSharedRefFormula() ⇒ <code>string</code> &#124; <code>undefined</code>
-Gets the formula if a shared formula ref cell.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>string</code> &#124; <code>undefined</code> - The formula.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -431,9 +423,11 @@ A column.
     * [.cell(rowNumber)](#Column+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.columnName()](#Column+columnName) ⇒ <code>string</code>
     * [.columnNumber()](#Column+columnNumber) ⇒ <code>number</code>
-    * [.hidden([hidden])](#Column+hidden) ⇒ <code>boolean</code> &#124; <code>[Column](#Column)</code>
+    * [.hidden()](#Column+hidden) ⇒ <code>boolean</code>
+    * [.hidden(hidden)](#Column+hidden) ⇒ <code>[Column](#Column)</code>
     * [.sheet()](#Column+sheet) ⇒ <code>Sheet</code>
-    * [.width([width])](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Column](#Column)</code>
+    * [.width()](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code>
+    * [.width(width)](#Column+width) ⇒ <code>[Column](#Column)</code>
     * [.workbook()](#Column+workbook) ⇒ <code>Workbook</code>
 
 <a name="Column+address"></a>
@@ -478,15 +472,22 @@ Get the number of the column.
 **Returns**: <code>number</code> - The column number.  
 <a name="Column+hidden"></a>
 
-#### column.hidden([hidden]) ⇒ <code>boolean</code> &#124; <code>[Column](#Column)</code>
-Gets or sets whether the column is hidden.
+#### column.hidden() ⇒ <code>boolean</code>
+Gets a value indicating whether the column is hidden.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
-**Returns**: <code>boolean</code> &#124; <code>[Column](#Column)</code> - A flag indicating whether the column is hidden if getting, the column if setting.  
+**Returns**: <code>boolean</code> - A flag indicating whether the column is hidden.  
+<a name="Column+hidden"></a>
+
+#### column.hidden(hidden) ⇒ <code>[Column](#Column)</code>
+Sets whether the column is hidden.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>[Column](#Column)</code> - The column.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [hidden] | <code>boolean</code> | A flag indicating whether to hide the column. |
+| hidden | <code>boolean</code> | A flag indicating whether to hide the column. |
 
 <a name="Column+sheet"></a>
 
@@ -497,15 +498,22 @@ Get the parent sheet.
 **Returns**: <code>Sheet</code> - The parent sheet.  
 <a name="Column+width"></a>
 
-#### column.width([width]) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Column](#Column)</code>
-Gets or sets the width.
+#### column.width() ⇒ <code>undefined</code> &#124; <code>number</code>
+Gets the width.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
-**Returns**: <code>undefined</code> &#124; <code>number</code> &#124; <code>[Column](#Column)</code> - The width (or undefined) if getting, the column if setting.  
+**Returns**: <code>undefined</code> &#124; <code>number</code> - The width (or undefined).  
+<a name="Column+width"></a>
+
+#### column.width(width) ⇒ <code>[Column](#Column)</code>
+Sets the width.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>[Column](#Column)</code> - The column.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [width] | <code>number</code> | The width of the column. |
+| width | <code>number</code> | The width of the column. |
 
 <a name="Column+workbook"></a>
 
@@ -929,8 +937,10 @@ A row.
 * [Row](#Row)
     * [.address([opts])](#Row+address) ⇒ <code>string</code>
     * [.cell(columnNameOrNumber)](#Row+cell) ⇒ <code>[Cell](#Cell)</code>
-    * [.height([height])](#Row+height) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code>
-    * [.hidden([hidden])](#Row+hidden) ⇒ <code>boolean</code> &#124; <code>[Row](#Row)</code>
+    * [.height()](#Row+height) ⇒ <code>undefined</code> &#124; <code>number</code>
+    * [.height(height)](#Row+height) ⇒ <code>[Row](#Row)</code>
+    * [.hidden()](#Row+hidden) ⇒ <code>boolean</code>
+    * [.hidden(hidden)](#Row+hidden) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
     * [.sheet()](#Row+sheet) ⇒ <code>Sheet</code>
     * [.workbook()](#Row+workbook) ⇒ <code>Workbook</code>
@@ -963,27 +973,41 @@ Get a cell in the row.
 
 <a name="Row+height"></a>
 
-#### row.height([height]) ⇒ <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code>
-Gets or sets the row height.
+#### row.height() ⇒ <code>undefined</code> &#124; <code>number</code>
+Gets the row height.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
-**Returns**: <code>undefined</code> &#124; <code>number</code> &#124; <code>[Row](#Row)</code> - The height (or undefined) if getting, the row if setting.  
+**Returns**: <code>undefined</code> &#124; <code>number</code> - The height (or undefined).  
+<a name="Row+height"></a>
+
+#### row.height(height) ⇒ <code>[Row](#Row)</code>
+Sets the row height.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>[Row](#Row)</code> - The row.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [height] | <code>number</code> | The height of the row. |
+| height | <code>number</code> | The height of the row. |
 
 <a name="Row+hidden"></a>
 
-#### row.hidden([hidden]) ⇒ <code>boolean</code> &#124; <code>[Row](#Row)</code>
-Gets or sets whether the row is hidden.
+#### row.hidden() ⇒ <code>boolean</code>
+Gets a value indicating whether the row is hidden.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
-**Returns**: <code>boolean</code> &#124; <code>[Row](#Row)</code> - A flag indicating whether the row is hidden if getting, the row if setting.  
+**Returns**: <code>boolean</code> - A flag indicating whether the row is hidden.  
+<a name="Row+hidden"></a>
+
+#### row.hidden(hidden) ⇒ <code>[Row](#Row)</code>
+Sets whether the row is hidden.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>[Row](#Row)</code> - The row.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [hidden] | <code>boolean</code> | A flag indicating whether to hide the row. |
+| hidden | <code>boolean</code> | A flag indicating whether to hide the row. |
 
 <a name="Row+rowNumber"></a>
 
