@@ -400,6 +400,29 @@ describe("Cell", () => {
         });
     });
 
+    describe("getSharedRefFormula", () => {
+        it("should return undefined if not a formula", () => {
+            expect(cell.getSharedRefFormula()).toBeUndefined();
+        });
+
+        it("should return undefined if not a shared formula ref", () => {
+            cellNode.children = [{
+                name: 'f',
+                attributes: {}
+            }];
+            expect(cell.getSharedRefFormula()).toBeUndefined();
+        });
+
+        it("should return the shared formula", () => {
+            cellNode.children = [{
+                name: 'f',
+                attributes: { ref: "A1:C3", si: 5 },
+                children: ["FORMULA"]
+            }];
+            expect(cell.getSharedRefFormula()).toBe("FORMULA");
+        });
+    });
+
     describe("sharesFormula", () => {
         it("should return true/false if shares a given formula or not", () => {
             cellNode.children = [{

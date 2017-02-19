@@ -152,6 +152,7 @@ A cell
         * [.value()](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
         * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
+        * [.getSharedRefFormula()](#Cell+getSharedRefFormula) ⇒ <code>string</code> &#124; <code>undefined</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -388,6 +389,13 @@ Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
 **Returns**: <code>Workbook</code> - The parent workbook.  
+<a name="Cell+getSharedRefFormula"></a>
+
+#### cell.getSharedRefFormula() ⇒ <code>string</code> &#124; <code>undefined</code>
+Gets the formula if a shared formula ref cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>string</code> &#124; <code>undefined</code> - The formula.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -516,6 +524,7 @@ A range of cells.
 * [Range](#Range)
     * _instance_
         * [.address([opts])](#Range+address) ⇒ <code>string</code>
+        * [.cell(ri, ci)](#Range+cell) ⇒ <code>[Cell](#Cell)</code>
         * [.clear()](#Range+clear) ⇒ <code>[Range](#Range)</code>
         * [.endCell()](#Range+endCell) ⇒ <code>[Cell](#Cell)</code>
         * [.forEach(callback)](#Range+forEach) ⇒ <code>[Range](#Range)</code>
@@ -525,10 +534,7 @@ A range of cells.
         * [.map(callback)](#Range+map) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
         * [.merged()](#Range+merged) ⇒ <code>boolean</code>
         * [.merged(merged)](#Range+merged) ⇒ <code>[Range](#Range)</code>
-        * [.numColumns()](#Range+numColumns) ⇒ <code>number</code>
-        * [.numRows()](#Range+numRows) ⇒ <code>number</code>
         * [.reduce(callback, [initialValue])](#Range+reduce) ⇒ <code>\*</code>
-        * [.relativeCell(ri, ci)](#Range+relativeCell) ⇒ <code>[Cell](#Cell)</code>
         * [.sheet()](#Range+sheet) ⇒ <code>Sheet</code>
         * [.startCell()](#Range+startCell) ⇒ <code>[Cell](#Cell)</code>
         * [.style(name)](#Range+style) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
@@ -539,10 +545,10 @@ A range of cells.
         * [.style(styles)](#Range+style) ⇒ <code>[Range](#Range)</code>
         * [.tap(callback)](#Range+tap) ⇒ <code>[Range](#Range)</code>
         * [.thru(callback)](#Range+thru) ⇒ <code>\*</code>
-        * [.value()](#Range+value) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
-        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
-        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
-        * [.value(value)](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.values()](#Range+values) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+        * [.values()](#Range+values) ⇒ <code>[Range](#Range)</code>
+        * [.values()](#Range+values) ⇒ <code>[Range](#Range)</code>
+        * [.values(value)](#Range+values) ⇒ <code>[Range](#Range)</code>
         * [.workbook()](#Range+workbook) ⇒ <code>Workbook</code>
     * _inner_
         * [~forEachCallback](#Range..forEachCallback) ⇒ <code>undefined</code>
@@ -567,6 +573,19 @@ Get the address of the range.
 | [opts.startColumnAnchored] | <code>boolean</code> | Anchor the start column. |
 | [opts.endRowAnchored] | <code>boolean</code> | Anchor the end row. |
 | [opts.endColumnAnchored] | <code>boolean</code> | Anchor the end column. |
+
+<a name="Range+cell"></a>
+
+#### range.cell(ri, ci) ⇒ <code>[Cell](#Cell)</code>
+Gets a cell within the range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ri | <code>number</code> | Row index relative to the top-left corner of the range (0-based). |
+| ci | <code>number</code> | Column index relative to the top-left corner of the range (0-based). |
 
 <a name="Range+clear"></a>
 
@@ -656,20 +675,6 @@ Sets a value indicating whether the cells in the range should be merged.
 | --- | --- | --- |
 | merged | <code>boolean</code> | True to merge, false to unmerge. |
 
-<a name="Range+numColumns"></a>
-
-#### range.numColumns() ⇒ <code>number</code>
-Gets the number of columns in the range.
-
-**Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>number</code> - - The number of columns.  
-<a name="Range+numRows"></a>
-
-#### range.numRows() ⇒ <code>number</code>
-Gets the number of rows in the range.
-
-**Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>number</code> - - The number of rows.  
 <a name="Range+reduce"></a>
 
 #### range.reduce(callback, [initialValue]) ⇒ <code>\*</code>
@@ -682,19 +687,6 @@ Reduces the range to a single value accumulated from the result of a function ca
 | --- | --- | --- |
 | callback | <code>[reduceCallback](#Range..reduceCallback)</code> | Function called for each cell in the range. |
 | [initialValue] | <code>\*</code> | The initial value. |
-
-<a name="Range+relativeCell"></a>
-
-#### range.relativeCell(ri, ci) ⇒ <code>[Cell](#Cell)</code>
-Gets a cell within the range.
-
-**Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>[Cell](#Cell)</code> - The cell.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| ri | <code>number</code> | Row index relative to the start cell. |
-| ci | <code>number</code> | Column index relative to the start cell. |
 
 <a name="Range+sheet"></a>
 
@@ -809,16 +801,16 @@ Invoke a callback on the range and return the value provided by the callback. Us
 | --- | --- | --- |
 | callback | <code>[thruCallback](#Range..thruCallback)</code> | The callback function. |
 
-<a name="Range+value"></a>
+<a name="Range+values"></a>
 
-#### range.value() ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+#### range.values() ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
 Get the values of each cell in the range as a 2D array.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
 **Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - The values.  
-<a name="Range+value"></a>
+<a name="Range+values"></a>
 
-#### range.value() ⇒ <code>[Range](#Range)</code>
+#### range.values() ⇒ <code>[Range](#Range)</code>
 Set the values in each cell to the result of a function called for each.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -828,9 +820,9 @@ Set the values in each cell to the result of a function called for each.
 | --- | --- | --- |
 |  | <code>[mapCallback](#Range..mapCallback)</code> | The callback to provide value for the cell. |
 
-<a name="Range+value"></a>
+<a name="Range+values"></a>
 
-#### range.value() ⇒ <code>[Range](#Range)</code>
+#### range.values() ⇒ <code>[Range](#Range)</code>
 Sets the value in each cell to the corresponding value in the given 2D array of values.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -840,9 +832,9 @@ Sets the value in each cell to the corresponding value in the given 2D array of 
 | --- | --- | --- |
 |  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The values to set. |
 
-<a name="Range+value"></a>
+<a name="Range+values"></a>
 
-#### range.value(value) ⇒ <code>[Range](#Range)</code>
+#### range.values(value) ⇒ <code>[Range](#Range)</code>
 Set the value of all cells in the range to a single value.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
