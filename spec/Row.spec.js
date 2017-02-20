@@ -41,8 +41,8 @@ describe("Row", () => {
         it("should return the address", () => {
             expect(row.address()).toBe('7:7');
             expect(row.address({ anchored: true })).toBe('$7:$7');
-            expect(row.address({ includeSheetName: true })).toBe('NAME!7:7');
-            expect(row.address({ includeSheetName: true, anchored: true })).toBe('NAME!$7:$7');
+            expect(row.address({ includeSheetName: true })).toBe("'NAME'!7:7");
+            expect(row.address({ includeSheetName: true, anchored: true })).toBe("'NAME'!$7:$7");
         });
     });
 

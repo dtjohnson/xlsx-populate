@@ -27,8 +27,8 @@ describe("Column", () => {
         it("should return the address", () => {
             expect(column.address()).toBe('E:E');
             expect(column.address({ anchored: true })).toBe('$E:$E');
-            expect(column.address({ includeSheetName: true })).toBe('NAME!E:E');
-            expect(column.address({ includeSheetName: true, anchored: true })).toBe('NAME!$E:$E');
+            expect(column.address({ includeSheetName: true })).toBe("'NAME'!E:E");
+            expect(column.address({ includeSheetName: true, anchored: true })).toBe("'NAME'!$E:$E");
         });
     });
 

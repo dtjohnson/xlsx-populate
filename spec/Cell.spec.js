@@ -48,8 +48,8 @@ describe("Cell", () => {
             expect(cell.address()).toBe('C7');
             expect(cell.address({ rowAnchored: true })).toBe('C$7');
             expect(cell.address({ columnAnchored: true })).toBe('$C7');
-            expect(cell.address({ includeSheetName: true })).toBe('NAME!C7');
-            expect(cell.address({ includeSheetName: true, rowAnchored: true, columnAnchored: true })).toBe('NAME!$C$7');
+            expect(cell.address({ includeSheetName: true })).toBe("'NAME'!C7");
+            expect(cell.address({ includeSheetName: true, rowAnchored: true, columnAnchored: true })).toBe("'NAME'!$C$7");
         });
     });
 

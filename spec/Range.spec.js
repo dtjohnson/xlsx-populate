@@ -38,14 +38,14 @@ describe("Range", () => {
             expect(range.address({ startColumnAnchored: true })).toBe('$B3:C5');
             expect(range.address({ endRowAnchored: true })).toBe('B3:C$5');
             expect(range.address({ endColumnAnchored: true })).toBe('B3:$C5');
-            expect(range.address({ includeSheetName: true })).toBe('NAME!B3:C5');
+            expect(range.address({ includeSheetName: true })).toBe("'NAME'!B3:C5");
             expect(range.address({
                 includeSheetName: true,
                 startRowAnchored: true,
                 startColumnAnchored: true,
                 endRowAnchored: true,
                 endColumnAnchored: true
-            })).toBe('NAME!$B$3:$C$5');
+            })).toBe("'NAME'!$B$3:$C$5");
         });
     });
 
