@@ -30,7 +30,7 @@ Backlog of features to implement (in no particular order):
 * Sheet: Rename, move, delete, activate. May require manipulating/clearing formulas.
 * When clearing a shared formula ref cell, we should move the shared formula ref to another.
 * Returning a shared formula in a not ref cell returns "SHARED". We should return a translated formula.
-* ColumnRange, RowRange
+* ColumnRange, RowRange, Group
 * Column/Row styles
 * Conditional formatting
 * Print settings
@@ -46,3 +46,5 @@ Backlog of features to implement (in no particular order):
 * Insert images
 * Frozen rows/columns
 * Workbook metadata (like author)
+* Create defined name
+* Enum of standard number formats?

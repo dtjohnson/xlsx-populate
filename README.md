@@ -140,7 +140,6 @@ A cell
         * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
         * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
-        * [.groupWith(selections)](#Cell+groupWith) ⇒ <code>Group</code>
         * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
         * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>[Range](#Range)</code>
@@ -234,18 +233,6 @@ Sets the formula in the cell.
 | --- | --- | --- |
 | formula | <code>string</code> | The formula to set. |
 
-<a name="Cell+groupWith"></a>
-
-#### cell.groupWith(selections) ⇒ <code>Group</code>
-Create a Group with this cell and other selections.
-
-**Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>Group</code> - The group.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| selections | <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>Group</code> | The selections. |
-
 <a name="Cell+tap"></a>
 
 #### cell.tap(callback) ⇒ <code>[Cell](#Cell)</code>
@@ -280,7 +267,7 @@ Create a range from this cell and another.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cell | <code>[Cell](#Cell)</code> | The other cell to range to. |
+| cell | <code>[Cell](#Cell)</code> &#124; <code>string</code> | The other cell or cell address to range to. |
 
 <a name="Cell+relativeCell"></a>
 
@@ -541,7 +528,6 @@ A range of cells.
         * [.forEach(callback)](#Range+forEach) ⇒ <code>[Range](#Range)</code>
         * [.formula()](#Range+formula) ⇒ <code>string</code> &#124; <code>undefined</code>
         * [.formula(formula)](#Range+formula) ⇒ <code>[Range](#Range)</code>
-        * [.groupWith(selections)](#Range+groupWith) ⇒ <code>Group</code>
         * [.map(callback)](#Range+map) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
         * [.merged()](#Range+merged) ⇒ <code>boolean</code>
         * [.merged(merged)](#Range+merged) ⇒ <code>[Range](#Range)</code>
@@ -642,18 +628,6 @@ Sets the shared formula in the range. The formula will be translated for each ce
 | Param | Type | Description |
 | --- | --- | --- |
 | formula | <code>string</code> | The formula to set. |
-
-<a name="Range+groupWith"></a>
-
-#### range.groupWith(selections) ⇒ <code>Group</code>
-Group the range with other selections.
-
-**Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>Group</code> - The group.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| selections | <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>Group</code> | The selections. |
 
 <a name="Range+map"></a>
 
@@ -1044,6 +1018,7 @@ A worksheet.
     * [.cell(address)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.cell(rowNumber, columnNameOrNumber)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
+    * [.definedName(name)](#Sheet+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
     * [.name()](#Sheet+name) ⇒ <code>string</code>
     * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
@@ -1089,6 +1064,22 @@ Gets a column in the sheet.
 | Param | Type | Description |
 | --- | --- | --- |
 | columnNameOrNumber | <code>string</code> &#124; <code>number</code> | The name or number of the column. |
+
+<a name="Sheet+definedName"></a>
+
+#### sheet.definedName(name) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+Gets a defined name scoped to the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> - The named selection or undefined if name not found.  
+**Throws**:
+
+- <code>Error</code> Will throw if address in defined name is not supported.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The defined name. |
 
 <a name="Sheet+find"></a>
 

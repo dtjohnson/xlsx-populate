@@ -23,9 +23,10 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range']);
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
+        sheet.range.and.returnValue("RANGE");
 
         row = jasmine.createSpyObj('row', ['sheet', 'workbook']);
         row.sheet.and.returnValue(sheet);
@@ -202,10 +203,6 @@ describe("Cell", () => {
         });
     });
 
-    xdescribe("groupWith", () => {
-        it("should");
-    });
-
     describe("tap", () => {
         it("should call the callback and return the cell", () => {
             const callback = jasmine.createSpy('callback').and.returnValue("RETURN");
@@ -222,8 +219,11 @@ describe("Cell", () => {
         });
     });
 
-    xdescribe("rangeTo", () => {
-        it("should");
+    describe("rangeTo", () => {
+        it("should create a range", () => {
+            expect(cell.rangeTo("OTHER")).toBe("RANGE");
+            expect(sheet.range).toHaveBeenCalledWith(cell, "OTHER");
+        });
     });
 
     describe("relativeCell", () => {

@@ -66,4 +66,22 @@ describe("Relationships", () => {
             expect(relationships.toObject()).toBe(relationshipsNode);
         });
     });
+
+    describe("_getStartingId", () => {
+        it("should set the next ID to 1 if no children", () => {
+            relationships._node.children = [];
+            relationships._getStartingId();
+            expect(relationships._nextId).toBe(1);
+        });
+
+        it("should set the next ID to last found ID + 1", () => {
+            relationships._node.children = [
+                { attributes: { Id: 'rId2' } },
+                { attributes: { Id: 'rId1' } },
+                { attributes: { Id: 'rId3' } }
+            ];
+            relationships._getStartingId();
+            expect(relationships._nextId).toBe(4);
+        });
+    });
 });

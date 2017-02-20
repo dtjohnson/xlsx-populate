@@ -7,7 +7,8 @@ describe("Sheet", () => {
 
     beforeEach(() => {
         let i = 0;
-        workbook = "WORKBOOK";
+        workbook = jasmine.createSpyObj("workbook", ["scopedDefinedName"]);
+        workbook.scopedDefinedName.and.returnValue("DEFINED NAME");
 
         Range = jasmine.createSpy("Range");
         Row = jasmine.createSpy("Row");
@@ -80,6 +81,13 @@ describe("Sheet", () => {
                     max: 5
                 }
             });
+        });
+    });
+
+    describe("definedName", () => {
+        it("should return the defined name", () => {
+            expect(sheet.definedName("FOO")).toBe("DEFINED NAME");
+            expect(workbook.scopedDefinedName).toHaveBeenCalledWith("FOO", sheet);
         });
     });
 
@@ -199,7 +207,7 @@ describe("Sheet", () => {
 
     describe("workbook", () => {
         it("should get the workbook", () => {
-            expect(sheet.workbook()).toBe("WORKBOOK");
+            expect(sheet.workbook()).toBe(workbook);
         });
     });
 

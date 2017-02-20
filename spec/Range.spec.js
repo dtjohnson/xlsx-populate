@@ -118,10 +118,6 @@ describe("Range", () => {
         });
     });
 
-    xdescribe("groupWith", () => {
-        it("should");
-    });
-
     describe("map", () => {
         it("should call the callback for each cell and return the values", () => {
             const callback = jasmine.createSpy("callback").and.callFake((cell, ri, ci) => `RETURN[${ri}, ${ci}]`);
