@@ -121,6 +121,9 @@ cell.style("border", {
 <dt><a href="#Sheet">Sheet</a></dt>
 <dd><p>A worksheet.</p>
 </dd>
+<dt><a href="#Workbook">Workbook</a></dt>
+<dd><p>A workbook.</p>
+</dd>
 </dl>
 
 <a name="Cell"></a>
@@ -153,7 +156,7 @@ A cell
         * [.style(styles)](#Cell+style) ⇒ <code>[Cell](#Cell)</code>
         * [.value()](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
-        * [.workbook()](#Cell+workbook) ⇒ <code>Workbook</code>
+        * [.workbook()](#Cell+workbook) ⇒ <code>[Workbook](#Workbook)</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -373,11 +376,11 @@ Sets the value of the cell.
 
 <a name="Cell+workbook"></a>
 
-#### cell.workbook() ⇒ <code>Workbook</code>
+#### cell.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>Workbook</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -418,7 +421,7 @@ A column.
     * [.sheet()](#Column+sheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.width()](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code>
     * [.width(width)](#Column+width) ⇒ <code>[Column](#Column)</code>
-    * [.workbook()](#Column+workbook) ⇒ <code>Workbook</code>
+    * [.workbook()](#Column+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Column+address"></a>
 
@@ -507,11 +510,11 @@ Sets the width.
 
 <a name="Column+workbook"></a>
 
-#### column.workbook() ⇒ <code>Workbook</code>
+#### column.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Get the parent workbook.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
-**Returns**: <code>Workbook</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Range"></a>
 
 ### Range
@@ -546,7 +549,7 @@ A range of cells.
         * [.values()](#Range+values) ⇒ <code>[Range](#Range)</code>
         * [.values()](#Range+values) ⇒ <code>[Range](#Range)</code>
         * [.values(value)](#Range+values) ⇒ <code>[Range](#Range)</code>
-        * [.workbook()](#Range+workbook) ⇒ <code>Workbook</code>
+        * [.workbook()](#Range+workbook) ⇒ <code>[Workbook](#Workbook)</code>
     * _inner_
         * [~forEachCallback](#Range..forEachCallback) ⇒ <code>undefined</code>
         * [~mapCallback](#Range..mapCallback) ⇒ <code>\*</code>
@@ -831,11 +834,11 @@ Set the value of all cells in the range to a single value.
 
 <a name="Range+workbook"></a>
 
-#### range.workbook() ⇒ <code>Workbook</code>
+#### range.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>Workbook</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Range..forEachCallback"></a>
 
 #### Range~forEachCallback ⇒ <code>undefined</code>
@@ -920,7 +923,7 @@ A row.
     * [.hidden(hidden)](#Row+hidden) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
     * [.sheet()](#Row+sheet) ⇒ <code>[Sheet](#Sheet)</code>
-    * [.workbook()](#Row+workbook) ⇒ <code>Workbook</code>
+    * [.workbook()](#Row+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Row+address"></a>
 
@@ -1002,11 +1005,11 @@ Gets the parent sheet of the row.
 **Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Row+workbook"></a>
 
-#### row.workbook() ⇒ <code>Workbook</code>
+#### row.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Get the parent workbook.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
-**Returns**: <code>Workbook</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Sheet"></a>
 
 ### Sheet
@@ -1026,7 +1029,7 @@ A worksheet.
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
-    * [.workbook()](#Sheet+workbook) ⇒ <code>Workbook</code>
+    * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Sheet+cell"></a>
 
@@ -1162,9 +1165,131 @@ Get the range of cells in the sheet that have contained a value or style at any 
 **Returns**: <code>[Range](#Range)</code> &#124; <code>undefined</code> - The used range or undefined if no cells in the sheet are used.  
 <a name="Sheet+workbook"></a>
 
-#### sheet.workbook() ⇒ <code>Workbook</code>
+#### sheet.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
-**Returns**: <code>Workbook</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+<a name="Workbook"></a>
+
+### Workbook
+A workbook.
+
+**Kind**: global class  
+
+* [Workbook](#Workbook)
+    * _instance_
+        * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+        * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
+        * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
+        * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
+        * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
+    * _static_
+        * [.MIME_TYPE](#Workbook.MIME_TYPE) : <code>string</code>
+        * [.fromBlankAsync()](#Workbook.fromBlankAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+        * [.fromDataAsync(data)](#Workbook.fromDataAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+        * [.fromFileAsync(path)](#Workbook.fromFileAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+
+<a name="Workbook+definedName"></a>
+
+#### workbook.definedName(name) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+Gets a defined name scoped to the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> - The named selection or undefined if name not found.  
+**Throws**:
+
+- <code>Error</code> Will throw if address in defined name is not supported.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The defined name. |
+
+<a name="Workbook+find"></a>
+
+#### workbook.find(pattern, [replacement]) ⇒ <code>boolean</code>
+Find the given pattern in the workbook and optionally replace it.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>boolean</code> - A flag indicating if the pattern was found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
+| [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in each cell will be replaced. |
+
+<a name="Workbook+outputAsync"></a>
+
+#### workbook.outputAsync([type]) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
+Generates the workbook output.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code> - The data.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [type] | <code>string</code> | The type of the data to return. (Supports any supported [JSZip data types](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html): base64, binarystring, uint8array, arraybuffer, blob, nodebuffer) Defaults to 'nodebuffer' in Node.js and 'blob' in browsers. |
+
+<a name="Workbook+sheet"></a>
+
+#### workbook.sheet(sheetNameOrIndex) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
+Gets the sheet with the provided name or index (0-based).
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code> - The sheet or undefined if not found.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sheetNameOrIndex | <code>string</code> &#124; <code>number</code> | The sheet name or index. |
+
+<a name="Workbook+toFileAsync"></a>
+
+#### workbook.toFileAsync(path) ⇒ <code>Promise.&lt;undefined&gt;</code>
+Write the workbook to file. (Not supported in browsers.)
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>Promise.&lt;undefined&gt;</code> - A promise.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| path | <code>string</code> | The path of the file to write. |
+
+<a name="Workbook.MIME_TYPE"></a>
+
+#### Workbook.MIME_TYPE : <code>string</code>
+The XLSX mime type.
+
+**Kind**: static property of <code>[Workbook](#Workbook)</code>  
+<a name="Workbook.fromBlankAsync"></a>
+
+#### Workbook.fromBlankAsync() ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+Create a new blank workbook.
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Promise.&lt;Workbook&gt;](#Workbook)</code> - The workbook.  
+<a name="Workbook.fromDataAsync"></a>
+
+#### Workbook.fromDataAsync(data) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+Loads a workbook from a data object. (Supports any supported [JSZip data types](https://stuk.github.io/jszip/documentation/api_jszip/load_async.html).)
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Promise.&lt;Workbook&gt;](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| data | <code>string</code> &#124; <code>Array.&lt;number&gt;</code> &#124; <code>ArrayBuffer</code> &#124; <code>Uint8Array</code> &#124; <code>Buffer</code> &#124; <code>Blob</code> &#124; <code>Promise.&lt;\*&gt;</code> | The data to load. |
+
+<a name="Workbook.fromFileAsync"></a>
+
+#### Workbook.fromFileAsync(path) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+Loads a workbook from file.
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Promise.&lt;Workbook&gt;](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| path | <code>string</code> | The path to the workbook. |
+
 
