@@ -143,6 +143,29 @@ describe("Row", () => {
         });
     });
 
+    describe("clearCellsUsingSharedFormula", () => {
+        it("should clear cells with matching shared formula", () => {
+            row._cells = [
+                undefined,
+                {
+                    sharesFormula: jasmine.createSpy("sharesFormula").and.returnValue(true),
+                    clear: jasmine.createSpy("clear")
+                },
+                undefined,
+                {
+                    sharesFormula: jasmine.createSpy("sharesFormula").and.returnValue(false),
+                    clear: jasmine.createSpy("clear")
+                }
+            ];
+
+            row.clearCellsUsingSharedFormula(7);
+            expect(row._cells[1].sharesFormula).toHaveBeenCalledWith(7);
+            expect(row._cells[1].clear).toHaveBeenCalledWith();
+            expect(row._cells[3].sharesFormula).toHaveBeenCalledWith(7);
+            expect(row._cells[3].clear).not.toHaveBeenCalled();
+        });
+    });
+
     describe("find", () => {
         it("should return the matches", () => {
             Cell.prototype.find.and.returnValue(true);

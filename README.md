@@ -1046,7 +1046,12 @@ A worksheet.
     * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
     * [.name()](#Sheet+name) ⇒ <code>string</code>
+    * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
+    * [.range(startCell, endCell)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
+    * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
+    * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
+    * [.workbook()](#Sheet+workbook) ⇒ <code>Workbook</code>
 
 <a name="Sheet+cell"></a>
 
@@ -1105,6 +1110,46 @@ Get the name of the sheet.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
 **Returns**: <code>string</code> - The sheet name.  
+<a name="Sheet+range"></a>
+
+#### sheet.range(address) ⇒ <code>[Range](#Range)</code>
+Gets a range from the given range address.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The range address (e.g. 'A1:B3'). |
+
+<a name="Sheet+range"></a>
+
+#### sheet.range(startCell, endCell) ⇒ <code>[Range](#Range)</code>
+Gets a range from the given cells or cell addresses.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| startCell | <code>string</code> &#124; <code>[Cell](#Cell)</code> | The starting cell or cell address (e.g. 'A1'). |
+| endCell | <code>string</code> &#124; <code>[Cell](#Cell)</code> | The ending cell or cell address (e.g. 'B3'). |
+
+<a name="Sheet+range"></a>
+
+#### sheet.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber) ⇒ <code>[Range](#Range)</code>
+Gets a range from the given row numbers and column names or numbers.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Range](#Range)</code> - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| startRowNumber | <code>number</code> | The starting cell row number. |
+| startColumnNameOrNumber | <code>string</code> &#124; <code>number</code> | The starting cell column name or number. |
+| endRowNumber | <code>number</code> | The ending cell row number. |
+| endColumnNameOrNumber | <code>string</code> &#124; <code>number</code> | The ending cell column name or number. |
+
 <a name="Sheet+row"></a>
 
 #### sheet.row(rowNumber) ⇒ <code>[Row](#Row)</code>
@@ -1117,4 +1162,18 @@ Gets the row with the given number.
 | --- | --- | --- |
 | rowNumber | <code>number</code> | The row number. |
 
+<a name="Sheet+usedRange"></a>
+
+#### sheet.usedRange() ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
+Get the range of cells in the sheet that have contained a value or style at any point. Useful for extracting the entire sheet contents.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Range](#Range)</code> &#124; <code>undefined</code> - The used range or undefined if no cells in the sheet are used.  
+<a name="Sheet+workbook"></a>
+
+#### sheet.workbook() ⇒ <code>Workbook</code>
+Gets the parent workbook.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>Workbook</code> - The parent workbook.  
 
