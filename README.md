@@ -1186,9 +1186,11 @@ A workbook.
         * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
     * _static_
         * [.MIME_TYPE](#Workbook.MIME_TYPE) : <code>string</code>
+        * [.dateToNumber(date)](#Workbook.dateToNumber) ⇒ <code>number</code>
         * [.fromBlankAsync()](#Workbook.fromBlankAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
         * [.fromDataAsync(data)](#Workbook.fromDataAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
         * [.fromFileAsync(path)](#Workbook.fromFileAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+        * [.numberToDate(number)](#Workbook.numberToDate) ⇒ <code>Date</code>
 
 <a name="Workbook+definedName"></a>
 
@@ -1261,6 +1263,18 @@ Write the workbook to file. (Not supported in browsers.)
 The XLSX mime type.
 
 **Kind**: static property of <code>[Workbook](#Workbook)</code>  
+<a name="Workbook.dateToNumber"></a>
+
+#### Workbook.dateToNumber(date) ⇒ <code>number</code>
+Convert a date to a number for Excel.
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>number</code> - The number.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| date | <code>Date</code> | The date. |
+
 <a name="Workbook.fromBlankAsync"></a>
 
 #### Workbook.fromBlankAsync() ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
@@ -1291,5 +1305,17 @@ Loads a workbook from file.
 | Param | Type | Description |
 | --- | --- | --- |
 | path | <code>string</code> | The path to the workbook. |
+
+<a name="Workbook.numberToDate"></a>
+
+#### Workbook.numberToDate(number) ⇒ <code>Date</code>
+Convert an Excel number to a date.
+
+**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>Date</code> - The date.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| number | <code>number</code> | The number. |
 
 
