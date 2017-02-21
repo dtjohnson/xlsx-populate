@@ -105,16 +105,16 @@ gulp.task("docs", () => {
 gulp.task("test", cb => {
     // Use run sequence to make sure lint and unit run in series. They both output to the
     // console so parallel execution would lead to some funny output.
-    runSequence("unit", cb);//"lint"
+    runSequence("unit", "lint", cb);
 });
 
 gulp.task('watch', () => {
     gulp.watch([PATHS.blank.template, PATHS.blank.workbook], ['blank']);
-    // gulp.watch(PATHS.lib, ['build']);
+    gulp.watch(PATHS.lib, ['build']);
     gulp.watch(PATHS.testSources, ["test"]);
     gulp.watch([PATHS.lib, PATHS.readme.template], ["docs"]);
 });
 
 gulp.task("default", cb => {
-    runSequence("blank", ["build", "test", "docs"], "watch", cb);
+    runSequence("blank", ["test", "docs"], ["build", "watch"], cb);
 });
