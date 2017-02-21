@@ -43,7 +43,7 @@ const PATHS = {
 PATHS.lint = [PATHS.lib];
 PATHS.testSources = [PATHS.lib, PATHS.spec];
 
-gulp.task('build', () => {
+gulp.task('browser', () => {
     return browserify({
         entries: PATHS.browserify.source,
         debug: true,
@@ -102,19 +102,18 @@ gulp.task("docs", () => {
         });
 });
 
-gulp.task("test", cb => {
-    // Use run sequence to make sure lint and unit run in series. They both output to the
-    // console so parallel execution would lead to some funny output.
-    runSequence("unit", "lint", cb);
-});
-
 gulp.task('watch', () => {
+    // Only watch blank, unit, and docs for changes. Everything else is too slow or noisy.
     gulp.watch([PATHS.blank.template, PATHS.blank.workbook], ['blank']);
-    gulp.watch(PATHS.lib, ['build']);
-    gulp.watch(PATHS.testSources, ["test"]);
+    gulp.watch(PATHS.testSources, ["unit"]);
     gulp.watch([PATHS.lib, PATHS.readme.template], ["docs"]);
 });
 
+gulp.task('build', cb => {
+    runSequence("blank", "lint", ["unit", "docs", "browser"], cb);
+});
+
 gulp.task("default", cb => {
-    runSequence("blank", ["test", "docs"], ["build", "watch"], cb);
+    // Watch just the quick stuff to aid development.
+    runSequence("blank", ["unit", "docs"], "watch", cb);
 });
