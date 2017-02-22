@@ -1,7 +1,7 @@
 {
   "name": "xlsx-populate",
   "version": "0.4.0",
-  "description": "Node.js module to populate XLSX templates.",
+  "description": "Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.",
   "main": "lib/Workbook.js",
   "scripts": {
     "test": "jasmine"

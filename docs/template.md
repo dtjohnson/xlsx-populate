@@ -4,10 +4,93 @@
 [![Dependency Status](https://david-dm.org/dtjohnson/xlsx-populate.svg)](https://david-dm.org/dtjohnson/xlsx-populate)
 
 # xlsx-populate
-TODO
+Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.
 
 ## Table of Contents
 <!-- toc -->
+
+## Installation
+
+### Node.js
+```
+npm install xlsx-populate
+```
+Note that xlsx-populate using ES6 features so only Node.js v4+ is supported.
+
+### Browser
+
+xlsx-populate is written first for Node.js. We use [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify) to transpile and pack up the module for use in the browser.
+
+You have a number of options to include the code in the browser. You can download the combined, minified code from the browser directory in this repository or you can install with bower:
+```
+bower install xlsx-populate
+```
+After including the module in the browser, it is available globally as `XLSXPopulate`.
+
+Alternatively, you can require this module using [browserify](http://browserify.org/). Since xlsx-populate uses ES6 features, you will also need to use [babelify](https://github.com/babel/babelify) with [babel-preset-es2015](https://www.npmjs.com/package/babel-preset-es2015).
+
+### Usage
+
+#### Basic Example
+
+Here is a basic example:
+```js
+const XLSXPopulate = require('xlsx-populate');
+
+// Load a new blank workbook
+XLSXPopulate.fromBlankAsync()
+    .then(workbook => {
+        // Modify the workbook.
+        workbook.sheet("Sheet1").cell("A1").value("This is neat!");
+        
+        // Write to file.
+        return workbook.toFileAsync("./out.xlsx");
+    });
+```
+
+#### Parsing Data
+
+You can also pull data out of existing workbooks using `value` as a getter without any arguments:
+```js
+const XLSXPopulate = require('xlsx-populate');
+
+// Load an existing workbook
+XLSXPopulate.fromFileAsync("./Book1.xlsx")
+    .then(workbook => {
+        // Modify the workbook.
+        const value = workbook.sheet("Sheet1").cell("A1").value();
+        
+        // Log the value.
+        console.log(value);
+    });
+```
+
+#### Ranges
+xlsx-populate also supports ranges of cells to allow parsing/manipulate of multiple cells at once.
+```
+const r = workbook.sheet(0).range("A1:C3");
+
+// Set all cell values to the same value:
+r.values(5);
+
+// Set the values using a 2D array:
+r.values([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]);
+
+// Set the values using a callback function:
+r.values((cell, ri, ci, range) => Math.random());
+```
+
+A common use case is to simply pull all of the values out all at once. You can easily do that with the [Sheet.usedRange](#Sheet+usedRange) method.
+```
+// Get 2D array of all values in the worksheet.
+const values = workbook.sheet("Sheet1").usedRange().values();
+```
+
+#### Styles
 
 ## Setup Development Environment
 

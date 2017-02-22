@@ -13,7 +13,7 @@
 localStorage.debug = 'xlsx-populate:*';
 
 function generate() {
-    XLSXPopulate.fromBlankAsync()
+    XlsxPopulate.fromBlankAsync()
         .then(function (workbook) {
             workbook.sheet("Sheet1").cell("A1").value("This was created in the browser!").style("fontColor", "ff0000");
             return workbook.outputAsync("base64");
