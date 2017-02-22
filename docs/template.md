@@ -29,9 +29,9 @@ After including the module in the browser, it is available globally as `XLSXPopu
 
 Alternatively, you can require this module using [browserify](http://browserify.org/). Since xlsx-populate uses ES6 features, you will also need to use [babelify](https://github.com/babel/babelify) with [babel-preset-es2015](https://www.npmjs.com/package/babel-preset-es2015).
 
-### Usage
+## Usage
 
-#### Basic Example
+### Basic Example
 
 Here is a basic example:
 ```js
@@ -48,7 +48,7 @@ XLSXPopulate.fromBlankAsync()
     });
 ```
 
-#### Parsing Data
+### Parsing Data
 
 You can also pull data out of existing workbooks using `value` as a getter without any arguments:
 ```js
@@ -65,9 +65,9 @@ XLSXPopulate.fromFileAsync("./Book1.xlsx")
     });
 ```
 
-#### Ranges
+### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulate of multiple cells at once.
-```
+```js
 const r = workbook.sheet(0).range("A1:C3");
 
 // Set all cell values to the same value:
@@ -85,12 +85,12 @@ r.values((cell, ri, ci, range) => Math.random());
 ```
 
 A common use case is to simply pull all of the values out all at once. You can easily do that with the [Sheet.usedRange](#Sheet+usedRange) method.
-```
+```js
 // Get 2D array of all values in the worksheet.
 const values = workbook.sheet("Sheet1").usedRange().values();
 ```
 
-#### Styles
+### Styles
 
 ## Setup Development Environment
 
