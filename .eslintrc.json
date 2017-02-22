@@ -179,13 +179,7 @@
     "padded-blocks": [2, "never"],
     "quote-props": [2, "as-needed"],
     //"quotes"
-    "require-jsdoc": [1, {
-      "require": {
-        "FunctionDeclaration": true,
-        "MethodDefinition": true,
-        "ClassDeclaration": true
-      }
-    }],
+    //"require-jsdoc"
     "semi-spacing": 2,
     "semi": 2,
     //"sort-vars"
