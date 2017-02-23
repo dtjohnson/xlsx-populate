@@ -15,7 +15,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
 ```
 npm install xlsx-populate
 ```
-Note that xlsx-populate using ES6 features so only Node.js v4+ is supported.
+Note that xlsx-populate uses ES6 features so only Node.js v4+ is supported.
 
 ### Browser
 
@@ -25,20 +25,20 @@ You have a number of options to include the code in the browser. You can downloa
 ```
 bower install xlsx-populate
 ```
-After including the module in the browser, it is available globally as `XLSXPopulate`.
+After including the module in the browser, it is available globally as `Workbook`.
 
 Alternatively, you can require this module using [browserify](http://browserify.org/). Since xlsx-populate uses ES6 features, you will also need to use [babelify](https://github.com/babel/babelify) with [babel-preset-es2015](https://www.npmjs.com/package/babel-preset-es2015).
 
 ## Usage
 
-### Basic Example
+### Populating Data
 
 Here is a basic example:
 ```js
-const XLSXPopulate = require('xlsx-populate');
+const Workbook = require('xlsx-populate');
 
 // Load a new blank workbook
-XLSXPopulate.fromBlankAsync()
+Workbook.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
         workbook.sheet("Sheet1").cell("A1").value("This is neat!");
@@ -50,12 +50,12 @@ XLSXPopulate.fromBlankAsync()
 
 ### Parsing Data
 
-You can also pull data out of existing workbooks using `value` as a getter without any arguments:
+You can pull data out of existing workbooks using `value` as a getter without any arguments:
 ```js
-const XLSXPopulate = require('xlsx-populate');
+const Workbook = require('xlsx-populate');
 
 // Load an existing workbook
-XLSXPopulate.fromFileAsync("./Book1.xlsx")
+Workbook.fromFileAsync("./Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
         const value = workbook.sheet("Sheet1").cell("A1").value();
@@ -64,6 +64,10 @@ XLSXPopulate.fromFileAsync("./Book1.xlsx")
         console.log(value);
     });
 ```
+
+### Method Chaining
+
+TODO
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulate of multiple cells at once.
@@ -90,7 +94,88 @@ A common use case is to simply pull all of the values out all at once. You can e
 const values = workbook.sheet("Sheet1").usedRange().values();
 ```
 
+### Rows and Columns
+
+TODO
+
 ### Styles
+xlsx-populate supports a wide range of cell formatting.
+TODO
+
+
+To set/set a cell style:
+```js
+// Set a single style
+cell.style("bold", true);
+
+// Set multiple styles
+cell.style({ bold: true, italic: true });
+
+// Get a single style
+const bold = cell.style("bold"); // true
+ 
+// Get multiple styles
+const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true } 
+```
+
+Similarly for ranges:
+```js
+// Set all cells in range with a single style
+range.style("bold", true);
+
+// Set with a 2D array
+range.style("bold", [[true, false], [false, true]]);
+
+// Set with a callback function
+range.style("bold", (cell, ri, ci, range) => Math.random() > 0.5);
+
+// Set multiple styles using any combination
+range.style({
+    bold: true,
+    italic: [[true, false], [false, true]],
+    underline: (cell, ri, ci, range) => Math.random() > 0.5
+});
+```
+
+### Dates
+
+Excel stores date/times as the number of days since 1/1/1900 ([sort of](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn't already exist in the cell:
+```js
+cell.value(new Date()).style("numberFormat", "dddd, mmmm dd, yyyy");
+```
+When fetching the value of the cell, it will be returned as a number. To convert it to a date use [Workbook.numberToDate](#Workbook.numberToDate):
+```js
+const num = cell.value(); // 42788
+const date = Workbook.numberToDate(num); // Wed Feb 22 2017 00:00:00 GMT-0500 (Eastern Standard Time)
+```
+
+### Serving from Express
+You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
+```js
+router.get("/download", function (req, res, next) {
+    // Open the workbook.
+    Workbook.fromFileAsync("input.xlsx")
+        .then(workbook => {
+            // Make edits.
+            workbook.sheet(0).cell("A1").value("foo");
+            
+            // Get the output
+            return workbook.outputAsync();
+        })
+        .then(data => {
+            // Set the output file name.
+            res.attachment("output.xlsx");
+            
+            // Send the workbook.
+            res.send(data);
+        })
+        .catch(next);
+});
+```
+
+### Browser Usage
+TODO
+
 
 ## Setup Development Environment
 

@@ -10,16 +10,14 @@
 
 <script type="text/javascript" src="../../browser/xlsx-populate.js"></script>
 <script type="text/javascript">
-localStorage.debug = 'xlsx-populate:*';
-
 function generate() {
-    XlsxPopulate.fromBlankAsync()
+    Workbook.fromBlankAsync()
         .then(function (workbook) {
             workbook.sheet("Sheet1").cell("A1").value("This was created in the browser!").style("fontColor", "ff0000");
             return workbook.outputAsync("base64");
         })
-        .then(function (content) {
-            location.href = "data:" + XLSXPopulate.MIME_TYPE + ";base64," + content;
+        .then(function (base64Data) {
+            location.href = "data:" + Workbook.MIME_TYPE + ";base64," + base64Data;
         });
 }
 </script>

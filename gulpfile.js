@@ -17,7 +17,7 @@ const Promise = require("bluebird");
 const fs = Promise.promisifyAll(require("fs"));
 const jasmineConfig = require('./spec/support/jasmine.json');
 
-const BROWSERIFY_STANDALONE_NAME = "XLSXPopulate";
+const BROWSERIFY_STANDALONE_NAME = "Workbook";
 const BABEL_PRESETS = ["es2015"];
 const PATHS = {
     lib: "./lib/**/*.js",
