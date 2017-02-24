@@ -26,13 +26,6 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Install xlsx-populate libraries](#install-xlsx-populate-libraries)
   * [Gulp tasks](#gulp-tasks)
 - [Style Reference](#style-reference)
-  * [Styles](#styles-1)
-  * [Color](#color)
-  * [Borders](#borders)
-  * [Border](#border)
-  * [SolidFill](#solidfill)
-  * [PatternFill](#patternfill)
-  * [GradientFill](#gradientfill)
 - [API Reference](#api-reference)
 
 ## Installation

@@ -91,8 +91,9 @@ gulp.task("blank", () => {
 gulp.task("docs", () => {
     return fs.readFileAsync(PATHS.readme.template, "utf8")
         .then(text => {
-            const tocText = toc(text).content;
+            const tocText = toc(text, { filter: str => str.indexOf('NOTOC-') === -1 }).content;
             text = text.replace("<!-- toc -->", tocText);
+            text = text.replace(/NOTOC-/mg, "");
             return jsdoc2md.render({ files: PATHS.lib })
                 .then(apiText => {
                     apiText = apiText.replace(/^#/mg, "##");

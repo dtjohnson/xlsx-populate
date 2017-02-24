@@ -99,7 +99,7 @@ const values = workbook.sheet("Sheet1").usedRange().values();
 TODO
 
 ### Styles
-xlsx-populate supports a wide range of cell formatting. See the [Style Reference](#Style Reference) for the various options.
+xlsx-populate supports a wide range of cell formatting. See the [Style Reference](#style-reference) for the various options.
 
 To set/set a cell style:
 ```js
@@ -248,7 +248,7 @@ gulp browserify  # outputs browser/xlsx-populate.js for web applications
 
 ## Style Reference
 
-### Styles
+### NOTOC-Styles
 |Style Name|Type|Description|
 | ------------- | ------------- | ----- |
 |bold|`boolean`|`true` for bold, `false` for not bold|
@@ -283,14 +283,14 @@ gulp browserify  # outputs browser/xlsx-populate.js for web applications
 |diagonalBorderDirection|`string`|Direction of the diagonal border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 |numberFormat|`string`|Number format code. See TODO.|
 
-### Color
+### NOTOC-Color
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |[rgb]|`string`|RGB color code (e.g. `'ff0000'`). Either rgb or theme is required.|
 |[theme]|`number`|Index of a theme color. Either rgb or theme is required.|
 |[tint]|`number`|Optional tint value of the color from -1 to 1. Particularly useful for theme colors. 0.0 means no tint, -1.0 means 100% darken, and 1.0 means 100% lighten.|
 
-### Borders
+### NOTOC-Borders
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |[left]|`Border|string|boolean`|The border settings for the left side. If string, with set border to the given border style. If true, will set border style to `'thin'`.|
@@ -299,20 +299,20 @@ gulp browserify  # outputs browser/xlsx-populate.js for web applications
 |[bottom]|`Border|string|boolean`|The border settings for the bottom side. If string, with set border to the given border style. If true, will set border style to `'thin'`.|
 |[diagonal]|`Border|string|boolean`|The border settings for the diagonal side. If string, with set border to the given border style. If true, will set border style to `'thin'`.|
 
-### Border
+### NOTOC-Border
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |style|`string`|Style of the given border.|
 |color|`Color|string|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |[direction]|`string`|For diagonal border, the direction of the border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 
-### SolidFill
+### NOTOC-SolidFill
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'solid'`||
 |color|`Color|string|number`|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
 
-### PatternFill
+### NOTOC-PatternFill
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'pattern'`||
@@ -320,7 +320,7 @@ gulp browserify  # outputs browser/xlsx-populate.js for web applications
 |foreground|`Color|string|number`|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
 |background|`Color|string|number`|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
 
-### GradientFill
+### NOTOC-GradientFill
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'gradient'`||
