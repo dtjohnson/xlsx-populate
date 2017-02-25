@@ -25,20 +25,23 @@ You have a number of options to include the code in the browser. You can downloa
 ```
 bower install xlsx-populate
 ```
-After including the module in the browser, it is available globally as `Workbook`.
+After including the module in the browser, it is available globally as `XlsxPopulate`.
 
 Alternatively, you can require this module using [browserify](http://browserify.org/). Since xlsx-populate uses ES6 features, you will also need to use [babelify](https://github.com/babel/babelify) with [babel-preset-es2015](https://www.npmjs.com/package/babel-preset-es2015).
 
 ## Usage
 
+xlsx-populate has an [extensive API](#api-reference) for working with Excel workbooks. This section reviews the most common functions and use cases.
+
 ### Populating Data
 
-Here is a basic example:
+To populate data in a workbook, you first load one (either blank, from data, or from file). Then you can access sheets and
+ cells within the workbook to manipulate them.
 ```js
-const Workbook = require('xlsx-populate');
+const XlsxPopulate = require('xlsx-populate');
 
 // Load a new blank workbook
-Workbook.fromBlankAsync()
+XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
         workbook.sheet("Sheet1").cell("A1").value("This is neat!");
@@ -52,10 +55,10 @@ Workbook.fromBlankAsync()
 
 You can pull data out of existing workbooks using `value` as a getter without any arguments:
 ```js
-const Workbook = require('xlsx-populate');
+const XlsxPopulate = require('xlsx-populate');
 
 // Load an existing workbook
-Workbook.fromFileAsync("./Book1.xlsx")
+XlsxPopulate.fromFileAsync("./Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
         const value = workbook.sheet("Sheet1").cell("A1").value();
@@ -64,10 +67,6 @@ Workbook.fromFileAsync("./Book1.xlsx")
         console.log(value);
     });
 ```
-
-### Method Chaining
-
-TODO
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulate of multiple cells at once.
@@ -96,7 +95,13 @@ const values = workbook.sheet("Sheet1").usedRange().values();
 
 ### Rows and Columns
 
-TODO
+You can access rows and columns in order to change size, hide/show, or access cells within:
+```js
+// Get the B column, set its width and unhide it (assuming it was hidden).
+sheet.column("B").width(25).hidden(false);
+
+const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+```
 
 ### Styles
 xlsx-populate supports a wide range of cell formatting. See the [Style Reference](#style-reference) for the various options.
@@ -166,16 +171,48 @@ fill is now set to:
 */
 ```
 
+Number formats are one of the most common styels. They can be set using the `numberFormat` style.
+```js
+```
+
+Information on how number format codes work can be found [here](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&rs=en-US&ad=US).
+You can also look up the appropriate format code in Excel:
+* Right-click on a cell in Excel with the number format you want.
+* Click on "Format Cells..."
+* Switch the category to "Custom" if it is not already.
+* The code in the "Type" box is the format you should copy.
+
 ### Dates
 
 Excel stores date/times as the number of days since 1/1/1900 ([sort of](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn't already exist in the cell:
 ```js
 cell.value(new Date()).style("numberFormat", "dddd, mmmm dd, yyyy");
 ```
-When fetching the value of the cell, it will be returned as a number. To convert it to a date use [Workbook.numberToDate](#Workbook.numberToDate):
+When fetching the value of the cell, it will be returned as a number. To convert it to a date use [XlsxPopulate.numberToDate](#XlsxPopulate.numberToDate):
 ```js
 const num = cell.value(); // 42788
-const date = Workbook.numberToDate(num); // Wed Feb 22 2017 00:00:00 GMT-0500 (Eastern Standard Time)
+const date = XlsxPopulate.numberToDate(num); // Wed Feb 22 2017 00:00:00 GMT-0500 (Eastern Standard Time)
+```
+
+### Method Chaining
+
+xlsx-populate uses method-chaining similar to that found in [jQuery](https://jquery.com/) and [d3](https://d3js.org/).
+```js
+workbook
+    .sheet(0)
+        .cell("A1")
+            .value("foo")
+            .style("bold", true)
+        .relativeCell(1, 0)
+            .formula("A1")
+            .style("italic", true)
+.workbook()
+    .sheet(1)
+        .range("A1:B3")
+            .value(5)
+        .cell(0, 0)
+            .style("underline", "double");
+        
 ```
 
 ### Serving from Express
@@ -183,7 +220,7 @@ You can serve the workbook from [express](http://expressjs.com/) or other web se
 ```js
 router.get("/download", function (req, res, next) {
     // Open the workbook.
-    Workbook.fromFileAsync("input.xlsx")
+    XlsxPopulate.fromFileAsync("input.xlsx")
         .then(workbook => {
             // Make edits.
             workbook.sheet(0).cell("A1").value("foo");
@@ -206,45 +243,79 @@ router.get("/download", function (req, res, next) {
 TODO
 
 
-## Setup Development Environment
+## Contributing
 
-To contribute, ensure that npm (node package manager) and git are installed. Then continue with the following instructions.
+Pull requests are very much welcome! If you'd like to contribute, please make sure to read this section carefully.
 
-### Install node and gulp globally
+### How xlsx-populate Works
+An XLSX workbook is essentially a zip of a bunch of XML files. xlsx-populate uses [JSZip](https://stuk.github.io/jszip/)
+to unzip the workbook and [sax-js](https://github.com/isaacs/sax-js) to parse the XML documents into corresponding objects.
+As you call methods, xlsx-populate manipulates the content of those objects. When you generate the output, xlsx-populate
+uses [xmlbuilder-js](https://github.com/oozcitak/xmlbuilder-js) to convert the objects back to XML and then uses JSZip to
+rezip them back into a workbook.
+
+The way in which xlsx-populate manipulates objects that are essentially the XML data is very different from the usual way
+parser/generator libraries work. Most other libraries will deserialize the XML into a rich object model. That model is then
+manipulated and serialized back into XML upon generation. The challenge with this approach is that the Office Open XML spec is [HUGE](http://www.ecma-international.org/publications/standards/Ecma-376.htm).
+It is extremely difficult for libraries to be able to support the entire specification. So these other libraries will deserialize
+only the portion of the spec they support and any other content/styles in the workbook they don't support are lost. Since
+xlsx-populate just manipulates the XML data, it is able to preserve styles and other content while still only supporting
+a fraction of the spec.
+
+### Setting up your Environment
+You'll need to make sure [Node.js](https://nodejs.org/en/) v4+ is installed (as xlsx-populate uses ES6 syntax). You'll also
+need to install [gulp](https://github.com/gulpjs/gulp):
 ```bash
-npm install --global node gulp
+npm install -g gulp
 ```
 
-### Git clone the project
-```bash
-git clone git@github.com:dtjohnson/xlsx-populate.git
-cd xlsx-populate
-```
-
-### Install xlsx-populate libraries
+Make sure you have [git](https://git-scm.com/) installed. Then follow [this guide](https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project) to see how to check out code, branch, and
+then submit your code as a pull request. When you check out the code, you'll first need to install the npm dependencies.
+From the project root, run:
 ```bash
 npm install
-npm install --only=dev # Install dev tools
-alias node="node --harmony"  # Run node in ES6 mode
 ```
 
-### Gulp tasks
-
-* __browserify__ - build client-side javascript project bundle
-* __lint__ - check project source code style
-* __unit__ - unit test project
-* __blank__ - build blank xlsx files for default load
-* __docs__ - build docs: generate README.md from docs/template.md and source code
-* __test__ - run lint and unit test project
-* __watch__ - listen for new project changes and then run associated gulp task
-* __default__ - run all gulp tasks
-
-Please review [gulp documentation](https://github.com/gulpjs/gulp) to learn more. Here are a few examples:
-
+The default gulp task is set up to watch the source files for updates and retest while you edit. From the project root just run:
+```bash
+gulp
 ```
-gulp lint  # checks code style
-gulp browserify  # outputs browser/xlsx-populate.js for web applications
+
+You should see the test output in your console window. As you edit files the tests will run again and show you if you've
+broken anything. (Note that if you've added new files you'll need to restart gulp for the new files to be watched.)
+
+Now write your code and make sure to add [Jasmine](https://jasmine.github.io/) unit tests. When you are finished, you need
+to build the code for the browser. Do that by running the gulp build command:
+```bash
+gulp build
 ```
+
+Verify all is working, check in your code, and submit a pull request.
+
+### Pull Request Checklist
+To make sure your code is consistent and high quality, please make sure to follow this checklist before submitting a pull request:
+ * Your code must follow the getter/setter pattern using a single function for both. Check `arguments.length` or use `ArgHandler` to distinguish.
+ * You must use valid [JSDoc](http://usejsdoc.org/) comments on *all* methods and classes. Use `@private` for private methods and `@ignore` for any public methods that are internal to xlsx-populate and should not be included in the public API docs.
+ * You must adhere to the configured [ESLint](http://eslint.org/) linting rules. You can configure your IDE to display rule violations live or you can run `gulp lint` to see them.
+ * Use [ES6](http://es6-features.org/#Constants) syntax. (This should be enforced by ESLint.)
+ * Make sure to have full [Jasmine](https://jasmine.github.io/) unit test coverage for your code.
+ * Make sure all tests pass successfully.
+ * Whenever possible, do not modify/break existing API behavior. This module adheres to the [semantic versioning standard](https://docs.npmjs.com/getting-started/semantic-versioning). So any breaking changes will require a major release.
+ * If your feature needs more documentation than just the JSDoc output, please add to the docs/template.md README file.
+ 
+
+### Gulp Tasks
+
+xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There are a number of tasks:
+
+* __browser__ - Transpile and build client-side JavaScript project bundle using [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify).
+* __lint__ - Check project source code style using [ESLint](http://eslint.org/).
+* __unit__ - Run [Jasmine](https://jasmine.github.io/) unit tests.
+* __blank__ - Convert a blank XLSX template into a JS buffer module to support [fromBlankAsync](#XlsxPopulate.fromBlankAsync).
+* __docs__ - Build this README doc by combining docs/template.md, API docs generated with [jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown), and a table of contents generated with [markdown-toc](https://github.com/jonschlinkert/markdown-toc).
+* __watch__ - Watch files for changes and then run associated gulp task. (Used by the default task.)
+* __build__ - Run all gulp tasks, including linting and tests, and build the docs and browser bundle.
+* __default__ - Run blank, unit, and docs tasks and watch the source files for those tasks for changes.
 
 ## Style Reference
 
@@ -281,7 +352,7 @@ gulp browserify  # outputs browser/xlsx-populate.js for web applications
 |leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|`Color|string|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |leftBorderStyle, rightBorderStyle, topBorderStyle, bottomBorderStyle, diagonalBorderStyle|`string`|Style of the given side.|
 |diagonalBorderDirection|`string`|Direction of the diagonal border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
-|numberFormat|`string`|Number format code. See TODO.|
+|numberFormat|`string`|Number format code. See docs [here](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&rs=en-US&ad=US).|
 
 ### NOTOC-Color
 |Property|Type|Description|
