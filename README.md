@@ -31,7 +31,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
 ## Installation
 
 ### Node.js
-```
+```bash
 npm install xlsx-populate
 ```
 Note that xlsx-populate uses ES6 features so only Node.js v4+ is supported.
@@ -41,7 +41,7 @@ Note that xlsx-populate uses ES6 features so only Node.js v4+ is supported.
 xlsx-populate is written first for Node.js. We use [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify) to transpile and pack up the module for use in the browser.
 
 You have a number of options to include the code in the browser. You can download the combined, minified code from the browser directory in this repository or you can install with bower:
-```
+```bash
 bower install xlsx-populate
 ```
 After including the module in the browser, it is available globally as `XlsxPopulate`.
@@ -192,6 +192,7 @@ fill is now set to:
 
 Number formats are one of the most common styels. They can be set using the `numberFormat` style.
 ```js
+cell.style("numberFormat", "0.00");
 ```
 
 Information on how number format codes work can be found [here](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&rs=en-US&ad=US).
