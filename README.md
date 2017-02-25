@@ -260,7 +260,57 @@ router.get("/download", function (req, res, next) {
 ```
 
 ### Browser Usage
-TODO
+Usage in the browser is almost the same. A functional example can be found in [examples/browser/index.html](https://rawgit.com/dtjohnson/xlsx-populate/master/examples/browser/index.html). The library is exposed globally as `XlsxPopulate`. Existing workbooks can be loaded from a file:
+```js
+// Assuming there is a file input in the page with the id 'file-input'
+var file = document.getElementById("file-input").files[0];
+
+// A File object is a special kind of blob.
+XlsxPopulate.fromDataAsync(file)
+    .then(function (workbook) {
+        // ...
+    });
+```
+
+You can also load from AJAX if you set the responseType to 'arrayBuffer':
+```js
+var req = new XMLHttpRequest();
+req.open("GET", "http://...", true);
+req.responseType = "arraybuffer";
+req.onreadystatechange = function () {
+    if (req.readyState === 4 && req.status === 200){
+        XlsxPopulate.fromDataAsync(req.response)
+            .then(function (workbook) {
+                // ...
+            }
+    }
+};
+
+req.send();
+```
+
+To download the workbook, you can either export as a blob (default behavior) or as a base64 string. You can then insert a link into the DOM and click it:
+```js
+XlsxPopulate.outputAsync()
+    .then(function (blob) {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = "out.xlsx";
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    });
+```
+
+Alternatively, you can download via a data URI:
+```js
+XlsxPopulate.outputAsync("base64")
+    .then(function (base64) {
+        location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
+    });
+```
 
 
 ## Contributing

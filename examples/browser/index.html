@@ -23,7 +23,7 @@
         <label><input id="radio-ajax" type="radio" name="source">Existing AJAX Workbook:</label> <input id="url-input" class="form-control" style="display: inline; width: 400px" type="text" value="../ranges/template.xlsx" />
     </div>
     <div class="radio">
-        <label><input id="radio-local" type="radio" name="source">Existing Local Workbook:</label> <input id="file-input" type="file" style="display: inline">
+        <label><input id="radio-local" type="radio" name="source">Existing Local Workbook:</label> <input id="file-input" type="file" style="display: inline" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
     </div>
 
     <button class="btn btn-primary" onclick="generateBlob()">Generate blob</button>
@@ -48,8 +48,6 @@
                 var url = urlInput.value;
                 req.open("GET", url, true);
                 req.responseType = "arraybuffer";
-                req.send();
-
                 req.onreadystatechange = function () {
                     if (req.readyState === 4){
                         if (req.status === 200) {
@@ -58,10 +56,12 @@
                             reject("Received a " + req.status + " HTTP code.");
                         }
                     }
-                }
+                };
+
+                req.send();
             });
         } else if (radioLocal.checked) {
-            const file = fileInput.files[0];
+            var file = fileInput.files[0];
             if (!file) return Promise.reject("You must select a file.");
             return XlsxPopulate.fromDataAsync(file);
         }
@@ -78,7 +78,6 @@
     function generateBlob() {
         return generate()
             .then(function (blob) {
-                console.log(blob);
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement("a");
                 document.body.appendChild(a);
