@@ -4,7 +4,7 @@ const proxyquire = require("proxyquire").noCallThru();
 const Promise = require("bluebird");
 
 describe("Workbook", () => {
-    let fs, JSZip, workbookNode, dateConverter, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
+    let fs, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
 
     beforeEach(() => {
         JSZip = jasmine.createSpy("JSZip");
@@ -65,10 +65,6 @@ describe("Workbook", () => {
 
         blank = "BLANK";
 
-        dateConverter = jasmine.createSpyObj("dateConverter", ["dateToNumber", "numberToDate"]);
-        dateConverter.dateToNumber.and.returnValue("NUMBER");
-        dateConverter.numberToDate.and.returnValue("DATE");
-
         Workbook = proxyquire("../lib/Workbook", {
             fs,
             jszip: JSZip,
@@ -79,8 +75,7 @@ describe("Workbook", () => {
             './ContentTypes': ContentTypes,
             './XmlParser': XmlParser,
             './XmlBuilder': XmlBuilder,
-            './blank': blank,
-            './dateConverter': dateConverter
+            './blank': blank
         });
     });
 
@@ -96,13 +91,6 @@ describe("Workbook", () => {
         describe("initialization", () => {
             it("should initialize", () => {
                 expect(JSZip.external.Promise).toBe(Promise);
-            });
-        });
-
-        describe("dateToNumber", () => {
-            it("should call dateConverter.dateToNumber", () => {
-                expect(Workbook.dateToNumber("DATE")).toBe("NUMBER");
-                expect(dateConverter.dateToNumber).toHaveBeenCalledWith("DATE");
             });
         });
 
@@ -134,13 +122,6 @@ describe("Workbook", () => {
                         expect(fs.readFile).toHaveBeenCalledWith("PATH", jasmine.any(Function));
                         expect(workbook).toBe("WORKBOOK");
                     });
-            });
-        });
-
-        describe("numberToDate", () => {
-            it("should call dateConverter.numberToDate", () => {
-                expect(Workbook.numberToDate("NUMBER")).toBe("DATE");
-                expect(dateConverter.numberToDate).toHaveBeenCalledWith("NUMBER");
             });
         });
     });

@@ -64,9 +64,9 @@ describe("Range", () => {
 
     describe("clear", () => {
         it("should clear the cell", () => {
-            spyOn(range, "values").and.returnValue("RETURN");
+            spyOn(range, "value").and.returnValue("RETURN");
             expect(range.clear()).toBe("RETURN");
-            expect(range.values).toHaveBeenCalledWith(undefined);
+            expect(range.value).toHaveBeenCalledWith(undefined);
         });
     });
 
@@ -304,7 +304,7 @@ describe("Range", () => {
         });
 
         it("should get the value", () => {
-            expect(range.values()).toEqualJson([
+            expect(range.value()).toEqualJson([
                 ["VALUE", "VALUE"],
                 ["VALUE", "VALUE"],
                 ["VALUE", "VALUE"]
@@ -315,7 +315,7 @@ describe("Range", () => {
         it("should set the value from the callback", () => {
             let i = 0;
             const callback = jasmine.createSpy("callback").and.callFake(() => i++);
-            expect(range.values(callback)).toBe(range);
+            expect(range.value(callback)).toBe(range);
             expect(cell.value).toHaveBeenCalledWith(0);
             expect(cell.value).toHaveBeenCalledWith(1);
             expect(cell.value).toHaveBeenCalledWith(2);
@@ -331,7 +331,7 @@ describe("Range", () => {
         });
 
         it("should set values from an array", () => {
-            expect(range.values([
+            expect(range.value([
                 [0, 1],
                 [2, 3],
                 [4, 5]
@@ -345,7 +345,7 @@ describe("Range", () => {
         });
 
         it("should set a single value", () => {
-            expect(range.values("foo")).toBe(range);
+            expect(range.value("foo")).toBe(range);
             expect(cell.value).toHaveBeenCalledWith("foo");
             expect(cell.value).toHaveBeenCalledWith("foo");
             expect(cell.value).toHaveBeenCalledWith("foo");

@@ -11,13 +11,13 @@
 <script type="text/javascript" src="../../browser/xlsx-populate.js"></script>
 <script type="text/javascript">
 function generate() {
-    Workbook.fromBlankAsync()
+    XlsxPopulate.fromBlankAsync()
         .then(function (workbook) {
             workbook.sheet("Sheet1").cell("A1").value("This was created in the browser!").style("fontColor", "ff0000");
             return workbook.outputAsync("base64");
         })
         .then(function (base64Data) {
-            location.href = "data:" + Workbook.MIME_TYPE + ";base64," + base64Data;
+            location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64Data;
         });
 }
 </script>

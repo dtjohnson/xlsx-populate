@@ -2,10 +2,10 @@
 
 /* eslint no-console:off */
 
-const Workbook = require('../../lib/Workbook');
+const XlsxPopulate = require('../../lib/XlsxPopulate');
 
 // Load the input workbook from file.
-Workbook.fromBlankAsync()
+XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // // Modify the workbook.
         const sheet = workbook.sheet("Sheet1");

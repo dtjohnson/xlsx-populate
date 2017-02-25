@@ -17,14 +17,14 @@ const Promise = require("bluebird");
 const fs = Promise.promisifyAll(require("fs"));
 const jasmineConfig = require('./spec/support/jasmine.json');
 
-const BROWSERIFY_STANDALONE_NAME = "Workbook";
+const BROWSERIFY_STANDALONE_NAME = "XlsxPopulate";
 const BABEL_PRESETS = ["es2015"];
 const PATHS = {
     lib: "./lib/**/*.js",
     spec: "./spec/**/*.js",
     examples: "./examples/**/*.js",
     browserify: {
-        source: "./lib/Workbook.js",
+        source: "./lib/XlsxPopulate.js",
         base: "./browser",
         bundle: "xlsx-populate.js",
         sourceMap: "./"

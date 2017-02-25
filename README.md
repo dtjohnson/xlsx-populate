@@ -377,6 +377,13 @@ gulp browserify  # outputs browser/xlsx-populate.js for web applications
 </dd>
 </dl>
 
+### Objects
+
+<dl>
+<dt><a href="#XlsxPopulate">XlsxPopulate</a> : <code>object</code></dt>
+<dd></dd>
+</dl>
+
 <a name="Cell"></a>
 
 ### Cell
@@ -407,7 +414,7 @@ A cell
         * [.style(styles)](#Cell+style) ⇒ <code>[Cell](#Cell)</code>
         * [.value()](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
-        * [.workbook()](#Cell+workbook) ⇒ <code>[Workbook](#Workbook)</code>
+        * [.workbook()](#Cell+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -627,11 +634,11 @@ Sets the value of the cell.
 
 <a name="Cell+workbook"></a>
 
-#### cell.workbook() ⇒ <code>[Workbook](#Workbook)</code>
+#### cell.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -672,7 +679,7 @@ A column.
     * [.sheet()](#Column+sheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.width()](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code>
     * [.width(width)](#Column+width) ⇒ <code>[Column](#Column)</code>
-    * [.workbook()](#Column+workbook) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.workbook()](#Column+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 
 <a name="Column+address"></a>
 
@@ -761,11 +768,11 @@ Sets the width.
 
 <a name="Column+workbook"></a>
 
-#### column.workbook() ⇒ <code>[Workbook](#Workbook)</code>
+#### column.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 Get the parent workbook.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
-**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
 <a name="Range"></a>
 
 ### Range
@@ -796,11 +803,11 @@ A range of cells.
         * [.style(styles)](#Range+style) ⇒ <code>[Range](#Range)</code>
         * [.tap(callback)](#Range+tap) ⇒ <code>[Range](#Range)</code>
         * [.thru(callback)](#Range+thru) ⇒ <code>\*</code>
-        * [.values()](#Range+values) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
-        * [.values()](#Range+values) ⇒ <code>[Range](#Range)</code>
-        * [.values()](#Range+values) ⇒ <code>[Range](#Range)</code>
-        * [.values(value)](#Range+values) ⇒ <code>[Range](#Range)</code>
-        * [.workbook()](#Range+workbook) ⇒ <code>[Workbook](#Workbook)</code>
+        * [.value()](#Range+value) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.value(value)](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.workbook()](#Range+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
     * _inner_
         * [~forEachCallback](#Range..forEachCallback) ⇒ <code>undefined</code>
         * [~mapCallback](#Range..mapCallback) ⇒ <code>\*</code>
@@ -1040,16 +1047,16 @@ Invoke a callback on the range and return the value provided by the callback. Us
 | --- | --- | --- |
 | callback | <code>[thruCallback](#Range..thruCallback)</code> | The callback function. |
 
-<a name="Range+values"></a>
+<a name="Range+value"></a>
 
-#### range.values() ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
+#### range.value() ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
 Get the values of each cell in the range as a 2D array.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
 **Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - The values.  
-<a name="Range+values"></a>
+<a name="Range+value"></a>
 
-#### range.values() ⇒ <code>[Range](#Range)</code>
+#### range.value() ⇒ <code>[Range](#Range)</code>
 Set the values in each cell to the result of a function called for each.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -1059,9 +1066,9 @@ Set the values in each cell to the result of a function called for each.
 | --- | --- | --- |
 |  | <code>[mapCallback](#Range..mapCallback)</code> | The callback to provide value for the cell. |
 
-<a name="Range+values"></a>
+<a name="Range+value"></a>
 
-#### range.values() ⇒ <code>[Range](#Range)</code>
+#### range.value() ⇒ <code>[Range](#Range)</code>
 Sets the value in each cell to the corresponding value in the given 2D array of values.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -1071,9 +1078,9 @@ Sets the value in each cell to the corresponding value in the given 2D array of 
 | --- | --- | --- |
 |  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The values to set. |
 
-<a name="Range+values"></a>
+<a name="Range+value"></a>
 
-#### range.values(value) ⇒ <code>[Range](#Range)</code>
+#### range.value(value) ⇒ <code>[Range](#Range)</code>
 Set the value of all cells in the range to a single value.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -1085,11 +1092,11 @@ Set the value of all cells in the range to a single value.
 
 <a name="Range+workbook"></a>
 
-#### range.workbook() ⇒ <code>[Workbook](#Workbook)</code>
+#### range.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
 <a name="Range..forEachCallback"></a>
 
 #### Range~forEachCallback ⇒ <code>undefined</code>
@@ -1174,7 +1181,7 @@ A row.
     * [.hidden(hidden)](#Row+hidden) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
     * [.sheet()](#Row+sheet) ⇒ <code>[Sheet](#Sheet)</code>
-    * [.workbook()](#Row+workbook) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.workbook()](#Row+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 
 <a name="Row+address"></a>
 
@@ -1256,11 +1263,11 @@ Gets the parent sheet of the row.
 **Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Row+workbook"></a>
 
-#### row.workbook() ⇒ <code>[Workbook](#Workbook)</code>
+#### row.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 Get the parent workbook.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
-**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
 <a name="Sheet"></a>
 
 ### Sheet
@@ -1280,7 +1287,7 @@ A worksheet.
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
-    * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.workbook()](#Sheet+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 
 <a name="Sheet+cell"></a>
 
@@ -1416,11 +1423,11 @@ Get the range of cells in the sheet that have contained a value or style at any 
 **Returns**: <code>[Range](#Range)</code> &#124; <code>undefined</code> - The used range or undefined if no cells in the sheet are used.  
 <a name="Sheet+workbook"></a>
 
-#### sheet.workbook() ⇒ <code>[Workbook](#Workbook)</code>
+#### sheet.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
-**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
 <a name="Workbook"></a>
 
 ### Workbook
@@ -1429,19 +1436,11 @@ A workbook.
 **Kind**: global class  
 
 * [Workbook](#Workbook)
-    * _instance_
-        * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
-        * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
-        * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
-        * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
-        * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
-    * _static_
-        * [.MIME_TYPE](#Workbook.MIME_TYPE) : <code>string</code>
-        * [.dateToNumber(date)](#Workbook.dateToNumber) ⇒ <code>number</code>
-        * [.fromBlankAsync()](#Workbook.fromBlankAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
-        * [.fromDataAsync(data)](#Workbook.fromDataAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
-        * [.fromFileAsync(path)](#Workbook.fromFileAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
-        * [.numberToDate(number)](#Workbook.numberToDate) ⇒ <code>Date</code>
+    * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+    * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
+    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
+    * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
+    * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
 
 <a name="Workbook+definedName"></a>
 
@@ -1508,61 +1507,74 @@ Write the workbook to file. (Not supported in browsers.)
 | --- | --- | --- |
 | path | <code>string</code> | The path of the file to write. |
 
-<a name="Workbook.MIME_TYPE"></a>
+<a name="XlsxPopulate"></a>
 
-#### Workbook.MIME_TYPE : <code>string</code>
+### XlsxPopulate : <code>object</code>
+**Kind**: global namespace  
+
+* [XlsxPopulate](#XlsxPopulate) : <code>object</code>
+    * [.MIME_TYPE](#XlsxPopulate.MIME_TYPE) : <code>string</code>
+    * [.dateToNumber(date)](#XlsxPopulate.dateToNumber) ⇒ <code>number</code>
+    * [.fromBlankAsync()](#XlsxPopulate.fromBlankAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+    * [.fromDataAsync(data)](#XlsxPopulate.fromDataAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+    * [.fromFileAsync(path)](#XlsxPopulate.fromFileAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+    * [.numberToDate(number)](#XlsxPopulate.numberToDate) ⇒ <code>Date</code>
+
+<a name="XlsxPopulate.MIME_TYPE"></a>
+
+#### XlsxPopulate.MIME_TYPE : <code>string</code>
 The XLSX mime type.
 
-**Kind**: static property of <code>[Workbook](#Workbook)</code>  
-<a name="Workbook.dateToNumber"></a>
+**Kind**: static property of <code>[XlsxPopulate](#XlsxPopulate)</code>  
+<a name="XlsxPopulate.dateToNumber"></a>
 
-#### Workbook.dateToNumber(date) ⇒ <code>number</code>
+#### XlsxPopulate.dateToNumber(date) ⇒ <code>number</code>
 Convert a date to a number for Excel.
 
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Kind**: static method of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 **Returns**: <code>number</code> - The number.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | date | <code>Date</code> | The date. |
 
-<a name="Workbook.fromBlankAsync"></a>
+<a name="XlsxPopulate.fromBlankAsync"></a>
 
-#### Workbook.fromBlankAsync() ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+#### XlsxPopulate.fromBlankAsync() ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
 Create a new blank workbook.
 
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Kind**: static method of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 **Returns**: <code>[Promise.&lt;Workbook&gt;](#Workbook)</code> - The workbook.  
-<a name="Workbook.fromDataAsync"></a>
+<a name="XlsxPopulate.fromDataAsync"></a>
 
-#### Workbook.fromDataAsync(data) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+#### XlsxPopulate.fromDataAsync(data) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
 Loads a workbook from a data object. (Supports any supported [JSZip data types](https://stuk.github.io/jszip/documentation/api_jszip/load_async.html).)
 
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Kind**: static method of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 **Returns**: <code>[Promise.&lt;Workbook&gt;](#Workbook)</code> - The workbook.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | data | <code>string</code> &#124; <code>Array.&lt;number&gt;</code> &#124; <code>ArrayBuffer</code> &#124; <code>Uint8Array</code> &#124; <code>Buffer</code> &#124; <code>Blob</code> &#124; <code>Promise.&lt;\*&gt;</code> | The data to load. |
 
-<a name="Workbook.fromFileAsync"></a>
+<a name="XlsxPopulate.fromFileAsync"></a>
 
-#### Workbook.fromFileAsync(path) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
+#### XlsxPopulate.fromFileAsync(path) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
 Loads a workbook from file.
 
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Kind**: static method of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 **Returns**: <code>[Promise.&lt;Workbook&gt;](#Workbook)</code> - The workbook.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | path | <code>string</code> | The path to the workbook. |
 
-<a name="Workbook.numberToDate"></a>
+<a name="XlsxPopulate.numberToDate"></a>
 
-#### Workbook.numberToDate(number) ⇒ <code>Date</code>
+#### XlsxPopulate.numberToDate(number) ⇒ <code>Date</code>
 Convert an Excel number to a date.
 
-**Kind**: static method of <code>[Workbook](#Workbook)</code>  
+**Kind**: static method of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 **Returns**: <code>Date</code> - The date.  
 
 | Param | Type | Description |
