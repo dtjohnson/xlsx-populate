@@ -15,6 +15,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Parsing Data](#parsing-data)
   * [Ranges](#ranges)
   * [Rows and Columns](#rows-and-columns)
+  * [Defined Names](#defined-names)
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
   * [Dates](#dates)
@@ -122,6 +123,20 @@ You can access rows and columns in order to change size, hide/show, or access ce
 sheet.column("B").width(25).hidden(false);
 
 const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+```
+
+### Defined Names
+Excel supports creating defined names that refer to addresses, formulas, or constants. These defined names can be scoped
+to the entire workbook or just individual sheets. xlsx-populate supports looking up defined names that refer to cells or
+ranges. (Dereferencing other names will result in an error.) Defined names are particularly useful if you are populating
+data into a known template. Then you do need to know the exact location.
+
+```js
+// Look up workbook-scoped name and set the value to 5.
+workbook.definedName("some name").value(5);
+
+// Look of a name scoped to the first sheet and set the value to "foo".
+workbook.sheet(0).definedName("some other name").value("foo");
 ```
 
 ### Find and Replace
