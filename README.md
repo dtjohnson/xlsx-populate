@@ -317,18 +317,23 @@ To download the workbook, you can either export as a blob (default behavior) or 
 ```js
 XlsxPopulate.outputAsync()
     .then(function (blob) {
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        document.body.appendChild(a);
-        a.href = url;
-        a.download = "out.xlsx";
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            // If IE, you must uses a different method.
+            window.navigator.msSaveOrOpenBlob(blob, "out.xlsx");
+        } else {
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.href = url;
+            a.download = "out.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
     });
 ```
 
-Alternatively, you can download via a data URI:
+Alternatively, you can download via a data URI, but this is not supported by IE:
 ```js
 XlsxPopulate.outputAsync("base64")
     .then(function (base64) {

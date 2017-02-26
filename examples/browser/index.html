@@ -78,24 +78,38 @@
     function generateBlob() {
         return generate()
             .then(function (blob) {
-                var url = window.URL.createObjectURL(blob);
-                var a = document.createElement("a");
-                document.body.appendChild(a);
-                a.href = url;
-                a.download = "out.xlsx";
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob, "out.xlsx");
+                } else {
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.href = url;
+                    a.download = "out.xlsx";
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
             })
-            .catch(err => alert(err.message || err));
+            .catch(function (err) {
+                alert(err.message || err);
+                throw err;
+            });
     }
 
     function generateBase64() {
         return generate("base64")
             .then(function (base64) {
-                location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    throw new Error("Navigating to data URI is not supported in IE.");
+                } else {
+                    location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
+                }
             })
-            .catch(err => alert(err.message || err));
+            .catch(function (err) {
+                alert(err.message || err);
+                throw err;
+            });
     }
 </script>
 </body>
