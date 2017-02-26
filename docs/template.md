@@ -392,6 +392,7 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 * __browser__ - Transpile and build client-side JavaScript project bundle using [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify).
 * __lint__ - Check project source code style using [ESLint](http://eslint.org/).
 * __unit__ - Run [Jasmine](https://jasmine.github.io/) unit tests.
+* __karma__ - Run unit tests in real browsers using [Karma](https://karma-runner.github.io/1.0/index.html).
 * __blank__ - Convert a blank XLSX template into a JS buffer module to support [fromBlankAsync](#XlsxPopulate.fromBlankAsync).
 * __docs__ - Build this README doc by combining docs/template.md, API docs generated with [jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown), and a table of contents generated with [markdown-toc](https://github.com/jonschlinkert/markdown-toc).
 * __watch__ - Watch files for changes and then run associated gulp task. (Used by the default task.)
