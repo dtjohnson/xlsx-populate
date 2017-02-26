@@ -452,6 +452,7 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 
 ### NOTOC-Color
 An object representing a color.
+
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |[rgb]|`string`|RGB color code (e.g. `'ff0000'`). Either rgb or theme is required.|
@@ -460,6 +461,7 @@ An object representing a color.
 
 ### NOTOC-Borders
 An object representing all of the borders.
+
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |[left]|`Border|string|boolean`|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
@@ -470,6 +472,7 @@ An object representing all of the borders.
 
 ### NOTOC-Border
 An object representing an individual border.
+
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |style|`string`|Style of the given border.|
@@ -478,6 +481,7 @@ An object representing an individual border.
 
 ### NOTOC-SolidFill
 An object representing a solid fill.
+
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'solid'`||
@@ -485,6 +489,7 @@ An object representing a solid fill.
 
 ### NOTOC-PatternFill
 An object representing a pattern fill.
+
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'pattern'`||
@@ -494,6 +499,7 @@ An object representing a pattern fill.
 
 ### NOTOC-GradientFill
 An object representing a gradient fill.
+
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'gradient'`||
