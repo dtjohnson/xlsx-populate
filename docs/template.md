@@ -263,7 +263,7 @@ router.get("/download", function (req, res, next) {
 ```
 
 ### Browser Usage
-Usage in the browser is almost the same. A functional example can be found in [examples/browser/index.html](https://rawgit.com/dtjohnson/xlsx-populate/master/examples/browser/index.html). The library is exposed globally as `XlsxPopulate`. Existing workbooks can be loaded from a file:
+Usage in the browser is almost the same. A functional example can be found in [examples/browser/index.html](https://gitcdn.xyz/dtjohnson/xlsx-populate/master/examples/browser/index.html). The library is exposed globally as `XlsxPopulate`. Existing workbooks can be loaded from a file:
 ```js
 // Assuming there is a file input in the page with the id 'file-input'
 var file = document.getElementById("file-input").files[0];

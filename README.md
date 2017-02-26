@@ -284,7 +284,7 @@ router.get("/download", function (req, res, next) {
 ```
 
 ### Browser Usage
-Usage in the browser is almost the same. A functional example can be found in [examples/browser/index.html](https://rawgit.com/dtjohnson/xlsx-populate/master/examples/browser/index.html). The library is exposed globally as `XlsxPopulate`. Existing workbooks can be loaded from a file:
+Usage in the browser is almost the same. A functional example can be found in [examples/browser/index.html](https://gitcdn.xyz/dtjohnson/xlsx-populate/master/examples/browser/index.html). The library is exposed globally as `XlsxPopulate`. Existing workbooks can be loaded from a file:
 ```js
 // Assuming there is a file input in the page with the id 'file-input'
 var file = document.getElementById("file-input").files[0];
@@ -1035,7 +1035,7 @@ Call a function for each cell in the range. Goes by row then column.
 <a name="Range+formula"></a>
 
 #### range.formula() ⇒ <code>string</code> &#124; <code>undefined</code>
-Gets the formula shared across the range.
+Gets the shared formula in the start cell (assuming it's the source of the shared formula).
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
 **Returns**: <code>string</code> &#124; <code>undefined</code> - The shared formula.  

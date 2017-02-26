@@ -93,12 +93,11 @@ describe("Range", () => {
 
     describe("formula", () => {
         it("should return the top-left cell shared ref formula", () => {
-            sheet.cell.and.returnValue({
+            spyOn(range, "startCell").and.returnValue({
                 getSharedRefFormula: jasmine.createSpy("getSharedRefFormula").and.returnValue("RETURN")
             });
 
             expect(range.formula()).toBe("RETURN");
-            expect(sheet.cell).toHaveBeenCalledWith(3, 2);
         });
 
         it("should set the shared formula", () => {
