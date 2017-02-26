@@ -1,12 +1,13 @@
 "use strict";
 
-var Workbook = require('../../lib/Workbook');
+const XlsxPopulate = require('../../lib/XlsxPopulate');
 
 // Load the input workbook from file.
-var workbook = Workbook.fromBlankSync();
+XlsxPopulate.fromBlankAsync()
+    .then(workbook => {
+        // Modify the workbook.
+        workbook.sheet("Sheet1").cell("A1").value("This is neat!");
 
-// Modify the workbook.
-workbook.getSheet("Sheet1").getCell("A1").setValue("This is neat!");
-
-// Write to file.
-workbook.toFileSync("./out.xlsx");
+        // Write to file.
+        return workbook.toFileAsync("./out.xlsx");
+    });

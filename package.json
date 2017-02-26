@@ -1,12 +1,10 @@
 {
   "name": "xlsx-populate",
   "version": "0.4.0",
-  "description": "Node.js module to populate XLSX templates.",
-  "main": "lib/Workbook.js",
+  "description": "Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.",
+  "main": "lib/XlsxPopulate.js",
   "scripts": {
-    "test": "jasmine",
-    "docs": "node docs/generate",
-    "eslint": "eslint */*.js"
+    "test": "jasmine"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [
@@ -14,10 +12,13 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "debug": "^2.2.0",
-    "jszip": "^2.4.0",
-    "xmldom": "0.1.22",
-    "xpath": "0.0.22"
+    "bluebird": "^3.4.7",
+    "debug": "^2.6.0",
+    "escape-string-regexp": "^1.0.5",
+    "jszip": "^3.1.3",
+    "lodash": "^4.17.4",
+    "sax": "^1.2.2",
+    "xmlbuilder": "^8.2.2"
   },
   "repository": {
     "type": "git",
@@ -25,14 +26,34 @@
   },
   "bugs": "https://github.com/dtjohnson/xlsx-populate/issues",
   "devDependencies": {
-    "eslint": "^2.6.0",
+    "babel": "^6.5.2",
+    "babel-preset-es2015": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.3.0",
+    "eslint": "^3.13.1",
     "gulp": "^3.9.1",
-    "gulp-eslint": "^2.0.0",
-    "gulp-jasmine": "^2.3.0",
-    "jasmine": "^2.4.1",
-    "jsdoc-to-markdown": "^1.3.3",
-    "proxyquire": "^1.7.4",
-    "replacestream": "^4.0.0",
-    "run-sequence": "^1.2.1"
+    "gulp-eslint": "^3.0.1",
+    "gulp-jasmine": "^2.4.2",
+    "gulp-sourcemaps": "^2.4.0",
+    "gulp-uglify": "^2.0.0",
+    "jasmine": "^2.5.3",
+    "jsdoc-to-markdown": "^2.0.1",
+    "jsondiffpatch": "^0.2.4",
+    "karma": "^1.5.0",
+    "karma-browserify": "^5.1.1",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-ie-launcher": "^1.0.0",
+    "karma-jasmine": "^1.1.0",
+    "markdown-include": "^0.4.3",
+    "markdown-toc": "^1.1.0",
+    "proxyquire": "^1.7.10",
+    "proxyquire-universal": "^1.0.8",
+    "proxyquireify": "^3.2.1",
+    "replacestream": "^4.0.2",
+    "run-sequence": "^1.2.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.8.0"
   }
 }

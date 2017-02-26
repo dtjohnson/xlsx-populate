@@ -1,2 +1,6 @@
-test
-.travis.yml
+blank
+browser
+docs
+spec
+gulpfile.js
+.*

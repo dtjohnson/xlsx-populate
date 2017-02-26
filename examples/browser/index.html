@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>xlsx-populate Browser Demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <div class="page-header">
+        <h1>xlsx-populate Browser Demo</h1>
+        <p>This is just a simple example of xlsx-populate in the browser. It will write red text to cell A1.</p>
+    </div>
+
+    <b>Source:</b>
+    <div class="radio">
+        <label><input id="radio-blank" type="radio" name="source" checked>Blank Workbook</label>
+    </div>
+    <div class="radio">
+        <label><input id="radio-ajax" type="radio" name="source">Existing AJAX Workbook:</label> <input id="url-input" class="form-control" style="display: inline; width: 400px" type="text" value="../ranges/template.xlsx" />
+    </div>
+    <div class="radio">
+        <label><input id="radio-local" type="radio" name="source">Existing Local Workbook:</label> <input id="file-input" type="file" style="display: inline" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    </div>
+
+    <button class="btn btn-primary" onclick="generateBlob()">Generate blob</button>
+    <button class="btn btn-primary" onclick="generateBase64()">Generate base64</button>
+</div>
+
+<script type="text/javascript" src="../../browser/xlsx-populate.js"></script>
+<script type="text/javascript">
+    var radioBlank = document.getElementById("radio-blank");
+    var radioAjax = document.getElementById("radio-ajax");
+    var radioLocal = document.getElementById("radio-local");
+    var urlInput = document.getElementById("url-input");
+    var fileInput = document.getElementById("file-input");
+
+    function getWorkbook() {
+        if (radioBlank.checked) {
+            return XlsxPopulate.fromBlankAsync();
+        } else if (radioAjax.checked) {
+            return new Promise(function (resolve, reject) {
+                //resolve(XlsxPopulate.fromBlankAsync());
+                var req = new XMLHttpRequest();
+                var url = urlInput.value;
+                req.open("GET", url, true);
+                req.responseType = "arraybuffer";
+                req.onreadystatechange = function () {
+                    if (req.readyState === 4){
+                        if (req.status === 200) {
+                            resolve(XlsxPopulate.fromDataAsync(req.response));
+                        } else {
+                            reject("Received a " + req.status + " HTTP code.");
+                        }
+                    }
+                };
+
+                req.send();
+            });
+        } else if (radioLocal.checked) {
+            var file = fileInput.files[0];
+            if (!file) return Promise.reject("You must select a file.");
+            return XlsxPopulate.fromDataAsync(file);
+        }
+    }
+
+    function generate(type) {
+        return getWorkbook()
+            .then(function (workbook) {
+                workbook.sheet(0).cell("A1").value("This was created in the browser!").style("fontColor", "ff0000");
+                return workbook.outputAsync(type);
+            })
+    }
+
+    function generateBlob() {
+        return generate()
+            .then(function (blob) {
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    window.navigator.msSaveOrOpenBlob(blob, "out.xlsx");
+                } else {
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement("a");
+                    document.body.appendChild(a);
+                    a.href = url;
+                    a.download = "out.xlsx";
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                }
+            })
+            .catch(function (err) {
+                alert(err.message || err);
+                throw err;
+            });
+    }
+
+    function generateBase64() {
+        return generate("base64")
+            .then(function (base64) {
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    throw new Error("Navigating to data URI is not supported in IE.");
+                } else {
+                    location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
+                }
+            })
+            .catch(function (err) {
+                alert(err.message || err);
+                throw err;
+            });
+    }
+</script>
+</body>
+</html>
