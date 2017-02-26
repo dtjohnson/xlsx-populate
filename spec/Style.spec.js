@@ -2,14 +2,16 @@
 
 /* eslint camelcase:off */
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 const _ = require("lodash");
 
 describe("Style", () => {
     let Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode, emptyBorderNode;
 
     beforeEach(() => {
-        Style = proxyquire("../lib/Style", {});
+        Style = proxyquire("../lib/Style", {
+            '@noCallThru': true
+        });
         styleSheet = jasmine.createSpyObj("styleSheet", ['getNumberFormatCode', 'getNumberFormatId']);
         id = "ID";
         xfNode = { name: "xf", attributes: {}, children: [] };

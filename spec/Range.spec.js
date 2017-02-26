@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("Range", () => {
     let Range, range, startCell, endCell, sheet, style;
 
     beforeEach(() => {
-        Range = proxyquire("../lib/Range", {});
+        Range = proxyquire("../lib/Range", {
+            '@noCallThru': true
+        });
 
         style = jasmine.createSpy("style");
         style.and.callFake(name => `STYLE:${name}`);

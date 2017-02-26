@@ -15,13 +15,15 @@ const jsdoc2md = require("jsdoc-to-markdown");
 const toc = require('markdown-toc');
 const Promise = require("bluebird");
 const fs = Promise.promisifyAll(require("fs"));
+const karma = require('karma');
 const jasmineConfig = require('./spec/support/jasmine.json');
 
 const BROWSERIFY_STANDALONE_NAME = "XlsxPopulate";
-const BABEL_PRESETS = ["es2015"];
+const BABEL_CONFIG = { presets: ["es2015"] };
 const PATHS = {
     lib: "./lib/**/*.js",
     spec: "./spec/**/*.js",
+    karma: ["./spec/helpers/**/*.js", "./spec/*.spec.js"], // Helpers need to go first
     examples: "./examples/**/*.js",
     browserify: {
         source: "./lib/XlsxPopulate.js",
@@ -43,13 +45,13 @@ const PATHS = {
 PATHS.lint = [PATHS.lib];
 PATHS.testSources = [PATHS.lib, PATHS.spec];
 
-gulp.task('browser', () => {
+gulp.task('browser', ['blank'], () => {
     return browserify({
         entries: PATHS.browserify.source,
         debug: true,
         standalone: BROWSERIFY_STANDALONE_NAME
     })
-        .transform("babelify", { presets: BABEL_PRESETS })
+        .transform("babelify", BABEL_CONFIG)
         .bundle()
         .pipe(source(PATHS.browserify.bundle))
         .pipe(buffer())
@@ -74,6 +76,35 @@ gulp.task("unit", () => {
             includeStackTrace: false,
             errorOnFail: false
         }));
+});
+
+gulp.task('karma', [], done => {
+    new karma.Server({
+        files: PATHS.karma,
+        frameworks: ['browserify', 'jasmine'],
+        browsers: ['Chrome', 'Firefox', 'IE'],
+        preprocessors: {
+            "./spec/**/*.js": ['browserify']
+        },
+        plugins: [
+            'karma-browserify',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-ie-launcher',
+            'karma-jasmine'
+        ],
+        browserify: {
+            debug: true,
+            transform: [["babelify", BABEL_CONFIG]],
+            configure(bundle) {
+                bundle.once('prebundle', () => {
+                    bundle.transform('babelify').plugin('proxyquire-universal');
+                });
+            }
+        },
+        singleRun: true,
+        autoWatch: false
+    }, done).start();
 });
 
 gulp.task("blank", () => {
@@ -111,7 +142,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('build', cb => {
-    runSequence("blank", "lint", ["unit", "docs", "browser"], cb);
+    runSequence("blank", "lint", "karma", ["unit", "docs", "browser"], cb);
 });
 
 gulp.task("default", cb => {

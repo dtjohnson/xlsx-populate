@@ -1,6 +1,6 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 const Promise = require("bluebird");
 
 describe("Workbook", () => {
@@ -63,11 +63,12 @@ describe("Workbook", () => {
         XmlBuilder = jasmine.createSpy("XmlBuilder");
         XmlBuilder.prototype.build = jasmine.createSpy("XmlBuilder.build").and.callFake(obj => `XML: ${obj}`);
 
-        blank = "BLANK";
+        blank = () => "BLANK";
 
         Workbook = proxyquire("../lib/Workbook", {
             fs,
             jszip: JSZip,
+            bluebird: Promise, // include so proxyquireify tests work properly
             './StyleSheet': StyleSheet,
             './Sheet': Sheet,
             './SharedStrings': SharedStrings,
@@ -75,12 +76,9 @@ describe("Workbook", () => {
             './ContentTypes': ContentTypes,
             './XmlParser': XmlParser,
             './XmlBuilder': XmlBuilder,
-            './blank': blank
+            './blank': blank,
+            '@noCallThru': true
         });
-    });
-
-    afterEach(() => {
-        delete process.browser;
     });
 
     describe("static", () => {
@@ -115,14 +113,22 @@ describe("Workbook", () => {
         });
 
         describe("fromFileAsync", () => {
-            itAsync("should init with the file data", () => {
-                return Workbook.fromFileAsync("PATH")
-                    .then(workbook => {
-                        expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("DATA");
-                        expect(fs.readFile).toHaveBeenCalledWith("PATH", jasmine.any(Function));
-                        expect(workbook).toBe("WORKBOOK");
-                    });
-            });
+            if (process.browser) {
+                it("should throw an error if in browser", () => {
+                    expect(() => Workbook.fromFileAsync()).toThrow();
+                });
+            }
+
+            if (!process.browser) {
+                itAsync("should init with the file data", () => {
+                    return Workbook.fromFileAsync("PATH")
+                        .then(workbook => {
+                            expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("DATA");
+                            expect(fs.readFile).toHaveBeenCalledWith("PATH", jasmine.any(Function));
+                            expect(workbook).toBe("WORKBOOK");
+                        });
+                });
+            }
         });
     });
 
@@ -188,28 +194,31 @@ describe("Workbook", () => {
                     });
             });
 
-            itAsync("should default type to buffer if node", () => {
-                return workbook.outputAsync()
-                    .then(() => {
-                        expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
-                            type: 'nodebuffer',
-                            compression: "DEFLATE",
-                            mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            if (!process.browser) {
+                itAsync("should default type to buffer if node", () => {
+                    return workbook.outputAsync()
+                        .then(() => {
+                            expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
+                                type: 'nodebuffer',
+                                compression: "DEFLATE",
+                                mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            });
                         });
-                    });
-            });
+                });
+            }
 
-            itAsync("should default type to blob if browser", () => {
-                process.browser = true;
-                return workbook.outputAsync()
-                    .then(() => {
-                        expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
-                            type: 'blob',
-                            compression: "DEFLATE",
-                            mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            if (process.browser) {
+                itAsync("should default type to blob if browser", () => {
+                    return workbook.outputAsync()
+                        .then(() => {
+                            expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
+                                type: 'blob',
+                                compression: "DEFLATE",
+                                mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            });
                         });
-                    });
-            });
+                });
+            }
         });
 
         describe("sheet", () => {
@@ -228,18 +237,21 @@ describe("Workbook", () => {
         });
 
         describe("toFileAsync", () => {
-            it("should throw an error if in browser", () => {
-                process.browser = true;
-                expect(() => workbook.toFileAsync()).toThrow();
-            });
+            if (process.browser) {
+                it("should throw an error if in browser", () => {
+                    expect(() => workbook.toFileAsync()).toThrow();
+                });
+            }
 
-            itAsync("should write the workbook to file", () => {
-                spyOn(workbook, "outputAsync").and.returnValue(Promise.resolve("OUTPUT"));
-                return workbook.toFileAsync("PATH")
-                    .then(() => {
-                        expect(fs.writeFile).toHaveBeenCalledWith("PATH", "OUTPUT", jasmine.any(Function));
-                    });
-            });
+            if (!process.browser) {
+                itAsync("should write the workbook to file", () => {
+                    spyOn(workbook, "outputAsync").and.returnValue(Promise.resolve("OUTPUT"));
+                    return workbook.toFileAsync("PATH")
+                        .then(() => {
+                            expect(fs.writeFile).toHaveBeenCalledWith("PATH", "OUTPUT", jasmine.any(Function));
+                        });
+                });
+            }
         });
 
         describe("scopedDefinedName", () => {

@@ -1,3 +1,4 @@
 "use strict";
 
-module.exports = new Buffer("{{DATA}}", "base64");
+// Export as a function as proxyquireify has trouble with constant exports.
+module.exports = () => new Buffer("{{DATA}}", "base64");

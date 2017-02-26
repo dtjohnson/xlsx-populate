@@ -1,6 +1,6 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("StyleSheet", () => {
     let Style, StyleSheet, styleSheet, styleSheetNode;
@@ -8,7 +8,8 @@ describe("StyleSheet", () => {
     beforeEach(() => {
         Style = jasmine.createSpy("_Style");
         StyleSheet = proxyquire("../lib/StyleSheet", {
-            "./Style": Style
+            "./Style": Style,
+            '@noCallThru': true
         });
 
         styleSheetNode = {

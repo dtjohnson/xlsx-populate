@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("dateConverter", () => {
     let dateConverter;
 
     beforeEach(() => {
-        dateConverter = proxyquire("../lib/dateConverter", {});
+        dateConverter = proxyquire("../lib/dateConverter", {
+            '@noCallThru': true
+        });
     });
 
     describe("dateToNumber", () => {

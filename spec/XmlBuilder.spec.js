@@ -1,12 +1,16 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const xmlbuilder = require("xmlbuilder");
+const proxyquire = require("proxyquire");
 
 describe("XmlBuilder", () => {
     let XmlBuilder, xmlBuilder;
 
     beforeEach(() => {
-        XmlBuilder = proxyquire("../lib/XmlBuilder", {});
+        XmlBuilder = proxyquire("../lib/XmlBuilder", {
+            xmlbuilder, // xmlbuilder doesn't play nice with proxyquireify, so include it this way
+            '@noCallThru': true
+        });
         xmlBuilder = new XmlBuilder();
     });
 

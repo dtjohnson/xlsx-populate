@@ -1,6 +1,6 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("Sheet", () => {
     let Sheet, Range, Row, Column, sheet, idNode, sheetNode, workbook;
@@ -16,7 +16,12 @@ describe("Sheet", () => {
         Row.prototype.find = jasmine.createSpy('find');
         Column = jasmine.createSpy("Column");
 
-        Sheet = proxyquire("../lib/Sheet", { './Range': Range, './Row': Row, './Column': Column });
+        Sheet = proxyquire("../lib/Sheet", {
+            './Range': Range,
+            './Row': Row,
+            './Column': Column,
+            '@noCallThru': true
+        });
 
         idNode = {
             name: 'sheet',

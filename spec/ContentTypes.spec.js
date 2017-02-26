@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("ContentTypes", () => {
     let ContentTypes, contentTypes, contentTypesNode;
 
     beforeEach(() => {
-        ContentTypes = proxyquire("../lib/ContentTypes", {});
+        ContentTypes = proxyquire("../lib/ContentTypes", {
+            '@noCallThru': true
+        });
 
         contentTypesNode = {
             name: "Types",

@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("xmlq", () => {
     let xmlq;
 
     beforeEach(() => {
-        xmlq = proxyquire("../lib/xmlq", {});
+        xmlq = proxyquire("../lib/xmlq", {
+            '@noCallThru': true
+        });
     });
 
     describe("appendChild", () => {

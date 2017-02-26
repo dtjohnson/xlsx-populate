@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("regexify", () => {
     let regexify;
 
     beforeEach(() => {
-        regexify = proxyquire("../lib/regexify", {});
+        regexify = proxyquire("../lib/regexify", {
+            '@noCallThru': true
+        });
     });
 
     it("should return a regexp unchanged", () => {

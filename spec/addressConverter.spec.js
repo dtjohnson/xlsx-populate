@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("addressConverter", () => {
     let addressConverter;
 
     beforeEach(() => {
-        addressConverter = proxyquire("../lib/addressConverter", {});
+        addressConverter = proxyquire("../lib/addressConverter", {
+            '@noCallThru': true
+        });
     });
 
     describe("columnNameToNumber", () => {

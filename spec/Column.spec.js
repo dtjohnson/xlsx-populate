@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("Column", () => {
     let Column, column, columnNode, sheet;
 
     beforeEach(() => {
-        Column = proxyquire("../lib/Column", {});
+        Column = proxyquire("../lib/Column", {
+            '@noCallThru': true
+        });
         sheet = jasmine.createSpyObj('sheet', ['cell', 'name', 'workbook']);
         sheet.cell.and.returnValue('CELL');
         sheet.name.and.returnValue('NAME');

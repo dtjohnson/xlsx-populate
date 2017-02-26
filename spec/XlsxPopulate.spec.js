@@ -1,6 +1,6 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("XlsxPopulate", () => {
     let dateConverter, Workbook, XlsxPopulate;
@@ -17,7 +17,8 @@ describe("XlsxPopulate", () => {
 
         XlsxPopulate = proxyquire("../lib/XlsxPopulate", {
             './dateConverter': dateConverter,
-            './Workbook': Workbook
+            './Workbook': Workbook,
+            '@noCallThru': true
         });
     });
 

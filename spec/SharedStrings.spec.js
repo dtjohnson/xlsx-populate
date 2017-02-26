@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("SharedStrings", () => {
     let SharedStrings, sharedStrings, sharedStringsNode;
 
     beforeEach(() => {
-        SharedStrings = proxyquire("../lib/SharedStrings", {});
+        SharedStrings = proxyquire("../lib/SharedStrings", {
+            '@noCallThru': true
+        });
 
         sharedStringsNode = {
             name: "sst",

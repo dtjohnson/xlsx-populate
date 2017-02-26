@@ -1,12 +1,14 @@
 "use strict";
 
-const proxyquire = require("proxyquire").noCallThru();
+const proxyquire = require("proxyquire");
 
 describe("Relationships", () => {
     let Relationships, relationships, relationshipsNode;
 
     beforeEach(() => {
-        Relationships = proxyquire("../lib/Relationships", {});
+        Relationships = proxyquire("../lib/Relationships", {
+            '@noCallThru': true
+        });
 
         relationshipsNode = {
             name: "Relationships",
