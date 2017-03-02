@@ -663,14 +663,14 @@ Find the given pattern in the cell and optionally replace it.
 Gets the formula in the cell. Note that if a formula was set as part of a range, the getter will return 'SHARED'. This is a limitation that may be addressed in a future release.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>string</code> - - The formula in the cell.  
+**Returns**: <code>string</code> - The formula in the cell.  
 <a name="Cell+formula"></a>
 
 #### cell.formula(formula) ⇒ <code>[Cell](#Cell)</code>
 Sets the formula in the cell.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>[Cell](#Cell)</code> - - The cell.  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
 
 | Param | Type | Description |
 | --- | --- | --- |
