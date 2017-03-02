@@ -596,7 +596,7 @@ A cell
         * [.style(styles)](#Cell+style) ⇒ <code>[Cell](#Cell)</code>
         * [.value()](#Cell+value) ⇒ <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ <code>[Cell](#Cell)</code>
-        * [.workbook()](#Cell+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+        * [.workbook()](#Cell+workbook) ⇒ <code>[Workbook](#Workbook)</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -816,11 +816,11 @@ Sets the value of the cell.
 
 <a name="Cell+workbook"></a>
 
-#### cell.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+#### cell.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Cell](#Cell)</code>  
-**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -861,7 +861,7 @@ A column.
     * [.sheet()](#Column+sheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.width()](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code>
     * [.width(width)](#Column+width) ⇒ <code>[Column](#Column)</code>
-    * [.workbook()](#Column+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+    * [.workbook()](#Column+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Column+address"></a>
 
@@ -950,11 +950,11 @@ Sets the width.
 
 <a name="Column+workbook"></a>
 
-#### column.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+#### column.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Get the parent workbook.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
-**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Range"></a>
 
 ### Range
@@ -989,7 +989,7 @@ A range of cells.
         * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
         * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
         * [.value(value)](#Range+value) ⇒ <code>[Range](#Range)</code>
-        * [.workbook()](#Range+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+        * [.workbook()](#Range+workbook) ⇒ <code>[Workbook](#Workbook)</code>
     * _inner_
         * [~forEachCallback](#Range..forEachCallback) ⇒ <code>undefined</code>
         * [~mapCallback](#Range..mapCallback) ⇒ <code>\*</code>
@@ -1274,11 +1274,11 @@ Set the value of all cells in the range to a single value.
 
 <a name="Range+workbook"></a>
 
-#### range.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+#### range.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
-**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Range..forEachCallback"></a>
 
 #### Range~forEachCallback ⇒ <code>undefined</code>
@@ -1363,7 +1363,7 @@ A row.
     * [.hidden(hidden)](#Row+hidden) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
     * [.sheet()](#Row+sheet) ⇒ <code>[Sheet](#Sheet)</code>
-    * [.workbook()](#Row+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+    * [.workbook()](#Row+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Row+address"></a>
 
@@ -1445,11 +1445,11 @@ Gets the parent sheet of the row.
 **Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
 <a name="Row+workbook"></a>
 
-#### row.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+#### row.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Get the parent workbook.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
-**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Sheet"></a>
 
 ### Sheet
@@ -1469,7 +1469,7 @@ A worksheet.
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
-    * [.workbook()](#Sheet+workbook) ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+    * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Sheet+cell"></a>
 
@@ -1605,11 +1605,11 @@ Get the range of cells in the sheet that have contained a value or style at any 
 **Returns**: <code>[Range](#Range)</code> &#124; <code>undefined</code> - The used range or undefined if no cells in the sheet are used.  
 <a name="Sheet+workbook"></a>
 
-#### sheet.workbook() ⇒ <code>[XlsxPopulate](#XlsxPopulate)</code>
+#### sheet.workbook() ⇒ <code>[Workbook](#Workbook)</code>
 Gets the parent workbook.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
-**Returns**: <code>[XlsxPopulate](#XlsxPopulate)</code> - The parent workbook.  
+**Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
 <a name="Workbook"></a>
 
 ### Workbook
