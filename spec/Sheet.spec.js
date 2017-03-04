@@ -3,7 +3,7 @@
 const proxyquire = require("proxyquire");
 
 describe("Sheet", () => {
-    let Sheet, Range, Row, Column, sheet, idNode, sheetNode, workbook;
+    let Sheet, Range, Row, Column, Relationships, sheet, idNode, sheetNode, workbook;
 
     beforeEach(() => {
         let i = 0;
@@ -16,10 +16,16 @@ describe("Sheet", () => {
         Row.prototype.find = jasmine.createSpy('find');
         Column = jasmine.createSpy("Column");
 
+        Relationships = jasmine.createSpy("Relationships");
+        Relationships.prototype.toObject = jasmine.createSpy("Relationships.toObject").and.returnValue("RELATIONSHIPS");
+        Relationships.prototype.findById = jasmine.createSpy("Relationships.findById").and.callFake(id => ({ attributes: { Target: `TARGET:${id}` } }));
+        Relationships.prototype.add = jasmine.createSpy("Relationships.add").and.returnValue({ attributes: { Id: "ID" } });
+
         Sheet = proxyquire("../lib/Sheet", {
             './Range': Range,
             './Row': Row,
             './Column': Column,
+            './Relationships': Relationships,
             '@noCallThru': true
         });
 
@@ -216,19 +222,6 @@ describe("Sheet", () => {
         });
     });
 
-    describe("areCellsMerged", () => {
-        it("should return true/false if the cells are merged or not", () => {
-            sheet._mergeCells = {
-                ADDRESS1: {},
-                ADDRESS2: {}
-            };
-
-            expect(sheet.areCellsMerged("ADDRESS1")).toBe(true);
-            expect(sheet.areCellsMerged("ADDRESS2")).toBe(true);
-            expect(sheet.areCellsMerged("ADDRESS3")).toBe(false);
-        });
-    });
-
     describe("clearCellsUsingSharedFormula", () => {
         it("should clear cells with matching shared formula", () => {
             sheet._rows = [
@@ -261,6 +254,55 @@ describe("Sheet", () => {
         });
     });
 
+    describe("hyperlink", () => {
+        it("should return the hyperlink", () => {
+            sheet._hyperlinks = {
+                ADDRESS1: { attributes: { 'r:id': "ID1" } },
+                ADDRESS2: { attributes: { 'r:id': "ID2" } }
+            };
+
+            expect(sheet.hyperlink("ADDRESS1")).toBe("TARGET:ID1");
+            expect(sheet.hyperlink("ADDRESS2")).toBe("TARGET:ID2");
+            expect(sheet.hyperlink("ADDRESS3")).toBeUndefined();
+        });
+
+        it("should add a hyperlink entry", () => {
+            expect(sheet._hyperlinks).toEqualJson({});
+            expect(sheet.hyperlink("ADDRESS", "HYPERLINK")).toBe(sheet);
+            expect(sheet._hyperlinks).toEqualJson({
+                ADDRESS: {
+                    name: 'hyperlink',
+                    attributes: {
+                        'r:id': "ID",
+                        ref: "ADDRESS"
+                    },
+                    children: []
+                }
+            });
+        });
+
+        it("should remove a hyperlink entry", () => {
+            sheet._hyperlinks = {
+                ADDRESS1: {},
+                ADDRESS2: {}
+            };
+
+            expect(sheet.hyperlink("ADDRESS3", undefined)).toBe(sheet);
+            expect(sheet._hyperlinks).toEqualJson({
+                ADDRESS1: {},
+                ADDRESS2: {}
+            });
+
+            sheet.hyperlink("ADDRESS1", undefined);
+            expect(sheet._hyperlinks).toEqualJson({
+                ADDRESS2: {}
+            });
+
+            sheet.hyperlink("ADDRESS2", undefined);
+            expect(sheet._hyperlinks).toEqualJson({});
+        });
+    });
+
     describe("incrementMaxSharedFormulaId", () => {
         it("should increment the max shared formula ID", () => {
             sheet._maxSharedFormulaId = 8;
@@ -270,10 +312,21 @@ describe("Sheet", () => {
         });
     });
 
-    describe("mergeCells", () => {
+    describe("merged", () => {
+        it("should return true/false if the cells are merged or not", () => {
+            sheet._mergeCells = {
+                ADDRESS1: {},
+                ADDRESS2: {}
+            };
+
+            expect(sheet.merged("ADDRESS1")).toBe(true);
+            expect(sheet.merged("ADDRESS2")).toBe(true);
+            expect(sheet.merged("ADDRESS3")).toBe(false);
+        });
+
         it("should add a mergeCell entry", () => {
             expect(sheet._mergeCells).toEqualJson({});
-            sheet.mergeCells("ADDRESS");
+            expect(sheet.merged("ADDRESS", true)).toBe(sheet);
             expect(sheet._mergeCells).toEqualJson({
                 ADDRESS: {
                     name: 'mergeCell',
@@ -284,9 +337,34 @@ describe("Sheet", () => {
                 }
             });
         });
+
+        it("should remove the mergeCell entry", () => {
+            sheet._mergeCells = {
+                ADDRESS1: {},
+                ADDRESS2: {}
+            };
+
+            expect(sheet.merged("ADDRESS3", false)).toBe(sheet);
+            expect(sheet._mergeCells).toEqualJson({
+                ADDRESS1: {},
+                ADDRESS2: {}
+            });
+
+            sheet.merged("ADDRESS1", false);
+            expect(sheet._mergeCells).toEqualJson({
+                ADDRESS2: {}
+            });
+
+            sheet.merged("ADDRESS2", false);
+            expect(sheet._mergeCells).toEqualJson({});
+        });
     });
 
     describe("toObject", () => {
+        it("should return the relationships", () => {
+            expect(sheet.toObject().relationships).toBe("RELATIONSHIPS");
+        });
+
         it("should add the rows", () => {
             sheet._rows = [
                 undefined,
@@ -294,7 +372,7 @@ describe("Sheet", () => {
                 undefined,
                 { toObject: () => "ROW2" }
             ];
-            expect(sheet.toObject().children).toEqualJson([
+            expect(sheet.toObject().sheet.children).toEqualJson([
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
                     name: 'sheetData',
@@ -312,7 +390,7 @@ describe("Sheet", () => {
                 undefined,
                 { toObject: () => "COLUMN2" }
             ];
-            expect(sheet.toObject().children).toEqualJson([
+            expect(sheet.toObject().sheet.children).toEqualJson([
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
                     name: 'cols',
@@ -330,7 +408,7 @@ describe("Sheet", () => {
                 "C3:D4": "MERGE2"
             };
 
-            expect(sheet.toObject().children).toEqualJson([
+            expect(sheet.toObject().sheet.children).toEqualJson([
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },
                 {
@@ -341,28 +419,43 @@ describe("Sheet", () => {
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
-    });
 
-    describe("unmergeCells", () => {
-        it("should remove the mergeCell entry", () => {
-            sheet._mergeCells = {
-                ADDRESS1: {},
-                ADDRESS2: {}
+        it("should add the hyperlinks", () => {
+            sheet._hyperlinks = {
+                A1: "HYPERLINK1",
+                C3: "HYPERLINK2"
             };
 
-            sheet.unmergeCells("ADDRESS3");
-            expect(sheet._mergeCells).toEqualJson({
-                ADDRESS1: {},
-                ADDRESS2: {}
-            });
+            expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetFormatPr', attributes: {}, children: [] },
+                { name: 'sheetData', attributes: {}, children: [] },
+                {
+                    name: 'hyperlinks',
+                    attributes: {},
+                    children: ["HYPERLINK1", "HYPERLINK2"]
+                },
+                { name: 'pageMargins', attributes: {}, children: [] }
+            ]);
+        });
 
-            sheet.unmergeCells("ADDRESS1");
-            expect(sheet._mergeCells).toEqualJson({
-                ADDRESS2: {}
-            });
-
-            sheet.unmergeCells("ADDRESS2");
-            expect(sheet._mergeCells).toEqualJson({});
+        it("should add the hyperlinks and merge cells in the proper order", () => {
+            sheet._mergeCells = { "A1:B2": "MERGE1" };
+            sheet._hyperlinks = { A1: "HYPERLINK1" };
+            expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetFormatPr', attributes: {}, children: [] },
+                { name: 'sheetData', attributes: {}, children: [] },
+                {
+                    name: 'mergeCells',
+                    attributes: {},
+                    children: ["MERGE1"]
+                },
+                {
+                    name: 'hyperlinks',
+                    attributes: {},
+                    children: ["HYPERLINK1"]
+                },
+                { name: 'pageMargins', attributes: {}, children: [] }
+            ]);
         });
     });
 
@@ -383,6 +476,18 @@ describe("Sheet", () => {
     });
 
     describe("_init", () => {
+        it("should create the relationships", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", attributes: {}, children: [] }
+                ]
+            }, "RELATIONSHIPS");
+
+            expect(sheet._relationships).toEqual(jasmine.any(Relationships));
+            expect(Relationships).toHaveBeenCalledWith("RELATIONSHIPS");
+        });
+
         it("should parse the rows", () => {
             sheet._init({}, {}, {
                 attributes: {},
@@ -456,6 +561,28 @@ describe("Sheet", () => {
             expect(sheet._mergeCells).toEqualJson({
                 "A1:B2": { name: 'mergeCell', attributes: { ref: "A1:B2", foo: true } },
                 "C3:D4": { name: 'mergeCell', attributes: { ref: "C3:D4", bar: true } }
+            });
+        });
+
+        it("should parse the hyperlinks", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", attributes: {}, children: [] },
+                    {
+                        name: 'hyperlinks',
+                        attributes: {},
+                        children: [
+                            { name: 'hyperlink', attributes: { ref: "A1", foo: true } },
+                            { name: 'hyperlink', attributes: { ref: "C3", bar: true } }
+                        ]
+                    }
+                ]
+            });
+
+            expect(sheet._hyperlinks).toEqualJson({
+                A1: { name: 'hyperlink', attributes: { ref: "A1", foo: true } },
+                C3: { name: 'hyperlink', attributes: { ref: "C3", bar: true } }
             });
         });
     });

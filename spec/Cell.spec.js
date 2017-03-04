@@ -25,9 +25,10 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink']);
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
+        sheet.hyperlink.and.returnValue("HYPERLINK");
         sheet.range.and.returnValue("RANGE");
 
         row = jasmine.createSpyObj('row', ['sheet', 'workbook']);
@@ -92,6 +93,18 @@ describe("Cell", () => {
     describe("columnNumber", () => {
         it("should return the column number", () => {
             expect(cell.columnNumber()).toBe(3);
+        });
+    });
+
+    describe("hyperlink", () => {
+        it("should get the hyperlink from the sheet", () => {
+            expect(cell.hyperlink()).toBe("HYPERLINK");
+            expect(sheet.hyperlink).toHaveBeenCalledWith("C7");
+        });
+
+        it("should set the hyperlink on the sheet", () => {
+            expect(cell.hyperlink("HYPERLINK")).toBe(cell);
+            expect(sheet.hyperlink).toHaveBeenCalledWith("C7", "HYPERLINK");
         });
     });
 

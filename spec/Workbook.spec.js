@@ -26,7 +26,12 @@ describe("Workbook", () => {
 
         Sheet = jasmine.createSpy("Sheet");
         Sheet.prototype.find = jasmine.createSpy("Sheet.find");
-        Sheet.prototype.toObject = jasmine.createSpy("Sheet.toObject").and.returnValue("SHEET");
+        let sheetOutput = false;
+        Sheet.prototype.toObject = jasmine.createSpy("Sheet.toObject").and.callFake(() => {
+            const relationships = sheetOutput ? "RELATIONSHIPS" : undefined;
+            sheetOutput = !sheetOutput;
+            return { sheet: "SHEET", relationships };
+        });
 
         SharedStrings = jasmine.createSpy("SharedStrings");
         SharedStrings.prototype.toObject = jasmine.createSpy("SharedStrings.toObject").and.returnValue("SHARED STRINGS");
@@ -185,7 +190,9 @@ describe("Workbook", () => {
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/styles.xml", "XML: STYLE SHEET", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/workbook.xml", "XML: WORKBOOK", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet1.xml", "XML: SHEET", { date: new Date(0), createFolders: false });
+                        expect(workbook._zip.file).not.toHaveBeenCalledWith("xl/worksheets/_rels/sheet1.xml.rels", "XML: RELATIONSHIPS", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet2.xml", "XML: SHEET", { date: new Date(0), createFolders: false });
+                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/_rels/sheet2.xml.rels", "XML: RELATIONSHIPS", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
                             type: 'TYPE',
                             compression: "DEFLATE",
@@ -339,7 +346,7 @@ describe("Workbook", () => {
         });
 
         describe("_initAsync", () => {
-            itAsync("should", () => {
+            itAsync("should extract the files from the data zip and load the objects", () => {
                 return workbook._initAsync("DATA")
                     .then(() => {
                         expect(JSZip.loadAsync).toHaveBeenCalledWith("DATA");
@@ -350,7 +357,9 @@ describe("Workbook", () => {
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/sharedStrings.xml");
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/styles.xml");
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet1.xml");
+                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/_rels/sheet1.xml.rels");
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet2.xml");
+                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/_rels/sheet2.xml.rels");
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/workbook.xml");
 
                         expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT([Content_Types].xml)');
@@ -358,7 +367,9 @@ describe("Workbook", () => {
                         expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/sharedStrings.xml)');
                         expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/styles.xml)');
                         expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/sheet1.xml)');
+                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/_rels/sheet1.xml.rels)');
                         expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/sheet2.xml)');
+                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/_rels/sheet2.xml.rels)');
                         expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/workbook.xml)');
 
                         expect(workbook._contentTypes).toEqual(jasmine.any(ContentTypes));
@@ -373,8 +384,8 @@ describe("Workbook", () => {
                         expect(Relationships).toHaveBeenCalledWith('JSON(TEXT(xl/_rels/workbook.xml.rels))');
                         expect(SharedStrings).toHaveBeenCalledWith('JSON(TEXT(xl/sharedStrings.xml))');
                         expect(StyleSheet).toHaveBeenCalledWith('JSON(TEXT(xl/styles.xml))');
-                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'A' } }, 'JSON(TEXT(xl/worksheets/sheet1.xml))');
-                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'B' } }, 'JSON(TEXT(xl/worksheets/sheet2.xml))');
+                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'A' } }, 'JSON(TEXT(xl/worksheets/sheet1.xml))', 'JSON(TEXT(xl/worksheets/_rels/sheet1.xml.rels))');
+                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'B' } }, 'JSON(TEXT(xl/worksheets/sheet2.xml))', 'JSON(TEXT(xl/worksheets/_rels/sheet2.xml.rels))');
 
                         expect(Relationships.prototype.findByType).toHaveBeenCalledWith('sharedStrings');
                         expect(ContentTypes.prototype.findByPartName).toHaveBeenCalledWith("/xl/sharedStrings.xml");

@@ -13,7 +13,7 @@ describe("Range", () => {
         style = jasmine.createSpy("style");
         style.and.callFake(name => `STYLE:${name}`);
 
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'areCellsMerged', 'mergeCells', 'unmergeCells', 'incrementMaxSharedFormulaId']);
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'merged', 'incrementMaxSharedFormulaId']);
         sheet.name.and.returnValue('NAME');
         sheet.cell.and.callFake((row, column) => `CELL[${row}, ${column}]`);
         sheet.workbook.and.returnValue('WORKBOOK');
@@ -138,19 +138,19 @@ describe("Range", () => {
 
     describe("merged", () => {
         it("should get merged", () => {
-            sheet.areCellsMerged.and.returnValue("RETURN");
+            sheet.merged.and.returnValue("RETURN");
             expect(range.merged()).toBe("RETURN");
-            expect(sheet.areCellsMerged).toHaveBeenCalledWith("B3:C5");
+            expect(sheet.merged).toHaveBeenCalledWith("B3:C5");
         });
 
         it("should merge the cells", () => {
             expect(range.merged(true)).toBe(range);
-            expect(sheet.mergeCells).toHaveBeenCalledWith("B3:C5");
+            expect(sheet.merged).toHaveBeenCalledWith("B3:C5", true);
         });
 
         it("should unmerge the cells", () => {
             expect(range.merged(false)).toBe(range);
-            expect(sheet.unmergeCells).toHaveBeenCalledWith("B3:C5");
+            expect(sheet.merged).toHaveBeenCalledWith("B3:C5", false);
         });
     });
 

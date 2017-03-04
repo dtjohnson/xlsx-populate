@@ -20,6 +20,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Styles](#styles)
   * [Dates](#dates)
   * [Method Chaining](#method-chaining)
+  * [Hyperlinks](#hyperlinks)
   * [Serving from Express](#serving-from-express)
   * [Browser Usage](#browser-usage)
 - [Missing Features](#missing-features)
@@ -272,6 +273,18 @@ workbook
         .cell(0, 0)
             .style("underline", "double");
         
+```
+
+### Hyperlinks
+Hyperlinks are also supported on cells using the [Cell.hyperlink](#Cell+hyperlink) method. The method will _not_ style the content to look like a hyperlink. You must do that yourself:
+```js
+// Set a hyperlink
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink("http://example.com");
+    
+// Get the hyperlink
+const value = cell.hyperlink(); // Returns 'http://example.com'
 ```
 
 ### Serving from Express
@@ -583,6 +596,8 @@ A cell
         * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
         * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
+        * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> &#124; <code>undefined</code>
+        * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ <code>[Cell](#Cell)</code>
         * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
         * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>[Range](#Range)</code>
@@ -675,6 +690,25 @@ Sets the formula in the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | formula | <code>string</code> | The formula to set. |
+
+<a name="Cell+hyperlink"></a>
+
+#### cell.hyperlink() ⇒ <code>string</code> &#124; <code>undefined</code>
+Gets the hyperlink attached to the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>string</code> &#124; <code>undefined</code> - The hyperlink or undefined if not set.  
+<a name="Cell+hyperlink"></a>
+
+#### cell.hyperlink(hyperlink) ⇒ <code>[Cell](#Cell)</code>
+Set or clear the hyperlink on the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| hyperlink | <code>string</code> &#124; <code>undefined</code> | The hyperlink to set or undefined to clear. |
 
 <a name="Cell+tap"></a>
 

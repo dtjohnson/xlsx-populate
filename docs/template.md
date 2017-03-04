@@ -252,6 +252,18 @@ workbook
         
 ```
 
+### Hyperlinks
+Hyperlinks are also supported on cells using the [Cell.hyperlink](#Cell+hyperlink) method. The method will _not_ style the content to look like a hyperlink. You must do that yourself:
+```js
+// Set a hyperlink
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink("http://example.com");
+    
+// Get the hyperlink
+const value = cell.hyperlink(); // Returns 'http://example.com'
+```
+
 ### Serving from Express
 You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
 ```js
