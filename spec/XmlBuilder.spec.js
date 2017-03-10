@@ -18,7 +18,7 @@ describe("XmlBuilder", () => {
                 name: 'root',
                 attributes: {
                     foo: 1,
-                    bar: "something"
+                    bar: `something'"<>&`
                 },
                 children: [
                     "foo",
@@ -30,11 +30,11 @@ describe("XmlBuilder", () => {
                             { name: 'C' }
                         ]
                     },
-                    "bar"
+                    `bar'"<>&`
                 ]
             };
 
-            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something">foo<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar</root>`);
+            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something&apos;&quot;&lt;&gt;&amp;">foo<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar&apos;&quot;&lt;&gt;&amp;</root>`);
         });
     });
 });
