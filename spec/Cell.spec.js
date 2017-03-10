@@ -339,7 +339,6 @@ describe("Cell", () => {
             expect(cellNode.attributes.t).toBeUndefined();
             expect(cellNode.children).toEqualJson([{
                 name: 'v',
-                attributes: {},
                 children: [5]
             }]);
 
@@ -348,7 +347,6 @@ describe("Cell", () => {
             expect(cellNode.attributes.t).toBeUndefined();
             expect(cellNode.children).toEqualJson([{
                 name: 'v',
-                attributes: {},
                 children: [-3.7]
             }]);
 
@@ -357,7 +355,6 @@ describe("Cell", () => {
             expect(cellNode.attributes.t).toBe('b');
             expect(cellNode.children).toEqualJson([{
                 name: 'v',
-                attributes: {},
                 children: [1]
             }]);
 
@@ -366,7 +363,6 @@ describe("Cell", () => {
             expect(cellNode.attributes.t).toBe('b');
             expect(cellNode.children).toEqualJson([{
                 name: 'v',
-                attributes: {},
                 children: [0]
             }]);
 
@@ -375,7 +371,6 @@ describe("Cell", () => {
             expect(cellNode.attributes.t).toBeUndefined();
             expect(cellNode.children).toEqualJson([{
                 name: 'v',
-                attributes: {},
                 children: [42736]
             }]);
 
@@ -384,7 +379,6 @@ describe("Cell", () => {
             expect(cellNode.attributes.t).toBe('s');
             expect(cellNode.children).toEqualJson([{
                 name: 'v',
-                attributes: {},
                 children: [7]
             }]);
             expect(sharedStrings.getStringByIndex).toHaveBeenCalledWith(7);

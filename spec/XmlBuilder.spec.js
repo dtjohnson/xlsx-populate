@@ -1,6 +1,5 @@
 "use strict";
 
-const xmlbuilder = require("xmlbuilder");
 const proxyquire = require("proxyquire");
 
 describe("XmlBuilder", () => {
@@ -8,7 +7,6 @@ describe("XmlBuilder", () => {
 
     beforeEach(() => {
         XmlBuilder = proxyquire("../lib/XmlBuilder", {
-            xmlbuilder, // xmlbuilder doesn't play nice with proxyquireify, so include it this way
             '@noCallThru': true
         });
         xmlBuilder = new XmlBuilder();
@@ -36,17 +34,7 @@ describe("XmlBuilder", () => {
                 ]
             };
 
-            expect(xmlBuilder.build(node)).toBe(
-`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<root foo="1" bar="something">
-  foo
-  <child>
-    <A>TEXT</A>
-    <B foo:bar="value"/>
-    <C/>
-  </child>
-  bar
-</root>`);
+            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something">foo<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar</root>`);
         });
     });
 });
