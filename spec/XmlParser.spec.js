@@ -1,12 +1,18 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
+const Promise = require("jszip").external.Promise;
 
 describe("XmlParser", () => {
-    let XmlParser, xmlParser;
+    let XmlParser, xmlParser, externals;
 
     beforeEach(() => {
+        // proxyquire doesn't like overriding raw objects... a spy obj works.
+        externals = jasmine.createSpyObj("externals", ["_"]);
+        externals.Promise = Promise;
+
         XmlParser = proxyquire("../lib/XmlParser", {
+            './externals': externals,
             '@noCallThru': true
         });
         xmlParser = new XmlParser();

@@ -32,6 +32,9 @@
 
 <script type="text/javascript" src="../../browser/xlsx-populate.js"></script>
 <script type="text/javascript">
+    // Promise is not defined in IE so xlsx-populate uses a polyfill via JSZip.
+    var Promise = XlsxPopulate.Promise;
+
     var radioBlank = document.getElementById("radio-blank");
     var radioAjax = document.getElementById("radio-ajax");
     var radioLocal = document.getElementById("radio-local");
@@ -43,7 +46,6 @@
             return XlsxPopulate.fromBlankAsync();
         } else if (radioAjax.checked) {
             return new Promise(function (resolve, reject) {
-                //resolve(XlsxPopulate.fromBlankAsync());
                 var req = new XMLHttpRequest();
                 var url = urlInput.value;
                 req.open("GET", url, true);

@@ -311,7 +311,7 @@ req.onreadystatechange = function () {
         XlsxPopulate.fromDataAsync(req.response)
             .then(function (workbook) {
                 // ...
-            }
+            });
     }
 };
 
@@ -344,6 +344,21 @@ XlsxPopulate.outputAsync("base64")
     .then(function (base64) {
         location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
     });
+```
+
+### Promises
+xlsx-populate uses [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to manage async input/output. By default it uses the `Promise` defined in the browser or Node.js. In browsers that don't support promises (IE) a [polyfill is used via JSZip](https://stuk.github.io/jszip/documentation/api_jszip/external.html).
+```js
+// Get the current promise library in use.
+// Helpful for getting a usable Promise library in IE.
+var Promise = XlsxPopulate.Promise;
+```
+
+If you prefer, you can override the default `Promise` library used with another ES6 compliant library like [bluebird](http://bluebirdjs.com/).
+```js
+const Promise = require("bluebird");
+const XlsxPopulate = require("xlsx-populate");
+XlsxPopulate.Promise = Promise;
 ```
 
 ## Missing Features

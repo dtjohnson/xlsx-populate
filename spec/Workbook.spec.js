@@ -1,10 +1,11 @@
 "use strict";
 
+const _ = require("lodash");
 const proxyquire = require("proxyquire");
-const Promise = require("bluebird");
+const Promise = require("jszip").external.Promise;
 
 describe("Workbook", () => {
-    let fs, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
+    let fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
 
     beforeEach(() => {
         JSZip = jasmine.createSpy("JSZip");
@@ -12,7 +13,7 @@ describe("Workbook", () => {
         JSZip.prototype.file = jasmine.createSpy("JSZip.file");
         JSZip.prototype.remove = jasmine.createSpy("JSZip.remove");
         JSZip.prototype.generateAsync = jasmine.createSpy("JSZip.generateAsync").and.returnValue(Promise.resolve("ZIP"));
-        JSZip.external = {};
+        JSZip.external = { Promise };
         JSZip.prototype.file.and.callFake(fileName => ({
             async: () => Promise.resolve(`TEXT(${fileName})`)
         }));
@@ -60,20 +61,21 @@ describe("Workbook", () => {
         };
 
         XmlParser = jasmine.createSpy("XmlParser");
-        XmlParser.prototype.parseAsync = jasmine.createSpy("XmlParser.parseAsync").and.callFake(text => {
-            if (text.indexOf("xl/workbook") >= 0) return Promise.resolve(workbookNode);
-            return Promise.resolve(`JSON(${text})`);
-        });
+        XmlParser.prototype.parseAsync = jasmine.createSpy("XmlParser.parseAsync").and.callFake(text => Promise.resolve(`JSON(${text})`));
 
         XmlBuilder = jasmine.createSpy("XmlBuilder");
         XmlBuilder.prototype.build = jasmine.createSpy("XmlBuilder.build").and.callFake(obj => `XML: ${obj}`);
 
         blank = () => "BLANK";
 
+        // proxyquire doesn't like overriding raw objects... a spy obj works.
+        externals = jasmine.createSpyObj("externals", ["_"]);
+        externals.Promise = Promise;
+
         Workbook = proxyquire("../lib/Workbook", {
             fs,
             jszip: JSZip,
-            bluebird: Promise, // include so proxyquireify tests work properly
+            './externals': externals,
             './StyleSheet': StyleSheet,
             './Sheet': Sheet,
             './SharedStrings': SharedStrings,
@@ -89,12 +91,6 @@ describe("Workbook", () => {
     describe("static", () => {
         beforeEach(() => {
             spyOn(Workbook.prototype, "_initAsync").and.returnValue(Promise.resolve("WORKBOOK"));
-        });
-
-        describe("initialization", () => {
-            it("should initialize", () => {
-                expect(JSZip.external.Promise).toBe(Promise);
-            });
         });
 
         describe("fromBlankAsync", () => {
@@ -346,31 +342,20 @@ describe("Workbook", () => {
         });
 
         describe("_initAsync", () => {
+            beforeEach(() => {
+                spyOn(workbook, "_parseNodesAsync").and.callFake(files => {
+                    return Promise.all(_.map(files, file => {
+                        if (file === "xl/workbook.xml") return Promise.resolve(workbookNode);
+                        return Promise.resolve(`PARSED(${file})`);
+                    }));
+                });
+            });
+
             itAsync("should extract the files from the data zip and load the objects", () => {
                 return workbook._initAsync("DATA")
                     .then(() => {
                         expect(JSZip.loadAsync).toHaveBeenCalledWith("DATA");
-
                         expect(workbook._zip).toEqual(jasmine.any(JSZip));
-                        expect(workbook._zip.file).toHaveBeenCalledWith("[Content_Types].xml");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/_rels/workbook.xml.rels");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/sharedStrings.xml");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/styles.xml");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet1.xml");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/_rels/sheet1.xml.rels");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet2.xml");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/_rels/sheet2.xml.rels");
-                        expect(workbook._zip.file).toHaveBeenCalledWith("xl/workbook.xml");
-
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT([Content_Types].xml)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/_rels/workbook.xml.rels)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/sharedStrings.xml)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/styles.xml)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/sheet1.xml)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/_rels/sheet1.xml.rels)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/sheet2.xml)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/worksheets/_rels/sheet2.xml.rels)');
-                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(xl/workbook.xml)');
 
                         expect(workbook._contentTypes).toEqual(jasmine.any(ContentTypes));
                         expect(workbook._relationships).toEqual(jasmine.any(Relationships));
@@ -380,12 +365,12 @@ describe("Workbook", () => {
                         expect(workbook._sheets[1]).toEqual(jasmine.any(Sheet));
                         expect(workbook._node).toBe(workbookNode);
 
-                        expect(ContentTypes).toHaveBeenCalledWith('JSON(TEXT([Content_Types].xml))');
-                        expect(Relationships).toHaveBeenCalledWith('JSON(TEXT(xl/_rels/workbook.xml.rels))');
-                        expect(SharedStrings).toHaveBeenCalledWith('JSON(TEXT(xl/sharedStrings.xml))');
-                        expect(StyleSheet).toHaveBeenCalledWith('JSON(TEXT(xl/styles.xml))');
-                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'A' } }, 'JSON(TEXT(xl/worksheets/sheet1.xml))', 'JSON(TEXT(xl/worksheets/_rels/sheet1.xml.rels))');
-                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'B' } }, 'JSON(TEXT(xl/worksheets/sheet2.xml))', 'JSON(TEXT(xl/worksheets/_rels/sheet2.xml.rels))');
+                        expect(ContentTypes).toHaveBeenCalledWith('PARSED([Content_Types].xml)');
+                        expect(Relationships).toHaveBeenCalledWith('PARSED(xl/_rels/workbook.xml.rels)');
+                        expect(SharedStrings).toHaveBeenCalledWith('PARSED(xl/sharedStrings.xml)');
+                        expect(StyleSheet).toHaveBeenCalledWith('PARSED(xl/styles.xml)');
+                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'A' } }, 'PARSED(xl/worksheets/sheet1.xml)', 'PARSED(xl/worksheets/_rels/sheet1.xml.rels)');
+                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'B' } }, 'PARSED(xl/worksheets/sheet2.xml)', 'PARSED(xl/worksheets/_rels/sheet2.xml.rels)');
 
                         expect(Relationships.prototype.findByType).toHaveBeenCalledWith('sharedStrings');
                         expect(ContentTypes.prototype.findByPartName).toHaveBeenCalledWith("/xl/sharedStrings.xml");
@@ -413,6 +398,28 @@ describe("Workbook", () => {
                     .then(() => {
                         expect(Relationships.prototype.add).toHaveBeenCalledWith("sharedStrings", "sharedStrings.xml");
                         expect(ContentTypes.prototype.add).toHaveBeenCalledWith("/xl/sharedStrings.xml", "application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml");
+                    });
+            });
+        });
+
+        describe("_parseNodesAsync", () => {
+            itAsync("should parse the nodes", () => {
+                workbook._zip = new JSZip();
+                return workbook._parseNodesAsync(["foo", "bar", "baz"])
+                    .then(nodes => {
+                        expect(workbook._zip.file).toHaveBeenCalledWith("foo");
+                        expect(workbook._zip.file).toHaveBeenCalledWith("bar");
+                        expect(workbook._zip.file).toHaveBeenCalledWith("baz");
+
+                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(foo)');
+                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(bar)');
+                        expect(XmlParser.prototype.parseAsync).toHaveBeenCalledWith('TEXT(baz)');
+
+                        expect(nodes).toEqualJson([
+                            "JSON(TEXT(foo))",
+                            "JSON(TEXT(bar))",
+                            "JSON(TEXT(baz))"
+                        ]);
                     });
             });
         });

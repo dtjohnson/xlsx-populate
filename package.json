@@ -12,7 +12,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.4.7",
     "debug": "^2.6.0",
     "escape-string-regexp": "^1.0.5",
     "jszip": "^3.1.3",

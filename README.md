@@ -23,6 +23,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Hyperlinks](#hyperlinks)
   * [Serving from Express](#serving-from-express)
   * [Browser Usage](#browser-usage)
+  * [Promises](#promises)
 - [Missing Features](#missing-features)
 - [Contributing](#contributing)
   * [How xlsx-populate Works](#how-xlsx-populate-works)
@@ -334,7 +335,7 @@ req.onreadystatechange = function () {
         XlsxPopulate.fromDataAsync(req.response)
             .then(function (workbook) {
                 // ...
-            }
+            });
     }
 };
 
@@ -367,6 +368,21 @@ XlsxPopulate.outputAsync("base64")
     .then(function (base64) {
         location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
     });
+```
+
+### Promises
+xlsx-populate uses [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to manage async input/output. By default it uses the `Promise` defined in the browser or Node.js. In browsers that don't support promises (IE) a [polyfill is used via JSZip](https://stuk.github.io/jszip/documentation/api_jszip/external.html).
+```js
+// Get the current promise library in use.
+// Helpful for getting a usable Promise library in IE.
+var Promise = XlsxPopulate.Promise;
+```
+
+If you prefer, you can override the default `Promise` library used with another ES6 compliant library like [bluebird](http://bluebirdjs.com/).
+```js
+const Promise = require("bluebird");
+const XlsxPopulate = require("xlsx-populate");
+XlsxPopulate.Promise = Promise;
 ```
 
 ## Missing Features
@@ -1729,6 +1745,7 @@ Write the workbook to file. (Not supported in browsers.)
 **Kind**: global namespace  
 
 * [XlsxPopulate](#XlsxPopulate) : <code>object</code>
+    * [.Promise](#XlsxPopulate.Promise) : <code>Promise</code>
     * [.MIME_TYPE](#XlsxPopulate.MIME_TYPE) : <code>string</code>
     * [.dateToNumber(date)](#XlsxPopulate.dateToNumber) ⇒ <code>number</code>
     * [.fromBlankAsync()](#XlsxPopulate.fromBlankAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
@@ -1736,6 +1753,12 @@ Write the workbook to file. (Not supported in browsers.)
     * [.fromFileAsync(path)](#XlsxPopulate.fromFileAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
     * [.numberToDate(number)](#XlsxPopulate.numberToDate) ⇒ <code>Date</code>
 
+<a name="XlsxPopulate.Promise"></a>
+
+#### XlsxPopulate.Promise : <code>Promise</code>
+The Promise library.
+
+**Kind**: static property of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 <a name="XlsxPopulate.MIME_TYPE"></a>
 
 #### XlsxPopulate.MIME_TYPE : <code>string</code>

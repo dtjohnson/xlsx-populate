@@ -1,9 +1,10 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
+const Promise = require("jszip").external.Promise;
 
 describe("XlsxPopulate", () => {
-    let dateConverter, Workbook, XlsxPopulate;
+    let dateConverter, Workbook, XlsxPopulate, externals;
 
     beforeEach(() => {
         dateConverter = jasmine.createSpyObj("dateConverter", ["dateToNumber", "numberToDate"]);
@@ -15,7 +16,12 @@ describe("XlsxPopulate", () => {
         Workbook.fromDataAsync.and.returnValue("WORKBOOK");
         Workbook.fromFileAsync.and.returnValue("WORKBOOK");
 
+        // proxyquire doesn't like overriding raw objects... a spy obj works.
+        externals = jasmine.createSpyObj("externals", ["_"]);
+        externals.Promise = Promise;
+
         XlsxPopulate = proxyquire("../lib/XlsxPopulate", {
+            './externals': externals,
             './dateConverter': dateConverter,
             './Workbook': Workbook,
             '@noCallThru': true
@@ -54,6 +60,15 @@ describe("XlsxPopulate", () => {
         it("should call dateConverter.numberToDate", () => {
             expect(XlsxPopulate.numberToDate("NUMBER")).toBe("DATE");
             expect(dateConverter.numberToDate).toHaveBeenCalledWith("NUMBER");
+        });
+    });
+
+    describe("Promise", () => {
+        it("should get/set the Promise", () => {
+            expect(XlsxPopulate.Promise).toBeDefined();
+            expect(XlsxPopulate.Promise.all).toEqual(jasmine.any(Function));
+            XlsxPopulate.Promise = "PROMISE";
+            expect(XlsxPopulate.Promise).toBe("PROMISE");
         });
     });
 });

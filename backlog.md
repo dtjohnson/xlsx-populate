@@ -27,7 +27,7 @@ Backlog of features to implement (in no particular order):
 ```
 
 * Support rich text (in cell values and shared strings)
-* Sheet: Rename, move, delete, activate. May require manipulating/clearing formulas.
+* Sheet: Rename, move, delete, activate, hide. May require manipulating/clearing formulas.
 * When clearing a shared formula ref cell, we should move the shared formula ref to another.
 * Returning a shared formula in a not ref cell returns "SHARED". We should return a translated formula.
 * ColumnRange, RowRange, Group
