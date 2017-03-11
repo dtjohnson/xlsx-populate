@@ -89,6 +89,32 @@ describe("xmlq", () => {
         });
     });
 
+    describe("insertInOrder", () => {
+        it("should insert in the middle", () => {
+            const node = { name: 'parent', children: [{ name: 'A' }, { name: 'C' }] };
+            xmlq.insertInOrder(node, { name: 'B' }, ['A', 'B', 'C']);
+            expect(node.children).toEqualJson([{ name: 'A' }, { name: 'B' }, { name: 'C' }]);
+        });
+
+        it("should insert at the beginning", () => {
+            const node = { name: 'parent', children: [{ name: 'C' }] };
+            xmlq.insertInOrder(node, { name: 'A' }, ['A', 'B', 'C']);
+            expect(node.children).toEqualJson([{ name: 'A' }, { name: 'C' }]);
+        });
+
+        it("insert at the end", () => {
+            const node = { name: 'parent', children: [{ name: 'A' }] };
+            xmlq.insertInOrder(node, { name: 'C' }, ['A', 'B', 'C']);
+            expect(node.children).toEqualJson([{ name: 'A' }, { name: 'C' }]);
+        });
+
+        it("append if node not expected in order", () => {
+            const node = { name: 'parent', children: [{ name: 'A' }, { name: 'C' }] };
+            xmlq.insertInOrder(node, { name: 'D' }, ['A', 'B', 'C']);
+            expect(node.children).toEqualJson([{ name: 'A' }, { name: 'C' }, { name: 'D' }]);
+        });
+    });
+
     describe("isEmpty", () => {
         it("should return true/false", () => {
             const nodes = [

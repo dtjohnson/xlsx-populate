@@ -1016,6 +1016,7 @@ A range of cells.
     * _instance_
         * [.address([opts])](#Range+address) ⇒ <code>string</code>
         * [.cell(ri, ci)](#Range+cell) ⇒ <code>[Cell](#Cell)</code>
+        * [.cells()](#Range+cells) ⇒ <code>Array.&lt;Array.&lt;Cell&gt;&gt;</code>
         * [.clear()](#Range+clear) ⇒ <code>[Range](#Range)</code>
         * [.endCell()](#Range+endCell) ⇒ <code>[Cell](#Cell)</code>
         * [.forEach(callback)](#Range+forEach) ⇒ <code>[Range](#Range)</code>
@@ -1077,6 +1078,13 @@ Gets a cell within the range.
 | ri | <code>number</code> | Row index relative to the top-left corner of the range (0-based). |
 | ci | <code>number</code> | Column index relative to the top-left corner of the range (0-based). |
 
+<a name="Range+cells"></a>
+
+#### range.cells() ⇒ <code>Array.&lt;Array.&lt;Cell&gt;&gt;</code>
+Get the cells in the range as a 2D array.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>Array.&lt;Array.&lt;Cell&gt;&gt;</code> - The cells.  
 <a name="Range+clear"></a>
 
 #### range.clear() ⇒ <code>[Range](#Range)</code>
@@ -1672,6 +1680,7 @@ A workbook.
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
     * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
+    * [.sheets()](#Workbook+sheets) ⇒ <code>[Array.&lt;Sheet&gt;](#Sheet)</code>
     * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
 
 <a name="Workbook+definedName"></a>
@@ -1727,6 +1736,13 @@ Gets the sheet with the provided name or index (0-based).
 | --- | --- | --- |
 | sheetNameOrIndex | <code>string</code> &#124; <code>number</code> | The sheet name or index. |
 
+<a name="Workbook+sheets"></a>
+
+#### workbook.sheets() ⇒ <code>[Array.&lt;Sheet&gt;](#Sheet)</code>
+Get an array of all the sheets in the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Array.&lt;Sheet&gt;](#Sheet)</code> - The sheets.  
 <a name="Workbook+toFileAsync"></a>
 
 #### workbook.toFileAsync(path) ⇒ <code>Promise.&lt;undefined&gt;</code>

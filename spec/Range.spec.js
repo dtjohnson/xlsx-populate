@@ -64,6 +64,16 @@ describe("Range", () => {
         });
     });
 
+    describe("cells", () => {
+        it("should get the cells", () => {
+            expect(range.cells()).toEqualJson([
+                ["CELL[3, 2]", "CELL[3, 3]"],
+                ["CELL[4, 2]", "CELL[4, 3]"],
+                ["CELL[5, 2]", "CELL[5, 3]"]
+            ]);
+        });
+    });
+
     describe("clear", () => {
         it("should clear the cell", () => {
             spyOn(range, "value").and.returnValue("RETURN");

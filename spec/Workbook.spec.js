@@ -239,6 +239,14 @@ describe("Workbook", () => {
             });
         });
 
+        describe("sheets", () => {
+            it("should return the sheets", () => {
+                workbook._sheets = ["SHEET1", "SHEET2"];
+                expect(workbook.sheets()).toEqualJson(["SHEET1", "SHEET2"]);
+                expect(workbook.sheets()).not.toBe(workbook._sheets);
+            });
+        });
+
         describe("toFileAsync", () => {
             if (process.browser) {
                 it("should throw an error if in browser", () => {
