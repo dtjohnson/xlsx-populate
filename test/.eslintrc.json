@@ -1,0 +1,8 @@
+{
+  "globals": {
+    "itAsync": true
+  },
+  "env": {
+    "jasmine": true
+  }
+}
