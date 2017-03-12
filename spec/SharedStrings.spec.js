@@ -15,7 +15,7 @@ describe("SharedStrings", () => {
             attributes: {
                 xmlns: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
                 count: 3,
-                unique: 7
+                uniqueCount: 7
             },
             children: [
                 {
@@ -53,6 +53,7 @@ describe("SharedStrings", () => {
                 children: [
                     {
                         name: "t",
+                        attributes: { 'xml:space': "preserve" },
                         children: ["baz"]
                     }
                 ]

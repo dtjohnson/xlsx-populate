@@ -25,6 +25,8 @@ describe("XmlParser", () => {
     <A>TEXT</A>
     <B foo:bar="value"/>
     <C/>
+    <D xml:space="preserve">    
+    </D>
   </child>bar</root>`;
 
             return xmlParser.parseAsync(xml)
@@ -43,7 +45,8 @@ describe("XmlParser", () => {
                                 children: [
                                     { name: 'A', attributes: {}, children: ["TEXT"] },
                                     { name: 'B', attributes: { 'foo:bar': "value" }, children: [] },
-                                    { name: 'C', attributes: {}, children: [] }
+                                    { name: 'C', attributes: {}, children: [] },
+                                    { name: 'D', attributes: { 'xml:space': "preserve" }, children: ["    \n    "] }
                                 ]
                             },
                             "bar"

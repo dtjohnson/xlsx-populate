@@ -5,9 +5,16 @@ const proxyquire = require("proxyquire");
 const Promise = require("jszip").external.Promise;
 
 describe("Workbook", () => {
-    let fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
+    let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
 
     beforeEach(() => {
+        // Resolve a promise with a small random delay so they resolve out of order.
+        resolved = val => {
+            return new Promise(resolve => {
+                setTimeout(resolve, Math.random() * 10);
+            }).then(() => val);
+        };
+
         JSZip = jasmine.createSpy("JSZip");
         JSZip.loadAsync = jasmine.createSpy("JSZip.loadAsync").and.returnValue(Promise.resolve(new JSZip()));
         JSZip.prototype.file = jasmine.createSpy("JSZip.file");
@@ -25,7 +32,14 @@ describe("Workbook", () => {
         StyleSheet = jasmine.createSpy("StyleSheet");
         StyleSheet.prototype.toObject = jasmine.createSpy("StyleSheet.toObject").and.returnValue("STYLE SHEET");
 
-        Sheet = jasmine.createSpy("Sheet");
+        Sheet = class {
+            constructor(workbook, sheetIdNode, sheetNode, sheetRelationshipsNode) {
+                this.workbook = workbook;
+                this.sheetIdNode = sheetIdNode;
+                this.sheetNode = sheetNode;
+                this.sheetRelationshipsNode = sheetRelationshipsNode;
+            }
+        };
         Sheet.prototype.find = jasmine.createSpy("Sheet.find");
         let sheetOutput = false;
         Sheet.prototype.toObject = jasmine.createSpy("Sheet.toObject").and.callFake(() => {
@@ -353,8 +367,8 @@ describe("Workbook", () => {
             beforeEach(() => {
                 spyOn(workbook, "_parseNodesAsync").and.callFake(files => {
                     return Promise.all(_.map(files, file => {
-                        if (file === "xl/workbook.xml") return Promise.resolve(workbookNode);
-                        return Promise.resolve(`PARSED(${file})`);
+                        if (file === "xl/workbook.xml") return resolved(workbookNode);
+                        return resolved(`PARSED(${file})`);
                     }));
                 });
             });
@@ -373,12 +387,19 @@ describe("Workbook", () => {
                         expect(workbook._sheets[1]).toEqual(jasmine.any(Sheet));
                         expect(workbook._node).toBe(workbookNode);
 
+                        expect(workbook._sheets[0].workbook).toBe(workbook);
+                        expect(workbook._sheets[0].sheetIdNode).toEqual({ name: 'sheet', attributes: { name: 'A' } });
+                        expect(workbook._sheets[0].sheetNode).toEqual('PARSED(xl/worksheets/sheet1.xml)');
+                        expect(workbook._sheets[0].sheetRelationshipsNode).toEqual('PARSED(xl/worksheets/_rels/sheet1.xml.rels)');
+                        expect(workbook._sheets[1].workbook).toBe(workbook);
+                        expect(workbook._sheets[1].sheetIdNode).toEqual({ name: 'sheet', attributes: { name: 'B' } });
+                        expect(workbook._sheets[1].sheetNode).toEqual('PARSED(xl/worksheets/sheet2.xml)');
+                        expect(workbook._sheets[1].sheetRelationshipsNode).toEqual('PARSED(xl/worksheets/_rels/sheet2.xml.rels)');
+
                         expect(ContentTypes).toHaveBeenCalledWith('PARSED([Content_Types].xml)');
                         expect(Relationships).toHaveBeenCalledWith('PARSED(xl/_rels/workbook.xml.rels)');
                         expect(SharedStrings).toHaveBeenCalledWith('PARSED(xl/sharedStrings.xml)');
                         expect(StyleSheet).toHaveBeenCalledWith('PARSED(xl/styles.xml)');
-                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'A' } }, 'PARSED(xl/worksheets/sheet1.xml)', 'PARSED(xl/worksheets/_rels/sheet1.xml.rels)');
-                        expect(Sheet).toHaveBeenCalledWith(workbook, { name: 'sheet', attributes: { name: 'B' } }, 'PARSED(xl/worksheets/sheet2.xml)', 'PARSED(xl/worksheets/_rels/sheet2.xml.rels)');
 
                         expect(Relationships.prototype.findByType).toHaveBeenCalledWith('sharedStrings');
                         expect(ContentTypes.prototype.findByPartName).toHaveBeenCalledWith("/xl/sharedStrings.xml");

@@ -34,7 +34,7 @@ describe("XmlBuilder", () => {
                 ]
             };
 
-            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something&apos;&quot;&lt;&gt;&amp;">foo<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar&apos;&quot;&lt;&gt;&amp;</root>`);
+            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something'&quot;&lt;&gt;&amp;">foo<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar'"&lt;&gt;&amp;</root>`);
         });
     });
 });
