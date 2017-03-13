@@ -1,7 +1,8 @@
 "use strict";
 
-const gulp = require('gulp');
+/* eslint global-require: "off" */
 
+const gulp = require('gulp');
 const browserify = require('browserify');
 const babelify = require('babelify');
 const source = require('vinyl-source-stream');
@@ -16,14 +17,13 @@ const toc = require('markdown-toc');
 const Promise = require("bluebird");
 const fs = Promise.promisifyAll(require("fs"));
 const karma = require('karma');
-const jasmineConfig = require('./spec/support/jasmine.json');
 
 const BROWSERIFY_STANDALONE_NAME = "XlsxPopulate";
 const BABEL_CONFIG = { presets: ["es2015"] };
 const PATHS = {
     lib: "./lib/**/*.js",
-    spec: "./spec/**/*.js",
-    karma: ["./spec/helpers/**/*.js", "./spec/*.spec.js"], // Helpers need to go first
+    unit: "./test/unit/**/*.js",
+    karma: ["./test/helpers/**/*.js", "./test/unit/**/*.spec.js"], // Helpers need to go first
     examples: "./examples/**/*.js",
     browserify: {
         source: "./lib/XlsxPopulate.js",
@@ -39,11 +39,15 @@ const PATHS = {
         workbook: "./blank/blank.xlsx",
         template: "./blank/template.js",
         build: "./lib/blank.js"
+    },
+    jasmineConfigs: {
+        unit: "./test/unit/jasmine.json",
+        e2eGenerate: "./test/e2e-generate/jasmine.json"
     }
 };
 
 PATHS.lint = [PATHS.lib];
-PATHS.testSources = [PATHS.lib, PATHS.spec];
+PATHS.unitTestSources = [PATHS.lib, PATHS.unit];
 
 gulp.task('browser', ['blank'], () => {
     return browserify({
@@ -69,12 +73,20 @@ gulp.task("lint", () => {
 });
 
 gulp.task("unit", () => {
-    return gulp
-        .src(PATHS.spec)
+    return gulp.src([])
         .pipe(jasmine({
-            config: jasmineConfig,
+            config: require(PATHS.jasmineConfigs.unit),
             includeStackTrace: false,
             errorOnFail: false
+        }));
+});
+
+gulp.task("e2e-generate", () => {
+    return gulp.src([])
+        .pipe(jasmine({
+            config: require(PATHS.jasmineConfigs.e2eGenerate),
+            includeStackTrace: false,
+            errorOnFail: true
         }));
 });
 
@@ -84,7 +96,7 @@ gulp.task('karma', [], done => {
         frameworks: ['browserify', 'jasmine'],
         browsers: ['Chrome', 'Firefox', 'IE'],
         preprocessors: {
-            "./spec/**/*.js": ['browserify']
+            "./test/**/*.js": ['browserify']
         },
         plugins: [
             'karma-browserify',
@@ -137,12 +149,12 @@ gulp.task("docs", () => {
 gulp.task('watch', () => {
     // Only watch blank, unit, and docs for changes. Everything else is too slow or noisy.
     gulp.watch([PATHS.blank.template, PATHS.blank.workbook], ['blank']);
-    gulp.watch(PATHS.testSources, ["unit"]);
+    gulp.watch(PATHS.unitTestSources, ["unit"]);
     gulp.watch([PATHS.lib, PATHS.readme.template], ["docs"]);
 });
 
 gulp.task('build', cb => {
-    runSequence("blank", "lint", "karma", ["unit", "docs", "browser"], cb);
+    runSequence(["docs", "browser"], "lint", "unit", "karma", "e2e-generate", cb);
 });
 
 gulp.task("default", cb => {

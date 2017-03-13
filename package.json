@@ -4,7 +4,8 @@
   "description": "Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.",
   "main": "lib/XlsxPopulate.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
+    "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [

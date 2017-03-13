@@ -4,5 +4,9 @@
   },
   "env": {
     "jasmine": true
+  },
+  "rules": {
+    "global-require": 0,
+    "no-sync": 0
   }
 }
