@@ -10,13 +10,13 @@ const buffer = require('vinyl-buffer');
 const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps');
 const eslint = require("gulp-eslint");
-const jasmine = require("gulp-jasmine");
 const runSequence = require('run-sequence').use(gulp);
 const jsdoc2md = require("jsdoc-to-markdown");
 const toc = require('markdown-toc');
 const Promise = require("bluebird");
 const fs = Promise.promisifyAll(require("fs"));
 const karma = require('karma');
+const Jasmine = require("jasmine");
 
 const BROWSERIFY_STANDALONE_NAME = "XlsxPopulate";
 const BABEL_CONFIG = { presets: ["es2015"] };
@@ -42,12 +42,22 @@ const PATHS = {
     },
     jasmineConfigs: {
         unit: "./test/unit/jasmine.json",
-        e2eGenerate: "./test/e2e-generate/jasmine.json"
+        e2eGenerate: "./test/e2e-generate/jasmine.json",
+        e2eParse: "./test/e2e-parse/jasmine.json"
     }
 };
 
 PATHS.lint = [PATHS.lib];
 PATHS.unitTestSources = [PATHS.lib, PATHS.unit];
+
+// Function to clear the require cache as running unit tests mess up later tests.
+const clearRequireCache = () => {
+    for (const moduleId in require.cache) {
+        if (require.cache.hasOwnProperty(moduleId)) {
+            delete require.cache[moduleId];
+        }
+    }
+};
 
 gulp.task('browser', ['blank'], () => {
     return browserify({
@@ -72,22 +82,30 @@ gulp.task("lint", () => {
         .pipe(eslint.format());
 });
 
-gulp.task("unit", () => {
-    return gulp.src([])
-        .pipe(jasmine({
-            config: require(PATHS.jasmineConfigs.unit),
-            includeStackTrace: false,
-            errorOnFail: false
-        }));
+gulp.task("unit", cb => {
+    process.chdir(__dirname);
+    const jasmine = new Jasmine();
+    jasmine.loadConfigFile(PATHS.jasmineConfigs.unit);
+    jasmine.onComplete(passed => cb(null));
+    jasmine.execute();
 });
 
-gulp.task("e2e-generate", () => {
-    return gulp.src([])
-        .pipe(jasmine({
-            config: require(PATHS.jasmineConfigs.e2eGenerate),
-            includeStackTrace: false,
-            errorOnFail: true
-        }));
+gulp.task("e2e-generate", cb => {
+    clearRequireCache();
+    process.chdir(__dirname);
+    const jasmine = new Jasmine();
+    jasmine.loadConfigFile(PATHS.jasmineConfigs.e2eGenerate);
+    jasmine.onComplete(passed => cb(null));
+    jasmine.execute();
+});
+
+gulp.task("e2e-parse", cb => {
+    clearRequireCache();
+    process.chdir(__dirname);
+    const jasmine = new Jasmine();
+    jasmine.loadConfigFile(PATHS.jasmineConfigs.e2eParse);
+    jasmine.onComplete(passed => cb(null));
+    jasmine.execute();
 });
 
 gulp.task('karma', [], done => {
@@ -154,7 +172,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('build', cb => {
-    runSequence(["docs", "browser"], "lint", "unit", "karma", "e2e-generate", cb);
+    runSequence(["docs", "browser"], "lint", "unit", "karma", "e2e-parse", "e2e-generate", cb);
 });
 
 gulp.task("default", cb => {

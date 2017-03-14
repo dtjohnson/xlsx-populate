@@ -5,7 +5,8 @@
   "main": "lib/XlsxPopulate.js",
   "scripts": {
     "test": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
-    "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json"
+    "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json",
+    "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [
@@ -34,7 +35,6 @@
     "glob": "^7.1.1",
     "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
-    "gulp-jasmine": "^2.4.2",
     "gulp-sourcemaps": "^2.4.0",
     "gulp-uglify": "^2.0.0",
     "jasmine": "^2.5.3",

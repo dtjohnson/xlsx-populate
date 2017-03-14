@@ -2,19 +2,11 @@
 
 process.chdir(__dirname);
 
-// Clear the require cache as running unit tests before this mess everything up.
-for (const moduleId in require.cache) {
-    if (require.cache.hasOwnProperty(moduleId)) {
-        delete require.cache[moduleId];
-    }
-}
-
 const fs = require("fs");
 const glob = require("glob");
 const path = require("path");
 const edge = require('edge');
 
-// delete require.cache[require.resolve("../../lib/XlsxPopulate")];
 const XlsxPopulate = require("../../lib/XlsxPopulate");
 
 // Install VSTO redistributable from here: https://www.microsoft.com/en-us/download/details.aspx?id=48217
