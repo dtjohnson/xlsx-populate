@@ -11,7 +11,7 @@ const XlsxPopulate = require("../../lib/XlsxPopulate");
 // const testCases = ["./simple/"]; // To focus
 const testCases = glob.sync("./*/");
 
-describe("e2e-generate", () => {
+describe("e2e-parse", () => {
     testCases.map(testCase => {
         itAsync(testCase, () => {
             return XlsxPopulate.fromFileAsync(`${testCase}input.xlsx`)

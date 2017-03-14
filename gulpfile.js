@@ -59,6 +59,45 @@ const clearRequireCache = () => {
     }
 };
 
+const runKarma = (files, cb) => {
+    process.chdir(__dirname);
+    new karma.Server({
+        files,
+        frameworks: ['browserify', 'jasmine'],
+        browsers: ['Chrome', 'Firefox', 'IE'],
+        preprocessors: {
+            "./test/**/*.js": ['browserify']
+        },
+        plugins: [
+            'karma-browserify',
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-ie-launcher',
+            'karma-jasmine'
+        ],
+        browserify: {
+            debug: true,
+            transform: [["babelify", BABEL_CONFIG]],
+            configure(bundle) {
+                bundle.once('prebundle', () => {
+                    bundle.transform('babelify').plugin('proxyquire-universal');
+                });
+            }
+        },
+        singleRun: true,
+        autoWatch: false
+    }, cb).start();
+};
+
+const runJasmine = (configPath, cb) => {
+    process.chdir(__dirname);
+    clearRequireCache();
+    const jasmine = new Jasmine();
+    jasmine.loadConfigFile(configPath);
+    jasmine.onComplete(passed => cb(null));
+    jasmine.execute();
+};
+
 gulp.task('browser', ['blank'], () => {
     return browserify({
         entries: PATHS.browserify.source,
@@ -83,58 +122,23 @@ gulp.task("lint", () => {
 });
 
 gulp.task("unit", cb => {
-    process.chdir(__dirname);
-    const jasmine = new Jasmine();
-    jasmine.loadConfigFile(PATHS.jasmineConfigs.unit);
-    jasmine.onComplete(passed => cb(null));
-    jasmine.execute();
+    runJasmine(PATHS.jasmineConfigs.unit, cb);
 });
 
 gulp.task("e2e-generate", cb => {
-    clearRequireCache();
-    process.chdir(__dirname);
-    const jasmine = new Jasmine();
-    jasmine.loadConfigFile(PATHS.jasmineConfigs.e2eGenerate);
-    jasmine.onComplete(passed => cb(null));
-    jasmine.execute();
+    runJasmine(PATHS.jasmineConfigs.e2eGenerate, cb);
 });
 
 gulp.task("e2e-parse", cb => {
-    clearRequireCache();
-    process.chdir(__dirname);
-    const jasmine = new Jasmine();
-    jasmine.loadConfigFile(PATHS.jasmineConfigs.e2eParse);
-    jasmine.onComplete(passed => cb(null));
-    jasmine.execute();
+    runJasmine(PATHS.jasmineConfigs.e2eParse, cb);
 });
 
-gulp.task('karma', [], done => {
-    new karma.Server({
-        files: PATHS.karma,
-        frameworks: ['browserify', 'jasmine'],
-        browsers: ['Chrome', 'Firefox', 'IE'],
-        preprocessors: {
-            "./test/**/*.js": ['browserify']
-        },
-        plugins: [
-            'karma-browserify',
-            'karma-chrome-launcher',
-            'karma-firefox-launcher',
-            'karma-ie-launcher',
-            'karma-jasmine'
-        ],
-        browserify: {
-            debug: true,
-            transform: [["babelify", BABEL_CONFIG]],
-            configure(bundle) {
-                bundle.once('prebundle', () => {
-                    bundle.transform('babelify').plugin('proxyquire-universal');
-                });
-            }
-        },
-        singleRun: true,
-        autoWatch: false
-    }, done).start();
+gulp.task('e2e-browser', cb => {
+    runKarma(["./test/helpers/**/*.js", "./browser/xlsx-populate.js", "./test/e2e-browser/**/*.spec.js"], cb);
+});
+
+gulp.task('unit-browser', cb => {
+    runKarma(PATHS.karma, cb);
 });
 
 gulp.task("blank", () => {
@@ -172,7 +176,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('build', cb => {
-    runSequence(["docs", "browser"], "lint", "unit", "karma", "e2e-parse", "e2e-generate", cb);
+    runSequence(["docs", "browser"], "lint", "unit", "unit-browser", "e2e-parse", "e2e-generate", "e2e-browser", cb);
 });
 
 gulp.task("default", cb => {

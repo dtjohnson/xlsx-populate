@@ -1,0 +1,9 @@
+{
+  "globals": {
+    "XlsxPopulate": true
+  },
+  "env": {
+    "browser": true,
+    "node": false
+  }
+}
