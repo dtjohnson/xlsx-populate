@@ -457,7 +457,10 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 * __browser__ - Transpile and build client-side JavaScript project bundle using [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify).
 * __lint__ - Check project source code style using [ESLint](http://eslint.org/).
 * __unit__ - Run [Jasmine](https://jasmine.github.io/) unit tests.
-* __karma__ - Run unit tests in real browsers using [Karma](https://karma-runner.github.io/1.0/index.html).
+* __unit-browser__ - Run the unit tests in real browsers using [Karma](https://karma-runner.github.io/1.0/index.html).
+* __e2e-parse__ - End-to-end tests of parsing data out of sample workbooks that were created in Microsoft Excel.
+* __e2e-generate__ - End-to-end tests of generating workbooks using xlsx-populate. To verify the workbooks were truly generated correctly they need to be opened in Microsoft Excel and verified. This task automates this verification using the .NET Excel Interop library with [Edge.js](https://github.com/tjanczuk/edge) acting as a bridge between Node.js and C#. Note that these tests will _only_ run on Windows with Microsoft Excel and the [Primary Interop Assemblies installed](https://msdn.microsoft.com/en-us/library/kh3965hw.aspx).
+* __e2e-browser__ - End-to-end tests of usage of the browserify bundle in real browsers using Karma.
 * __blank__ - Convert a blank XLSX template into a JS buffer module to support [fromBlankAsync](#XlsxPopulate.fromBlankAsync).
 * __docs__ - Build this README doc by combining docs/template.md, API docs generated with [jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown), and a table of contents generated with [markdown-toc](https://github.com/jonschlinkert/markdown-toc).
 * __watch__ - Watch files for changes and then run associated gulp task. (Used by the default task.)

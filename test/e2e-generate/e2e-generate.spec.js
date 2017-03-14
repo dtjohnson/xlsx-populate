@@ -9,8 +9,7 @@ const edge = require('edge');
 
 const XlsxPopulate = require("../../lib/XlsxPopulate");
 
-// Install VSTO redistributable from here: https://www.microsoft.com/en-us/download/details.aspx?id=48217
-const interopPath = glob.sync("C:\\Windows\\assembly\\GAC_MSIL\\Microsoft.Office.Interop.Excel\\*\\Microsoft.Office.Interop.Excel.dll")[0];
+const interopPath = glob.sync("C:\\Program Files (x86)\\Microsoft Office\\root\\Office*\\DCF\\Microsoft.Office.Interop.Excel.dll")[0];
 if (!interopPath) throw new Error("Unable to find the Microsoft.Office.Interop.Excel.dll!");
 
 // const testCases = ["./from-existing/"]; // To focus
