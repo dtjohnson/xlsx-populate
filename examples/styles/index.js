@@ -84,7 +84,7 @@ XlsxPopulate.fromBlankAsync()
                 top: true,
                 right: "thick",
                 bottom: { style: "dotted", color: "ff0000" },
-                left: { style: "mediumDashed", theme: 5 },
+                left: { style: "mediumDashed", color: 5 },
                 diagonal: { style: "thick", color: "0000ff", direction: "both" }
             })
             .relativeCell(1, 0).value("number").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00")

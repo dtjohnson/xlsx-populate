@@ -1,0 +1,339 @@
+{
+  "bold": true,
+  "italic": true,
+  "underline": "xlUnderlineStyleSingle",
+  "double underline": "xlUnderlineStyleDouble",
+  "strikethrough": true,
+  "superscript": true,
+  "subscript": true,
+  "larger": 14,
+  "smaller": 8,
+  "comic sans": "Comic Sans MS",
+  "rgb font color": "FF0000",
+  "theme font color": 5,
+  "tinted theme font color": {
+    "theme": 5,
+    "tint": -0.5
+  },
+  "horizontal center": "xlHAlignCenter",
+  "this text is justified distributed": "xlHAlignDistributed",
+  "indent": 2,
+  "vertical center": "xlVAlignCenter",
+  "this text is wrapped text": true,
+  "this text is shrink to fit": true,
+  "right-to-left": "xlRTL",
+  "text rotation": -10,
+  "angle counterclockwise": 45,
+  "angle clockwise": -45,
+  "rotate text up": "xlUpward",
+  "rotate text down": "xlDownward",
+  "vertical text": "xlVertical",
+  "rgb solid fill": {
+    "pattern": "xlPatternSolid",
+    "rgb": "FF0000"
+  },
+  "theme solid fill": {
+    "pattern": "xlPatternSolid",
+    "theme": 6
+  },
+  "tinted theme solid fill": {
+    "pattern": "xlPatternSolid",
+    "theme": 6,
+    "tint": 0.25
+  },
+  "pattern fill": {
+    "pattern": "xlPatternDown",
+    "fgRgb": "FF0000",
+    "bgTheme": 4,
+    "bgTint": 0.4
+  },
+  "linear gradient fill": {
+    "pattern": "xlPatternLinearGradient",
+    "degree": 10,
+    "stops": [
+      {
+        "position": 0,
+        "rgb": "FF0000"
+      },
+      {
+        "position": 0.5,
+        "rgb": "00FF00"
+      },
+      {
+        "position": 1,
+        "rgb": "0000FF"
+      }
+    ]
+  },
+  "path gradient fill": {
+    "pattern": "xlPatternRectangularGradient",
+    "left": 0.1,
+    "right": 0.3,
+    "top": 0.5,
+    "bottom": 0.7,
+    "stops": [
+      {
+        "position": 0,
+        "rgb": "FF0000"
+      },
+      {
+        "position": 1,
+        "rgb": "0000FF"
+      }
+    ]
+  },
+  "thin border": {
+    "left": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "000000"
+    },
+    "right": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "000000"
+    },
+    "top": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "000000"
+    },
+    "bottom": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "000000"
+    },
+    "diagonalUp": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "thick border": {
+    "left": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "000000"
+    },
+    "right": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "000000"
+    },
+    "top": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "000000"
+    },
+    "bottom": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "000000"
+    },
+    "diagonalUp": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "double blue border": {
+    "left": {
+      "style": "xlDouble",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    },
+    "right": {
+      "style": "xlDouble",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    },
+    "top": {
+      "style": "xlDouble",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    },
+    "bottom": {
+      "style": "xlDouble",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    },
+    "diagonalUp": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "right red border": {
+    "left": {
+      "style": "xlLineStyleNone"
+    },
+    "right": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "FF0000"
+    },
+    "top": {
+      "style": "xlLineStyleNone"
+    },
+    "bottom": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalUp": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "theme diagonal up border": {
+    "left": {
+      "style": "xlLineStyleNone"
+    },
+    "right": {
+      "style": "xlLineStyleNone"
+    },
+    "top": {
+      "style": "xlLineStyleNone"
+    },
+    "bottom": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalUp": {
+      "style": "xlDash",
+      "tint": -0.1,
+      "weight": "xlThin",
+      "theme": 7
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "various styles border": {
+    "left": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "000000"
+    },
+    "right": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "000000"
+    },
+    "top": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlHairline",
+      "rgb": "000000"
+    },
+    "bottom": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlMedium",
+      "rgb": "000000"
+    },
+    "diagonalUp": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "various colors border": {
+    "left": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "FFFF00"
+    },
+    "right": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "00FF00"
+    },
+    "top": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "FF0000"
+    },
+    "bottom": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    },
+    "diagonalUp": {
+      "style": "xlLineStyleNone"
+    },
+    "diagonalDown": {
+      "style": "xlLineStyleNone"
+    }
+  },
+  "complex border": {
+    "left": {
+      "style": "xlDash",
+      "tint": 0,
+      "weight": "xlMedium",
+      "theme": 6
+    },
+    "right": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "000000"
+    },
+    "top": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "000000"
+    },
+    "bottom": {
+      "style": "xlDot",
+      "tint": 0,
+      "weight": "xlThin",
+      "rgb": "FF0000"
+    },
+    "diagonalUp": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    },
+    "diagonalDown": {
+      "style": "xlContinuous",
+      "tint": 0,
+      "weight": "xlThick",
+      "rgb": "0000FF"
+    }
+  },
+  "number": "0.00",
+  "currency": "\\$#,##0.00",
+  "accounting": "_(\\$* #,##0.00_);_(\\$* (#,##0.00);_(\\$* \"-\"??_);_(@_)",
+  "short date": "m/d/yyyy",
+  "long date": "[$-F800]dddd, mmmm dd, yyyy",
+  "time": "[$-F400]h:mm:ss AM/PM",
+  "percentage": "0.00%",
+  "fraction": "# ?/?",
+  "scientific": "0.00E+00",
+  "text": "@"
+}

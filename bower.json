@@ -15,7 +15,7 @@
     "docs",
     "lib",
     "node_modules",
-    "spec"
+    "test"
   ],
   "keywords": [
     "promise",
