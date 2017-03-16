@@ -7,15 +7,12 @@ XlsxPopulate.fromFileAsync("../Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
 
-            console.log(workbook.sheet(4).selection().map(s => s.address()));
-        // workbook.activeSheet().cell("A1").value("This is neat!");
-        // workbook.activeSheet().activeCell().value("FOO");
-    // workbook.activeSheet(2).activeCell("C3");
-    //         workbook.sheet(0).active(true);
-        // console.log(workbook.sheet(0).hidden());
-        // workbook.sheet(0).hidden('true');
-        // console.log(workbook.sheet(0).hidden());
+        // workbook.moveSheet("Sheet1");
+        // workbook.addSheet("NEW").tabColor("0000FF").active(true);
+        console.log(workbook.find(2));
+        // workbook.activeSheet().tabColor(6).activeCell().value("FOO");
+        // console.log(workbook.activeSheet().tabColor())
 
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
-    });
+    }).catch(err => console.error(err));
