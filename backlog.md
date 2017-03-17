@@ -6,7 +6,7 @@ Backlog of features to implement (in no particular order):
 * When clearing a shared formula ref cell, we should move the shared formula ref to another.
 * Returning a shared formula in a not ref cell returns "SHARED". We should return a translated formula.
 * ColumnRange, RowRange, Group
-* Column/Row styles
+* Support sheet, row, and column styles. That will require iterating over all contained styles and updating.
 * Conditional formatting
 * Print settings
 * Autofilters

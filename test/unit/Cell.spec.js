@@ -3,10 +3,14 @@
 const proxyquire = require("proxyquire");
 
 describe("Cell", () => {
-    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style;
+    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError;
 
     beforeEach(() => {
+        FormulaError = jasmine.createSpyObj("FormulaError", ["getError"]);
+        FormulaError.getError.and.returnValue("ERROR");
+
         Cell = proxyquire("../../lib/Cell", {
+            './FormulaError': FormulaError,
             '@noCallThru': true
         });
 
@@ -396,6 +400,14 @@ describe("Cell", () => {
             }];
             expect(cell.value()).toBe("inline string");
 
+            cellNode.attributes.t = "e";
+            cellNode.children = [{
+                name: 'v',
+                children: ["#ERR!"]
+            }];
+            expect(cell.value()).toEqual("ERROR");
+            expect(FormulaError.getError).toHaveBeenCalledWith("#ERR!");
+
             cell.value(undefined);
             expect(cell.value()).toBeUndefined();
             expect(cellNode.attributes.t).toBeUndefined();
@@ -478,8 +490,28 @@ describe("Cell", () => {
     });
 
     describe("toObject", () => {
-        it("should return the node", () => {
-            expect(cell.toObject()).toBe(cellNode);
+        it("should return the node with stored formula values cleared", () => {
+            cell._node.children = [{
+                name: 'f',
+                attributes: {},
+                children: []
+            }, {
+                name: 'v',
+                attributes: {},
+                children: ["VALUE"]
+            }];
+
+            expect(cell.toObject()).toEqualJson({
+                name: "c",
+                attributes: {
+                    r: "C7"
+                },
+                children: [{
+                    name: 'f',
+                    attributes: {},
+                    children: []
+                }]
+            });
         });
     });
 
@@ -522,26 +554,6 @@ describe("Cell", () => {
             spyOn(cell, '_getSharedFormulaRefId').and.returnValue("REF_ID");
             cell._init(cellNode);
             expect(sheet.updateMaxSharedFormulaId).toHaveBeenCalledWith("REF_ID");
-        });
-
-        it("should clear and stored formula values", () => {
-            cellNode.children = [{
-                name: 'f',
-                attributes: {},
-                children: []
-            }, {
-                name: 'v',
-                attributes: {},
-                children: ["VALUE"]
-            }];
-
-            cell._init(cellNode);
-
-            expect(cellNode.children).toEqualJson([{
-                name: 'f',
-                attributes: {},
-                children: []
-            }]);
         });
     });
 });

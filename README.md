@@ -91,6 +91,7 @@ XlsxPopulate.fromFileAsync("./Book1.xlsx")
         console.log(value);
     });
 ```
+__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output. 
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulation of multiple cells at once.
@@ -577,6 +578,9 @@ An object representing a gradient fill.
 <dt><a href="#Column">Column</a></dt>
 <dd><p>A column.</p>
 </dd>
+<dt><a href="#FormulaError">FormulaError</a></dt>
+<dd><p>A formula error (e.g. #DIV/0!).</p>
+</dd>
 <dt><a href="#Range">Range</a></dt>
 <dd><p>A range of cells.</p>
 </dd>
@@ -865,7 +869,7 @@ Sets the value of the cell.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>Date</code> &#124; <code>null</code> &#124; <code>undefined</code> | The value to set. |
+| value | <code>string</code> &#124; <code>boolean</code> &#124; <code>number</code> &#124; <code>null</code> &#124; <code>undefined</code> | The value to set. |
 
 <a name="Cell+workbook"></a>
 
@@ -1008,6 +1012,74 @@ Get the parent workbook.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
 **Returns**: <code>[Workbook](#Workbook)</code> - The parent workbook.  
+<a name="FormulaError"></a>
+
+### FormulaError
+A formula error (e.g. #DIV/0!).
+
+**Kind**: global class  
+
+* [FormulaError](#FormulaError)
+    * _instance_
+        * [.error()](#FormulaError+error) ⇒ <code>string</code>
+    * _static_
+        * [.DIV0](#FormulaError.DIV0) : <code>[FormulaError](#FormulaError)</code>
+        * [.NA](#FormulaError.NA) : <code>[FormulaError](#FormulaError)</code>
+        * [.NAME](#FormulaError.NAME) : <code>[FormulaError](#FormulaError)</code>
+        * [.NULL](#FormulaError.NULL) : <code>[FormulaError](#FormulaError)</code>
+        * [.NUM](#FormulaError.NUM) : <code>[FormulaError](#FormulaError)</code>
+        * [.REF](#FormulaError.REF) : <code>[FormulaError](#FormulaError)</code>
+        * [.VALUE](#FormulaError.VALUE) : <code>[FormulaError](#FormulaError)</code>
+
+<a name="FormulaError+error"></a>
+
+#### formulaError.error() ⇒ <code>string</code>
+Get the error code.
+
+**Kind**: instance method of <code>[FormulaError](#FormulaError)</code>  
+**Returns**: <code>string</code> - The error code.  
+<a name="FormulaError.DIV0"></a>
+
+#### FormulaError.DIV0 : <code>[FormulaError](#FormulaError)</code>
+\#DIV/0! error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
+<a name="FormulaError.NA"></a>
+
+#### FormulaError.NA : <code>[FormulaError](#FormulaError)</code>
+\#N/A error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
+<a name="FormulaError.NAME"></a>
+
+#### FormulaError.NAME : <code>[FormulaError](#FormulaError)</code>
+\#NAME? error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
+<a name="FormulaError.NULL"></a>
+
+#### FormulaError.NULL : <code>[FormulaError](#FormulaError)</code>
+\#NULL! error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
+<a name="FormulaError.NUM"></a>
+
+#### FormulaError.NUM : <code>[FormulaError](#FormulaError)</code>
+\#NUM! error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
+<a name="FormulaError.REF"></a>
+
+#### FormulaError.REF : <code>[FormulaError](#FormulaError)</code>
+\#REF! error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
+<a name="FormulaError.VALUE"></a>
+
+#### FormulaError.VALUE : <code>[FormulaError](#FormulaError)</code>
+\#VALUE! error.
+
+**Kind**: static property of <code>[FormulaError](#FormulaError)</code>  
 <a name="Range"></a>
 
 ### Range
@@ -1524,6 +1596,8 @@ A worksheet.
     * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
     * [.definedName(name)](#Sheet+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
+    * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
+    * [.hidden(hidden)](#Sheet+hidden)
     * [.name()](#Sheet+name) ⇒ <code>string</code>
     * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startCell, endCell)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
@@ -1597,6 +1671,24 @@ Find the given pattern in the sheet and optionally replace it.
 | --- | --- | --- |
 | pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
 | [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in each cell will be replaced. |
+
+<a name="Sheet+hidden"></a>
+
+#### sheet.hidden() ⇒ <code>boolean</code> &#124; <code>string</code>
+Gets a value indicating if the sheet is hidden or not.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>boolean</code> &#124; <code>string</code> - True if hidden, false if visible, and 'very' if very hidden.  
+<a name="Sheet+hidden"></a>
+
+#### sheet.hidden(hidden)
+Set whether the sheet is hidden or not.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| hidden | <code>boolean</code> &#124; <code>string</code> | True to hide, false to show, and 'very' to make very hidden. |
 
 <a name="Sheet+name"></a>
 
@@ -1766,6 +1858,7 @@ Write the workbook to file. (Not supported in browsers.)
 * [XlsxPopulate](#XlsxPopulate) : <code>object</code>
     * [.Promise](#XlsxPopulate.Promise) : <code>Promise</code>
     * [.MIME_TYPE](#XlsxPopulate.MIME_TYPE) : <code>string</code>
+    * [.FormulaError](#XlsxPopulate.FormulaError) : <code>[FormulaError](#FormulaError)</code>
     * [.dateToNumber(date)](#XlsxPopulate.dateToNumber) ⇒ <code>number</code>
     * [.fromBlankAsync()](#XlsxPopulate.fromBlankAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
     * [.fromDataAsync(data)](#XlsxPopulate.fromDataAsync) ⇒ <code>[Promise.&lt;Workbook&gt;](#Workbook)</code>
@@ -1782,6 +1875,12 @@ The Promise library.
 
 #### XlsxPopulate.MIME_TYPE : <code>string</code>
 The XLSX mime type.
+
+**Kind**: static property of <code>[XlsxPopulate](#XlsxPopulate)</code>  
+<a name="XlsxPopulate.FormulaError"></a>
+
+#### XlsxPopulate.FormulaError : <code>[FormulaError](#FormulaError)</code>
+Formula error class.
 
 **Kind**: static property of <code>[XlsxPopulate](#XlsxPopulate)</code>  
 <a name="XlsxPopulate.dateToNumber"></a>
