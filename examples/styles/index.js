@@ -1,7 +1,5 @@
 "use strict";
 
-/* eslint no-console:off */
-
 const XlsxPopulate = require('../../lib/XlsxPopulate');
 
 // Load the input workbook from file.

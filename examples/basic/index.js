@@ -3,16 +3,12 @@
 const XlsxPopulate = require('../../lib/XlsxPopulate');
 
 // Load the input workbook from file.
-XlsxPopulate.fromFileAsync("../Book1.xlsx")
+XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
-
-        // workbook.moveSheet("Sheet1");
-        // workbook.addSheet("NEW").tabColor("0000FF").active(true);
-        // console.log(workbook.find(2));
-        console.log(workbook.activeSheet().usedRange().value());
-        // console.log(workbook.activeSheet().tabColor())
+        workbook.sheet("Sheet1").cell("A1").value("This is neat!");
 
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
-    }).catch(err => console.error(err));
+    })
+    .catch(err => console.error(err));
