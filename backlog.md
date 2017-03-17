@@ -13,7 +13,7 @@ Backlog of features to implement (in no particular order):
 * Data validation
 * Formula parsing
 * Charts
-* Cell comments
+* Cell comments. Will require rich text parsing. A comments relationship is creating in the sheet rels file that points to a commentsN.xml file.
 * Cell protection
 * Copy style
 * Built-in styles
@@ -23,4 +23,3 @@ Backlog of features to implement (in no particular order):
 * Workbook metadata (like author)
 * Create defined name
 * Enum of standard number formats?
-* Value errors

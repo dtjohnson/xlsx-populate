@@ -9,8 +9,8 @@ XlsxPopulate.fromFileAsync("../Book1.xlsx")
 
         // workbook.moveSheet("Sheet1");
         // workbook.addSheet("NEW").tabColor("0000FF").active(true);
-        console.log(workbook.find(2));
-        // workbook.activeSheet().tabColor(6).activeCell().value("FOO");
+        // console.log(workbook.find(2));
+        console.log(workbook.activeSheet().usedRange().value());
         // console.log(workbook.activeSheet().tabColor())
 
         // Write to file.
