@@ -7,7 +7,7 @@ describe("Sheet", () => {
 
     beforeEach(() => {
         let i = 0;
-        workbook = jasmine.createSpyObj("workbook", ["scopedDefinedName", "activeSheet"]);
+        workbook = jasmine.createSpyObj("workbook", ["scopedDefinedName", "activeSheet", "sheets", "moveSheet"]);
         workbook.scopedDefinedName.and.returnValue("DEFINED NAME");
         workbook.activeSheet.and.returnValue("ACTIVE SHEET");
 
@@ -280,12 +280,64 @@ describe("Sheet", () => {
         });
     });
 
-    xdescribe("hidden", () => {
+    describe("hidden", () => {
+        it("should return the hidden state", () => {
+            expect(sheet.hidden()).toBe(false);
 
+            idNode.attributes.state = "hidden";
+            expect(sheet.hidden()).toBe(true);
+
+            idNode.attributes.state = "veryHidden";
+            expect(sheet.hidden()).toBe('very');
+        });
+
+        it("should hide/unhide the sheet", () => {
+            workbook.sheets.and.returnValue([
+                sheet,
+                {
+                    hidden: jasmine.createSpy("hidden").and.returnValue(false)
+                }
+            ]);
+
+            expect(sheet.hidden(true)).toBe(sheet);
+            expect(idNode.attributes.state).toBe("hidden");
+
+            expect(sheet.hidden('very')).toBe(sheet);
+            expect(idNode.attributes.state).toBe("veryHidden");
+
+            expect(sheet.hidden(false)).toBe(sheet);
+            expect(idNode.attributes.state).toBeUndefined();
+        });
+
+        it("should hide the sheet and activate a different one", () => {
+            const otherSheet = {
+                active: jasmine.createSpy("active").and.returnValue(false),
+                hidden: jasmine.createSpy("hidden").and.returnValue(false)
+            };
+            workbook.sheets.and.returnValue([sheet, otherSheet]);
+
+            spyOn(sheet, "active").and.returnValue(true);
+            sheet.hidden(true);
+            expect(otherSheet.active).toHaveBeenCalledWith(true);
+        });
+
+        it("should throw an error if trying to hide the only visible sheet", () => {
+            workbook.sheets.and.returnValue([
+                sheet,
+                {
+                    hidden: jasmine.createSpy("hidden").and.returnValue(true)
+                }
+            ]);
+
+            expect(() => sheet.hidden(true)).toThrow();
+        });
     });
 
-    xdescribe("move", () => {
-
+    describe("move", () => {
+        it("should call the workbook move method", () => {
+            expect(sheet.move("BEFORE")).toBe(sheet);
+            expect(workbook.moveSheet).toHaveBeenCalledWith(sheet, "BEFORE");
+        });
     });
 
     describe("name", () => {
@@ -348,12 +400,109 @@ describe("Sheet", () => {
         });
     });
 
-    xdescribe("selected", () => {
+    describe("tabColor", () => {
+        it("should get the tab color", () => {
+            expect(sheet.tabColor()).toBeUndefined();
 
+            sheet._sheetPrNode.children = [{
+                name: "tabColor",
+                attributes: {
+                    rgb: "RGB"
+                }
+            }];
+            expect(sheet.tabColor()).toEqualJson({
+                rgb: "RGB"
+            });
+
+            sheet._sheetPrNode.children = [{
+                name: "tabColor",
+                attributes: {
+                    theme: 0
+                }
+            }];
+            expect(sheet.tabColor()).toEqualJson({
+                theme: 0
+            });
+
+            sheet._sheetPrNode.children = [{
+                name: "tabColor",
+                attributes: {
+                    rgb: "RGB",
+                    tint: "TINT"
+                }
+            }];
+            expect(sheet.tabColor()).toEqualJson({
+                rgb: "RGB",
+                tint: "TINT"
+            });
+
+            sheet._sheetPrNode.children = [{
+                name: "tabColor",
+                attributes: {
+                    indexed: 5
+                }
+            }];
+            expect(sheet.tabColor()).toEqualJson({
+                rgb: "FFFF00"
+            });
+        });
+
+        it("should set the tab color", () => {
+            expect(sheet.tabColor("ff0000")).toBe(sheet);
+            expect(sheet._sheetPrNode.children).toEqualJson([{
+                name: "tabColor",
+                attributes: {
+                    rgb: "FF0000"
+                },
+                children: []
+            }]);
+
+            expect(sheet.tabColor(5)).toBe(sheet);
+            expect(sheet._sheetPrNode.children).toEqualJson([{
+                name: "tabColor",
+                attributes: {
+                    theme: 5
+                },
+                children: []
+            }]);
+
+            expect(sheet.tabColor({ rgb: "ff0000", tint: -0.5 })).toBe(sheet);
+            expect(sheet._sheetPrNode.children).toEqualJson([{
+                name: "tabColor",
+                attributes: {
+                    rgb: "FF0000",
+                    tint: -0.5
+                },
+                children: []
+            }]);
+
+            expect(sheet.tabColor(null)).toBe(sheet);
+            expect(sheet._sheetPrNode.children).toEqualJson([]);
+        });
     });
 
-    xdescribe("tabColor", () => {
+    describe("tabSelected", () => {
+        let sheetViewNode;
 
+        beforeEach(() => {
+            sheetViewNode = { attributes: {} };
+            spyOn(sheet, "_getOrCreateSheetViewNode").and.returnValue(sheetViewNode);
+        });
+
+        it("should return the tab selected state", () => {
+            expect(sheet.tabSelected()).toBe(false);
+
+            sheetViewNode.attributes.tabSelected = 1;
+            expect(sheet.tabSelected()).toBe(true);
+        });
+
+        it("should select/deselect the sheet tab", () => {
+            expect(sheet.tabSelected(true)).toBe(sheet);
+            expect(sheetViewNode.attributes.tabSelected).toBe(1);
+
+            expect(sheet.tabSelected(false)).toBe(sheet);
+            expect(sheetViewNode.attributes.tabSelected).toBeUndefined();
+        });
     });
 
     describe("usedRange", () => {
@@ -419,14 +568,16 @@ describe("Sheet", () => {
         });
     });
 
-    xdescribe("existingColumnStyleId", () => {
+    describe("existingColumnStyleId", () => {
         it("should return undefined if no existing column", () => {
             expect(sheet.existingColumnStyleId(3)).toBeUndefined();
         });
 
         it("should return the style ID from the column", () => {
-            sheet._columns[5] = {
-                styleId: () => "STYLE ID"
+            sheet._colNodes[5] = {
+                attributes: {
+                    style: "STYLE ID"
+                }
             };
             expect(sheet.existingColumnStyleId(5)).toBe("STYLE ID");
         });
@@ -538,9 +689,13 @@ describe("Sheet", () => {
         });
     });
 
-    xdescribe("toObject", () => {
+    describe("toObject", () => {
         it("should return the relationships", () => {
             expect(sheet.toObject().relationships).toBe("RELATIONSHIPS");
+        });
+
+        it("should return the ID node", () => {
+            expect(sheet.toObject().id).toBe(idNode);
         });
 
         it("should add the rows", () => {
@@ -551,6 +706,7 @@ describe("Sheet", () => {
                 { toObject: () => "ROW2" }
             ];
             expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
                     name: 'sheetData',
@@ -562,13 +718,13 @@ describe("Sheet", () => {
         });
 
         it("should add the columns", () => {
-            sheet._columns = [
-                undefined,
-                { toObject: () => "COLUMN1" },
-                undefined,
-                { toObject: () => "COLUMN2" }
-            ];
+            sheet._colsNode = {
+                name: "cols",
+                attributes: {},
+                children: ["COLUMN1", "COLUMN2"]
+            };
             expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
                     name: 'cols',
@@ -587,6 +743,7 @@ describe("Sheet", () => {
             };
 
             expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },
                 {
@@ -605,6 +762,7 @@ describe("Sheet", () => {
             };
 
             expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },
                 {
@@ -620,6 +778,7 @@ describe("Sheet", () => {
             sheet._mergeCells = { "A1:B2": "MERGE1" };
             sheet._hyperlinks = { A1: "HYPERLINK1" };
             expect(sheet.toObject().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },
                 {
@@ -653,7 +812,41 @@ describe("Sheet", () => {
         });
     });
 
-    xdescribe("_init", () => {
+    describe("_getOrCreateSheetViewNode", () => {
+        it("should get the existing sheet view node", () => {
+            const sheetView = { name: "sheetView" };
+            sheetNode.children.push({
+                name: "sheetViews",
+                attributes: {},
+                children: [sheetView]
+            });
+
+            expect(sheet._getOrCreateSheetViewNode()).toBe(sheetView);
+        });
+
+        it("should create a new sheet view node", () => {
+            const sheetView = sheet._getOrCreateSheetViewNode();
+            expect(sheetView).toEqualJson({
+                name: "sheetView",
+                attributes: {
+                    workbookViewId: 0
+                },
+                children: []
+            });
+            expect(sheetNode.children[1]).toEqualJson({
+                name: "sheetViews",
+                attributes: {},
+                children: [sheetView]
+            });
+        });
+    });
+
+    describe("_init", () => {
+        it("should create the sheet node", () => {
+            sheet._init({}, {});
+            expect(sheet._node).toEqual(jasmine.any(Object));
+        });
+
         it("should create the relationships", () => {
             sheet._init({}, {}, {
                 attributes: {},
@@ -706,18 +899,38 @@ describe("Sheet", () => {
                 ]
             });
 
-            expect(sheet._columns).toEqual([
+            expect(sheet._colNodes).toEqualJson([
                 undefined,
                 undefined,
-                jasmine.any(Column),
-                jasmine.any(Column),
+                { name: 'col', attributes: { min: 2, max: 3, foo: true } },
+                { name: 'col', attributes: { min: 2, max: 3, foo: true } },
                 undefined,
-                jasmine.any(Column)
+                { name: 'col', attributes: { min: 5, max: 5, bar: true } }
             ]);
+        });
 
-            expect(Column).toHaveBeenCalledWith(sheet, { name: 'col', attributes: { min: 2, max: 2, foo: true } });
-            expect(Column).toHaveBeenCalledWith(sheet, { name: 'col', attributes: { min: 3, max: 3, foo: true } });
-            expect(Column).toHaveBeenCalledWith(sheet, { name: 'col', attributes: { min: 5, max: 5, bar: true } });
+        it("should store the sheetPr node", () => {
+            const sheetPrNode = { name: 'sheetPr', attributes: {}, children: [] };
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    sheetPrNode,
+                    { name: "sheetData", attributes: {}, children: [] }
+                ]
+            });
+            
+            expect(sheet._sheetPrNode).toBe(sheetPrNode);
+        });
+
+        it("should create the sheetPr node", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", attributes: {}, children: [] }
+                ]
+            });
+
+            expect(sheet._sheetPrNode).toEqualJson({ name: 'sheetPr', attributes: {}, children: [] });
         });
 
         it("should parse the merged cells", () => {

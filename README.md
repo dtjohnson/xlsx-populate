@@ -15,6 +15,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Parsing Data](#parsing-data)
   * [Ranges](#ranges)
   * [Rows and Columns](#rows-and-columns)
+  * [Managing Sheets](#managing-sheets)
   * [Defined Names](#defined-names)
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
@@ -128,6 +129,69 @@ You can access rows and columns in order to change size, hide/show, or access ce
 sheet.column("B").width(25).hidden(false);
 
 const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+```
+
+### Managing Sheets
+xlsx-populate supports a number of options for managing sheets.
+
+You can get a sheet by name or index or get all of the sheets as an array:
+```js
+// Get sheet by index
+const sheet1 = workbook.sheet(0);
+
+// Get sheet by name
+const sheet2 = workbook.sheet("Sheet2");
+
+// Get all sheets as an array
+const sheets = workbook.sheets();
+```
+
+You can add new sheets:
+```js
+// Add a new sheet named 'New 1' at the end of the workbook
+const newSheet1 = workbook.addSheet('New 1');
+
+// Add a new sheet named 'New 2' at index 1 (0-based)
+const newSheet2 = workbook.addSheet('New 2', 1);
+
+// Add a new sheet named 'New 3' before the sheet named 'Sheet1'
+const newSheet3 = workbook.addSheet('New 3', 'Sheet1');
+
+// Add a new sheet named 'New 4' before the sheet named 'Sheet1' using a Sheet reference.
+const sheet = workbook.sheet('Sheet1');
+const newSheet4 = workbook.addSheet('New 4', sheet);
+```
+
+You can move sheets:
+```js
+// Move 'Sheet1' to the end
+workbook.moveSheet("Sheet1");
+
+// Move 'Sheet1' to index 2
+workbook.moveSheet("Sheet1", 2);
+
+// Move 'Sheet1' before 'Sheet2'
+workbook.moveSheet("Sheet1", "Sheet2");
+```
+The above methods can all use sheet references instead of names as well. And you can also move a sheet using a method on the sheet:
+```js
+// Move the sheet before 'Sheet2'
+sheet.move("Sheet2");
+```
+
+You can get/set the active sheet:
+```js
+// Get the active sheet
+const sheet = workbook.activeSheet();
+
+// Check if the current sheet is active
+sheet.active() // returns true or false
+
+// Activate the sheet
+sheet.active(true);
+
+// Or from the workbook
+workbook.activeSheet("Sheet2");
 ```
 
 ### Defined Names
@@ -1625,12 +1689,16 @@ A worksheet.
     * [.definedName(name)](#Sheet+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
-    * [.hidden(hidden)](#Sheet+hidden)
+    * [.hidden(hidden)](#Sheet+hidden) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.move([indexOrBeforeSheet])](#Sheet+move) ⇒ <code>[Sheet](#Sheet)</code>
     * [.name()](#Sheet+name) ⇒ <code>string</code>
     * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startCell, endCell)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
+    * [.tabColor()](#Sheet+tabColor) ⇒ <code>undefined</code> &#124; <code>Color</code>
+    * [.tabColor()](#Sheet+tabColor) ⇒ <code>Color</code> &#124; <code>string</code> &#124; <code>number</code>
+    * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ <code>[Sheet](#Sheet)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
@@ -1760,14 +1828,27 @@ Gets a value indicating if the sheet is hidden or not.
 **Returns**: <code>boolean</code> &#124; <code>string</code> - True if hidden, false if visible, and 'very' if very hidden.  
 <a name="Sheet+hidden"></a>
 
-#### sheet.hidden(hidden)
+#### sheet.hidden(hidden) ⇒ <code>[Sheet](#Sheet)</code>
 Set whether the sheet is hidden or not.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | hidden | <code>boolean</code> &#124; <code>string</code> | True to hide, false to show, and 'very' to make very hidden. |
+
+<a name="Sheet+move"></a>
+
+#### sheet.move([indexOrBeforeSheet]) ⇒ <code>[Sheet](#Sheet)</code>
+Move the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [indexOrBeforeSheet] | <code>number</code> &#124; <code>string</code> &#124; <code>[Sheet](#Sheet)</code> | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
 <a name="Sheet+name"></a>
 
@@ -1827,6 +1908,32 @@ Gets the row with the given number.
 | Param | Type | Description |
 | --- | --- | --- |
 | rowNumber | <code>number</code> | The row number. |
+
+<a name="Sheet+tabColor"></a>
+
+#### sheet.tabColor() ⇒ <code>undefined</code> &#124; <code>Color</code>
+Get the tab color. (See style [Color](#color).)
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>undefined</code> &#124; <code>Color</code> - The color or undefined if not set.  
+<a name="Sheet+tabColor"></a>
+
+#### sheet.tabColor() ⇒ <code>Color</code> &#124; <code>string</code> &#124; <code>number</code>
+Sets the tab color. (See style [Color](#color).)
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>Color</code> &#124; <code>string</code> &#124; <code>number</code> - color - Color of the tab. If string, will set an RGB color. If number, will set a theme color.  
+<a name="Sheet+tabSelected"></a>
+
+#### sheet.tabSelected(selected) ⇒ <code>[Sheet](#Sheet)</code>
+Sets whether this sheet is selected.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| selected | <code>boolean</code> | True to select, false to deselected. |
 
 <a name="Sheet+usedRange"></a>
 

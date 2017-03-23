@@ -106,6 +106,69 @@ sheet.column("B").width(25).hidden(false);
 const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
 ```
 
+### Managing Sheets
+xlsx-populate supports a number of options for managing sheets.
+
+You can get a sheet by name or index or get all of the sheets as an array:
+```js
+// Get sheet by index
+const sheet1 = workbook.sheet(0);
+
+// Get sheet by name
+const sheet2 = workbook.sheet("Sheet2");
+
+// Get all sheets as an array
+const sheets = workbook.sheets();
+```
+
+You can add new sheets:
+```js
+// Add a new sheet named 'New 1' at the end of the workbook
+const newSheet1 = workbook.addSheet('New 1');
+
+// Add a new sheet named 'New 2' at index 1 (0-based)
+const newSheet2 = workbook.addSheet('New 2', 1);
+
+// Add a new sheet named 'New 3' before the sheet named 'Sheet1'
+const newSheet3 = workbook.addSheet('New 3', 'Sheet1');
+
+// Add a new sheet named 'New 4' before the sheet named 'Sheet1' using a Sheet reference.
+const sheet = workbook.sheet('Sheet1');
+const newSheet4 = workbook.addSheet('New 4', sheet);
+```
+
+You can move sheets:
+```js
+// Move 'Sheet1' to the end
+workbook.moveSheet("Sheet1");
+
+// Move 'Sheet1' to index 2
+workbook.moveSheet("Sheet1", 2);
+
+// Move 'Sheet1' before 'Sheet2'
+workbook.moveSheet("Sheet1", "Sheet2");
+```
+The above methods can all use sheet references instead of names as well. And you can also move a sheet using a method on the sheet:
+```js
+// Move the sheet before 'Sheet2'
+sheet.move("Sheet2");
+```
+
+You can get/set the active sheet:
+```js
+// Get the active sheet
+const sheet = workbook.activeSheet();
+
+// Check if the current sheet is active
+sheet.active() // returns true or false
+
+// Activate the sheet
+sheet.active(true);
+
+// Or from the workbook
+workbook.activeSheet("Sheet2");
+```
+
 ### Defined Names
 Excel supports creating defined names that refer to addresses, formulas, or constants. These defined names can be scoped
 to the entire workbook or just individual sheets. xlsx-populate supports looking up defined names that refer to cells or
