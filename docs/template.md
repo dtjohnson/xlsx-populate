@@ -19,6 +19,8 @@ Note that xlsx-populate uses ES6 features so only Node.js v4+ is supported.
 
 ### Browser
 
+A functional browser example can be found in [examples/browser/index.html](https://gitcdn.xyz/repo/dtjohnson/xlsx-populate/master/examples/browser/index.html).
+
 xlsx-populate is written first for Node.js. We use [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify) to transpile and pack up the module for use in the browser.
 
 You have a number of options to include the code in the browser. You can download the combined, minified code from the browser directory in this repository or you can install with bower:

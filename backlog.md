@@ -1,6 +1,6 @@
 Backlog of features to implement (in no particular order):
 
-* Selected cells in sheet (worksheet->sheetViews->sheetView->selection->sqref)
+* Selected cells in sheet (worksheet->sheetViews->sheetView->selection->sqref). Should wait for Group.
 * Support rich text (in cell values and shared strings)
 * Sheet: Rename, delete. Will require manipulating/clearing formulas.
 * When clearing a shared formula ref cell, we should move the shared formula ref to another.

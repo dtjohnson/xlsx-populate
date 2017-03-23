@@ -43,6 +43,8 @@ Note that xlsx-populate uses ES6 features so only Node.js v4+ is supported.
 
 ### Browser
 
+A functional browser example can be found in [examples/browser/index.html](https://gitcdn.xyz/repo/dtjohnson/xlsx-populate/master/examples/browser/index.html).
+
 xlsx-populate is written first for Node.js. We use [browserify](http://browserify.org/) and [babelify](https://github.com/babel/babelify) to transpile and pack up the module for use in the browser.
 
 You have a number of options to include the code in the browser. You can download the combined, minified code from the browser directory in this repository or you can install with bower:
@@ -611,6 +613,8 @@ A cell
 
 * [Cell](#Cell)
     * _instance_
+        * [.active()](#Cell+active) ⇒ <code>boolean</code>
+        * [.active(active)](#Cell+active) ⇒ <code>[Cell](#Cell)</code>
         * [.address([opts])](#Cell+address) ⇒ <code>string</code>
         * [.column()](#Cell+column) ⇒ <code>[Column](#Column)</code>
         * [.clear()](#Cell+clear) ⇒ <code>[Cell](#Cell)</code>
@@ -638,6 +642,25 @@ A cell
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
+
+<a name="Cell+active"></a>
+
+#### cell.active() ⇒ <code>boolean</code>
+Gets a value indicating whether the cell is the active cell in the sheet.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>boolean</code> - True if active, false otherwise.  
+<a name="Cell+active"></a>
+
+#### cell.active(active) ⇒ <code>[Cell](#Cell)</code>
+Make the cell the active cell in the sheet.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| active | <code>boolean</code> | Must be set to `true`. Deactivating directly is not supported. To deactivate, you should activate a different cell instead. |
 
 <a name="Cell+address"></a>
 
@@ -1591,6 +1614,11 @@ A worksheet.
 **Kind**: global class  
 
 * [Sheet](#Sheet)
+    * [.active()](#Sheet+active) ⇒ <code>boolean</code>
+    * [.active(active)](#Sheet+active) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.activeCell()](#Sheet+activeCell) ⇒ <code>[Cell](#Cell)</code>
+    * [.activeCell(cell)](#Sheet+activeCell) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.activeCell(rowNumber, columnNameOrNumber)](#Sheet+activeCell) ⇒ <code>[Sheet](#Sheet)</code>
     * [.cell(address)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.cell(rowNumber, columnNameOrNumber)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
@@ -1605,6 +1633,57 @@ A worksheet.
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
+
+<a name="Sheet+active"></a>
+
+#### sheet.active() ⇒ <code>boolean</code>
+Gets a value indicating whether the sheet is the active sheet in the workbook.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>boolean</code> - True if active, false otherwise.  
+<a name="Sheet+active"></a>
+
+#### sheet.active(active) ⇒ <code>[Sheet](#Sheet)</code>
+Make the sheet the active sheet in the workkbok.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| active | <code>boolean</code> | Must be set to `true`. Deactivating directly is not supported. To deactivate, you should activate a different sheet instead. |
+
+<a name="Sheet+activeCell"></a>
+
+#### sheet.activeCell() ⇒ <code>[Cell](#Cell)</code>
+Get the active cell in the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The active cell.  
+<a name="Sheet+activeCell"></a>
+
+#### sheet.activeCell(cell) ⇒ <code>[Sheet](#Sheet)</code>
+Set the active cell in the workbook.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | <code>string</code> &#124; <code>[Cell](#Cell)</code> | The cell or address of cell to activate. |
+
+<a name="Sheet+activeCell"></a>
+
+#### sheet.activeCell(rowNumber, columnNameOrNumber) ⇒ <code>[Sheet](#Sheet)</code>
+Set the active cell in the workbook by row and column.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rowNumber | <code>number</code> | The row number of the cell. |
+| columnNameOrNumber | <code>string</code> &#124; <code>number</code> | The column name or number of the cell. |
 
 <a name="Sheet+cell"></a>
 

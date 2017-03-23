@@ -4,7 +4,7 @@ const _ = require("lodash");
 const proxyquire = require("proxyquire");
 const Promise = require("jszip").external.Promise;
 
-describe("Workbook", () => {
+xdescribe("Workbook", () => {
     let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
 
     beforeEach(() => {

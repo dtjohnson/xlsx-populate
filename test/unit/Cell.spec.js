@@ -29,7 +29,8 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink']);
+        sheet.activeCell.and.returnValue("ACTIVE CELL");
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
         sheet.hyperlink.and.returnValue("HYPERLINK");
@@ -48,6 +49,23 @@ describe("Cell", () => {
         };
 
         cell = new Cell(row, cellNode);
+    });
+
+    describe("active", () => {
+        it("should return true/false", () => {
+            expect(cell.active()).toBe(false);
+            sheet.activeCell.and.returnValue(cell);
+            expect(cell.active()).toBe(true);
+        });
+
+        it("should set the sheet active cell", () => {
+            expect(cell.active(true)).toBe(cell);
+            expect(sheet.activeCell).toHaveBeenCalledWith(cell);
+        });
+
+        it("should throw an error if attempting to deactivate", () => {
+            expect(() => cell.active(false)).toThrow();
+        });
     });
 
     describe("address", () => {
