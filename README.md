@@ -1957,12 +1957,48 @@ A workbook.
 **Kind**: global class  
 
 * [Workbook](#Workbook)
+    * [.activeSheet()](#Workbook+activeSheet) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.activeSheet(sheet)](#Workbook+activeSheet) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.addSheet(name, [indexOrBeforeSheet])](#Workbook+addSheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
     * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
+    * [.moveSheet(sheet, [indexOrBeforeSheet])](#Workbook+moveSheet) ⇒ <code>[Workbook](#Workbook)</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
     * [.sheets()](#Workbook+sheets) ⇒ <code>[Array.&lt;Sheet&gt;](#Sheet)</code>
     * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
+
+<a name="Workbook+activeSheet"></a>
+
+#### workbook.activeSheet() ⇒ <code>[Sheet](#Sheet)</code>
+Get the active sheet in the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The active sheet.  
+<a name="Workbook+activeSheet"></a>
+
+#### workbook.activeSheet(sheet) ⇒ <code>[Workbook](#Workbook)</code>
+Set the active sheet in the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Workbook](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sheet | <code>[Sheet](#Sheet)</code> &#124; <code>string</code> &#124; <code>number</code> | The sheet or name of sheet or index of sheet to activate. The sheet must not be hidden. |
+
+<a name="Workbook+addSheet"></a>
+
+#### workbook.addSheet(name, [indexOrBeforeSheet]) ⇒ <code>[Sheet](#Sheet)</code>
+Add a new sheet to the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The new sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the sheet. Must be unique, less than 31 characters, and may not contain the following characters: \ / * [ ] : ? |
+| [indexOrBeforeSheet] | <code>number</code> &#124; <code>string</code> &#124; <code>[Sheet](#Sheet)</code> | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
 <a name="Workbook+definedName"></a>
 
@@ -2004,6 +2040,19 @@ Generates the workbook output.
 | Param | Type | Description |
 | --- | --- | --- |
 | [type] | <code>string</code> | The type of the data to return. (Supports any supported [JSZip data types](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html): base64, binarystring, uint8array, arraybuffer, blob, nodebuffer) Defaults to 'nodebuffer' in Node.js and 'blob' in browsers. |
+
+<a name="Workbook+moveSheet"></a>
+
+#### workbook.moveSheet(sheet, [indexOrBeforeSheet]) ⇒ <code>[Workbook](#Workbook)</code>
+Move a sheet to a new position.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Workbook](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sheet | <code>[Sheet](#Sheet)</code> &#124; <code>string</code> &#124; <code>number</code> | The sheet or name of sheet or index of sheet to move. |
+| [indexOrBeforeSheet] | <code>number</code> &#124; <code>string</code> &#124; <code>[Sheet](#Sheet)</code> | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
 <a name="Workbook+sheet"></a>
 

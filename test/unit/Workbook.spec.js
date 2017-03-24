@@ -4,7 +4,7 @@ const _ = require("lodash");
 const proxyquire = require("proxyquire");
 const Promise = require("jszip").external.Promise;
 
-xdescribe("Workbook", () => {
+describe("Workbook", () => {
     let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
 
     beforeEach(() => {
@@ -45,8 +45,10 @@ xdescribe("Workbook", () => {
         Sheet.prototype.toObject = jasmine.createSpy("Sheet.toObject").and.callFake(() => {
             const relationships = sheetOutput ? "RELATIONSHIPS" : undefined;
             sheetOutput = !sheetOutput;
-            return { sheet: "SHEET", relationships };
+            return { sheet: "SHEET", id: { attributes: { 'r:id': "RID" } }, relationships };
         });
+        Sheet.prototype.hidden = jasmine.createSpy("Sheet.hidden").and.returnValue(false);
+        Sheet.prototype.tabSelected = jasmine.createSpy("Sheet.tabSelected");
 
         SharedStrings = jasmine.createSpy("SharedStrings");
         SharedStrings.prototype.toObject = jasmine.createSpy("SharedStrings.toObject").and.returnValue("SHARED STRINGS");
@@ -64,14 +66,27 @@ xdescribe("Workbook", () => {
         workbookNode = {
             name: 'workbook',
             attributes: {},
-            children: [{
-                name: 'sheets',
-                attributes: {},
-                children: [
-                    { name: 'sheet', attributes: { name: 'A' } },
-                    { name: 'sheet', attributes: { name: 'B' } }
-                ]
-            }]
+            children: [
+                {
+                    name: "bookViews",
+                    attributes: {},
+                    children: [
+                        {
+                            name: 'workbookView',
+                            attributes: {},
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    name: 'sheets',
+                    attributes: {},
+                    children: [
+                        { name: 'sheet', attributes: { name: 'A', sheetId: 5 } },
+                        { name: 'sheet', attributes: { name: 'B', sheetId: 9 } }
+                    ]
+                }
+            ]
         };
 
         XmlParser = jasmine.createSpy("XmlParser");
@@ -154,6 +169,101 @@ xdescribe("Workbook", () => {
             workbook = new Workbook();
         });
 
+        describe("activeSheet", () => {
+            beforeEach(() => {
+                workbook._node = workbookNode;
+                workbook._sheets = [new Sheet(), new Sheet()];
+            });
+
+            it("should return the active sheet", () => {
+                expect(workbook.activeSheet()).toBe(workbook._sheets[0]);
+                workbookNode.children[0].children[0].attributes.activeTab = 1;
+                expect(workbook.activeSheet()).toBe(workbook._sheets[1]);
+            });
+
+            it("should set the active sheet", () => {
+                expect(workbook.activeSheet(workbook._sheets[1])).toBe(workbook);
+                expect(workbook._sheets[0].tabSelected).toHaveBeenCalledWith(false);
+                expect(workbook._sheets[1].tabSelected).toHaveBeenCalledWith(true);
+                expect(workbookNode.children[0].children[0].attributes.activeTab).toBe(1);
+
+                expect(workbook.activeSheet(0)).toBe(workbook);
+                expect(workbookNode.children[0].children[0].attributes.activeTab).toBe(0);
+            });
+        });
+
+        describe("addSheet", () => {
+            beforeEach(() => {
+                workbook._sheets = [new Sheet()];
+                spyOn(workbook, "activeSheet").and.returnValue(workbook._sheets[0]);
+                spyOn(workbook, "sheet");
+                workbook._relationships = jasmine.createSpyObj("relationships", ["add"]);
+                workbook._relationships.add.and.returnValue({
+                    attributes: {
+                        Id: 'RID'
+                    }
+                });
+                workbook._maxSheetId = 7;
+            });
+
+            it("should throw an error if the sheet name is invalid", () => {
+                expect(() => workbook.addSheet()).toThrow();
+                expect(() => workbook.addSheet('foo?')).toThrow();
+                expect(() => workbook.addSheet('12345678901234567890123456789012')).toThrow();
+
+                expect(() => workbook.addSheet('foo')).not.toThrow();
+
+                workbook.sheet.and.returnValue(workbook._sheets[0]);
+                expect(() => workbook.addSheet('foo')).toThrow();
+            });
+
+            it("should add the sheet at the end", () => {
+                const sheet = workbook.addSheet('foo');
+                expect(sheet).toEqual(jasmine.any(Sheet));
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[1]).toBe(sheet);
+                expect(sheet.workbook).toBe(workbook);
+                expect(sheet.sheetIdNode).toEqualJson({
+                    name: "sheet",
+                    attributes: {
+                        name: "foo",
+                        sheetId: 8,
+                        'r:id': "RID"
+                    },
+                    children: []
+                });
+                expect(sheet.sheetNode).toBeUndefined();
+                expect(sheet.sheetRelationshipsNode).toBeUndefined();
+                expect(workbook.activeSheet).toHaveBeenCalledWith(workbook._sheets[0]);
+            });
+
+            it("should add the sheet at the given index", () => {
+                const sheet1 = workbook.addSheet('foo', 0);
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet1);
+
+                const sheet2 = workbook.addSheet('bar', 2);
+                expect(workbook._sheets.length).toBe(3);
+                expect(workbook._sheets[2]).toBe(sheet2);
+            });
+
+            it("should add the sheet before the given sheet", () => {
+                const sheet = workbook.addSheet('foo', workbook._sheets[0]);
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet);
+            });
+
+            it("should add the sheet before the sheet with the given name", () => {
+                workbook.sheet.and.callFake(name => {
+                    if (name === 'existing') return workbook._sheets[0];
+                });
+
+                const sheet = workbook.addSheet('foo', 'existing');
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet);
+            });
+        });
+
         describe("definedName", () => {
             it("should return the scoped defined name", () => {
                 spyOn(workbook, 'scopedDefinedName').and.returnValue("SCOPED DEFINED NAME");
@@ -181,6 +291,8 @@ xdescribe("Workbook", () => {
         });
 
         describe("outputAsync", () => {
+            const relationships = [];
+
             beforeEach(() => {
                 workbook._contentTypes = new ContentTypes();
                 workbook._relationships = new Relationships();
@@ -188,7 +300,14 @@ xdescribe("Workbook", () => {
                 workbook._styleSheet = new StyleSheet();
                 workbook._node = "WORKBOOK";
                 workbook._sheets = [new Sheet(), new Sheet()];
+                workbook._sheetsNode = { name: 'sheets', attributes: {}, children: [] };
                 workbook._zip = new JSZip();
+
+                spyOn(workbook._relationships, "findById").and.callFake(() => {
+                    const relationship = { attributes: {} };
+                    relationships.push(relationship);
+                    return relationship;
+                });
             });
 
             itAsync("should output the data", () => {
@@ -208,6 +327,14 @@ xdescribe("Workbook", () => {
                             compression: "DEFLATE",
                             mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         });
+                        expect(relationships).toEqualJson([
+                            { attributes: { Target: "worksheets/sheet1.xml" } },
+                            { attributes: { Target: "worksheets/sheet2.xml" } }
+                        ]);
+                        expect(workbook._sheetsNode.children).toEqualJson([
+                            { attributes: { 'r:id': "RID" } },
+                            { attributes: { 'r:id': "RID" } }
+                        ]);
                     });
             });
 
@@ -236,6 +363,47 @@ xdescribe("Workbook", () => {
                         });
                 });
             }
+        });
+
+        describe("moveSheet", () => {
+            let sheet1, sheet2, sheet3;
+            beforeEach(() => {
+                sheet1 = new Sheet();
+                sheet2 = new Sheet();
+                sheet3 = new Sheet();
+                sheet1.name = jasmine.createSpy("name").and.returnValue("SHEET1");
+                sheet2.name = jasmine.createSpy("name").and.returnValue("SHEET2");
+                sheet3.name = jasmine.createSpy("name").and.returnValue("SHEET3");
+
+                workbook._sheets = [sheet1, sheet2, sheet3];
+                spyOn(workbook, "activeSheet").and.returnValue(sheet1);
+            });
+
+            it("should throw an error if the sheet doesn't exist", () => {
+                expect(() => workbook.moveSheet("foo")).toThrow();
+                expect(() => workbook.moveSheet("SHEET1", "foo")).toThrow();
+            });
+
+            it("should move the sheet to the end", () => {
+                workbook.moveSheet("SHEET2");
+                expect(workbook._sheets).toEqual([sheet1, sheet3, sheet2]);
+                expect(workbook.activeSheet).toHaveBeenCalledWith(sheet1);
+            });
+
+            it("should move the sheet to the given index", () => {
+                workbook.moveSheet("SHEET1", 1);
+                expect(workbook._sheets).toEqual([sheet2, sheet1, sheet3]);
+            });
+
+            it("should move the sheet before the sheet with the given name", () => {
+                workbook.moveSheet("SHEET3", "SHEET1");
+                expect(workbook._sheets).toEqual([sheet3, sheet1, sheet2]);
+            });
+
+            it("should move the sheet before the given sheet", () => {
+                workbook.moveSheet("SHEET2", sheet1);
+                expect(workbook._sheets).toEqual([sheet2, sheet1, sheet3]);
+            });
         });
 
         describe("sheet", () => {
@@ -388,11 +556,11 @@ xdescribe("Workbook", () => {
                         expect(workbook._node).toBe(workbookNode);
 
                         expect(workbook._sheets[0].workbook).toBe(workbook);
-                        expect(workbook._sheets[0].sheetIdNode).toEqual({ name: 'sheet', attributes: { name: 'A' } });
+                        expect(workbook._sheets[0].sheetIdNode).toEqual({ name: 'sheet', attributes: { name: 'A', sheetId: 5 } });
                         expect(workbook._sheets[0].sheetNode).toEqual('PARSED(xl/worksheets/sheet1.xml)');
                         expect(workbook._sheets[0].sheetRelationshipsNode).toEqual('PARSED(xl/worksheets/_rels/sheet1.xml.rels)');
                         expect(workbook._sheets[1].workbook).toBe(workbook);
-                        expect(workbook._sheets[1].sheetIdNode).toEqual({ name: 'sheet', attributes: { name: 'B' } });
+                        expect(workbook._sheets[1].sheetIdNode).toEqual({ name: 'sheet', attributes: { name: 'B', sheetId: 9 } });
                         expect(workbook._sheets[1].sheetNode).toEqual('PARSED(xl/worksheets/sheet2.xml)');
                         expect(workbook._sheets[1].sheetRelationshipsNode).toEqual('PARSED(xl/worksheets/_rels/sheet2.xml.rels)');
 
@@ -405,6 +573,8 @@ xdescribe("Workbook", () => {
                         expect(ContentTypes.prototype.findByPartName).toHaveBeenCalledWith("/xl/sharedStrings.xml");
 
                         expect(workbook._zip.remove).toHaveBeenCalledWith("xl/calcChain.xml");
+
+                        expect(workbook._maxSheetId).toBe(9);
                     });
             });
 
