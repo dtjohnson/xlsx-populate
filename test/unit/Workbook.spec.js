@@ -4,7 +4,7 @@ const _ = require("lodash");
 const proxyquire = require("proxyquire");
 const Promise = require("jszip").external.Promise;
 
-xdescribe("Workbook", () => {
+describe("Workbook", () => {
     let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
 
     beforeEach(() => {
@@ -173,11 +173,12 @@ xdescribe("Workbook", () => {
             beforeEach(() => {
                 workbook._node = workbookNode;
                 workbook._sheets = [new Sheet(), new Sheet()];
+                workbook._activeSheet = workbook._sheets[0];
             });
 
             it("should return the active sheet", () => {
                 expect(workbook.activeSheet()).toBe(workbook._sheets[0]);
-                workbookNode.children[0].children[0].attributes.activeTab = 1;
+                workbook._activeSheet = workbook._sheets[1];
                 expect(workbook.activeSheet()).toBe(workbook._sheets[1]);
             });
 
@@ -185,10 +186,10 @@ xdescribe("Workbook", () => {
                 expect(workbook.activeSheet(workbook._sheets[1])).toBe(workbook);
                 expect(workbook._sheets[0].tabSelected).toHaveBeenCalledWith(false);
                 expect(workbook._sheets[1].tabSelected).toHaveBeenCalledWith(true);
-                expect(workbookNode.children[0].children[0].attributes.activeTab).toBe(1);
+                expect(workbook._activeSheet).toBe(workbook._sheets[1]);
 
                 expect(workbook.activeSheet(0)).toBe(workbook);
-                expect(workbookNode.children[0].children[0].attributes.activeTab).toBe(0);
+                expect(workbook._activeSheet).toBe(workbook._sheets[0]);
             });
         });
 
@@ -234,7 +235,6 @@ xdescribe("Workbook", () => {
                 });
                 expect(sheet.sheetNode).toBeUndefined();
                 expect(sheet.sheetRelationshipsNode).toBeUndefined();
-                expect(workbook.activeSheet).toHaveBeenCalledWith(workbook._sheets[0]);
             });
 
             it("should add the sheet at the given index", () => {
@@ -268,7 +268,7 @@ xdescribe("Workbook", () => {
             it("should return the scoped defined name", () => {
                 spyOn(workbook, 'scopedDefinedName').and.returnValue("SCOPED DEFINED NAME");
                 expect(workbook.definedName("NAME")).toBe("SCOPED DEFINED NAME");
-                expect(workbook.scopedDefinedName).toHaveBeenCalledWith("NAME");
+                expect(workbook.scopedDefinedName).toHaveBeenCalledWith(undefined, "NAME");
             });
         });
 
@@ -308,11 +308,16 @@ xdescribe("Workbook", () => {
                     relationships.push(relationship);
                     return relationship;
                 });
+                spyOn(workbook, "_setSheetRefs");
             });
 
             itAsync("should output the data", () => {
                 return workbook.outputAsync('TYPE')
-                    .then(() => {
+                    .then(zip => {
+                        expect(zip).toBe("ZIP");
+
+                        expect(workbook._setSheetRefs).toHaveBeenCalledWith();
+
                         expect(workbook._zip.file).toHaveBeenCalledWith("[Content_Types].xml", "XML: CONTENT TYPES", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/_rels/workbook.xml.rels", "XML: RELATIONSHIPS", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/sharedStrings.xml", "XML: SHARED STRINGS", { date: new Date(0), createFolders: false });
@@ -376,7 +381,6 @@ xdescribe("Workbook", () => {
                 sheet3.name = jasmine.createSpy("name").and.returnValue("SHEET3");
 
                 workbook._sheets = [sheet1, sheet2, sheet3];
-                spyOn(workbook, "activeSheet").and.returnValue(sheet1);
             });
 
             it("should throw an error if the sheet doesn't exist", () => {
@@ -387,7 +391,6 @@ xdescribe("Workbook", () => {
             it("should move the sheet to the end", () => {
                 workbook.moveSheet("SHEET2");
                 expect(workbook._sheets).toEqual([sheet1, sheet3, sheet2]);
-                expect(workbook.activeSheet).toHaveBeenCalledWith(sheet1);
             });
 
             it("should move the sheet to the given index", () => {
@@ -451,6 +454,13 @@ xdescribe("Workbook", () => {
             let sheet;
 
             beforeEach(() => {
+                sheet = {
+                    cell: jasmine.createSpy("cell").and.returnValue("CELL"),
+                    range: jasmine.createSpy("range").and.returnValue("RANGE"),
+                    row: jasmine.createSpy("row").and.returnValue("ROW"),
+                    column: jasmine.createSpy("column").and.returnValue("COLUMN")
+                };
+
                 workbook._node = {
                     children: [{
                         name: 'definedNames',
@@ -459,7 +469,7 @@ xdescribe("Workbook", () => {
                             { name: 'definedName', attributes: { name: 'range' }, children: ["Sheet2!$A$1:B2"] },
                             { name: 'definedName', attributes: { name: 'column' }, children: ["Sheet3!$A:$A"] },
                             { name: 'definedName', attributes: { name: 'row' }, children: ["Sheet4!$1:$1"] },
-                            { name: 'definedName', attributes: { name: 'sheet scope', localSheetId: 2 }, children: ["Sheet5!$A$1"] },
+                            { name: 'definedName', localSheet: sheet, attributes: { name: 'sheet scope' }, children: ["Sheet5!$A$1"] },
                             { name: 'definedName', attributes: { name: 'row range' }, children: ["Sheet1!$1:$3"] },
                             { name: 'definedName', attributes: { name: 'column range' }, children: ["Sheet1!$A:$C"] },
                             { name: 'definedName', attributes: { name: 'group' }, children: ["A1,A2"] },
@@ -468,52 +478,87 @@ xdescribe("Workbook", () => {
                     }]
                 };
 
-                sheet = {
-                    cell: jasmine.createSpy("cell").and.returnValue("CELL"),
-                    range: jasmine.createSpy("range").and.returnValue("RANGE"),
-                    row: jasmine.createSpy("row").and.returnValue("ROW"),
-                    column: jasmine.createSpy("column").and.returnValue("COLUMN"),
-                };
                 spyOn(workbook, "sheet").and.returnValue(sheet);
             });
 
             it("should return undefined if not found", () => {
-                expect(workbook.scopedDefinedName("not found")).toBeUndefined();
+                expect(workbook.scopedDefinedName(undefined, "not found")).toBeUndefined();
             });
 
-            it("should throw an error if not supported", () => {
-                expect(() => workbook.scopedDefinedName("row range")).toThrow();
-                expect(() => workbook.scopedDefinedName("column range")).toThrow();
-                expect(() => workbook.scopedDefinedName("group")).toThrow();
-                expect(() => workbook.scopedDefinedName("formula")).toThrow();
+            it("should return the string if not supported", () => {
+                expect(workbook.scopedDefinedName(undefined, "row range")).toEqual("Sheet1!$1:$3");
+                expect(workbook.scopedDefinedName(undefined, "column range")).toEqual("Sheet1!$A:$C");
+                expect(workbook.scopedDefinedName(undefined, "group")).toEqual("A1,A2");
+                expect(workbook.scopedDefinedName(undefined, "formula")).toEqual("A1*A2");
             });
 
             it("should return the selection", () => {
-                expect(workbook.scopedDefinedName("cell")).toBe("CELL");
+                expect(workbook.scopedDefinedName(undefined, "cell")).toBe("CELL");
                 expect(workbook.sheet).toHaveBeenCalledWith("Sheet1");
                 expect(sheet.cell).toHaveBeenCalledWith(1, 1);
 
-                expect(workbook.scopedDefinedName("range")).toBe("RANGE");
+                expect(workbook.scopedDefinedName(undefined, "range")).toBe("RANGE");
                 expect(workbook.sheet).toHaveBeenCalledWith("Sheet2");
                 expect(sheet.range).toHaveBeenCalledWith(1, 1, 2, 2);
 
-                expect(workbook.scopedDefinedName("column")).toBe("COLUMN");
+                expect(workbook.scopedDefinedName(undefined, "column")).toBe("COLUMN");
                 expect(workbook.sheet).toHaveBeenCalledWith("Sheet3");
                 expect(sheet.column).toHaveBeenCalledWith(1);
 
-                expect(workbook.scopedDefinedName("row")).toBe("ROW");
+                expect(workbook.scopedDefinedName(undefined, "row")).toBe("ROW");
                 expect(workbook.sheet).toHaveBeenCalledWith("Sheet3");
                 expect(sheet.row).toHaveBeenCalledWith(1);
             });
 
             it("should return the scoped selection", () => {
-                expect(workbook.scopedDefinedName("sheet scope")).toBeUndefined();
+                expect(workbook.scopedDefinedName(undefined, "sheet scope")).toBeUndefined();
 
-                workbook._sheets = [undefined, sheet];
-                expect(workbook.scopedDefinedName("sheet scope", sheet)).toBeUndefined();
+                expect(workbook.scopedDefinedName({}, "sheet scope")).toBeUndefined();
 
-                workbook._sheets = [undefined, undefined, sheet];
-                expect(workbook.scopedDefinedName("sheet scope", sheet)).toBe("CELL");
+                expect(workbook.scopedDefinedName(sheet, "sheet scope")).toBe("CELL");
+            });
+
+            it("should set the defined name with a string", () => {
+                expect(workbook.scopedDefinedName(undefined, "NAME", "VALUE")).toBe(workbook);
+                expect(workbook._node.children[0].children[9]).toEqualJson({
+                    name: "definedName",
+                    attributes: { name: "NAME" },
+                    children: ["VALUE"]
+                });
+            });
+
+            it("should define a sheet scoped name", () => {
+                expect(workbook.scopedDefinedName(sheet, "NAME", "VALUE")).toBe(workbook);
+                expect(workbook._node.children[0].children[9]).toEqualJson({
+                    name: "definedName",
+                    attributes: { name: "NAME" },
+                    children: ["VALUE"],
+                    localSheet: {}
+                });
+                expect(workbook._node.children[0].children[9].localSheet).toBe(sheet);
+            });
+
+            it("should set the defined name with a cell", () => {
+                const cell = jasmine.createSpyObj("cell", ["address"]);
+                cell.address.and.returnValue("ADDRESS");
+
+                expect(workbook.scopedDefinedName(undefined, "NAME", cell)).toBe(workbook);
+                expect(workbook._node.children[0].children[9]).toEqualJson({
+                    name: "definedName",
+                    attributes: { name: "NAME" },
+                    children: ["ADDRESS"]
+                });
+                expect(cell.address).toHaveBeenCalledWith({ includeSheetName: true, anchored: true });
+            });
+
+            it("should unset a name", () => {
+                workbook._node.children[0].children.length = 2;
+
+                workbook.scopedDefinedName(undefined, "cell", null);
+                expect(workbook._node.children[0].children.length).toBe(1);
+
+                workbook.scopedDefinedName(undefined, "range", null);
+                expect(workbook._node.children.length).toBe(0);
             });
         });
 
@@ -539,11 +584,14 @@ xdescribe("Workbook", () => {
                         return resolved(`PARSED(${file})`);
                     }));
                 });
+                spyOn(workbook, "_parseSheetRefs");
             });
 
             itAsync("should extract the files from the data zip and load the objects", () => {
                 return workbook._initAsync("DATA")
-                    .then(() => {
+                    .then(wb => {
+                        expect(wb).toBe(workbook);
+
                         expect(JSZip.loadAsync).toHaveBeenCalledWith("DATA");
                         expect(workbook._zip).toEqual(jasmine.any(JSZip));
 
@@ -575,6 +623,8 @@ xdescribe("Workbook", () => {
                         expect(workbook._zip.remove).toHaveBeenCalledWith("xl/calcChain.xml");
 
                         expect(workbook._maxSheetId).toBe(9);
+
+                        expect(workbook._parseSheetRefs).toHaveBeenCalledWith();
                     });
             });
 
@@ -620,6 +670,157 @@ xdescribe("Workbook", () => {
                             "JSON(TEXT(baz))"
                         ]);
                     });
+            });
+        });
+
+        describe("_parseSheetRefs", () => {
+            beforeEach(() => {
+                workbook._node = {
+                    name: 'workbook',
+                    attributes: {},
+                    children: []
+                };
+
+                workbook._sheets = ["SHEET1", "SHEET2"];
+            });
+
+            it("should parse the active sheet", () => {
+                workbook._node.children = [{
+                    name: "bookViews",
+                    attributes: {},
+                    children: [{
+                        name: "workbookView",
+                        attributes: { activeTab: 1 },
+                        children: []
+                    }]
+                }];
+
+                workbook._parseSheetRefs();
+                expect(workbook._activeSheet).toBe("SHEET2");
+            });
+
+            it("should parse the defined names sheets", () => {
+                workbook._node.children = [{
+                    name: "definedNames",
+                    attributes: {},
+                    children: [
+                        {
+                            name: "definedName",
+                            attributes: { name: "WORKBOOK_SCOPE" },
+                            children: ["VALUE1"]
+                        },
+                        {
+                            name: "definedName",
+                            attributes: { name: "SHEET_SCOPE", localSheetId: 0 },
+                            children: ["VALUE2"]
+                        }
+                    ]
+                }];
+
+                workbook._parseSheetRefs();
+
+                expect(workbook._node.children).toEqualJson([{
+                    name: "definedNames",
+                    attributes: {},
+                    children: [
+                        {
+                            name: "definedName",
+                            attributes: { name: "WORKBOOK_SCOPE" },
+                            children: ["VALUE1"]
+                        },
+                        {
+                            name: "definedName",
+                            attributes: { name: "SHEET_SCOPE", localSheetId: 0 },
+                            children: ["VALUE2"],
+                            localSheet: "SHEET1"
+                        }
+                    ]
+                }]);
+            });
+        });
+
+        describe("_setSheetRefs", () => {
+            beforeEach(() => {
+                workbook._node = {
+                    name: 'workbook',
+                    attributes: {},
+                    children: []
+                };
+
+                workbook._sheets = ["SHEET1", "SHEET2"];
+                workbook._activeSheet = "SHEET2";
+            });
+
+            it("should set the active sheet and create the book view", () => {
+                workbook._setSheetRefs();
+                expect(workbook._node.children).toEqualJson([{
+                    name: "bookViews",
+                    attributes: {},
+                    children: [{
+                        name: "workbookView",
+                        attributes: { activeTab: 1 },
+                        children: []
+                    }]
+                }]);
+            });
+
+            it("should set the active sheet and use the existing book view", () => {
+                workbook._node.children = [{
+                    name: "bookViews",
+                    attributes: { foo: true },
+                    children: []
+                }];
+
+                workbook._setSheetRefs();
+                expect(workbook._node.children).toEqualJson([{
+                    name: "bookViews",
+                    attributes: { foo: true },
+                    children: [{
+                        name: "workbookView",
+                        attributes: { activeTab: 1 },
+                        children: []
+                    }]
+                }]);
+            });
+
+            it("should set the defined names sheets", () => {
+                workbook._node.children = [{
+                    name: "definedNames",
+                    attributes: {},
+                    children: [
+                        {
+                            name: "definedName",
+                            attributes: { name: "WORKBOOK_SCOPE" },
+                            children: ["VALUE1"]
+                        },
+                        {
+                            name: "definedName",
+                            attributes: { name: "SHEET_SCOPE" },
+                            children: ["VALUE2"],
+                            localSheet: "SHEET1"
+                        }
+                    ]
+                }];
+
+                workbook._setSheetRefs();
+
+                expect(workbook._node.children[1]).toEqualJson({
+                    name: "definedNames",
+                    attributes: {},
+                    children: [
+                        {
+                            name: "definedName",
+                            attributes: { name: "WORKBOOK_SCOPE" },
+                            children: ["VALUE1"]
+                        },
+                        {
+                            name: "definedName",
+                            attributes: { name: "SHEET_SCOPE", localSheetId: 0 },
+                            children: ["VALUE2"],
+                            localSheet: "SHEET1"
+                        }
+                    ]
+                });
             });
         });
     });

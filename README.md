@@ -740,6 +740,7 @@ Get the address of the column.
 | [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
 | [opts.rowAnchored] | <code>boolean</code> | Anchor the row. |
 | [opts.columnAnchored] | <code>boolean</code> | Anchor the column. |
+| [opts.anchored] | <code>boolean</code> | Anchor both the row and the column. |
 
 <a name="Cell+column"></a>
 
@@ -1226,6 +1227,7 @@ Get the address of the range.
 | [opts.startColumnAnchored] | <code>boolean</code> | Anchor the start column. |
 | [opts.endRowAnchored] | <code>boolean</code> | Anchor the end row. |
 | [opts.endColumnAnchored] | <code>boolean</code> | Anchor the end column. |
+| [opts.anchored] | <code>boolean</code> | Anchor all row and columns. |
 
 <a name="Range+cell"></a>
 
@@ -1686,7 +1688,8 @@ A worksheet.
     * [.cell(address)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.cell(rowNumber, columnNameOrNumber)](#Sheet+cell) ⇒ <code>[Cell](#Cell)</code>
     * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
-    * [.definedName(name)](#Sheet+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+    * [.definedName(name)](#Sheet+definedName) ⇒ <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+    * [.definedName(name, refersTo)](#Sheet+definedName) ⇒ <code>[Workbook](#Workbook)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
     * [.hidden(hidden)](#Sheet+hidden) ⇒ <code>[Sheet](#Sheet)</code>
@@ -1792,19 +1795,28 @@ Gets a column in the sheet.
 
 <a name="Sheet+definedName"></a>
 
-#### sheet.definedName(name) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+#### sheet.definedName(name) ⇒ <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
 Gets a defined name scoped to the sheet.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
-**Returns**: <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> - The named selection or undefined if name not found.  
-**Throws**:
-
-- <code>Error</code> Will throw if address in defined name is not supported.
-
+**Returns**: <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> - What the defined name refers to or undefined if not found. Will return the string formula if not a Row, Column, Cell, or Range.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The defined name. |
+
+<a name="Sheet+definedName"></a>
+
+#### sheet.definedName(name, refersTo) ⇒ <code>[Workbook](#Workbook)</code>
+Set a defined name scoped to the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Workbook](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The defined name. |
+| refersTo | <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> | What the name refers to. |
 
 <a name="Sheet+find"></a>
 
@@ -1960,7 +1972,8 @@ A workbook.
     * [.activeSheet()](#Workbook+activeSheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.activeSheet(sheet)](#Workbook+activeSheet) ⇒ <code>[Workbook](#Workbook)</code>
     * [.addSheet(name, [indexOrBeforeSheet])](#Workbook+addSheet) ⇒ <code>[Sheet](#Sheet)</code>
-    * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+    * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+    * [.definedName(name, refersTo)](#Workbook+definedName) ⇒ <code>[Workbook](#Workbook)</code>
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
     * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
     * [.moveSheet(sheet, [indexOrBeforeSheet])](#Workbook+moveSheet) ⇒ <code>[Workbook](#Workbook)</code>
@@ -2002,19 +2015,28 @@ Add a new sheet to the workbook.
 
 <a name="Workbook+definedName"></a>
 
-#### workbook.definedName(name) ⇒ <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
+#### workbook.definedName(name) ⇒ <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
 Gets a defined name scoped to the workbook.
 
 **Kind**: instance method of <code>[Workbook](#Workbook)</code>  
-**Returns**: <code>undefined</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> - The named selection or undefined if name not found.  
-**Throws**:
-
-- <code>Error</code> Will throw if address in defined name is not supported.
-
+**Returns**: <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> - What the defined name refers to or undefined if not found. Will return the string formula if not a Row, Column, Cell, or Range.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The defined name. |
+
+<a name="Workbook+definedName"></a>
+
+#### workbook.definedName(name, refersTo) ⇒ <code>[Workbook](#Workbook)</code>
+Set a defined name scoped to the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Workbook](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The defined name. |
+| refersTo | <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> | What the name refers to. |
 
 <a name="Workbook+find"></a>
 
