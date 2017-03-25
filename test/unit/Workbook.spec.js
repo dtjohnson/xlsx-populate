@@ -303,7 +303,7 @@ describe("Workbook", () => {
                 workbook._sheetsNode = { name: 'sheets', attributes: {}, children: [] };
                 workbook._zip = new JSZip();
 
-                spyOn(workbook._relationships, "findById").and.callFake(() => {
+                workbook._relationships.findById = jasmine.createSpy("findById").and.callFake(() => {
                     const relationship = { attributes: {} };
                     relationships.push(relationship);
                     return relationship;
