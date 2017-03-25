@@ -160,8 +160,8 @@ describe("addressConverter", () => {
             });
         });
 
-        it("should throw an error", () => {
-            expect(() => addressConverter.fromAddress("Foo")).toThrow();
+        it("should return undefined", () => {
+            expect(addressConverter.fromAddress("Foo")).toBeUndefined();
         });
     });
 

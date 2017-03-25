@@ -195,7 +195,6 @@ describe("Sheet", () => {
                 children: []
             });
             expect(Column).toHaveBeenCalledWith(sheet, colNode);
-            expect(sheet._colsNode.children).toEqualJson([colNode]);
             expect(sheet._colNodes[5]).toEqualJson(colNode);
         });
 
@@ -209,7 +208,6 @@ describe("Sheet", () => {
                 children: []
             };
 
-            sheet._colsNode.children = [existingColNode];
             sheet._colNodes[4] = sheet._colNodes[5] = sheet._colNodes[6] = sheet._colNodes[7] = existingColNode;
 
             const column = sheet.column('F');
@@ -225,7 +223,19 @@ describe("Sheet", () => {
                 children: []
             });
             expect(Column).toHaveBeenCalledWith(sheet, colNode);
-            expect(sheet._colsNode.children).toEqualJson([
+            expect(sheet._colNodes).toEqualJson([
+                null,
+                null,
+                null,
+                null,
+                {
+                    name: "col",
+                    attributes: {
+                        min: 4,
+                        max: 5
+                    },
+                    children: []
+                },
                 {
                     name: "col",
                     attributes: {
@@ -244,23 +254,18 @@ describe("Sheet", () => {
                     children: []
                 }
             ]);
-            expect(sheet._colNodes).toEqualJson([
-                null,
-                null,
-                null,
-                null,
-                sheet._colsNode.children[0],
-                sheet._colsNode.children[0],
-                sheet._colsNode.children[1],
-                sheet._colsNode.children[2]
-            ]);
         });
     });
 
     describe("definedName", () => {
         it("should return the defined name", () => {
             expect(sheet.definedName("FOO")).toBe("DEFINED NAME");
-            expect(workbook.scopedDefinedName).toHaveBeenCalledWith("FOO", sheet);
+            expect(workbook.scopedDefinedName).toHaveBeenCalledWith(sheet, "FOO");
+        });
+
+        it("should set the defined name", () => {
+            expect(sheet.definedName("NAME", "REF")).toBe(sheet);
+            expect(workbook.scopedDefinedName).toHaveBeenCalledWith(sheet, "NAME", "REF");
         });
     });
 
@@ -721,15 +726,44 @@ describe("Sheet", () => {
             sheet._colsNode = {
                 name: "cols",
                 attributes: {},
-                children: ["COLUMN1", "COLUMN2"]
+                children: ["foo"]
             };
+            sheet._colNodes = [
+                null,
+                {
+                    name: "col",
+                    attributes: { min: 1, max: 2, foo: true }
+                },
+                {
+                    name: "col",
+                    attributes: { min: 1, max: 2, foo: true }
+                },
+                {
+                    name: "col",
+                    attributes: { min: 3, max: 3, foo: true }
+                },
+                {
+                    name: "col",
+                    attributes: { min: 4, max: 4 }
+                }
+            ];
+
             expect(sheet.toObject().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
                     name: 'cols',
                     attributes: {},
-                    children: ["COLUMN1", "COLUMN2"]
+                    children: [
+                        {
+                            name: "col",
+                            attributes: { min: 1, max: 2, foo: true }
+                        },
+                        {
+                            name: "col",
+                            attributes: { min: 3, max: 3, foo: true }
+                        }
+                    ]
                 },
                 { name: 'sheetData', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }

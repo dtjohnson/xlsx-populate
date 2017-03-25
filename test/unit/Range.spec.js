@@ -48,6 +48,7 @@ describe("Range", () => {
                 endRowAnchored: true,
                 endColumnAnchored: true
             })).toBe("'NAME'!$B$3:$C$5");
+            expect(range.address({ anchored: true })).toBe("$B$3:$C$5");
         });
     });
 
