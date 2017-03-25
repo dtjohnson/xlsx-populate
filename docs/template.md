@@ -183,6 +183,15 @@ workbook.definedName("some name").value(5);
 workbook.sheet(0).definedName("some other name").value("foo");
 ```
 
+You can also create, modify, or delete defined names:
+```js
+// Create/modify a workbook-scope defined name
+workbook.definedName("some name", "TRUE");
+
+// Delete a sheet-scoped defined name:
+workbook.sheet(0).definedName("some name", null);
+```
+
 ### Find and Replace
 You can search for occurrences of text in cells within the workbook or sheets and optionally replace them.
 ```js
@@ -430,6 +439,10 @@ XlsxPopulate.Promise = Promise;
 ## Missing Features
 There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn't supported
 please open an issue to show your support. Better still, feel free to [contribute](#contributing) a pull request!
+
+## Submitting an Issue
+If you happen to run into a bug or an issue, please feel free to [submit an issue](https://github.com/dtjohnson/xlsx-populate/issues). I only ask that you please include sample JavaScript code that demonstrates the issue.
+If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue. 
 
 ## Contributing
 
