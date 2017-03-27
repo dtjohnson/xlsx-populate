@@ -893,6 +893,21 @@ describe("Sheet", () => {
             expect(Relationships).toHaveBeenCalledWith("RELATIONSHIPS");
         });
 
+        it("should delete the optional dimension node", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "dimension", attributes: {}, children: [] },
+                    { name: "sheetData", attributes: {}, children: [] }
+                ]
+            });
+
+            expect(sheet._node.children).toEqualJson([
+                { name: "sheetPr", attributes: {}, children: [] },
+                { name: "sheetData", attributes: {}, children: [] }
+            ]);
+        });
+
         it("should parse the rows", () => {
             sheet._init({}, {}, {
                 attributes: {},
