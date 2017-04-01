@@ -23,3 +23,4 @@ Backlog of features to implement (in no particular order):
 * Workbook metadata (like author)
 * Create defined name
 * Enum of standard number formats?
+* Drawings

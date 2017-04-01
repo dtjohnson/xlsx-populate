@@ -2,6 +2,7 @@
   "name": "xlsx-populate",
   "version": "1.5.3",
   "description": "Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.",
+  "keywords": ["excel", "workbook", "xlsx", "parse", "generate", "populate", "template", "browser", "style", "formatting"],
   "main": "lib/XlsxPopulate.js",
   "scripts": {
     "test": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
