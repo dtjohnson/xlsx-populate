@@ -21,7 +21,14 @@ describe("XmlBuilder", () => {
                     bar: `something'"<>&`
                 },
                 children: [
+                    null,
+                    undefined,
                     "foo",
+                    {
+                        toXml() {
+                            return "XML";
+                        }
+                    },
                     {
                         name: 'child',
                         children: [
@@ -34,7 +41,17 @@ describe("XmlBuilder", () => {
                 ]
             };
 
-            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something'&quot;&lt;&gt;&amp;">foo<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar'"&lt;&gt;&amp;</root>`);
+            expect(xmlBuilder.build(node)).toBe(`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><root foo="1" bar="something'&quot;&lt;&gt;&amp;">fooXML<child><A>TEXT</A><B foo:bar="value"/><C/></child>bar'"&lt;&gt;&amp;</root>`);
+        });
+
+        it("should return undefined if root toXml yields nil", () => {
+            const node = {
+                toXml() {
+                    return null;
+                }
+            };
+
+            expect(xmlBuilder.build(node)).toBeUndefined();
         });
     });
 });

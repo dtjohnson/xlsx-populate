@@ -30,7 +30,7 @@ describe("Workbook", () => {
         fs.writeFile.and.callFake((path, data, cb) => cb(null));
 
         StyleSheet = jasmine.createSpy("StyleSheet");
-        StyleSheet.prototype.toObject = jasmine.createSpy("StyleSheet.toObject").and.returnValue("STYLE SHEET");
+        StyleSheet.prototype.toString = () => "STYLE SHEET";
 
         Sheet = class {
             constructor(workbook, sheetIdNode, sheetNode, sheetRelationshipsNode) {
@@ -42,7 +42,7 @@ describe("Workbook", () => {
         };
         Sheet.prototype.find = jasmine.createSpy("Sheet.find");
         let sheetOutput = false;
-        Sheet.prototype.toObject = jasmine.createSpy("Sheet.toObject").and.callFake(() => {
+        Sheet.prototype.toXmls = jasmine.createSpy("Sheet.toXmls").and.callFake(() => {
             const relationships = sheetOutput ? "RELATIONSHIPS" : undefined;
             sheetOutput = !sheetOutput;
             return { sheet: "SHEET", id: { attributes: { 'r:id': "RID" } }, relationships };
@@ -51,15 +51,15 @@ describe("Workbook", () => {
         Sheet.prototype.tabSelected = jasmine.createSpy("Sheet.tabSelected");
 
         SharedStrings = jasmine.createSpy("SharedStrings");
-        SharedStrings.prototype.toObject = jasmine.createSpy("SharedStrings.toObject").and.returnValue("SHARED STRINGS");
+        SharedStrings.prototype.toString = () => "SHARED STRINGS";
 
         Relationships = jasmine.createSpy("Relationships");
-        Relationships.prototype.toObject = jasmine.createSpy("Relationships.toObject").and.returnValue("RELATIONSHIPS");
+        Relationships.prototype.toString = () => "RELATIONSHIPS";
         Relationships.prototype.findByType = jasmine.createSpy("Relationships.findByType");
         Relationships.prototype.add = jasmine.createSpy("Relationships.add");
 
         ContentTypes = jasmine.createSpy("ContentTypes");
-        ContentTypes.prototype.toObject = jasmine.createSpy("ContentTypes.toObject").and.returnValue("CONTENT TYPES");
+        ContentTypes.prototype.toString = () => "CONTENT TYPES";
         ContentTypes.prototype.findByPartName = jasmine.createSpy("ContentTypes.findByPartName");
         ContentTypes.prototype.add = jasmine.createSpy("ContentTypes.add");
 
@@ -93,7 +93,7 @@ describe("Workbook", () => {
         XmlParser.prototype.parseAsync = jasmine.createSpy("XmlParser.parseAsync").and.callFake(text => Promise.resolve(`JSON(${text})`));
 
         XmlBuilder = jasmine.createSpy("XmlBuilder");
-        XmlBuilder.prototype.build = jasmine.createSpy("XmlBuilder.build").and.callFake(obj => `XML: ${obj}`);
+        XmlBuilder.prototype.build = jasmine.createSpy("XmlBuilder.build").and.callFake(obj => `XML: ${obj && obj.toString()}`);
 
         blank = () => "BLANK";
 

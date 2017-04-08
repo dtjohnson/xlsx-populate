@@ -297,9 +297,9 @@ describe("StyleSheet", () => {
         });
     });
 
-    describe("toObject", () => {
+    describe("toXml", () => {
         it("should return the node as is", () => {
-            expect(styleSheet.toXmls()).toBe(styleSheetNode);
+            expect(styleSheet.toXml()).toBe(styleSheetNode);
         });
     });
 

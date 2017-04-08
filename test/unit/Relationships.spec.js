@@ -87,14 +87,14 @@ describe("Relationships", () => {
         });
     });
 
-    describe("toObject", () => {
+    describe("toXml", () => {
         it("should return the node as is", () => {
-            expect(relationships.toXmls()).toBe(relationshipsNode);
+            expect(relationships.toXml()).toBe(relationshipsNode);
         });
 
         it("should return undefined", () => {
             relationshipsNode.children.length = 0;
-            expect(relationships.toXmls()).toBeUndefined();
+            expect(relationships.toXml()).toBeUndefined();
         });
     });
 

@@ -20,7 +20,6 @@ describe("Sheet", () => {
         Cell.prototype.address = jasmine.createSpy("Cell.address").and.returnValue("ADDRESS");
 
         Relationships = jasmine.createSpy("Relationships");
-        Relationships.prototype.toObject = jasmine.createSpy("Relationships.toObject").and.returnValue("RELATIONSHIPS");
         Relationships.prototype.findById = jasmine.createSpy("Relationships.findById").and.callFake(id => ({ attributes: { Target: `TARGET:${id}` } }));
         Relationships.prototype.add = jasmine.createSpy("Relationships.add").and.returnValue({ attributes: { Id: "ID" } });
 
@@ -694,32 +693,13 @@ describe("Sheet", () => {
         });
     });
 
-    describe("toObject", () => {
+    describe("toXmls", () => {
         it("should return the relationships", () => {
-            expect(sheet.toXmls().relationships).toBe("RELATIONSHIPS");
+            expect(sheet.toXmls().relationships).toBe(sheet._relationships);
         });
 
         it("should return the ID node", () => {
             expect(sheet.toXmls().id).toBe(idNode);
-        });
-
-        it("should add the rows", () => {
-            sheet._rows = [
-                undefined,
-                { toObject: () => "ROW1" },
-                undefined,
-                { toObject: () => "ROW2" }
-            ];
-            expect(sheet.toXmls().sheet.children).toEqualJson([
-                { name: 'sheetPr', attributes: {}, children: [] },
-                { name: 'sheetFormatPr', attributes: {}, children: [] },
-                {
-                    name: 'sheetData',
-                    attributes: {},
-                    children: ["ROW1", "ROW2"]
-                },
-                { name: 'pageMargins', attributes: {}, children: [] }
-            ]);
         });
 
         it("should add the columns", () => {
@@ -926,6 +906,7 @@ describe("Sheet", () => {
                 jasmine.any(Row),
                 jasmine.any(Row)
             ]);
+            expect(sheet._sheetDataNode.children).toBe(sheet._rows);
 
             expect(Row).toHaveBeenCalledWith(sheet, "ROW1");
             expect(Row).toHaveBeenCalledWith(sheet, "ROW2");

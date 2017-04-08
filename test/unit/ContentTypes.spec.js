@@ -67,9 +67,9 @@ describe("ContentTypes", () => {
         });
     });
 
-    describe("toObject", () => {
+    describe("toXml", () => {
         it("should return the node as is", () => {
-            expect(contentTypes.toXmls()).toBe(contentTypesNode);
+            expect(contentTypes.toXml()).toBe(contentTypesNode);
         });
     });
 });

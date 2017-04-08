@@ -71,9 +71,9 @@ describe("SharedStrings", () => {
         });
     });
 
-    describe("toObject", () => {
+    describe("toXml", () => {
         it("should return the node as is", () => {
-            expect(sharedStrings.toXmls()).toBe(sharedStringsNode);
+            expect(sharedStrings.toXml()).toBe(sharedStringsNode);
         });
     });
 

@@ -197,13 +197,9 @@ describe("Row", () => {
         });
     });
 
-    describe("toObject", () => {
-        it("should return the object representation with children in order", () => {
-            row.cell(3);
-            row.cell(1);
-            const obj = row.toXmls();
-            expect(obj).toBe(rowNode);
-            expect(obj.children).toEqualJson([3, 1, 2]);
+    describe("toXml", () => {
+        it("should return the node", () => {
+            expect(row.toXml()).toBe(rowNode);
         });
     });
 
@@ -216,7 +212,13 @@ describe("Row", () => {
     describe("_init", () => {
         it("should store existing rows", () => {
             expect(row._cells).toEqual([undefined, undefined, jasmine.any(Cell)]);
-            expect(Cell).toHaveBeenCalledWith(row, rowNode.children[0]);
+            expect(rowNode.children).toBe(row._cells);
+            expect(Cell).toHaveBeenCalledWith(row, {
+                name: 'c',
+                attributes: {
+                    r: "B7"
+                }
+            });
         });
     });
 });
