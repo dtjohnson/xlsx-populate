@@ -299,7 +299,7 @@ describe("StyleSheet", () => {
 
     describe("toObject", () => {
         it("should return the node as is", () => {
-            expect(styleSheet.toObject()).toBe(styleSheetNode);
+            expect(styleSheet.toXmls()).toBe(styleSheetNode);
         });
     });
 

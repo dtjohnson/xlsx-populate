@@ -201,7 +201,7 @@ describe("Row", () => {
         it("should return the object representation with children in order", () => {
             row.cell(3);
             row.cell(1);
-            const obj = row.toObject();
+            const obj = row.toXmls();
             expect(obj).toBe(rowNode);
             expect(obj.children).toEqualJson([3, 1, 2]);
         });

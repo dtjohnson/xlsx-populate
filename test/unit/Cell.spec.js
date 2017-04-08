@@ -520,7 +520,7 @@ describe("Cell", () => {
                 children: ["VALUE"]
             }];
 
-            expect(cell.toObject()).toEqualJson({
+            expect(cell.toXmls()).toEqualJson({
                 name: "c",
                 attributes: {
                     r: "C7"

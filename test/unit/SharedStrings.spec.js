@@ -73,7 +73,7 @@ describe("SharedStrings", () => {
 
     describe("toObject", () => {
         it("should return the node as is", () => {
-            expect(sharedStrings.toObject()).toBe(sharedStringsNode);
+            expect(sharedStrings.toXmls()).toBe(sharedStringsNode);
         });
     });
 

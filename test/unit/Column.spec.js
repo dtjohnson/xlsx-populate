@@ -88,7 +88,7 @@ describe("Column", () => {
 
     describe("toObject", () => {
         it("should return the object representation", () => {
-            expect(column.toObject()).toBe(columnNode);
+            expect(column.toXmls()).toBe(columnNode);
         });
     });
 

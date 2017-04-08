@@ -696,11 +696,11 @@ describe("Sheet", () => {
 
     describe("toObject", () => {
         it("should return the relationships", () => {
-            expect(sheet.toObject().relationships).toBe("RELATIONSHIPS");
+            expect(sheet.toXmls().relationships).toBe("RELATIONSHIPS");
         });
 
         it("should return the ID node", () => {
-            expect(sheet.toObject().id).toBe(idNode);
+            expect(sheet.toXmls().id).toBe(idNode);
         });
 
         it("should add the rows", () => {
@@ -710,7 +710,7 @@ describe("Sheet", () => {
                 undefined,
                 { toObject: () => "ROW2" }
             ];
-            expect(sheet.toObject().sheet.children).toEqualJson([
+            expect(sheet.toXmls().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
@@ -748,7 +748,7 @@ describe("Sheet", () => {
                 }
             ];
 
-            expect(sheet.toObject().sheet.children).toEqualJson([
+            expect(sheet.toXmls().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 {
@@ -776,7 +776,7 @@ describe("Sheet", () => {
                 "C3:D4": "MERGE2"
             };
 
-            expect(sheet.toObject().sheet.children).toEqualJson([
+            expect(sheet.toXmls().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },
@@ -795,7 +795,7 @@ describe("Sheet", () => {
                 C3: "HYPERLINK2"
             };
 
-            expect(sheet.toObject().sheet.children).toEqualJson([
+            expect(sheet.toXmls().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },
@@ -811,7 +811,7 @@ describe("Sheet", () => {
         it("should add the hyperlinks and merge cells in the proper order", () => {
             sheet._mergeCells = { "A1:B2": "MERGE1" };
             sheet._hyperlinks = { A1: "HYPERLINK1" };
-            expect(sheet.toObject().sheet.children).toEqualJson([
+            expect(sheet.toXmls().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
                 { name: 'sheetData', attributes: {}, children: [] },

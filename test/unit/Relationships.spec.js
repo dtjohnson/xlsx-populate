@@ -89,12 +89,12 @@ describe("Relationships", () => {
 
     describe("toObject", () => {
         it("should return the node as is", () => {
-            expect(relationships.toObject()).toBe(relationshipsNode);
+            expect(relationships.toXmls()).toBe(relationshipsNode);
         });
 
         it("should return undefined", () => {
             relationshipsNode.children.length = 0;
-            expect(relationships.toObject()).toBeUndefined();
+            expect(relationships.toXmls()).toBeUndefined();
         });
     });
 
