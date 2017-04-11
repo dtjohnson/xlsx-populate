@@ -18,4 +18,5 @@ XlsxPopulate.fromFileAsync('./template.xlsx')
 
         // Write to file.
         return workbook.toFileAsync('./out.xlsx');
-    });
+    })
+    .catch(err => console.error(err));
