@@ -335,5 +335,96 @@
   "percentage": "0.00%",
   "fraction": "# ?/?",
   "scientific": "0.00E+00",
-  "text": "@"
+  "text": "@",
+  "column-row": {
+    "column": {
+      "bold": true,
+      "italic": {}
+    },
+    "row": {
+      "bold": {},
+      "italic": true
+    },
+    "A1": {
+      "bold": true,
+      "italic": true,
+      "value": null
+    },
+    "B1": {
+      "bold": false,
+      "italic": true,
+      "value": null
+    },
+    "A2": {
+      "bold": true,
+      "italic": false,
+      "value": null
+    },
+    "B2": {
+      "bold": false,
+      "italic": false,
+      "value": null
+    }
+  },
+  "row-column-value": {
+    "column": {
+      "bold": true,
+      "italic": {}
+    },
+    "row": {
+      "bold": {},
+      "italic": true
+    },
+    "A1": {
+      "bold": true,
+      "italic": true,
+      "value": "foo"
+    },
+    "B1": {
+      "bold": false,
+      "italic": true,
+      "value": "foo"
+    },
+    "A2": {
+      "bold": true,
+      "italic": false,
+      "value": "foo"
+    },
+    "B2": {
+      "bold": false,
+      "italic": false,
+      "value": "foo"
+    }
+  },
+  "value-column-row": {
+    "column": {
+      "bold": true,
+      "italic": {}
+    },
+    "row": {
+      "bold": {},
+      "italic": true
+    },
+    "A1": {
+      "bold": true,
+      "italic": true,
+      "value": "foo"
+    },
+    "B1": {
+      "bold": false,
+      "italic": true,
+      "value": "foo"
+    },
+    "A2": {
+      "bold": true,
+      "italic": false,
+      "value": "foo"
+    },
+    "B2": {
+      "bold": false,
+      "italic": false,
+      "value": "foo"
+    }
+  }
+
 }

@@ -90,4 +90,18 @@ module.exports = workbook => {
         .relativeCell(1, -1).value("fraction").relativeCell(0, 1).value(1.2).style("numberFormat", "# ?/?")
         .relativeCell(1, -1).value("scientific").relativeCell(0, 1).value(1.2).style("numberFormat", "0.00E+00")
         .relativeCell(1, -1).value("text").relativeCell(0, 1).value(1.2).style("numberFormat", "@");
+
+    const sheet2 = workbook.addSheet("Sheet2");
+    sheet2.column("A").style("bold", true);
+    sheet2.row(1).style("italic", true);
+
+    const sheet3 = workbook.addSheet("Sheet3");
+    sheet3.row(1).style("italic", true);
+    sheet3.column("A").style("bold", true);
+    sheet3.range("A1:B2").value("foo");
+
+    const sheet4 = workbook.addSheet("Sheet4");
+    sheet4.range("A1:B2").value("foo");
+    sheet4.column("A").style("bold", true);
+    sheet4.row(1).style("italic", true);
 };

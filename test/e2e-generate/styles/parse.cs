@@ -209,7 +209,43 @@ static class Parser
         cell = cell.Offset[1, 0];
         results[cell.Value2] = cell.Offset[0, 1].NumberFormat;
 
+        results["column-row"] = GetRowColumnStyleData(workbook, 2);
+        results["row-column-value"] = GetRowColumnStyleData(workbook, 3);
+        results["value-column-row"] = GetRowColumnStyleData(workbook, 4);
+
         return results;
+    }
+
+    private static object GetRowColumnStyleData(Workbook workbook, int sheetIndex)
+    {
+        var sheet = (Worksheet)workbook.Worksheets[sheetIndex];
+        var column = (Range)sheet.Columns[1];
+        var row = (Range)sheet.Rows[1];
+
+        return new {
+            column = new {
+                bold = column.Font.Bold,
+                italic = column.Font.Italic,
+            },
+            row = new {
+                bold = row.Font.Bold,
+                italic = row.Font.Italic,
+            },
+            A1 = GetCellStyleData(sheet, "A1"),
+            B1 = GetCellStyleData(sheet, "B1"),
+            A2 = GetCellStyleData(sheet, "A2"),
+            B2 = GetCellStyleData(sheet, "B2"),
+        };
+    }
+
+    private static object GetCellStyleData(Worksheet sheet, string address)
+    {
+        var cell = (Range)sheet.Range[address];
+        return new {
+            bold = cell.Font.Bold,
+            italic = cell.Font.Italic,
+            value = cell.Value2,
+        };
     }
 
     private static string OleToHex(object ole)
