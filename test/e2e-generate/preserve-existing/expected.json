@@ -1,0 +1,161 @@
+{
+  "editedValues": {
+    "Values": "FOO",
+    "Rich Text": "FOO",
+    "Hyperlinks": "FOO",
+    "Comments": "FOO",
+    "Merge Cells": "FOO",
+    "Formulas": "FOO",
+    "Defined Names": "FOO",
+    "Styles": "FOO",
+    "Conditional Formatting": "FOO",
+    "Data Validation": "FOO",
+    "Filter": "FOO",
+    "Table": "FOO",
+    "Pivot Table": "FOO",
+    "Image": "FOO",
+    "Chart": "FOO"
+  },
+  "values": {
+    "edited": "FOO",
+    "text": {
+      "value": "text",
+      "text": "text",
+      "format": "General"
+    },
+    "number": {
+      "value": 5.6,
+      "text": "5.6",
+      "format": "General"
+    },
+    "boolean": {
+      "value": true,
+      "text": "TRUE",
+      "format": "General"
+    },
+    "date": {
+      "value": 41030,
+      "text": "5/1/2012",
+      "format": "m/d/yyyy"
+    }
+  },
+  "richText": {
+    "bold": {
+      "text": "foo",
+      "bold": true,
+      "italic": false
+    },
+    "italic": {
+      "text": "bar",
+      "bold": false,
+      "italic": true
+    }
+  },
+  "hyperlinks": {
+    "text": "Example",
+    "address": "http://example.com/"
+  },
+  "comments": {
+    "hidden": {
+      "text": "foo",
+      "visible": false,
+      "topLeftCell": "B2",
+      "top": 16.5,
+      "left": 59.25,
+      "height": 59.25,
+      "width": 108
+    },
+    "visible": {
+      "text": "bar",
+      "visible": true,
+      "topLeftCell": "C9",
+      "top": 125.25,
+      "left": 131.25,
+      "height": 131.25,
+      "width": 141
+    }
+  },
+  "mergeCells": [
+    "A2:B2",
+    "A4:A5",
+    "A7:B8"
+  ],
+  "formulas": {
+    "normal": {
+      "value": true,
+      "formula": "=TRUE"
+    },
+    "array": {
+      "value": 0,
+      "formula": "=SUM(B2:C2*B3:C3)"
+    }
+  },
+  "definedNames": {
+    "workbookNameFromWorkbook": "WORKBOOK_NAME",
+    "workbookNameFromSheet": null,
+    "workbookNameFromOtherSheet": null,
+    "sheetNameFromWorkbook": null,
+    "sheetNameFromSheet": "SHEET_NAME",
+    "sheetNameFromOtherSheet": null
+  },
+  "styles": {
+    "populatedCell": {
+      "bold": true,
+      "italic": true,
+      "value": "cell bold + italic"
+    },
+    "emptyCell": {
+      "bold": true,
+      "italic": true,
+      "value": null
+    },
+    "row": {
+      "bold": true,
+      "italic": {}
+    },
+    "column": {
+      "bold": {},
+      "italic": true
+    },
+    "good": "Good",
+    "bad": "Bad",
+    "numberFormat": "_($* #,##0.00_);_($* (#,##0.00);_($* \"-\"??_);_(@_)"
+  },
+  "conditionalFormatting": "color scale",
+  "dataValidation": {
+    "type": "xlValidateList",
+    "source": "foo,bar",
+    "ignoreBlank": true,
+    "inCellDropdown": true
+  },
+  "filter": {
+    "range": "A2:B5",
+    "count": 1,
+    "on": true,
+    "op": "0",
+    "criteria": "=2"
+  },
+  "table": {
+    "range": "A2:B5",
+    "style": "TableStyleMedium2"
+  },
+  "pivotTable": {
+    "sourceData": "'Pivot Table'!R2C1:R5C2",
+    "tableRange": "D2:E6"
+  },
+  "image": {
+    "topLeftCell": "A2",
+    "top": 21.75,
+    "left": 20.25,
+    "height": 111,
+    "width": 447.73126220703125
+  },
+  "chart": {
+    "type": "xlColumnClustered",
+    "topLeftCell": "D2",
+    "top": 29.62495994567871,
+    "left": 149.6249542236328,
+    "height": 216,
+    "width": 360
+  }
+}
