@@ -24,3 +24,4 @@ Backlog of features to implement (in no particular order):
 * Create defined name
 * Enum of standard number formats?
 * Drawings
+* Array formulas - May want to introduce a new Formula class.

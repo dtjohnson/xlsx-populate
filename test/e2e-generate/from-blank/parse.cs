@@ -3,11 +3,13 @@ static class Parser
     public static object Parse(Workbook workbook)
     {
         var sheet = (Worksheet)workbook.Worksheets[1];
-        var cell = sheet.Range["A1"];
-        var value = cell.Value2;
+        var valueCell = sheet.Range["A1"];
+        var formulaCell = sheet.Range["A2"];
 
         return new {
-            value = value
+            value = valueCell.Value2,
+            formula = formulaCell.Formula,
+            formulaValue = formulaCell.Value2,
         };
     }
 }

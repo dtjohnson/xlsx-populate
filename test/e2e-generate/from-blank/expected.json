@@ -1,3 +1,5 @@
 {
-  "value": "TEST"
+  "value": "TEST",
+  "formula": "=5*2",
+  "formulaValue": 10
 }
