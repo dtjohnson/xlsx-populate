@@ -251,6 +251,22 @@ range.style({
 });
 ```
 
+If you are setting styles for many cells, performance is far better if you set for an entire row or column:
+```js
+// Set a single style
+sheet.row(1).style("bold", true);
+
+// Set multiple styles
+sheet.column("A").style({ bold: true, italic: true });
+
+// Get a single style
+const bold = sheet.column(3).style("bold");
+ 
+// Get multiple styles
+const styles = sheet.row(5).style(["bold", "italic"]); 
+```
+Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.
+
 Some styles take values that are more complex objects:
 ```js
 cell.style("fill", {

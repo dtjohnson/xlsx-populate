@@ -277,6 +277,22 @@ range.style({
 });
 ```
 
+If you are setting styles for many cells, performance is far better if you set for an entire row or column:
+```js
+// Set a single style
+sheet.row(1).style("bold", true);
+
+// Set multiple styles
+sheet.column("A").style({ bold: true, italic: true });
+
+// Get a single style
+const bold = sheet.column(3).style("bold");
+ 
+// Get multiple styles
+const styles = sheet.row(5).style(["bold", "italic"]); 
+```
+Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.
+
 Some styles take values that are more complex objects:
 ```js
 cell.style("fill", {
@@ -1018,6 +1034,10 @@ A column.
     * [.hidden()](#Column+hidden) ⇒ <code>boolean</code>
     * [.hidden(hidden)](#Column+hidden) ⇒ <code>[Column](#Column)</code>
     * [.sheet()](#Column+sheet) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.style(name)](#Column+style) ⇒ <code>\*</code>
+    * [.style(names)](#Column+style) ⇒ <code>object.&lt;string, \*&gt;</code>
+    * [.style(name, value)](#Column+style) ⇒ <code>[Cell](#Cell)</code>
+    * [.style(styles)](#Column+style) ⇒ <code>[Cell](#Cell)</code>
     * [.width()](#Column+width) ⇒ <code>undefined</code> &#124; <code>number</code>
     * [.width(width)](#Column+width) ⇒ <code>[Column](#Column)</code>
     * [.workbook()](#Column+workbook) ⇒ <code>[Workbook](#Workbook)</code>
@@ -1088,6 +1108,55 @@ Get the parent sheet.
 
 **Kind**: instance method of <code>[Column](#Column)</code>  
 **Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
+<a name="Column+style"></a>
+
+#### column.style(name) ⇒ <code>\*</code>
+Gets an individual style.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>\*</code> - The style.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+
+<a name="Column+style"></a>
+
+#### column.style(names) ⇒ <code>object.&lt;string, \*&gt;</code>
+Gets multiple styles.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>object.&lt;string, \*&gt;</code> - Object whose keys are the style names and values are the styles.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;string&gt;</code> | The names of the style. |
+
+<a name="Column+style"></a>
+
+#### column.style(name, value) ⇒ <code>[Cell](#Cell)</code>
+Sets an individual style.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Column+style"></a>
+
+#### column.style(styles) ⇒ <code>[Cell](#Cell)</code>
+Sets multiple styles.
+
+**Kind**: instance method of <code>[Column](#Column)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
+
 <a name="Column+width"></a>
 
 #### column.width() ⇒ <code>undefined</code> &#124; <code>number</code>
@@ -1599,6 +1668,10 @@ A row.
     * [.hidden(hidden)](#Row+hidden) ⇒ <code>[Row](#Row)</code>
     * [.rowNumber()](#Row+rowNumber) ⇒ <code>number</code>
     * [.sheet()](#Row+sheet) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.style(name)](#Row+style) ⇒ <code>\*</code>
+    * [.style(names)](#Row+style) ⇒ <code>object.&lt;string, \*&gt;</code>
+    * [.style(name, value)](#Row+style) ⇒ <code>[Cell](#Cell)</code>
+    * [.style(styles)](#Row+style) ⇒ <code>[Cell](#Cell)</code>
     * [.workbook()](#Row+workbook) ⇒ <code>[Workbook](#Workbook)</code>
 
 <a name="Row+address"></a>
@@ -1679,6 +1752,55 @@ Gets the parent sheet of the row.
 
 **Kind**: instance method of <code>[Row](#Row)</code>  
 **Returns**: <code>[Sheet](#Sheet)</code> - The parent sheet.  
+<a name="Row+style"></a>
+
+#### row.style(name) ⇒ <code>\*</code>
+Gets an individual style.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>\*</code> - The style.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+
+<a name="Row+style"></a>
+
+#### row.style(names) ⇒ <code>object.&lt;string, \*&gt;</code>
+Gets multiple styles.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>object.&lt;string, \*&gt;</code> - Object whose keys are the style names and values are the styles.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;string&gt;</code> | The names of the style. |
+
+<a name="Row+style"></a>
+
+#### row.style(name, value) ⇒ <code>[Cell](#Cell)</code>
+Sets an individual style.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Row+style"></a>
+
+#### row.style(styles) ⇒ <code>[Cell](#Cell)</code>
+Sets multiple styles.
+
+**Kind**: instance method of <code>[Row](#Row)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
+
 <a name="Row+workbook"></a>
 
 #### row.workbook() ⇒ <code>[Workbook](#Workbook)</code>
