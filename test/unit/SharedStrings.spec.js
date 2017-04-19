@@ -99,6 +99,7 @@ describe("SharedStrings", () => {
             expect(sharedStrings._indexMap).toEqualJson({
                 foo: 0,
                 bar: 1,
+                '[{"name":"r","children":[{}]},{"name":"r","children":[{}]}]': 2,
                 baz: 3
             });
         });

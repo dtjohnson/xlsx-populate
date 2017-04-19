@@ -587,6 +587,28 @@ describe("Sheet", () => {
         });
     });
 
+    describe("forEachExistingColumnNumber", () => {
+        it("should call the callback for each existing column number", () => {
+            sheet._colNodes = [null, "NODE1", "NODE2"];
+            const callback = jasmine.createSpy("callback");
+            sheet.forEachExistingColumnNumber(callback);
+            expect(callback.calls.count()).toBe(2);
+            expect(callback).toHaveBeenCalledWith(1);
+            expect(callback).toHaveBeenCalledWith(2);
+        });
+    });
+
+    describe("forEachExistingRow", () => {
+        it("should call the callback for each existing row", () => {
+            sheet._rows = [null, "ROW1", "ROW2"];
+            const callback = jasmine.createSpy("callback");
+            sheet.forEachExistingRow(callback);
+            expect(callback.calls.count()).toBe(2);
+            expect(callback).toHaveBeenCalledWith("ROW1", 1);
+            expect(callback).toHaveBeenCalledWith("ROW2", 2);
+        });
+    });
+
     describe("hyperlink", () => {
         it("should return the hyperlink", () => {
             sheet._hyperlinks = {
