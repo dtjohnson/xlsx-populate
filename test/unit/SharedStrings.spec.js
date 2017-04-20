@@ -35,19 +35,39 @@ describe("SharedStrings", () => {
 
     describe("getIndexForString", () => {
         beforeEach(() => {
-            sharedStrings._stringArray = ["foo", "bar"];
-            sharedStrings._indexMap = { foo: 0, bar: 1 };
+            sharedStrings._stringArray = [
+                "foo",
+                "bar",
+                [{ name: "r", children: [{}] }, { name: "r", children: [{}] }]
+            ];
+
+            sharedStrings._indexMap = {
+                foo: 0,
+                bar: 1,
+                '[{"name":"r","children":[{}]},{"name":"r","children":[{}]}]': 2
+            };
         });
 
         it("should return the index if the string already exists", () => {
             expect(sharedStrings.getIndexForString("foo")).toBe(0);
             expect(sharedStrings.getIndexForString("bar")).toBe(1);
+            expect(sharedStrings.getIndexForString([{ name: "r", children: [{}] }, { name: "r", children: [{}] }])).toBe(2);
         });
 
         it("should create a new entry if the string doesn't exist", () => {
-            expect(sharedStrings.getIndexForString("baz")).toBe(2);
-            expect(sharedStrings._stringArray).toEqual(["foo", "bar", "baz"]);
-            expect(sharedStrings._indexMap).toEqual({ foo: 0, bar: 1, baz: 2 });
+            expect(sharedStrings.getIndexForString("baz")).toBe(3);
+            expect(sharedStrings._stringArray).toEqualJson([
+                "foo",
+                "bar",
+                [{ name: "r", children: [{}] }, { name: "r", children: [{}] }],
+                "baz"
+            ]);
+            expect(sharedStrings._indexMap).toEqualJson({
+                foo: 0,
+                bar: 1,
+                '[{"name":"r","children":[{}]},{"name":"r","children":[{}]}]': 2,
+                baz: 3
+            });
             expect(sharedStringsNode.children[sharedStringsNode.children.length - 1]).toEqualJson({
                 name: "si",
                 children: [
@@ -57,6 +77,26 @@ describe("SharedStrings", () => {
                         children: ["baz"]
                     }
                 ]
+            });
+        });
+
+        it("should create a new array entry if the array doesn't exist", () => {
+            expect(sharedStrings.getIndexForString([{ name: "r", children: [{}] }])).toBe(3);
+            expect(sharedStrings._stringArray).toEqualJson([
+                "foo",
+                "bar",
+                [{ name: "r", children: [{}] }, { name: "r", children: [{}] }],
+                [{ name: "r", children: [{}] }]
+            ]);
+            expect(sharedStrings._indexMap).toEqualJson({
+                foo: 0,
+                bar: 1,
+                '[{"name":"r","children":[{}]},{"name":"r","children":[{}]}]': 2,
+                '[{"name":"r","children":[{}]}]': 3
+            });
+            expect(sharedStringsNode.children[sharedStringsNode.children.length - 1]).toEqualJson({
+                name: "si",
+                children: [{ name: "r", children: [{}] }]
             });
         });
     });

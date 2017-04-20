@@ -12,7 +12,7 @@ const XlsxPopulate = require("../../lib/XlsxPopulate");
 const interopPath = glob.sync("C:\\Program Files (x86)\\Microsoft Office\\root\\Office*\\DCF\\Microsoft.Office.Interop.Excel.dll")[0];
 if (!interopPath) throw new Error("Unable to find the Microsoft.Office.Interop.Excel.dll!");
 
-// const testCases = ["./styles/"]; // To focus
+// const testCases = ["./preserve-existing/"]; // To focus
 const testCases = glob.sync("./*/");
 
 describe("e2e-generate", () => {
