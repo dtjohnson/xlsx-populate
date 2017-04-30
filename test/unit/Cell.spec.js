@@ -208,6 +208,7 @@ describe("Cell", () => {
             expect(cell.find('bar')).toBe(true);
             expect(cell.find('BAR')).toBe(true);
             expect(cell.find('goo')).toBe(false);
+            expect(cell.value).not.toHaveBeenCalledWith(jasmine.anything());
         });
 
         it("should return true if regex matches and false otherwise", () => {
@@ -215,6 +216,15 @@ describe("Cell", () => {
             expect(cell.find(/\w{3}/)).toBe(true);
             expect(cell.find(/\w{4}/)).toBe(false);
             expect(cell.find(/Foo/)).toBe(true);
+            expect(cell.value).not.toHaveBeenCalledWith(jasmine.anything());
+        });
+
+        it("should not replace if replacement is nil", () => {
+            cell.value.and.returnValue("Foo bar baz");
+            expect(cell.find("foo", undefined)).toBe(true);
+            expect(cell.value).not.toHaveBeenCalledWith(jasmine.anything());
+            expect(cell.find("bar", null)).toBe(true);
+            expect(cell.value).not.toHaveBeenCalledWith(jasmine.anything());
         });
 
         it("should replace all occurences of substring", () => {
