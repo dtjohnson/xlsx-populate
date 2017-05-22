@@ -1283,8 +1283,8 @@ A range of cells.
         * [.tap(callback)](#Range+tap) ⇒ <code>[Range](#Range)</code>
         * [.thru(callback)](#Range+thru) ⇒ <code>\*</code>
         * [.value()](#Range+value) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
-        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
-        * [.value()](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.value(callback)](#Range+value) ⇒ <code>[Range](#Range)</code>
+        * [.value(values)](#Range+value) ⇒ <code>[Range](#Range)</code>
         * [.value(value)](#Range+value) ⇒ <code>[Range](#Range)</code>
         * [.workbook()](#Range+workbook) ⇒ <code>[Workbook](#Workbook)</code>
     * _inner_
@@ -1543,7 +1543,7 @@ Get the values of each cell in the range as a 2D array.
 **Returns**: <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> - The values.  
 <a name="Range+value"></a>
 
-#### range.value() ⇒ <code>[Range](#Range)</code>
+#### range.value(callback) ⇒ <code>[Range](#Range)</code>
 Set the values in each cell to the result of a function called for each.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -1551,11 +1551,11 @@ Set the values in each cell to the result of a function called for each.
 
 | Param | Type | Description |
 | --- | --- | --- |
-|  | <code>[mapCallback](#Range..mapCallback)</code> | The callback to provide value for the cell. |
+| callback | <code>[mapCallback](#Range..mapCallback)</code> | The callback to provide value for the cell. |
 
 <a name="Range+value"></a>
 
-#### range.value() ⇒ <code>[Range](#Range)</code>
+#### range.value(values) ⇒ <code>[Range](#Range)</code>
 Sets the value in each cell to the corresponding value in the given 2D array of values.
 
 **Kind**: instance method of <code>[Range](#Range)</code>  
@@ -1563,7 +1563,7 @@ Sets the value in each cell to the corresponding value in the given 2D array of 
 
 | Param | Type | Description |
 | --- | --- | --- |
-|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The values to set. |
+| values | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The values to set. |
 
 <a name="Range+value"></a>
 
