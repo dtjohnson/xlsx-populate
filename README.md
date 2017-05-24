@@ -180,6 +180,18 @@ The above methods can all use sheet references instead of names as well. And you
 sheet.move("Sheet2");
 ```
 
+You can delete sheets:
+```js
+// Delete 'Sheet1'
+workbook.deketeSheet("Sheet1");
+
+// Delete sheet with index 2
+workbook.deleteSheet(2);
+
+// Delete from sheet reference
+workbook.sheet(0).delete();
+```
+
 You can get/set the active sheet:
 ```js
 // Get the active sheet
@@ -1826,6 +1838,7 @@ A worksheet.
     * [.column(columnNameOrNumber)](#Sheet+column) ⇒ <code>[Column](#Column)</code>
     * [.definedName(name)](#Sheet+definedName) ⇒ <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
     * [.definedName(name, refersTo)](#Sheet+definedName) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.delete()](#Sheet+delete) ⇒ <code>[Workbook](#Workbook)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
     * [.hidden(hidden)](#Sheet+hidden) ⇒ <code>[Sheet](#Sheet)</code>
@@ -1954,6 +1967,13 @@ Set a defined name scoped to the sheet.
 | name | <code>string</code> | The defined name. |
 | refersTo | <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> | What the name refers to. |
 
+<a name="Sheet+delete"></a>
+
+#### sheet.delete() ⇒ <code>[Workbook](#Workbook)</code>
+Deletes the sheet and returns the parent workbook.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Workbook](#Workbook)</code> - The workbook.  
 <a name="Sheet+find"></a>
 
 #### sheet.find(pattern, [replacement]) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
@@ -2110,9 +2130,10 @@ A workbook.
     * [.addSheet(name, [indexOrBeforeSheet])](#Workbook+addSheet) ⇒ <code>[Sheet](#Sheet)</code>
     * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> &#124; <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code>
     * [.definedName(name, refersTo)](#Workbook+definedName) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.deleteSheet(sheet)](#Workbook+deleteSheet) ⇒ <code>[Workbook](#Workbook)</code>
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
-    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
     * [.moveSheet(sheet, [indexOrBeforeSheet])](#Workbook+moveSheet) ⇒ <code>[Workbook](#Workbook)</code>
+    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ <code>[Sheet](#Sheet)</code> &#124; <code>undefined</code>
     * [.sheets()](#Workbook+sheets) ⇒ <code>[Array.&lt;Sheet&gt;](#Sheet)</code>
     * [.toFileAsync(path)](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
@@ -2174,6 +2195,18 @@ Set a defined name scoped to the workbook.
 | name | <code>string</code> | The defined name. |
 | refersTo | <code>string</code> &#124; <code>[Cell](#Cell)</code> &#124; <code>[Range](#Range)</code> &#124; <code>[Row](#Row)</code> &#124; <code>[Column](#Column)</code> | What the name refers to. |
 
+<a name="Workbook+deleteSheet"></a>
+
+#### workbook.deleteSheet(sheet) ⇒ <code>[Workbook](#Workbook)</code>
+Delete a sheet from the workbook.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>[Workbook](#Workbook)</code> - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sheet | <code>[Sheet](#Sheet)</code> &#124; <code>string</code> &#124; <code>number</code> | The sheet or name of sheet or index of sheet to move. |
+
 <a name="Workbook+find"></a>
 
 #### workbook.find(pattern, [replacement]) ⇒ <code>boolean</code>
@@ -2187,18 +2220,6 @@ Find the given pattern in the workbook and optionally replace it.
 | pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
 | [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in each cell will be replaced. |
 
-<a name="Workbook+outputAsync"></a>
-
-#### workbook.outputAsync([type]) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
-Generates the workbook output.
-
-**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
-**Returns**: <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code> - The data.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [type] | <code>string</code> | The type of the data to return. (Supports any supported [JSZip data types](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html): base64, binarystring, uint8array, arraybuffer, blob, nodebuffer) Defaults to 'nodebuffer' in Node.js and 'blob' in browsers. |
-
 <a name="Workbook+moveSheet"></a>
 
 #### workbook.moveSheet(sheet, [indexOrBeforeSheet]) ⇒ <code>[Workbook](#Workbook)</code>
@@ -2211,6 +2232,18 @@ Move a sheet to a new position.
 | --- | --- | --- |
 | sheet | <code>[Sheet](#Sheet)</code> &#124; <code>string</code> &#124; <code>number</code> | The sheet or name of sheet or index of sheet to move. |
 | [indexOrBeforeSheet] | <code>number</code> &#124; <code>string</code> &#124; <code>[Sheet](#Sheet)</code> | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
+
+<a name="Workbook+outputAsync"></a>
+
+#### workbook.outputAsync([type]) ⇒ <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code>
+Generates the workbook output.
+
+**Kind**: instance method of <code>[Workbook](#Workbook)</code>  
+**Returns**: <code>string</code> &#124; <code>Uint8Array</code> &#124; <code>ArrayBuffer</code> &#124; <code>Blob</code> &#124; <code>Buffer</code> - The data.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [type] | <code>string</code> | The type of the data to return. (Supports any supported [JSZip data types](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html): base64, binarystring, uint8array, arraybuffer, blob, nodebuffer) Defaults to 'nodebuffer' in Node.js and 'blob' in browsers. |
 
 <a name="Workbook+sheet"></a>
 

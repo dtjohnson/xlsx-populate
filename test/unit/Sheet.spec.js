@@ -7,7 +7,7 @@ describe("Sheet", () => {
 
     beforeEach(() => {
         let i = 0;
-        workbook = jasmine.createSpyObj("workbook", ["scopedDefinedName", "activeSheet", "sheets", "moveSheet"]);
+        workbook = jasmine.createSpyObj("workbook", ["scopedDefinedName", "activeSheet", "sheets", "deleteSheet", "moveSheet"]);
         workbook.scopedDefinedName.and.returnValue("DEFINED NAME");
         workbook.activeSheet.and.returnValue("ACTIVE SHEET");
 
@@ -265,6 +265,13 @@ describe("Sheet", () => {
         it("should set the defined name", () => {
             expect(sheet.definedName("NAME", "REF")).toBe(sheet);
             expect(workbook.scopedDefinedName).toHaveBeenCalledWith(sheet, "NAME", "REF");
+        });
+    });
+
+    describe("delete", () => {
+        it("should call the workbook delete method", () => {
+            expect(sheet.delete()).toBe(workbook);
+            expect(workbook.deleteSheet).toHaveBeenCalledWith(sheet);
         });
     });
 

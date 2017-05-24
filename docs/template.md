@@ -154,6 +154,18 @@ The above methods can all use sheet references instead of names as well. And you
 sheet.move("Sheet2");
 ```
 
+You can delete sheets:
+```js
+// Delete 'Sheet1'
+workbook.deketeSheet("Sheet1");
+
+// Delete sheet with index 2
+workbook.deleteSheet(2);
+
+// Delete from sheet reference
+workbook.sheet(0).delete();
+```
+
 You can get/set the active sheet:
 ```js
 // Get the active sheet

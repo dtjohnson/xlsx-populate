@@ -272,6 +272,43 @@ describe("Workbook", () => {
             });
         });
 
+        describe("deleteSheet", () => {
+            let sheet1, sheet2, sheet3;
+            beforeEach(() => {
+                sheet1 = new Sheet();
+                sheet2 = new Sheet();
+                sheet3 = new Sheet();
+                sheet1.name = jasmine.createSpy("name").and.returnValue("SHEET1");
+                sheet2.name = jasmine.createSpy("name").and.returnValue("SHEET2");
+                sheet3.name = jasmine.createSpy("name").and.returnValue("SHEET3");
+
+                workbook._sheets = [sheet1, sheet2, sheet3];
+                workbook._activeSheet = sheet2;
+            });
+
+            it("should throw an error if the sheet doesn't exist", () => {
+                expect(() => workbook.deleteSheet("foo")).toThrow();
+            });
+
+            it("should throw an error if we are trying to hide the only visible sheet", () => {
+                sheet1.hidden = jasmine.createSpy("hidden").and.returnValue(true);
+                sheet2.hidden = jasmine.createSpy("hidden").and.returnValue(false);
+                sheet3.hidden = jasmine.createSpy("hidden").and.returnValue(true);
+                expect(() => workbook.deleteSheet(1)).toThrow();
+                expect(() => workbook.deleteSheet(0)).not.toThrow();
+            });
+
+            it("should delete the sheet and update the active sheet as needed", () => {
+                workbook.deleteSheet(1);
+                expect(workbook._sheets).toEqual([sheet1, sheet3]);
+                expect(workbook._activeSheet).toBe(sheet3);
+
+                workbook.deleteSheet(0);
+                expect(workbook._sheets).toEqual([sheet3]);
+                expect(workbook._activeSheet).toBe(sheet3);
+            });
+        });
+
         describe("find", () => {
             it("should return the matches", () => {
                 workbook._sheets = [
@@ -287,6 +324,45 @@ describe("Workbook", () => {
                 Sheet.prototype.find.and.returnValue('C');
                 expect(workbook.find('bar', 'baz')).toEqual(['C', 'C', 'C']);
                 expect(Sheet.prototype.find).toHaveBeenCalledWith(/bar/gim, 'baz');
+            });
+        });
+
+        describe("moveSheet", () => {
+            let sheet1, sheet2, sheet3;
+            beforeEach(() => {
+                sheet1 = new Sheet();
+                sheet2 = new Sheet();
+                sheet3 = new Sheet();
+                sheet1.name = jasmine.createSpy("name").and.returnValue("SHEET1");
+                sheet2.name = jasmine.createSpy("name").and.returnValue("SHEET2");
+                sheet3.name = jasmine.createSpy("name").and.returnValue("SHEET3");
+
+                workbook._sheets = [sheet1, sheet2, sheet3];
+            });
+
+            it("should throw an error if the sheet doesn't exist", () => {
+                expect(() => workbook.moveSheet("foo")).toThrow();
+                expect(() => workbook.moveSheet("SHEET1", "foo")).toThrow();
+            });
+
+            it("should move the sheet to the end", () => {
+                workbook.moveSheet("SHEET2");
+                expect(workbook._sheets).toEqual([sheet1, sheet3, sheet2]);
+            });
+
+            it("should move the sheet to the given index", () => {
+                workbook.moveSheet("SHEET1", 1);
+                expect(workbook._sheets).toEqual([sheet2, sheet1, sheet3]);
+            });
+
+            it("should move the sheet before the sheet with the given name", () => {
+                workbook.moveSheet("SHEET3", "SHEET1");
+                expect(workbook._sheets).toEqual([sheet3, sheet1, sheet2]);
+            });
+
+            it("should move the sheet before the given sheet", () => {
+                workbook.moveSheet("SHEET2", sheet1);
+                expect(workbook._sheets).toEqual([sheet2, sheet1, sheet3]);
             });
         });
 
@@ -368,45 +444,6 @@ describe("Workbook", () => {
                         });
                 });
             }
-        });
-
-        describe("moveSheet", () => {
-            let sheet1, sheet2, sheet3;
-            beforeEach(() => {
-                sheet1 = new Sheet();
-                sheet2 = new Sheet();
-                sheet3 = new Sheet();
-                sheet1.name = jasmine.createSpy("name").and.returnValue("SHEET1");
-                sheet2.name = jasmine.createSpy("name").and.returnValue("SHEET2");
-                sheet3.name = jasmine.createSpy("name").and.returnValue("SHEET3");
-
-                workbook._sheets = [sheet1, sheet2, sheet3];
-            });
-
-            it("should throw an error if the sheet doesn't exist", () => {
-                expect(() => workbook.moveSheet("foo")).toThrow();
-                expect(() => workbook.moveSheet("SHEET1", "foo")).toThrow();
-            });
-
-            it("should move the sheet to the end", () => {
-                workbook.moveSheet("SHEET2");
-                expect(workbook._sheets).toEqual([sheet1, sheet3, sheet2]);
-            });
-
-            it("should move the sheet to the given index", () => {
-                workbook.moveSheet("SHEET1", 1);
-                expect(workbook._sheets).toEqual([sheet2, sheet1, sheet3]);
-            });
-
-            it("should move the sheet before the sheet with the given name", () => {
-                workbook.moveSheet("SHEET3", "SHEET1");
-                expect(workbook._sheets).toEqual([sheet3, sheet1, sheet2]);
-            });
-
-            it("should move the sheet before the given sheet", () => {
-                workbook.moveSheet("SHEET2", sheet1);
-                expect(workbook._sheets).toEqual([sheet2, sheet1, sheet3]);
-            });
         });
 
         describe("sheet", () => {
