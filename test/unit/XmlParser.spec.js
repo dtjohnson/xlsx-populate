@@ -27,6 +27,9 @@ describe("XmlParser", () => {
     <C/>
     <D xml:space="preserve">    
     </D>
+    <E>01</E>
+    <F>1</F>
+    <G>-1.23</G>
   </child>bar</root>`;
 
             return xmlParser.parseAsync(xml)
@@ -46,7 +49,10 @@ describe("XmlParser", () => {
                                     { name: 'A', attributes: {}, children: ["TEXT"] },
                                     { name: 'B', attributes: { 'foo:bar': "value" }, children: [] },
                                     { name: 'C', attributes: {}, children: [] },
-                                    { name: 'D', attributes: { 'xml:space': "preserve" }, children: ["    \n    "] }
+                                    { name: 'D', attributes: { 'xml:space': "preserve" }, children: ["    \n    "] },
+                                    { name: 'E', attributes: {}, children: ["01"] },
+                                    { name: 'F', attributes: {}, children: [1] },
+                                    { name: 'G', attributes: {}, children: [-1.23] }
                                 ]
                             },
                             "bar"

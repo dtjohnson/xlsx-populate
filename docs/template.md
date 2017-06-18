@@ -157,7 +157,7 @@ sheet.move("Sheet2");
 You can delete sheets:
 ```js
 // Delete 'Sheet1'
-workbook.deketeSheet("Sheet1");
+workbook.deleteSheet("Sheet1");
 
 // Delete sheet with index 2
 workbook.deleteSheet(2);

@@ -53,9 +53,7 @@ PATHS.unitTestSources = [PATHS.lib, PATHS.unit];
 // Function to clear the require cache as running unit tests mess up later tests.
 const clearRequireCache = () => {
     for (const moduleId in require.cache) {
-        if (require.cache.hasOwnProperty(moduleId)) {
-            delete require.cache[moduleId];
-        }
+        delete require.cache[moduleId];
     }
 };
 
