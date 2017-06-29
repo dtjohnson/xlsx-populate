@@ -137,6 +137,12 @@ const sheet = workbook.sheet('Sheet1');
 const newSheet4 = workbook.addSheet('New 4', sheet);
 ```
 
+You can rename sheets:
+```js
+// Rename the first sheet.
+const sheet = workbook.sheet(0).name("new sheet name");
+```
+
 You can move sheets:
 ```js
 // Move 'Sheet1' to the end
