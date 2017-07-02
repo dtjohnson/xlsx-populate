@@ -423,7 +423,7 @@ req.send();
 
 To download the workbook, you can either export as a blob (default behavior) or as a base64 string. You can then insert a link into the DOM and click it:
 ```js
-XlsxPopulate.outputAsync()
+workbook.outputAsync()
     .then(function (blob) {
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             // If IE, you must uses a different method.
@@ -443,7 +443,7 @@ XlsxPopulate.outputAsync()
 
 Alternatively, you can download via a data URI, but this is not supported by IE:
 ```js
-XlsxPopulate.outputAsync("base64")
+workbook.outputAsync("base64")
     .then(function (base64) {
         location.href = "data:" + XlsxPopulate.MIME_TYPE + ";base64," + base64;
     });
