@@ -136,6 +136,7 @@ const newSheet3 = workbook.addSheet('New 3', 'Sheet1');
 const sheet = workbook.sheet('Sheet1');
 const newSheet4 = workbook.addSheet('New 4', sheet);
 ```
+*Note: the sheet rename method does not rename references to the sheet so formulas, etc. can be broken. Use with caution!*
 
 You can rename sheets:
 ```js

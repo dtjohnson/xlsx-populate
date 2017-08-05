@@ -162,6 +162,13 @@ const newSheet3 = workbook.addSheet('New 3', 'Sheet1');
 const sheet = workbook.sheet('Sheet1');
 const newSheet4 = workbook.addSheet('New 4', sheet);
 ```
+*Note: the sheet rename method does not rename references to the sheet so formulas, etc. can be broken. Use with caution!*
+
+You can rename sheets:
+```js
+// Rename the first sheet.
+const sheet = workbook.sheet(0).name("new sheet name");
+```
 
 You can move sheets:
 ```js
@@ -1843,7 +1850,7 @@ A worksheet.
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
     * [.hidden(hidden)](#Sheet+hidden) ⇒ <code>[Sheet](#Sheet)</code>
     * [.move([indexOrBeforeSheet])](#Sheet+move) ⇒ <code>[Sheet](#Sheet)</code>
-    * [.name()](#Sheet+name) ⇒ <code>string</code>
+    * [.name(name)](#Sheet+name) ⇒ <code>[Sheet](#Sheet)</code>
     * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startCell, endCell)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
@@ -2020,11 +2027,16 @@ Move the sheet.
 
 <a name="Sheet+name"></a>
 
-#### sheet.name() ⇒ <code>string</code>
-Get the name of the sheet.
+#### sheet.name(name) ⇒ <code>[Sheet](#Sheet)</code>
+Set the name of the sheet. *Note: this method does not rename references to the sheet so formulas, etc. can be broken. Use with caution!*
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
-**Returns**: <code>string</code> - The sheet name.  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name to set to the sheet. |
+
 <a name="Sheet+range"></a>
 
 #### sheet.range(address) ⇒ <code>[Range](#Range)</code>
