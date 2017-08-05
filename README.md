@@ -1847,9 +1847,12 @@ A worksheet.
     * [.definedName(name, refersTo)](#Sheet+definedName) ⇒ <code>[Workbook](#Workbook)</code>
     * [.delete()](#Sheet+delete) ⇒ <code>[Workbook](#Workbook)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
+    * [.gridLinesVisible()](#Sheet+gridLinesVisible) ⇒ <code>boolean</code>
+    * [.gridLinesVisible(selected)](#Sheet+gridLinesVisible) ⇒ <code>[Sheet](#Sheet)</code>
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
     * [.hidden(hidden)](#Sheet+hidden) ⇒ <code>[Sheet](#Sheet)</code>
     * [.move([indexOrBeforeSheet])](#Sheet+move) ⇒ <code>[Sheet](#Sheet)</code>
+    * [.name()](#Sheet+name) ⇒ <code>string</code>
     * [.name(name)](#Sheet+name) ⇒ <code>[Sheet](#Sheet)</code>
     * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startCell, endCell)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
@@ -1857,6 +1860,7 @@ A worksheet.
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>undefined</code> &#124; <code>Color</code>
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>Color</code> &#124; <code>string</code> &#124; <code>number</code>
+    * [.tabSelected()](#Sheet+tabSelected) ⇒ <code>boolean</code>
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ <code>[Sheet](#Sheet)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
@@ -1994,6 +1998,25 @@ Find the given pattern in the sheet and optionally replace it.
 | pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
 | [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in each cell will be replaced. |
 
+<a name="Sheet+gridLinesVisible"></a>
+
+#### sheet.gridLinesVisible() ⇒ <code>boolean</code>
+Gets a value indicating whether this sheet's grid lines are visible.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>boolean</code> - True if selected, false if not.  
+<a name="Sheet+gridLinesVisible"></a>
+
+#### sheet.gridLinesVisible(selected) ⇒ <code>[Sheet](#Sheet)</code>
+Sets whether this sheet's grid lines are visible.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| selected | <code>boolean</code> | True to make visible, false to hide. |
+
 <a name="Sheet+hidden"></a>
 
 #### sheet.hidden() ⇒ <code>boolean</code> &#124; <code>string</code>
@@ -2025,6 +2048,13 @@ Move the sheet.
 | --- | --- | --- |
 | [indexOrBeforeSheet] | <code>number</code> &#124; <code>string</code> &#124; <code>[Sheet](#Sheet)</code> | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
+<a name="Sheet+name"></a>
+
+#### sheet.name() ⇒ <code>string</code>
+Get the name of the sheet.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>string</code> - The sheet name.  
 <a name="Sheet+name"></a>
 
 #### sheet.name(name) ⇒ <code>[Sheet](#Sheet)</code>
@@ -2103,6 +2133,13 @@ Sets the tab color. (See style [Color](#color).)
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
 **Returns**: <code>Color</code> &#124; <code>string</code> &#124; <code>number</code> - color - Color of the tab. If string, will set an RGB color. If number, will set a theme color.  
+<a name="Sheet+tabSelected"></a>
+
+#### sheet.tabSelected() ⇒ <code>boolean</code>
+Gets a value indicating whether this sheet is selected.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>boolean</code> - True if selected, false if not.  
 <a name="Sheet+tabSelected"></a>
 
 #### sheet.tabSelected(selected) ⇒ <code>[Sheet](#Sheet)</code>
