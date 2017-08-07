@@ -357,17 +357,20 @@ To set/get/remove a cell DataValidation:
 // Set the DataValidation
 cell.dataValidation({
     type: 'list',
-    allowBlank: true, 
-    showInputMessage: true,
-    prompt: true,
+    allowBlank: false, 
+    showInputMessage: false,
+    prompt: false,
     promptTitle: 'String',
-    showErrorMessage: true,
+    showErrorMessage: false,
     error: 'String',
     errorTitle: 'String',
     operator: 'String',
     formula1: '$A:$A',//Required
     formula2: 'String'
 });
+
+//Here is a short version of the one above.
+cell.dataValidation('$A:$A');
 
 // Get the DataValidation
 const obj = cell.dataValidation(); // Returns a Object
@@ -393,6 +396,9 @@ range.dataValidation({
     formula1: 'Item1,Item2,Item3,Item4',//Required
     formula2: 'String'
 });
+
+//Here is a short version of the one above.
+range.dataValidation('Item1,Item2,Item3,Item4');
 
 // Get the DataValidation
 const obj = range.dataValidation(); // Returns a Object
