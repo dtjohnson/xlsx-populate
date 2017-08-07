@@ -357,7 +357,7 @@ To set/get/remove a cell DataValidation:
 // Set the DataValidation
 cell.dataValidation({
     type: 'list',
-    allowBlank: boolen, 
+    allowBlank: true, 
     showInputMessage: true,
     prompt: true,
     promptTitle: 'String',
