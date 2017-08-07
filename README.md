@@ -354,7 +354,7 @@ xlsx-populate supports DataValidation. See the [DataValidation](#datavalidation)
 
 To set/get/remove a cell DataValidation:
 ```js
-// Set DataValidation
+// Set the DataValidation
 cell.dataValidation({
     type: 'list',
     allowBlank: boolen, 
@@ -369,10 +369,10 @@ cell.dataValidation({
     formula2: 'String'
 });
 
-// Get DataValidation
+// Get the DataValidation
 const obj = cell.dataValidation(); // Returns Object
 
-// Remove DataValidation
+// Remove the DataValidation
 cell.dataValidation(null); //Returns cell
 ```
 
@@ -394,10 +394,10 @@ range.dataValidation({
     formula2: 'String'
 });
 
-// Get DataValidation
+// Get the DataValidation
 const obj = range.dataValidation(); // Returns Object
 
-// Remove DataValidation
+// Remove the DataValidation
 range.dataValidation(null); //Returns range
 ```
 
