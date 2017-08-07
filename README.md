@@ -370,10 +370,10 @@ cell.dataValidation({
 });
 
 // Get the DataValidation
-const obj = cell.dataValidation(); // Returns Object
+const obj = cell.dataValidation(); // Returns a Object
 
 // Remove the DataValidation
-cell.dataValidation(null); //Returns cell
+cell.dataValidation(null); //Returns the cell
 ```
 
 Similarly for ranges:
@@ -395,10 +395,10 @@ range.dataValidation({
 });
 
 // Get the DataValidation
-const obj = range.dataValidation(); // Returns Object
+const obj = range.dataValidation(); // Returns a Object
 
 // Remove the DataValidation
-range.dataValidation(null); //Returns range
+range.dataValidation(null); //Returns the range
 ```
 
 Please note, DataValidation getts applied to the Range, NOT each Cell in the range.
