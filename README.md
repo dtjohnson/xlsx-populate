@@ -19,6 +19,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Defined Names](#defined-names)
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
+  * [DataValidation](#datavalidation)
   * [Dates](#dates)
   * [Method Chaining](#method-chaining)
   * [Hyperlinks](#hyperlinks)
@@ -347,6 +348,60 @@ You can also look up the desired format code in Excel:
 * Click on "Format Cells..."
 * Switch the category to "Custom" if it is not already.
 * The code in the "Type" box is the format you should copy.
+
+### DataValidation
+xlsx-populate supports DataValidation. See the [DataValidation](#datavalidation) for the various options.
+
+To set/get/remove a cell DataValidation:
+```js
+// Set DataValidation
+cell.dataValidation({
+    type: 'list',
+    allowBlank: boolen, 
+    showInputMessage: true,
+    prompt: true,
+    promptTitle: 'String',
+    showErrorMessage: true,
+    error: 'String',
+    errorTitle: 'String',
+    operator: 'String',
+    formula1: '$A:$A',//Required
+    formula2: 'String'
+});
+
+// Get DataValidation
+const obj = cell.dataValidation(); // Returns Object
+
+// Remove DataValidation
+cell.dataValidation(null); //Returns cell
+```
+
+Similarly for ranges:
+```js
+
+// Set all cells in range with a single DataValidation
+range.dataValidation({
+    type: 'list',
+    allowBlank: false, 
+    showInputMessage: false,
+    prompt: false,
+    promptTitle: 'String',
+    showErrorMessage: false,
+    error: 'String',
+    errorTitle: 'String',
+    operator: 'String',
+    formula1: 'Item1,Item2,Item3,Item4',//Required
+    formula2: 'String'
+});
+
+// Get DataValidation
+const obj = range.dataValidation(); // Returns Object
+
+// Remove DataValidation
+range.dataValidation(null); //Returns range
+```
+
+Please note, DataValidation getts applied to the Range, NOT each Cell in the range.
 
 ### Dates
 
