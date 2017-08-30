@@ -29,7 +29,7 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation']);
         sheet.activeCell.and.returnValue("ACTIVE CELL");
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
@@ -53,6 +53,40 @@ describe("Cell", () => {
     });
 
     /* PUBLIC */
+
+    describe('dataValidation', () => {
+
+        it('should return undefined', () => {
+            expect(cell.dataValidation()).toBeUndefined();
+        })
+
+        it('should return the cell', () => {
+            expect(cell.dataValidation(['testing', 'testing2'])).toBe(cell);
+        });
+
+        it('should return undefined', () => {
+            expect(cell.dataValidation(null)).toBeUndefined();
+        })
+
+        it('should return the cell', () => {
+            expect(cell.dataValidation({
+                    type: 'list',
+                    allowBlank: false,
+                    showInputMessage: true,
+                    prompt: 'this is a prompt',
+                    promptTitle: 'here is a title',
+                    showErrorMessage: true,
+                    error: 'there has been an error',
+                    errorTitle: 'error titlte',
+                    formula1: 'testign1, testing2, testing3'
+            })).toBe(cell);
+        })
+
+        it('should return undefined', () => {
+            expect(cell.dataValidation(null)).toBeUndefined();
+        })
+        
+    });
 
     describe("active", () => {
         it("should return true/false", () => {
