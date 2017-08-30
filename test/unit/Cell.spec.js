@@ -54,40 +54,6 @@ describe("Cell", () => {
 
     /* PUBLIC */
 
-    describe('dataValidation', () => {
-
-        it('should return undefined', () => {
-            expect(cell.dataValidation()).toBeUndefined();
-        })
-
-        it('should return the cell', () => {
-            expect(cell.dataValidation(['testing', 'testing2'])).toBe(cell);
-        });
-
-        it('should return undefined', () => {
-            expect(cell.dataValidation(null)).toBeUndefined();
-        })
-
-        it('should return the cell', () => {
-            expect(cell.dataValidation({
-                    type: 'list',
-                    allowBlank: false,
-                    showInputMessage: true,
-                    prompt: 'this is a prompt',
-                    promptTitle: 'here is a title',
-                    showErrorMessage: true,
-                    error: 'there has been an error',
-                    errorTitle: 'error titlte',
-                    formula1: 'testign1, testing2, testing3'
-            })).toBe(cell);
-        })
-
-        it('should return undefined', () => {
-            expect(cell.dataValidation(null)).toBeUndefined();
-        })
-        
-    });
-
     describe("active", () => {
         it("should return true/false", () => {
             expect(cell.active()).toBe(false);
@@ -230,6 +196,72 @@ describe("Cell", () => {
             expect(cell.hyperlink("HYPERLINK")).toBe(cell);
             expect(sheet.hyperlink).toHaveBeenCalledWith("C7", "HYPERLINK");
         });
+    });
+
+    describe('dataValidation', () => {
+        
+        it('should return false', () => {
+            expect(cell.dataValidation()).toBe(false);
+        })
+
+        it('should return the cell', () => {
+            expect(cell.dataValidation('testing, testing2')).toBe(cell);
+        });
+
+        it('should return JSON object', () => {
+            expect(cell.dataValidation()).toEqualJson({
+                type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'testing1, testing2',
+                formula2: ''
+            });
+        })
+
+        it('should return true', () => {
+            expect(cell.dataValidation(false)).toBe(true);
+        })
+
+        it('should return the cell', () => {
+            expect(cell.dataValidation({ type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'test1, test2, test3',
+                formula2: ''
+            })).toBe(cell);
+        })
+
+        it('should return JSON object', () => {
+            expect(cell.dataValidation()).toEqualJson({ type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'test1, test2, test3',
+                formula2: ''
+            });
+        })
+
+        it('should return true', () => {
+            expect(cell.dataValidation(false)).toBe(true);
+        })
+        
     });
 
     describe("find", () => {
