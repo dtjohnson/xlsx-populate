@@ -199,34 +199,10 @@ describe("Cell", () => {
     });
 
     describe('dataValidation', () => {
-        
-        it('should return false', () => {
-            expect(cell.dataValidation()).toBe(false);
-        })
-
         it('should return the cell', () => {
             expect(cell.dataValidation('testing, testing2')).toBe(cell);
+            expect(sheet.dataValidation).toHaveBeenCalledWith('C7', 'testing, testing2');
         });
-
-        it('should return JSON object', () => {
-            expect(cell.dataValidation()).toEqualJson({
-                type: 'list',
-                allowBlank: false,
-                showInputMessage: false,
-                prompt: '',
-                promptTitle: '',
-                showErrorMessage: false,
-                error: '',
-                errorTitle: '',
-                operator: '',
-                formula1: 'testing1, testing2',
-                formula2: ''
-            });
-        })
-
-        it('should return true', () => {
-            expect(cell.dataValidation(false)).toBe(true);
-        })
 
         it('should return the cell', () => {
             expect(cell.dataValidation({ type: 'list',
@@ -241,10 +217,8 @@ describe("Cell", () => {
                 formula1: 'test1, test2, test3',
                 formula2: ''
             })).toBe(cell);
-        })
 
-        it('should return JSON object', () => {
-            expect(cell.dataValidation()).toEqualJson({ type: 'list',
+            expect(sheet.dataValidation).toHaveBeenCalledWith('C7', { type: 'list',
                 allowBlank: false,
                 showInputMessage: false,
                 prompt: '',
@@ -256,10 +230,6 @@ describe("Cell", () => {
                 formula1: 'test1, test2, test3',
                 formula2: ''
             });
-        })
-
-        it('should return true', () => {
-            expect(cell.dataValidation(false)).toBe(true);
         })
         
     });

@@ -13,7 +13,7 @@ describe("Range", () => {
         style = jasmine.createSpy("style");
         style.and.callFake(name => `STYLE:${name}`);
 
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'merged', 'incrementMaxSharedFormulaId']);
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'merged', 'incrementMaxSharedFormulaId', 'dataValidation']);
         sheet.name.and.returnValue('NAME');
         sheet.cell.and.callFake((row, column) => `CELL[${row}, ${column}]`);
         sheet.workbook.and.returnValue('WORKBOOK');
@@ -32,7 +32,6 @@ describe("Range", () => {
 
         range = new Range(startCell, endCell);
     });
-
     describe("address", () => {
         it("should return the address", () => {
             expect(range.address()).toBe('B3:C5');
@@ -290,6 +289,41 @@ describe("Range", () => {
             expect(style).toHaveBeenCalledWith("baz", 'BAZ4');
             expect(style).toHaveBeenCalledWith("baz", 'BAZ5');
         });
+    });
+
+    describe('dataValidation', () => {
+        it('should return the range', () => {
+            expect(range.dataValidation('testing, testing2')).toBe(range);
+            expect(sheet.dataValidation).toHaveBeenCalledWith('B3:C5', 'testing, testing2');
+        });
+
+        it('should return the range', () => {
+            expect(range.dataValidation({ type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'test1, test2, test3',
+                formula2: ''
+            })).toBe(range);
+
+            expect(sheet.dataValidation).toHaveBeenCalledWith('B3:C5', { type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'test1, test2, test3',
+                formula2: ''
+            });
+        })
     });
 
     describe("tap", () => {
