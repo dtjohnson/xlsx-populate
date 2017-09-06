@@ -35,6 +35,7 @@ describe("Cell", () => {
         sheet.column.and.returnValue("COLUMN");
         sheet.hyperlink.and.returnValue("HYPERLINK");
         sheet.range.and.returnValue("RANGE");
+        sheet.dataValidation.and.returnValue("DATAVALIDATION");
 
         row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber']);
         row.sheet.and.returnValue(sheet);
@@ -231,6 +232,11 @@ describe("Cell", () => {
                 formula2: ''
             });
         })
+
+        it("should get the dataValidation from the cell", () => {
+            expect(cell.dataValidation()).toBe("DATAVALIDATION");
+            expect(sheet.dataValidation).toHaveBeenCalledWith("C7");
+        });
         
     });
 

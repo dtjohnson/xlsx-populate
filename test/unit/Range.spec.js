@@ -17,6 +17,7 @@ describe("Range", () => {
         sheet.name.and.returnValue('NAME');
         sheet.cell.and.callFake((row, column) => `CELL[${row}, ${column}]`);
         sheet.workbook.and.returnValue('WORKBOOK');
+        sheet.dataValidation.and.returnValue('DATAVALIDATION');
 
         startCell = jasmine.createSpyObj("startCell", ["rowNumber", "columnNumber", "columnName", "sheet", "value"]);
         startCell.columnName.and.returnValue("B");
@@ -324,6 +325,12 @@ describe("Range", () => {
                 formula2: ''
             });
         })
+
+        it("should get the dataValidation from the range", () => {
+            expect(range.dataValidation()).toBe("DATAVALIDATION");
+            expect(sheet.dataValidation).toHaveBeenCalledWith("B3:C5");
+        });
+
     });
 
     describe("tap", () => {
