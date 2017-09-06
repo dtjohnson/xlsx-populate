@@ -792,6 +792,8 @@ A cell
         * [.formula(formula)](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
         * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> &#124; <code>undefined</code>
         * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ <code>[Cell](#Cell)</code>
+        * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> &#124; <code>undefined</code>
+        * [.dataValidation(DataValidation)](#Cell+dataValidation) ⇒ <code>[Cell](#Cell)</code>
         * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
         * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>[Range](#Range)</code>
@@ -923,6 +925,25 @@ Set or clear the hyperlink on the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | hyperlink | <code>string</code> &#124; <code>undefined</code> | The hyperlink to set or undefined to clear. |
+
+<a name="Cell+dataValidation"></a>
+
+#### cell.dataValidation() ⇒ <code>object</code> &#124; <code>undefined</code>
+Gets the DataValidation Object attached to the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>object</code> &#124; <code>undefined</code> - The DataValidation or undefined if not set.  
+<a name="Cell+dataValidation"></a>
+
+#### cell.dataValidation(DataValidation) ⇒ <code>[Cell](#Cell)</code>
+Set or clear the DataValidation Object of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| DataValidation | <code>object</code> &#124; <code>undefined</code> | Object or null to clear. |
 
 <a name="Cell+tap"></a>
 
@@ -1344,6 +1365,8 @@ A range of cells.
         * [.map(callback)](#Range+map) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
         * [.merged()](#Range+merged) ⇒ <code>boolean</code>
         * [.merged(merged)](#Range+merged) ⇒ <code>[Range](#Range)</code>
+        * [.dataValidation()](#Range+dataValidation) ⇒ <code>object</code> &#124; <code>undefined</code>
+        * [.dataValidation(DataValidation)](#Range+dataValidation) ⇒ <code>[Range](#Range)</code>
         * [.reduce(callback, [initialValue])](#Range+reduce) ⇒ <code>\*</code>
         * [.sheet()](#Range+sheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.startCell()](#Range+startCell) ⇒ <code>[Cell](#Cell)</code>
@@ -1480,6 +1503,25 @@ Sets a value indicating whether the cells in the range should be merged.
 | Param | Type | Description |
 | --- | --- | --- |
 | merged | <code>boolean</code> | True to merge, false to unmerge. |
+
+<a name="Range+dataValidation"></a>
+
+#### range.dataValidation() ⇒ <code>object</code> &#124; <code>undefined</code>
+Gets the DataValidation Object attached to the Range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>object</code> &#124; <code>undefined</code> - The DataValidation or undefined if not set.  
+<a name="Range+dataValidation"></a>
+
+#### range.dataValidation(DataValidation) ⇒ <code>[Range](#Range)</code>
+Set or clear the DataValidation Object of the entire range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The Range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| DataValidation | <code>object</code> &#124; <code>undefined</code> | Object or null to clear. |
 
 <a name="Range+reduce"></a>
 
