@@ -341,6 +341,63 @@ const num = cell.value(); // 42788
 const date = XlsxPopulate.numberToDate(num); // Wed Feb 22 2017 00:00:00 GMT-0500 (Eastern Standard Time)
 ```
 
+### Data Validation
+Data validation is also supported. To set/get/remove a cell data validation:
+```js
+// Set the data validation
+cell.dataValidation({
+    type: 'list',
+    allowBlank: false, 
+    showInputMessage: false,
+    prompt: false,
+    promptTitle: 'String',
+    showErrorMessage: false,
+    error: 'String',
+    errorTitle: 'String',
+    operator: 'String',
+    formula1: '$A:$A',//Required
+    formula2: 'String'
+});
+
+//Here is a short version of the one above.
+cell.dataValidation('$A:$A');
+
+// Get the data validation
+const obj = cell.dataValidation(); // Returns an object
+
+// Remove the data validation
+cell.dataValidation(null); //Returns the cell
+```
+
+Similarly for ranges:
+```js
+
+// Set all cells in range with a single shared data validation
+range.dataValidation({
+    type: 'list',
+    allowBlank: false, 
+    showInputMessage: false,
+    prompt: false,
+    promptTitle: 'String',
+    showErrorMessage: false,
+    error: 'String',
+    errorTitle: 'String',
+    operator: 'String',
+    formula1: 'Item1,Item2,Item3,Item4',//Required
+    formula2: 'String'
+});
+
+//Here is a short version of the one above.
+range.dataValidation('Item1,Item2,Item3,Item4');
+
+// Get the data validation
+const obj = range.dataValidation(); // Returns an object
+
+// Remove the data validation
+range.dataValidation(null); //Returns the Range
+```
+Please note, the data validation gets applied to the entire range, *not* each Cell in the range.
+
 ### Method Chaining
 
 xlsx-populate uses method-chaining similar to that found in [jQuery](https://jquery.com/) and [d3](https://d3js.org/). This lets you construct large chains of setters as desired:

@@ -721,7 +721,6 @@ describe("Sheet", () => {
             expect(sheet.dataValidation("ADDRESS2", false)).toBe(true);
             expect(sheet._dataValidations).toEqualJson({});
         });
-
     });
 
     describe("hyperlink", () => {
@@ -927,7 +926,7 @@ describe("Sheet", () => {
 
         it("should add the hyperlinks and merge cells in the proper order", () => {
             sheet._mergeCells = { "A1:B2": "MERGE1" };
-            sheet._dataValidations['A1'] = {
+            sheet._dataValidations.A1 = {
                 name: "dataValidation",
                 attributes: {
                     type: 'list',
@@ -1229,7 +1228,7 @@ describe("Sheet", () => {
                                         children: ['']
                                     }
                                 ]
-                            },
+                            }
                         ]
                     }
                 ]
@@ -1292,6 +1291,5 @@ describe("Sheet", () => {
                 }
             });
         });
-
     });
 });
