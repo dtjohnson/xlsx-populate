@@ -621,6 +621,109 @@ describe("Sheet", () => {
         });
     });
 
+    describe("dataValidation", () => {
+        it("should return the dataValidation Object", () => {
+            sheet._dataValidations = {
+                A1: {
+                    name: 'dataValidation',
+                    attributes: {
+                        type: 'list',
+                        sqref: 'A1'
+                    },
+                    children: [
+                        {
+                            name: 'formula1',
+                            atrributes: {},
+                            children: ['test1, test2, test3']
+                        }
+                    ]
+                },
+                A2: {
+                    name: 'dataValidation',
+                    attributes: {
+                        type: 'list',
+                        sqref: 'A2'
+                    },
+                    children: [
+                        {
+                            name: 'formula1',
+                            atrributes: {},
+                            children: ['test1, test2, test3']
+                        }
+                    ]
+                }
+            };
+
+            expect(sheet.dataValidation("A1")).toEqualJson({
+                type: 'list',
+                formula1: 'test1, test2, test3'
+            });
+            
+            expect(sheet.dataValidation("A2")).toEqualJson({
+                type: 'list',
+                formula1: 'test1, test2, test3'
+            });
+
+            expect(sheet.dataValidation("A3")).toBe(false);
+        });
+
+        it("should add a dataValidations entry", () => {
+            expect(sheet._dataValidations).toEqualJson({});
+            expect(sheet.dataValidation("A1", "TEST")).toBe(sheet);
+            expect(sheet._dataValidations).toEqualJson({
+                A1: {
+                    name: 'dataValidation',
+                    attributes: {
+                        type: 'list',
+                        allowBlank: false,
+                        showInputMessage: false,
+                        prompt: '',
+                        promptTitle: '',
+                        showErrorMessage: false,
+                        error: '',
+                        errorTitle: '',
+                        operator: '',
+                        sqref: 'A1'
+                    },
+                    children: [
+                        {
+                            name: 'formula1',
+                            atrributes: {},
+                            children: ['TEST']
+                        },
+                        {
+                            name: 'formula2',
+                            atrributes: {},
+                            children: ['']
+                        }
+                    ]
+                }
+            });
+        });
+
+        it("should remove a dataValidation entry", () => {
+            sheet._dataValidations = {
+                ADDRESS1: {},
+                ADDRESS2: {}
+            };
+
+            expect(sheet.dataValidation("ADDRESS3", false)).toBe(false);
+            expect(sheet._dataValidations).toEqualJson({
+                ADDRESS1: {},
+                ADDRESS2: {}
+            });
+
+            expect(sheet.dataValidation("ADDRESS1", false)).toBe(true);
+            expect(sheet._dataValidations).toEqualJson({
+                ADDRESS2: {}
+            });
+
+            expect(sheet.dataValidation("ADDRESS2", false)).toBe(true);
+            expect(sheet._dataValidations).toEqualJson({});
+        });
+
+    });
+
     describe("hyperlink", () => {
         it("should return the hyperlink", () => {
             sheet._hyperlinks = {
@@ -824,7 +927,16 @@ describe("Sheet", () => {
 
         it("should add the hyperlinks and merge cells in the proper order", () => {
             sheet._mergeCells = { "A1:B2": "MERGE1" };
+            sheet._dataValidations['A1'] = {
+                name: "dataValidation",
+                attributes: {
+                    type: 'list',
+                    sqref: 'A1'
+                },
+                children: ['STUFF']
+            };
             sheet._hyperlinks = { A1: "HYPERLINK1" };
+
             expect(sheet.toXmls().sheet.children).toEqualJson([
                 { name: 'sheetPr', attributes: {}, children: [] },
                 { name: 'sheetFormatPr', attributes: {}, children: [] },
@@ -833,6 +945,20 @@ describe("Sheet", () => {
                     name: 'mergeCells',
                     attributes: {},
                     children: ["MERGE1"]
+                },
+                {
+                    name: 'dataValidations',
+                    attributes: {},
+                    children: [
+                        {
+                            name: "dataValidation",
+                            attributes: {
+                                type: 'list',
+                                sqref: 'A1'
+                            },
+                            children: ['STUFF']
+                        }
+                    ]
                 },
                 {
                     name: 'hyperlinks',
@@ -1040,5 +1166,132 @@ describe("Sheet", () => {
                 C3: { name: 'hyperlink', attributes: { ref: "C3", bar: true } }
             });
         });
+
+
+        it("should parse the dataValidations", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", attributes: {}, children: [] },
+                    {
+                        name: 'dataValidations',
+                        children: [
+                            {
+                                name: "dataValidation",
+                                attributes: {
+                                    type: 'list',
+                                    allowBlank: false,
+                                    showInputMessage: false,
+                                    prompt: '',
+                                    promptTitle: '',
+                                    showErrorMessage: false,
+                                    error: '',
+                                    errorTitle: '',
+                                    operator: '',
+                                    sqref: 'A1'
+                                },
+                                children: [
+                                    {
+                                        name: 'formula1',
+                                        atrributes: {},
+                                        children: ['test1, test2, test3']
+                                    },
+                                    {
+                                        name: 'formula2',
+                                        atrributes: {},
+                                        children: ['']
+                                    }
+                                ]
+                            },
+                            {
+                                name: "dataValidation",
+                                attributes: {
+                                    type: 'list',
+                                    allowBlank: false,
+                                    showInputMessage: false,
+                                    prompt: '',
+                                    promptTitle: '',
+                                    showErrorMessage: false,
+                                    error: '',
+                                    errorTitle: '',
+                                    operator: '',
+                                    sqref: 'A2'
+                                },
+                                children: [
+                                    {
+                                        name: 'formula1',
+                                        atrributes: {},
+                                        children: ['test1, test2, test3']
+                                    },
+                                    {
+                                        name: 'formula2',
+                                        atrributes: {},
+                                        children: ['']
+                                    }
+                                ]
+                            },
+                        ]
+                    }
+                ]
+            });
+
+            expect(sheet._dataValidations).toEqualJson({
+                A1: {
+                    name: "dataValidation",
+                    attributes: {
+                        type: 'list',
+                        allowBlank: false,
+                        showInputMessage: false,
+                        prompt: '',
+                        promptTitle: '',
+                        showErrorMessage: false,
+                        error: '',
+                        errorTitle: '',
+                        operator: '',
+                        sqref: 'A1'
+                    },
+                    children: [
+                        {
+                            name: 'formula1',
+                            atrributes: {},
+                            children: ['test1, test2, test3']
+                        },
+                        {
+                            name: 'formula2',
+                            atrributes: {},
+                            children: ['']
+                        }
+                    ]
+                },
+                A2: {
+                    name: "dataValidation",
+                    attributes: {
+                        type: 'list',
+                        allowBlank: false,
+                        showInputMessage: false,
+                        prompt: '',
+                        promptTitle: '',
+                        showErrorMessage: false,
+                        error: '',
+                        errorTitle: '',
+                        operator: '',
+                        sqref: 'A2'
+                    },
+                    children: [
+                        {
+                            name: 'formula1',
+                            atrributes: {},
+                            children: ['test1, test2, test3']
+                        },
+                        {
+                            name: 'formula2',
+                            atrributes: {},
+                            children: ['']
+                        }
+                    ]
+                }
+            });
+        });
+
     });
 });

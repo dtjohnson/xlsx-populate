@@ -19,6 +19,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Defined Names](#defined-names)
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
+  * [DataValidation](#datavalidation)
   * [Dates](#dates)
   * [Method Chaining](#method-chaining)
   * [Hyperlinks](#hyperlinks)
@@ -354,6 +355,66 @@ You can also look up the desired format code in Excel:
 * Click on "Format Cells..."
 * Switch the category to "Custom" if it is not already.
 * The code in the "Type" box is the format you should copy.
+
+### DataValidation
+xlsx-populate supports DataValidation. See the [DataValidation](#datavalidation) for the various options.
+
+To set/get/remove a cell DataValidation:
+```js
+// Set the DataValidation
+cell.dataValidation({
+    type: 'list',
+    allowBlank: false, 
+    showInputMessage: false,
+    prompt: false,
+    promptTitle: 'String',
+    showErrorMessage: false,
+    error: 'String',
+    errorTitle: 'String',
+    operator: 'String',
+    formula1: '$A:$A',//Required
+    formula2: 'String'
+});
+
+//Here is a short version of the one above.
+cell.dataValidation('$A:$A');
+
+// Get the DataValidation
+const obj = cell.dataValidation(); // Returns a Object
+
+// Remove the DataValidation
+cell.dataValidation(null); //Returns the cell
+```
+
+Similarly for ranges:
+```js
+
+// Set all cells in range with a single DataValidation
+range.dataValidation({
+    type: 'list',
+    allowBlank: false, 
+    showInputMessage: false,
+    prompt: false,
+    promptTitle: 'String',
+    showErrorMessage: false,
+    error: 'String',
+    errorTitle: 'String',
+    operator: 'String',
+    formula1: 'Item1,Item2,Item3,Item4',//Required
+    formula2: 'String'
+});
+
+//Here is a short version of the one above.
+range.dataValidation('Item1,Item2,Item3,Item4');
+
+// Get the DataValidation
+const obj = range.dataValidation(); // Returns a Object
+
+// Remove the DataValidation
+range.dataValidation(null); //Returns the range
+```
+
+Please note, DataValidation getts applied to the Range, NOT each Cell in the range.
 
 ### Dates
 
@@ -738,6 +799,8 @@ A cell
         * [.formula(formula)](#Cell+formula) ⇒ <code>[Cell](#Cell)</code>
         * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> &#124; <code>undefined</code>
         * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ <code>[Cell](#Cell)</code>
+        * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> &#124; <code>undefined</code>
+        * [.dataValidation(DataValidation)](#Cell+dataValidation) ⇒ <code>[Cell](#Cell)</code>
         * [.tap(callback)](#Cell+tap) ⇒ <code>[Cell](#Cell)</code>
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
         * [.rangeTo(cell)](#Cell+rangeTo) ⇒ <code>[Range](#Range)</code>
@@ -869,6 +932,25 @@ Set or clear the hyperlink on the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | hyperlink | <code>string</code> &#124; <code>undefined</code> | The hyperlink to set or undefined to clear. |
+
+<a name="Cell+dataValidation"></a>
+
+#### cell.dataValidation() ⇒ <code>object</code> &#124; <code>undefined</code>
+Gets the DataValidation Object attached to the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>object</code> &#124; <code>undefined</code> - The DataValidation or undefined if not set.  
+<a name="Cell+dataValidation"></a>
+
+#### cell.dataValidation(DataValidation) ⇒ <code>[Cell](#Cell)</code>
+Set or clear the DataValidation Object of the cell.
+
+**Kind**: instance method of <code>[Cell](#Cell)</code>  
+**Returns**: <code>[Cell](#Cell)</code> - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| DataValidation | <code>object</code> &#124; <code>undefined</code> | Object or null to clear. |
 
 <a name="Cell+tap"></a>
 
@@ -1290,6 +1372,8 @@ A range of cells.
         * [.map(callback)](#Range+map) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
         * [.merged()](#Range+merged) ⇒ <code>boolean</code>
         * [.merged(merged)](#Range+merged) ⇒ <code>[Range](#Range)</code>
+        * [.dataValidation()](#Range+dataValidation) ⇒ <code>object</code> &#124; <code>undefined</code>
+        * [.dataValidation(DataValidation)](#Range+dataValidation) ⇒ <code>[Range](#Range)</code>
         * [.reduce(callback, [initialValue])](#Range+reduce) ⇒ <code>\*</code>
         * [.sheet()](#Range+sheet) ⇒ <code>[Sheet](#Sheet)</code>
         * [.startCell()](#Range+startCell) ⇒ <code>[Cell](#Cell)</code>
@@ -1426,6 +1510,25 @@ Sets a value indicating whether the cells in the range should be merged.
 | Param | Type | Description |
 | --- | --- | --- |
 | merged | <code>boolean</code> | True to merge, false to unmerge. |
+
+<a name="Range+dataValidation"></a>
+
+#### range.dataValidation() ⇒ <code>object</code> &#124; <code>undefined</code>
+Gets the DataValidation Object attached to the Range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>object</code> &#124; <code>undefined</code> - The DataValidation or undefined if not set.  
+<a name="Range+dataValidation"></a>
+
+#### range.dataValidation(DataValidation) ⇒ <code>[Range](#Range)</code>
+Set or clear the DataValidation Object of the entire range.
+
+**Kind**: instance method of <code>[Range](#Range)</code>  
+**Returns**: <code>[Range](#Range)</code> - The Range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| DataValidation | <code>object</code> &#124; <code>undefined</code> | Object or null to clear. |
 
 <a name="Range+reduce"></a>
 

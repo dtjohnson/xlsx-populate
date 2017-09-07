@@ -29,12 +29,13 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation']);
         sheet.activeCell.and.returnValue("ACTIVE CELL");
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
         sheet.hyperlink.and.returnValue("HYPERLINK");
         sheet.range.and.returnValue("RANGE");
+        sheet.dataValidation.and.returnValue("DATAVALIDATION");
 
         row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber']);
         row.sheet.and.returnValue(sheet);
@@ -196,6 +197,47 @@ describe("Cell", () => {
             expect(cell.hyperlink("HYPERLINK")).toBe(cell);
             expect(sheet.hyperlink).toHaveBeenCalledWith("C7", "HYPERLINK");
         });
+    });
+
+    describe('dataValidation', () => {
+        it('should return the cell', () => {
+            expect(cell.dataValidation('testing, testing2')).toBe(cell);
+            expect(sheet.dataValidation).toHaveBeenCalledWith('C7', 'testing, testing2');
+        });
+
+        it('should return the cell', () => {
+            expect(cell.dataValidation({ type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'test1, test2, test3',
+                formula2: ''
+            })).toBe(cell);
+
+            expect(sheet.dataValidation).toHaveBeenCalledWith('C7', { type: 'list',
+                allowBlank: false,
+                showInputMessage: false,
+                prompt: '',
+                promptTitle: '',
+                showErrorMessage: false,
+                error: '',
+                errorTitle: '',
+                operator: '',
+                formula1: 'test1, test2, test3',
+                formula2: ''
+            });
+        })
+
+        it("should get the dataValidation from the cell", () => {
+            expect(cell.dataValidation()).toBe("DATAVALIDATION");
+            expect(sheet.dataValidation).toHaveBeenCalledWith("C7");
+        });
+        
     });
 
     describe("find", () => {

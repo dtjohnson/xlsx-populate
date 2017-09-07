@@ -22,7 +22,8 @@
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [
-    "Eddie Corrigall <eddiecorrigall@gmail.com>"
+    "Eddie Corrigall <eddiecorrigall@gmail.com>",
+    "Alan Doyle <alandoyle95@gmail.com>"
   ],
   "license": "MIT",
   "dependencies": {

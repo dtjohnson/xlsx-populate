@@ -10,7 +10,6 @@ Backlog of features to implement (in no particular order):
 * Conditional formatting
 * Print settings
 * Autofilters
-* Data validation
 * Formula parsing
 * Charts
 * Cell comments. Will require rich text parsing. A comments relationship is creating in the sheet rels file that points to a commentsN.xml file.
