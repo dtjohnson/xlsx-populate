@@ -163,6 +163,13 @@ const newSheet3 = workbook.addSheet('New 3', 'Sheet1');
 const sheet = workbook.sheet('Sheet1');
 const newSheet4 = workbook.addSheet('New 4', sheet);
 ```
+*Note: the sheet rename method does not rename references to the sheet so formulas, etc. can be broken. Use with caution!*
+
+You can rename sheets:
+```js
+// Rename the first sheet.
+const sheet = workbook.sheet(0).name("new sheet name");
+```
 
 You can move sheets:
 ```js
@@ -1943,16 +1950,20 @@ A worksheet.
     * [.definedName(name, refersTo)](#Sheet+definedName) ⇒ <code>[Workbook](#Workbook)</code>
     * [.delete()](#Sheet+delete) ⇒ <code>[Workbook](#Workbook)</code>
     * [.find(pattern, [replacement])](#Sheet+find) ⇒ <code>[Array.&lt;Cell&gt;](#Cell)</code>
+    * [.gridLinesVisible()](#Sheet+gridLinesVisible) ⇒ <code>boolean</code>
+    * [.gridLinesVisible(selected)](#Sheet+gridLinesVisible) ⇒ <code>[Sheet](#Sheet)</code>
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> &#124; <code>string</code>
     * [.hidden(hidden)](#Sheet+hidden) ⇒ <code>[Sheet](#Sheet)</code>
     * [.move([indexOrBeforeSheet])](#Sheet+move) ⇒ <code>[Sheet](#Sheet)</code>
     * [.name()](#Sheet+name) ⇒ <code>string</code>
+    * [.name(name)](#Sheet+name) ⇒ <code>[Sheet](#Sheet)</code>
     * [.range(address)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startCell, endCell)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ <code>[Range](#Range)</code>
     * [.row(rowNumber)](#Sheet+row) ⇒ <code>[Row](#Row)</code>
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>undefined</code> &#124; <code>Color</code>
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>Color</code> &#124; <code>string</code> &#124; <code>number</code>
+    * [.tabSelected()](#Sheet+tabSelected) ⇒ <code>boolean</code>
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ <code>[Sheet](#Sheet)</code>
     * [.usedRange()](#Sheet+usedRange) ⇒ <code>[Range](#Range)</code> &#124; <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ <code>[Workbook](#Workbook)</code>
@@ -2090,6 +2101,25 @@ Find the given pattern in the sheet and optionally replace it.
 | pattern | <code>string</code> &#124; <code>RegExp</code> | The pattern to look for. Providing a string will result in a case-insensitive substring search. Use a RegExp for more sophisticated searches. |
 | [replacement] | <code>string</code> &#124; <code>function</code> | The text to replace or a String.replace callback function. If pattern is a string, all occurrences of the pattern in each cell will be replaced. |
 
+<a name="Sheet+gridLinesVisible"></a>
+
+#### sheet.gridLinesVisible() ⇒ <code>boolean</code>
+Gets a value indicating whether this sheet's grid lines are visible.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>boolean</code> - True if selected, false if not.  
+<a name="Sheet+gridLinesVisible"></a>
+
+#### sheet.gridLinesVisible(selected) ⇒ <code>[Sheet](#Sheet)</code>
+Sets whether this sheet's grid lines are visible.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| selected | <code>boolean</code> | True to make visible, false to hide. |
+
 <a name="Sheet+hidden"></a>
 
 #### sheet.hidden() ⇒ <code>boolean</code> &#124; <code>string</code>
@@ -2128,6 +2158,18 @@ Get the name of the sheet.
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
 **Returns**: <code>string</code> - The sheet name.  
+<a name="Sheet+name"></a>
+
+#### sheet.name(name) ⇒ <code>[Sheet](#Sheet)</code>
+Set the name of the sheet. *Note: this method does not rename references to the sheet so formulas, etc. can be broken. Use with caution!*
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>[Sheet](#Sheet)</code> - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name to set to the sheet. |
+
 <a name="Sheet+range"></a>
 
 #### sheet.range(address) ⇒ <code>[Range](#Range)</code>
@@ -2194,6 +2236,13 @@ Sets the tab color. (See style [Color](#color).)
 
 **Kind**: instance method of <code>[Sheet](#Sheet)</code>  
 **Returns**: <code>Color</code> &#124; <code>string</code> &#124; <code>number</code> - color - Color of the tab. If string, will set an RGB color. If number, will set a theme color.  
+<a name="Sheet+tabSelected"></a>
+
+#### sheet.tabSelected() ⇒ <code>boolean</code>
+Gets a value indicating whether this sheet is selected.
+
+**Kind**: instance method of <code>[Sheet](#Sheet)</code>  
+**Returns**: <code>boolean</code> - True if selected, false if not.  
 <a name="Sheet+tabSelected"></a>
 
 #### sheet.tabSelected(selected) ⇒ <code>[Sheet](#Sheet)</code>
