@@ -28,3 +28,4 @@ node_modules
 .lock-wscript
 
 .idea
+examples/drawings/out.xlsx
