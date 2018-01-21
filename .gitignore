@@ -29,3 +29,4 @@ node_modules
 
 .idea
 examples/drawings/out.xlsx
+examples/drawings/~$out.xlsx
