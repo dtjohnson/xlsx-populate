@@ -5,7 +5,7 @@ process.chdir(__dirname);
 const fs = require("fs");
 const glob = require("glob");
 const path = require("path");
-const edge = require('edge');
+const edge = require('edge-js');
 
 const XlsxPopulate = require("../../lib/XlsxPopulate");
 
