@@ -73,7 +73,7 @@
         return getWorkbook()
             .then(function (workbook) {
                 workbook.sheet(0).cell("A1").value("This was created in the browser!").style("fontColor", "ff0000");
-                return workbook.outputAsync(type);
+                return workbook.outputAsync({ type: type });
             })
     }
 

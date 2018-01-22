@@ -4,6 +4,9 @@
     "node": true,
     "es6": true
   },
+  "globals": {
+    "Blob": true
+  },
   "rules": {
     /* Possible Errors */
     "comma-dangle": [2, "never"],
