@@ -12,12 +12,13 @@ const XlsxPopulate = require("../../lib/XlsxPopulate");
 const interopPath = glob.sync("C:\\Program Files (x86)\\Microsoft Office\\root\\Office*\\DCF\\Microsoft.Office.Interop.Excel.dll")[0];
 if (!interopPath) throw new Error("Unable to find the Microsoft.Office.Interop.Excel.dll!");
 
-// const testCases = ["./preserve-existing/"]; // To focus
+// const testCases = ["./encrypted/"]; // To focus
 const testCases = glob.sync("./*/");
 
 describe("e2e-generate", () => {
     testCases.map(testCase => {
         itAsync(testCase, () => {
+            const password = fs.existsSync(`${testCase}password.txt`) && fs.readFileSync(`${testCase}password.txt`, "utf8");
             return Promise.resolve()
                 .then(() => {
                     if (fs.existsSync(`${testCase}template.xlsx`)) {
@@ -31,7 +32,7 @@ describe("e2e-generate", () => {
                     generate(workbook);
                     return workbook;
                 })
-                .then(workbook => workbook.toFileAsync(`${testCase}out.xlsx`))
+                .then(workbook => workbook.toFileAsync(`${testCase}out.xlsx`, { password }))
                 .then(() => new Promise((resolve, reject) => {
                     const wbPath = path.resolve(`${testCase}out.xlsx`);
                     const parseSource = fs.readFileSync(`${testCase}parse.cs`);
@@ -43,7 +44,7 @@ describe("e2e-generate", () => {
                         references: ["System.Drawing.dll", interopPath]
                     });
 
-                    parse(wbPath, (err, results) => {
+                    parse({ path: wbPath, password }, (err, results) => {
                         if (err) return reject(err);
                         resolve(results);
                     });
