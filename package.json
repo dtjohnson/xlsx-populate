@@ -12,7 +12,9 @@
     "template",
     "browser",
     "style",
-    "formatting"
+    "formatting",
+    "encryption",
+    "password"
   ],
   "main": "lib/XlsxPopulate.js",
   "scripts": {

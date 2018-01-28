@@ -5,7 +5,7 @@ const proxyquire = require("proxyquire");
 const Promise = require("jszip").external.Promise;
 
 describe("Workbook", () => {
-    let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, blank;
+    let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, Encryptor, blank;
 
     beforeEach(() => {
         // Resolve a promise with a small random delay so they resolve out of order.
@@ -95,6 +95,10 @@ describe("Workbook", () => {
         XmlBuilder = jasmine.createSpy("XmlBuilder");
         XmlBuilder.prototype.build = jasmine.createSpy("XmlBuilder.build").and.callFake(obj => `XML: ${obj && obj.toString()}`);
 
+        Encryptor = jasmine.createSpy("Encryptor");
+        Encryptor.prototype.encrypt = jasmine.createSpy("Encryptor.encrypt").and.callFake(input => `ENCRYPTED(${input})`);
+        Encryptor.prototype.decryptAsync = jasmine.createSpy("Encryptor.decryptAsync").and.callFake(input => Promise.resolve(`DECRYPTED(${input})`));
+
         blank = () => "BLANK";
 
         // proxyquire doesn't like overriding raw objects... a spy obj works.
@@ -112,6 +116,7 @@ describe("Workbook", () => {
             './ContentTypes': ContentTypes,
             './XmlParser': XmlParser,
             './XmlBuilder': XmlBuilder,
+            './Encryptor': Encryptor,
             './blank': blank,
             '@noCallThru': true
         });
@@ -126,7 +131,7 @@ describe("Workbook", () => {
             itAsync("should init with blank data", () => {
                 return Workbook.fromBlankAsync()
                     .then(workbook => {
-                        expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("BLANK");
+                        expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("BLANK", undefined);
                         expect(workbook).toBe("WORKBOOK");
                     });
             });
@@ -134,9 +139,9 @@ describe("Workbook", () => {
 
         describe("fromDataAsync", () => {
             itAsync("should init with the data", () => {
-                return Workbook.fromDataAsync("DATA")
+                return Workbook.fromDataAsync("DATA", "OPTS")
                     .then(workbook => {
-                        expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("DATA");
+                        expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("DATA", "OPTS");
                         expect(workbook).toBe("WORKBOOK");
                     });
             });
@@ -151,9 +156,9 @@ describe("Workbook", () => {
 
             if (!process.browser) {
                 itAsync("should init with the file data", () => {
-                    return Workbook.fromFileAsync("PATH")
+                    return Workbook.fromFileAsync("PATH", "OPTS")
                         .then(workbook => {
-                            expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("DATA");
+                            expect(Workbook.prototype._initAsync).toHaveBeenCalledWith("DATA", "OPTS");
                             expect(fs.readFile).toHaveBeenCalledWith("PATH", jasmine.any(Function));
                             expect(workbook).toBe("WORKBOOK");
                         });
@@ -385,12 +390,13 @@ describe("Workbook", () => {
                     return relationship;
                 });
                 spyOn(workbook, "_setSheetRefs");
+                spyOn(workbook, "_convertBufferToOutput").and.returnValue("OUTPUT");
             });
 
             itAsync("should output the data", () => {
-                return workbook.outputAsync('TYPE')
-                    .then(zip => {
-                        expect(zip).toBe("ZIP");
+                return workbook.outputAsync({ type: "TYPE" })
+                    .then(output => {
+                        expect(output).toBe("OUTPUT");
 
                         expect(workbook._setSheetRefs).toHaveBeenCalledWith();
 
@@ -404,9 +410,8 @@ describe("Workbook", () => {
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/sheet2.xml", "XML: SHEET", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/worksheets/_rels/sheet2.xml.rels", "XML: RELATIONSHIPS", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
-                            type: 'TYPE',
-                            compression: "DEFLATE",
-                            mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            type: 'nodebuffer',
+                            compression: "DEFLATE"
                         });
                         expect(relationships).toEqualJson([
                             { attributes: { Target: "worksheets/sheet1.xml" } },
@@ -416,34 +421,19 @@ describe("Workbook", () => {
                             { attributes: { 'r:id': "RID" } },
                             { attributes: { 'r:id': "RID" } }
                         ]);
+                        expect(Encryptor.prototype.encrypt).not.toHaveBeenCalled();
+                        expect(workbook._convertBufferToOutput).toHaveBeenCalledWith("ZIP", "TYPE");
                     });
             });
 
-            if (!process.browser) {
-                itAsync("should default type to buffer if node", () => {
-                    return workbook.outputAsync()
-                        .then(() => {
-                            expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
-                                type: 'nodebuffer',
-                                compression: "DEFLATE",
-                                mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                            });
-                        });
-                });
-            }
-
-            if (process.browser) {
-                itAsync("should default type to blob if browser", () => {
-                    return workbook.outputAsync()
-                        .then(() => {
-                            expect(workbook._zip.generateAsync).toHaveBeenCalledWith({
-                                type: 'blob',
-                                compression: "DEFLATE",
-                                mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                            });
-                        });
-                });
-            }
+            itAsync("should encrypt the workbook is password is set", () => {
+                return workbook.outputAsync({ password: "PASSWORD" })
+                    .then(output => {
+                        expect(Encryptor.prototype.encrypt).toHaveBeenCalledWith("ZIP", "PASSWORD");
+                        expect(workbook._convertBufferToOutput).toHaveBeenCalledWith("ENCRYPTED(ZIP)", undefined);
+                        expect(output).toBe("OUTPUT");
+                    });
+            });
         });
 
         describe("sheet", () => {
@@ -622,14 +612,19 @@ describe("Workbook", () => {
                     }));
                 });
                 spyOn(workbook, "_parseSheetRefs");
+                spyOn(workbook, "_convertInputToBufferAsync").and.returnValue(Promise.resolve("BUFFER"));
             });
 
             itAsync("should extract the files from the data zip and load the objects", () => {
-                return workbook._initAsync("DATA")
+                return workbook._initAsync("DATA", { base64: "BASE64" })
                     .then(wb => {
                         expect(wb).toBe(workbook);
 
-                        expect(JSZip.loadAsync).toHaveBeenCalledWith("DATA");
+                        expect(workbook._convertInputToBufferAsync).toHaveBeenCalledWith("DATA", "BASE64");
+
+                        expect(Encryptor.prototype.decryptAsync).not.toHaveBeenCalled();
+
+                        expect(JSZip.loadAsync).toHaveBeenCalledWith("BUFFER");
                         expect(workbook._zip).toEqual(jasmine.any(JSZip));
 
                         expect(workbook._contentTypes).toEqual(jasmine.any(ContentTypes));
@@ -662,6 +657,16 @@ describe("Workbook", () => {
                         expect(workbook._maxSheetId).toBe(9);
 
                         expect(workbook._parseSheetRefs).toHaveBeenCalledWith();
+                    });
+            });
+
+            itAsync("should decrypte the data if a password is set", () => {
+                return workbook._initAsync("DATA", { password: "PASSWORD" })
+                    .then(wb => {
+                        expect(wb).toBe(workbook);
+                        expect(workbook._convertInputToBufferAsync).toHaveBeenCalledWith("DATA", undefined);
+                        expect(Encryptor.prototype.decryptAsync).toHaveBeenCalledWith("BUFFER", "PASSWORD");
+                        expect(JSZip.loadAsync).toHaveBeenCalledWith("DECRYPTED(BUFFER)");
                     });
             });
 
@@ -858,6 +863,129 @@ describe("Workbook", () => {
                         }
                     ]
                 });
+            });
+        });
+
+        describe("_convertBufferToOutput", () => {
+            if (!process.browser) {
+                it("should default to buffer in Node", () => {
+                    const input = Buffer.alloc(5);
+                    const output = workbook._convertBufferToOutput(input);
+                    expect(Buffer.isBuffer(output)).toBe(true);
+                });
+            }
+
+            if (process.browser) {
+                it("should default to blob in browser", () => {
+                    const input = Buffer.alloc(5);
+                    const output = workbook._convertBufferToOutput(input);
+                    expect(output).toEqual(jasmine.any(Blob));
+                });
+            }
+
+            it("should return buffers unchanged", () => {
+                const input = Buffer.alloc(5);
+                const output = workbook._convertBufferToOutput(input, "nodebuffer");
+                expect(output).toBe(input);
+            });
+
+            if (process.browser) {
+                itAsync("should convert to a blob", () => {
+                    const input = Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]);
+                    const output = workbook._convertBufferToOutput(input, "blob");
+                    expect(output).toEqual(jasmine.any(Blob));
+
+                    return new Promise(resolve => {
+                        const fileReader = new FileReader();
+                        fileReader.onload = event => {
+                            resolve(event.target.result);
+                        };
+                        fileReader.readAsArrayBuffer(output);
+                    }).then(buffer => {
+                        expect(new Uint8Array(buffer)).toEqualUInt8Array(input);
+                    });
+                });
+            }
+
+            it("should convert to a base64 string", () => {
+                const input = Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]);
+                const output = workbook._convertBufferToOutput(input, "base64");
+                expect(output).toEqual("Zm9vYmFy");
+            });
+
+            it("should convert to a binary string", () => {
+                const input = Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]);
+                const output = workbook._convertBufferToOutput(input, "binarystring");
+                expect(output).toEqual("foobar");
+            });
+
+            it("should convert to a Uint8Array", () => {
+                const input = Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]);
+                const output = workbook._convertBufferToOutput(input, "uint8array");
+                expect(output).toEqual(jasmine.any(Uint8Array));
+                expect(output).toEqualUInt8Array(input);
+            });
+
+            it("should convert to an ArrayBuffer", () => {
+                const input = Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]);
+                const output = workbook._convertBufferToOutput(input, "arraybuffer");
+                expect(output).toEqual(jasmine.any(ArrayBuffer));
+                expect(new Uint8Array(output)).toEqualUInt8Array(input);
+            });
+        });
+
+        describe("_convertInputToBufferAsync", () => {
+            itAsync("should return buffers unchanged", () => {
+                const input = Buffer.alloc(5);
+                return workbook._convertInputToBufferAsync(input)
+                    .then(output => {
+                        expect(output).toBe(input);
+                    });
+            });
+
+            if (process.browser) {
+                itAsync("should convert a blob", () => {
+                    const input = new Blob([new Uint8Array([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72])], { type: Workbook.MIME_TYPE });
+                    return workbook._convertInputToBufferAsync(input)
+                        .then(output => {
+                            expect(Buffer.isBuffer(output)).toBe(true);
+                            expect(output).toEqualUInt8Array(Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]));
+                        });
+                });
+            }
+
+            itAsync("should convert a base64 string", () => {
+                return workbook._convertInputToBufferAsync("Zm9vYmFy", true)
+                    .then(output => {
+                        expect(Buffer.isBuffer(output)).toBe(true);
+                        expect(output).toEqualUInt8Array(Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]));
+                    });
+            });
+
+            itAsync("should convert a binary string", () => {
+                return workbook._convertInputToBufferAsync("foobar")
+                    .then(output => {
+                        expect(Buffer.isBuffer(output)).toBe(true);
+                        expect(output).toEqualUInt8Array(Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]));
+                    });
+            });
+
+            itAsync("should convert a Uint8Array", () => {
+                const input = new Uint8Array([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72])
+                return workbook._convertInputToBufferAsync(input)
+                    .then(output => {
+                        expect(Buffer.isBuffer(output)).toBe(true);
+                        expect(output).toEqualUInt8Array(Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]));
+                    });
+            });
+
+            itAsync("should convert an ArrayBuffer", () => {
+                const input = new Uint8Array([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]).buffer;
+                return workbook._convertInputToBufferAsync(input)
+                    .then(output => {
+                        expect(Buffer.isBuffer(output)).toBe(true);
+                        expect(output).toEqualUInt8Array(Buffer.from([0x66, 0x6f, 0x6f, 0x62, 0x61, 0x72]));
+                    });
             });
         });
     });
