@@ -4,7 +4,7 @@
 [![Dependency Status](https://david-dm.org/dtjohnson/xlsx-populate.svg)](https://david-dm.org/dtjohnson/xlsx-populate)
 
 # xlsx-populate
-Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.
+Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, encryption, and a focus on keeping existing workbook features and styles in tact.
 
 ## Table of Contents
 <!-- toc -->
@@ -527,6 +527,23 @@ const Promise = require("bluebird");
 const XlsxPopulate = require("xlsx-populate");
 XlsxPopulate.Promise = Promise;
 ```
+
+### Encryption
+XLSX Agile encryption and descryption are supported so you can read and write password-protected workbooks. To read a protected workbook, pass the password in as an option:
+```js
+XlsxPopulate.fromFileAsync("./Book1.xlsx", { password: "S3cret!" })
+    .then(workbook => {
+        // ...
+    });
+```
+
+Similarly, to write a password encrypted workbook:
+```js
+workbook.toFileAsync("./out.xlsx", { password: "S3cret!" });
+```
+The password option is supported in all output methods. N.B. Workbooks will only be encrypted if you supply a password when outputting even if they had a password when reading.
+
+Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.  
 
 ## Missing Features
 There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn't supported

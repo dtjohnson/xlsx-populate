@@ -5,7 +5,8 @@
     "es6": true
   },
   "globals": {
-    "Blob": true
+    "Blob": true,
+    "FileReader": true
   },
   "rules": {
     /* Possible Errors */

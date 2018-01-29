@@ -48,15 +48,15 @@ describe("XlsxPopulate", () => {
 
     describe("fromDataAsync", () => {
         it("should call Workbook.fromDataAsync", () => {
-            expect(XlsxPopulate.fromDataAsync("DATA")).toBe("WORKBOOK");
-            expect(Workbook.fromDataAsync).toHaveBeenCalledWith("DATA");
+            expect(XlsxPopulate.fromDataAsync("DATA", "OPTS")).toBe("WORKBOOK");
+            expect(Workbook.fromDataAsync).toHaveBeenCalledWith("DATA", "OPTS");
         });
     });
 
     describe("fromFileAsync", () => {
         it("should call Workbook.fromFileAsync", () => {
-            expect(XlsxPopulate.fromFileAsync("PATH")).toBe("WORKBOOK");
-            expect(Workbook.fromFileAsync).toHaveBeenCalledWith("PATH");
+            expect(XlsxPopulate.fromFileAsync("PATH", "OPTS")).toBe("WORKBOOK");
+            expect(Workbook.fromFileAsync).toHaveBeenCalledWith("PATH", "OPTS");
         });
     });
 

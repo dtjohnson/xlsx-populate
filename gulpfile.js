@@ -29,7 +29,9 @@ const PATHS = {
         source: "./lib/XlsxPopulate.js",
         base: "./browser",
         bundle: "xlsx-populate.js",
-        sourceMap: "./"
+        noEncryptionBundle: "xlsx-populate-no-encryption.js",
+        sourceMap: "./",
+        encryptionIngores: ["./lib/Encryptor.js"]
     },
     readme: {
         template: "./docs/template.md",
@@ -83,7 +85,11 @@ const runKarma = (files, cb) => {
             }
         },
         singleRun: true,
-        autoWatch: false
+        autoWatch: false,
+        captureTimeout: 210000,
+        browserDisconnectTolerance: 3,
+        browserDisconnectTimeout : 210000,
+        browserNoActivityTimeout : 210000
     }, cb).start();
 };
 
@@ -96,20 +102,31 @@ const runJasmine = (configPath, cb) => {
     jasmine.execute();
 };
 
-gulp.task('browser', ['blank'], () => {
+const runBrowserify = (ignores, bundle) => {
     return browserify({
         entries: PATHS.browserify.source,
         debug: true,
         standalone: BROWSERIFY_STANDALONE_NAME
     })
+        .ignore(ignores)
         .transform("babelify", BABEL_CONFIG)
         .bundle()
-        .pipe(source(PATHS.browserify.bundle))
+        .pipe(source(bundle))
         .pipe(buffer())
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
         .pipe(sourcemaps.write(PATHS.browserify.sourceMap))
         .pipe(gulp.dest(PATHS.browserify.base));
+}
+
+gulp.task('browser', ['browser-full', 'browser-no-encryption']);
+
+gulp.task('browser-full', ['blank'], () => {
+    return runBrowserify([], PATHS.browserify.bundle);
+});
+
+gulp.task('browser-no-encryption', ['blank'], () => {
+    return runBrowserify([PATHS.browserify.encryptionIngores], PATHS.browserify.noEncryptionBundle);
 });
 
 gulp.task("lint", () => {
