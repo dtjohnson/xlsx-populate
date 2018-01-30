@@ -3,7 +3,7 @@
 const proxyquire = require("proxyquire");
 
 describe("Cell", () => {
-    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError;
+    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
 
     beforeEach(() => {
         FormulaError = jasmine.createSpyObj("FormulaError", ["getError"]);
@@ -29,12 +29,14 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
 
+        range = jasmine.createSpyObj('range', ['value', 'style']);
+
         sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation']);
         sheet.activeCell.and.returnValue("ACTIVE CELL");
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
         sheet.hyperlink.and.returnValue("HYPERLINK");
-        sheet.range.and.returnValue("RANGE");
+        sheet.range.and.returnValue(range);
         sheet.dataValidation.and.returnValue("DATAVALIDATION");
 
         row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber']);
@@ -314,7 +316,7 @@ describe("Cell", () => {
 
     describe("rangeTo", () => {
         it("should create a range", () => {
-            expect(cell.rangeTo("OTHER")).toBe("RANGE");
+            expect(cell.rangeTo("OTHER")).toBe(range);
             expect(sheet.range).toHaveBeenCalledWith(cell, "OTHER");
         });
     });
@@ -389,6 +391,13 @@ describe("Cell", () => {
             expect(style.style).toHaveBeenCalledWith("foo", "value");
         });
 
+        it("should set the values in the range", () => {
+            spyOn(cell, "relativeCell");
+            cell.style("foo", [[1, 2], [3, 4], [5, 6]]);
+            expect(cell.relativeCell).toHaveBeenCalledWith(2, 1);
+            expect(range.style).toHaveBeenCalledWith("foo", [[1, 2], [3, 4], [5, 6]]);
+        });
+
         it("should set multiple styles", () => {
             expect(cell.style({
                 foo: "FOO", bar: "BAR", baz: "BAZ"
@@ -421,6 +430,13 @@ describe("Cell", () => {
             cell.value(5.6);
             expect(cell._value).toBe(5.6);
             expect(cell.clear).toHaveBeenCalledWith();
+        });
+
+        it("should set the values in the range", () => {
+            spyOn(cell, "relativeCell");
+            cell.value([[1, 2], [3, 4]]);
+            expect(cell.relativeCell).toHaveBeenCalledWith(1, 1);
+            expect(range.value).toHaveBeenCalledWith([[1, 2], [3, 4]]);
         });
     });
 

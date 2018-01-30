@@ -96,6 +96,16 @@ A common use case is to simply pull all of the values out all at once. You can e
 const values = workbook.sheet("Sheet1").usedRange().value();
 ```
 
+Alternatively, you can set the values in a range with only the top-left cell in the range:
+```js
+workbook.sheet(0).cell("A1").value([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]);
+```
+The set range is returned.
+
 ### Rows and Columns
 
 You can access rows and columns in order to change size, hide/show, or access cells within:

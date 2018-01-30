@@ -124,6 +124,16 @@ A common use case is to simply pull all of the values out all at once. You can e
 const values = workbook.sheet("Sheet1").usedRange().value();
 ```
 
+Alternatively, you can set the values in a range with only the top-left cell in the range:
+```js
+workbook.sheet(0).cell("A1").value([
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]);
+```
+The set range is returned.
+
 ### Rows and Columns
 
 You can access rows and columns in order to change size, hide/show, or access cells within:
@@ -837,9 +847,11 @@ A cell
         * [.style(name)](#Cell+style) ⇒ <code>\*</code>
         * [.style(names)](#Cell+style) ⇒ <code>object.&lt;string, \*&gt;</code>
         * [.style(name, value)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
+        * [.style(name)](#Cell+style) ⇒ [<code>Range</code>](#Range)
         * [.style(styles)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
+        * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
@@ -1087,6 +1099,19 @@ Sets an individual style.
 
 <a name="Cell+style"></a>
 
+#### cell.style(name) ⇒ [<code>Range</code>](#Range)
+Sets the styles in the range starting with the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Range</code>](#Range) - The range that was set.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | 2D array of values to set. |
+
+<a name="Cell+style"></a>
+
 #### cell.style(styles) ⇒ [<code>Cell</code>](#Cell)
 Sets multiple styles.
 
@@ -1115,6 +1140,18 @@ Sets the value of the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>null</code> \| <code>undefined</code> | The value to set. |
+
+<a name="Cell+value"></a>
+
+#### cell.value() ⇒ [<code>Range</code>](#Range)
+Sets the values in the range starting with the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Range</code>](#Range) - The range that was set.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+|  | <code>Array.&lt;Array.&lt;(string\|boolean\|number\|null\|undefined)&gt;&gt;</code> | 2D array of values to set. |
 
 <a name="Cell+workbook"></a>
 
