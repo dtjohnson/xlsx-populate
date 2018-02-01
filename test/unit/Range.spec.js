@@ -1,14 +1,18 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
+const Style = require('../../lib/Style');
 
 describe("Range", () => {
-    let Range, range, startCell, endCell, sheet, style;
+    let Range, range, startCell, endCell, sheet, style, styleObj;
 
     beforeEach(() => {
         Range = proxyquire("../../lib/Range", {
             '@noCallThru': true
         });
+
+        styleObj = {};
+        styleObj.constructor = Style;
 
         style = jasmine.createSpy("style");
         style.and.callFake(name => `STYLE:${name}`);
@@ -262,6 +266,17 @@ describe("Range", () => {
             expect(style).toHaveBeenCalledWith("foo", 'bar');
             expect(style).toHaveBeenCalledWith("foo", 'bar');
             expect(style).toHaveBeenCalledWith("foo", 'bar');
+        });
+
+        it("should assign a style when asked", () => {
+            expect(range.style(styleObj)).toBe(range);
+            expect(range._style).toBe(styleObj);
+            expect(style).toHaveBeenCalledWith(styleObj);
+            expect(style).toHaveBeenCalledWith(styleObj);
+            expect(style).toHaveBeenCalledWith(styleObj);
+            expect(style).toHaveBeenCalledWith(styleObj);
+            expect(style).toHaveBeenCalledWith(styleObj);
+            expect(style).toHaveBeenCalledWith(styleObj);
         });
 
         it("should set styles from an object", () => {

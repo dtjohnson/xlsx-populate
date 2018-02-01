@@ -117,7 +117,7 @@ const runBrowserify = (ignores, bundle) => {
         .pipe(uglify())
         .pipe(sourcemaps.write(PATHS.browserify.sourceMap))
         .pipe(gulp.dest(PATHS.browserify.base));
-}
+};
 
 gulp.task('browser', ['browser-full', 'browser-no-encryption']);
 

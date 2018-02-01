@@ -1,6 +1,7 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
+const Style = require('../../lib/Style');
 
 describe("Cell", () => {
     let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
@@ -15,6 +16,7 @@ describe("Cell", () => {
         });
 
         style = jasmine.createSpyObj("style", ["style", "id"]);
+        style.constructor = Style;
         style.id.and.returnValue(4);
         style.style.and.callFake(name => `STYLE:${name}`);
 
@@ -239,7 +241,7 @@ describe("Cell", () => {
             expect(cell.dataValidation()).toBe("DATAVALIDATION");
             expect(sheet.dataValidation).toHaveBeenCalledWith("C7");
         });
-        
+
     });
 
     describe("find", () => {
@@ -364,6 +366,13 @@ describe("Cell", () => {
             cell.style("foo");
             expect(styleSheet.createStyle).toHaveBeenCalledWith(2);
             expect(cell._style).toBe(style);
+        });
+
+        it("should assign a style when asked", () => {
+            expect(cell._style).toBeUndefined();
+            cell.style(style);
+            expect(cell._style).toBe(style);
+            expect(cell._styleId).toBe(style.id());
         });
 
         it("should not create a style if one already exists", () => {
