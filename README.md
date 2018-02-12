@@ -849,6 +849,7 @@ A cell
         * [.style(name, value)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.style(name)](#Cell+style) ⇒ [<code>Range</code>](#Range)
         * [.style(styles)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
+        * [.style(style)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
@@ -1122,6 +1123,18 @@ Sets multiple styles.
 | --- | --- | --- |
 | styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
 
+<a name="Cell+style"></a>
+
+#### cell.style(style) ⇒ [<code>Cell</code>](#Cell)
+Sets to a specific style
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| style | [<code>Style</code>](#new_Style_new) | Style object given from stylesheet.createStyle |
+
 <a name="Cell+value"></a>
 
 #### cell.value() ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
@@ -1202,6 +1215,7 @@ A column.
     * [.style(names)](#Column+style) ⇒ <code>object.&lt;string, \*&gt;</code>
     * [.style(name, value)](#Column+style) ⇒ [<code>Cell</code>](#Cell)
     * [.style(styles)](#Column+style) ⇒ [<code>Cell</code>](#Cell)
+    * [.style(style)](#Column+style) ⇒ [<code>Cell</code>](#Cell)
     * [.width()](#Column+width) ⇒ <code>undefined</code> \| <code>number</code>
     * [.width(width)](#Column+width) ⇒ [<code>Column</code>](#Column)
     * [.workbook()](#Column+workbook) ⇒ [<code>Workbook</code>](#Workbook)
@@ -1320,6 +1334,18 @@ Sets multiple styles.
 | Param | Type | Description |
 | --- | --- | --- |
 | styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
+
+<a name="Column+style"></a>
+
+#### column.style(style) ⇒ [<code>Cell</code>](#Cell)
+Sets to a specific style
+
+**Kind**: instance method of [<code>Column</code>](#Column)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| style | [<code>Style</code>](#new_Style_new) | Style object given from stylesheet.createStyle |
 
 <a name="Column+width"></a>
 
@@ -1446,6 +1472,7 @@ A range of cells.
         * [.style(name)](#Range+style) ⇒ [<code>Range</code>](#Range)
         * [.style(name, value)](#Range+style) ⇒ [<code>Range</code>](#Range)
         * [.style(styles)](#Range+style) ⇒ [<code>Range</code>](#Range)
+        * [.style(style)](#Range+style) ⇒ [<code>Range</code>](#Range)
         * [.tap(callback)](#Range+tap) ⇒ [<code>Range</code>](#Range)
         * [.thru(callback)](#Range+thru) ⇒ <code>\*</code>
         * [.value()](#Range+value) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
@@ -1695,6 +1722,18 @@ Set multiple styles for the cells in the range.
 | --- | --- | --- |
 | styles | <code>object.&lt;string, (Range~mapCallback\|Array.&lt;Array.&lt;\*&gt;&gt;\|\*)&gt;</code> | Object whose keys are style names and values are either function callbacks, 2D arrays of style values, or a single value for all the cells. |
 
+<a name="Range+style"></a>
+
+#### range.style(style) ⇒ [<code>Range</code>](#Range)
+Sets to a specific style
+
+**Kind**: instance method of [<code>Range</code>](#Range)  
+**Returns**: [<code>Range</code>](#Range) - The range.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| style | [<code>Style</code>](#new_Style_new) | Style object given from stylesheet.createStyle |
+
 <a name="Range+tap"></a>
 
 #### range.tap(callback) ⇒ [<code>Range</code>](#Range)
@@ -1857,6 +1896,7 @@ A row.
     * [.style(names)](#Row+style) ⇒ <code>object.&lt;string, \*&gt;</code>
     * [.style(name, value)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.style(styles)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
+    * [.style(style)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.workbook()](#Row+workbook) ⇒ [<code>Workbook</code>](#Workbook)
 
 <a name="Row+address"></a>
@@ -1985,6 +2025,18 @@ Sets multiple styles.
 | Param | Type | Description |
 | --- | --- | --- |
 | styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
+
+<a name="Row+style"></a>
+
+#### row.style(style) ⇒ [<code>Cell</code>](#Cell)
+Sets to a specific style
+
+**Kind**: instance method of [<code>Row</code>](#Row)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| style | [<code>Style</code>](#new_Style_new) | Style object given from stylesheet.createStyle |
 
 <a name="Row+workbook"></a>
 

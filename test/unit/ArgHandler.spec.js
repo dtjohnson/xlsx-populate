@@ -1,6 +1,7 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
+const Style = require('../../lib/Style');
 
 describe("ArgHandler", () => {
     let ArgHandler, argHandler, handlers;
@@ -21,6 +22,7 @@ describe("ArgHandler", () => {
             array: jasmine.createSpy("array").and.returnValue("array"),
             date: jasmine.createSpy("date").and.returnValue("date"),
             object: jasmine.createSpy("object").and.returnValue("object"),
+            Style: jasmine.createSpy("style").and.returnValue("Style"),
             '*': jasmine.createSpy("*").and.returnValue("*")
         };
 
@@ -35,6 +37,7 @@ describe("ArgHandler", () => {
             .case("array", handlers.array)
             .case("date", handlers.date)
             .case("object", handlers.object)
+            .case("Style", handlers.Style)
             .case(["nil", 'nil', '*'], handlers['*']);
     });
 
@@ -109,6 +112,12 @@ describe("ArgHandler", () => {
         it("should handle object", () => {
             expect(argHandler.handle([{}])).toBe('object');
             expect(handlers.object).toHaveBeenCalledWith({});
+        });
+
+        it("should handle Styles", () => {
+            const style = new Style(null, 0, {}, {}, {}, {});
+            expect(argHandler.handle([style])).toBe('Style');
+            expect(handlers.Style).toHaveBeenCalledWith(style);
         });
 
         it("should handle *", () => {

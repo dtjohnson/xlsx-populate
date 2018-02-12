@@ -2,6 +2,7 @@
 
 const _ = require("lodash");
 const proxyquire = require("proxyquire");
+const Style = require('../../lib/Style');
 
 describe("Column", () => {
     let Column, column, columnNode, sheet, style, styleSheet, workbook, existingRows;
@@ -12,6 +13,7 @@ describe("Column", () => {
         });
 
         style = jasmine.createSpyObj("style", ["style", "id"]);
+        style.constructor = Style;
         style.id.and.returnValue("STYLE_ID");
         style.style.and.callFake(name => `STYLE:${name}`);
 
@@ -156,6 +158,19 @@ describe("Column", () => {
             expect(existingRows[1]._cell.style).toHaveBeenCalledWith("foo", "value");
             expect(existingRows[2].cell).toHaveBeenCalledWith(5);
             expect(existingRows[2]._cell.style).toHaveBeenCalledWith("foo", "value");
+        });
+
+        it("should assign a style when asked", () => {
+            column._style = undefined;
+            column.style(style);
+            expect(column._style).toBe(style);
+            expect(column._node.attributes.style).toBe(style.id());
+
+            expect(existingRows[0].cell).not.toHaveBeenCalled();
+            expect(existingRows[1].cell).toHaveBeenCalledWith(5);
+            expect(existingRows[1]._cell.style).toHaveBeenCalledWith(style);
+            expect(existingRows[2].cell).toHaveBeenCalledWith(5);
+            expect(existingRows[2]._cell.style).toHaveBeenCalledWith(style);
         });
 
         it("should set multiple styles", () => {
