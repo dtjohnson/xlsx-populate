@@ -22,5 +22,5 @@ Backlog of features to implement (in no particular order):
 * Workbook metadata (like author)
 * Create defined name
 * Enum of standard number formats?
-* Drawings
+* Drawings - Need to add handling for (oneCellAnchor (should be easy, does not have to block in xml, has ext block instead.), AlternateContent (more compliated))
 * Array formulas - May want to introduce a new Formula class.
