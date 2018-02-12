@@ -1,7 +1,6 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
-const Style = require('../../lib/Style');
 
 describe("Cell", () => {
     let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
@@ -15,10 +14,11 @@ describe("Cell", () => {
             '@noCallThru': true
         });
 
-        style = jasmine.createSpyObj("style", ["style", "id"]);
-        style.constructor = Style;
-        style.id.and.returnValue(4);
-        style.style.and.callFake(name => `STYLE:${name}`);
+        const Style = class {}
+        if (!Style.name) Style.name = "Style";
+        Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue(4);
+        Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
+        style = new Style();
 
         styleSheet = jasmine.createSpyObj("styleSheet", ["createStyle"]);
         styleSheet.createStyle.and.returnValue(style);

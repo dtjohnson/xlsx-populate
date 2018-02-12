@@ -2,7 +2,6 @@
 
 const _ = require("lodash");
 const proxyquire = require("proxyquire");
-const Style = require('../../lib/Style');
 
 describe("Column", () => {
     let Column, column, columnNode, sheet, style, styleSheet, workbook, existingRows;
@@ -12,10 +11,11 @@ describe("Column", () => {
             '@noCallThru': true
         });
 
-        style = jasmine.createSpyObj("style", ["style", "id"]);
-        style.constructor = Style;
-        style.id.and.returnValue("STYLE_ID");
-        style.style.and.callFake(name => `STYLE:${name}`);
+        const Style = class {}
+        if (!Style.name) Style.name = "Style";
+        Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
+        Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
+        style = new Style();
 
         styleSheet = jasmine.createSpyObj("styleSheet", ["createStyle"]);
         styleSheet.createStyle.and.returnValue(style);

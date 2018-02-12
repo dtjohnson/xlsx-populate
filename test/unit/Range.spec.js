@@ -1,21 +1,19 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
-const Style = require('../../lib/Style');
 
 describe("Range", () => {
-    let Range, range, startCell, endCell, sheet, style, styleObj;
+    let Range, range, startCell, endCell, sheet, style;
 
     beforeEach(() => {
         Range = proxyquire("../../lib/Range", {
             '@noCallThru': true
         });
 
-        styleObj = {};
-        styleObj.constructor = Style;
-
-        style = jasmine.createSpy("style");
-        style.and.callFake(name => `STYLE:${name}`);
+        const Style = class {}
+        if (!Style.name) Style.name = "Style";
+        Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
+        style = new Style();
 
         sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'merged', 'incrementMaxSharedFormulaId', 'dataValidation']);
         sheet.name.and.returnValue('NAME');
@@ -197,7 +195,7 @@ describe("Range", () => {
     describe("style", () => {
         let cell;
         beforeEach(() => {
-            cell = { style };
+            cell = { style: style.style };
             sheet.cell.and.returnValue(cell);
         });
 
@@ -207,7 +205,7 @@ describe("Range", () => {
                 ["STYLE:foo", "STYLE:foo"],
                 ["STYLE:foo", "STYLE:foo"]
             ]);
-            expect(style).toHaveBeenCalledWith("foo");
+            expect(cell.style).toHaveBeenCalledWith("foo");
         });
 
         it("should get multiple style values", () => {
@@ -223,19 +221,19 @@ describe("Range", () => {
                     ["STYLE:bar", "STYLE:bar"]
                 ]
             });
-            expect(style).toHaveBeenCalledWith("foo");
+            expect(cell.style).toHaveBeenCalledWith("foo");
         });
 
         it("should set a style from the callback", () => {
             let i = 0;
             const callback = jasmine.createSpy("callback").and.callFake(() => i++);
             expect(range.style("foo", callback)).toBe(range);
-            expect(style).toHaveBeenCalledWith("foo", 0);
-            expect(style).toHaveBeenCalledWith("foo", 1);
-            expect(style).toHaveBeenCalledWith("foo", 2);
-            expect(style).toHaveBeenCalledWith("foo", 3);
-            expect(style).toHaveBeenCalledWith("foo", 4);
-            expect(style).toHaveBeenCalledWith("foo", 5);
+            expect(cell.style).toHaveBeenCalledWith("foo", 0);
+            expect(cell.style).toHaveBeenCalledWith("foo", 1);
+            expect(cell.style).toHaveBeenCalledWith("foo", 2);
+            expect(cell.style).toHaveBeenCalledWith("foo", 3);
+            expect(cell.style).toHaveBeenCalledWith("foo", 4);
+            expect(cell.style).toHaveBeenCalledWith("foo", 5);
             expect(callback).toHaveBeenCalledWith(cell, 0, 0, range);
             expect(callback).toHaveBeenCalledWith(cell, 0, 1, range);
             expect(callback).toHaveBeenCalledWith(cell, 1, 0, range);
@@ -250,33 +248,33 @@ describe("Range", () => {
                 [2, 3],
                 [4, 5]
             ])).toBe(range);
-            expect(style).toHaveBeenCalledWith("foo", 0);
-            expect(style).toHaveBeenCalledWith("foo", 1);
-            expect(style).toHaveBeenCalledWith("foo", 2);
-            expect(style).toHaveBeenCalledWith("foo", 3);
-            expect(style).toHaveBeenCalledWith("foo", 4);
-            expect(style).toHaveBeenCalledWith("foo", 5);
+            expect(cell.style).toHaveBeenCalledWith("foo", 0);
+            expect(cell.style).toHaveBeenCalledWith("foo", 1);
+            expect(cell.style).toHaveBeenCalledWith("foo", 2);
+            expect(cell.style).toHaveBeenCalledWith("foo", 3);
+            expect(cell.style).toHaveBeenCalledWith("foo", 4);
+            expect(cell.style).toHaveBeenCalledWith("foo", 5);
         });
 
         it("should set a style from a single value", () => {
             expect(range.style("foo", "bar")).toBe(range);
-            expect(style).toHaveBeenCalledWith("foo", 'bar');
-            expect(style).toHaveBeenCalledWith("foo", 'bar');
-            expect(style).toHaveBeenCalledWith("foo", 'bar');
-            expect(style).toHaveBeenCalledWith("foo", 'bar');
-            expect(style).toHaveBeenCalledWith("foo", 'bar');
-            expect(style).toHaveBeenCalledWith("foo", 'bar');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'bar');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'bar');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'bar');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'bar');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'bar');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'bar');
         });
 
         it("should assign a style when asked", () => {
-            expect(range.style(styleObj)).toBe(range);
-            expect(range._style).toBe(styleObj);
-            expect(style).toHaveBeenCalledWith(styleObj);
-            expect(style).toHaveBeenCalledWith(styleObj);
-            expect(style).toHaveBeenCalledWith(styleObj);
-            expect(style).toHaveBeenCalledWith(styleObj);
-            expect(style).toHaveBeenCalledWith(styleObj);
-            expect(style).toHaveBeenCalledWith(styleObj);
+            expect(range.style(style)).toBe(range);
+            expect(range._style).toBe(style);
+            expect(cell.style).toHaveBeenCalledWith(style);
+            expect(cell.style).toHaveBeenCalledWith(style);
+            expect(cell.style).toHaveBeenCalledWith(style);
+            expect(cell.style).toHaveBeenCalledWith(style);
+            expect(cell.style).toHaveBeenCalledWith(style);
+            expect(cell.style).toHaveBeenCalledWith(style);
         });
 
         it("should set styles from an object", () => {
@@ -286,24 +284,24 @@ describe("Range", () => {
                 bar: [["BAR0", "BAR1"], ["BAR2", "BAR3"], ["BAR4", "BAR5"]],
                 baz: () => `BAZ${i++}`
             })).toBe(range);
-            expect(style).toHaveBeenCalledWith("foo", 'FOO');
-            expect(style).toHaveBeenCalledWith("foo", 'FOO');
-            expect(style).toHaveBeenCalledWith("foo", 'FOO');
-            expect(style).toHaveBeenCalledWith("foo", 'FOO');
-            expect(style).toHaveBeenCalledWith("foo", 'FOO');
-            expect(style).toHaveBeenCalledWith("foo", 'FOO');
-            expect(style).toHaveBeenCalledWith("bar", 'BAR0');
-            expect(style).toHaveBeenCalledWith("bar", 'BAR1');
-            expect(style).toHaveBeenCalledWith("bar", 'BAR2');
-            expect(style).toHaveBeenCalledWith("bar", 'BAR3');
-            expect(style).toHaveBeenCalledWith("bar", 'BAR4');
-            expect(style).toHaveBeenCalledWith("bar", 'BAR5');
-            expect(style).toHaveBeenCalledWith("baz", 'BAZ0');
-            expect(style).toHaveBeenCalledWith("baz", 'BAZ1');
-            expect(style).toHaveBeenCalledWith("baz", 'BAZ2');
-            expect(style).toHaveBeenCalledWith("baz", 'BAZ3');
-            expect(style).toHaveBeenCalledWith("baz", 'BAZ4');
-            expect(style).toHaveBeenCalledWith("baz", 'BAZ5');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'FOO');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'FOO');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'FOO');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'FOO');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'FOO');
+            expect(cell.style).toHaveBeenCalledWith("foo", 'FOO');
+            expect(cell.style).toHaveBeenCalledWith("bar", 'BAR0');
+            expect(cell.style).toHaveBeenCalledWith("bar", 'BAR1');
+            expect(cell.style).toHaveBeenCalledWith("bar", 'BAR2');
+            expect(cell.style).toHaveBeenCalledWith("bar", 'BAR3');
+            expect(cell.style).toHaveBeenCalledWith("bar", 'BAR4');
+            expect(cell.style).toHaveBeenCalledWith("bar", 'BAR5');
+            expect(cell.style).toHaveBeenCalledWith("baz", 'BAZ0');
+            expect(cell.style).toHaveBeenCalledWith("baz", 'BAZ1');
+            expect(cell.style).toHaveBeenCalledWith("baz", 'BAZ2');
+            expect(cell.style).toHaveBeenCalledWith("baz", 'BAZ3');
+            expect(cell.style).toHaveBeenCalledWith("baz", 'BAZ4');
+            expect(cell.style).toHaveBeenCalledWith("baz", 'BAZ5');
         });
     });
 

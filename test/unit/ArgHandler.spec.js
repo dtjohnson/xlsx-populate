@@ -1,12 +1,14 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
-const Style = require('../../lib/Style');
 
 describe("ArgHandler", () => {
-    let ArgHandler, argHandler, handlers;
+    let ArgHandler, argHandler, handlers, Style;
 
     beforeEach(() => {
+        Style = class {}
+        if (!Style.name) Style.name = "Style";
+
         ArgHandler = proxyquire("../../lib/ArgHandler", {
             '@noCallThru': true
         });
@@ -115,7 +117,7 @@ describe("ArgHandler", () => {
         });
 
         it("should handle Styles", () => {
-            const style = new Style(null, 0, {}, {}, {}, {});
+            const style = new Style();
             expect(argHandler.handle([style])).toBe('Style');
             expect(handlers.Style).toHaveBeenCalledWith(style);
         });
