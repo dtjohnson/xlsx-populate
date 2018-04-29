@@ -814,6 +814,17 @@ describe("Cell", () => {
             expect(sharedStrings.getStringByIndex).toHaveBeenCalledWith(5);
         });
 
+        it("should parse simple string values", () => {
+            node.attributes.t = "str";
+            node.children = [{
+                name: 'v',
+                children: ['SIMPLE STRING']
+            }];
+
+            cell._parseNode(node);
+            expect(cell._value).toBe("SIMPLE STRING");
+        });
+
         it("should parse inline string values", () => {
             node.attributes.t = "inlineStr";
             node.children = [{
