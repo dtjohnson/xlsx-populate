@@ -1452,6 +1452,7 @@ A range of cells.
     * _instance_
         * [.address([opts])](#Range+address) ⇒ <code>string</code>
         * [.cell(ri, ci)](#Range+cell) ⇒ [<code>Cell</code>](#Cell)
+        * [.autoFilter()](#Range+autoFilter) ⇒ [<code>Range</code>](#Range)
         * [.cells()](#Range+cells) ⇒ <code>Array.&lt;Array.&lt;Cell&gt;&gt;</code>
         * [.clear()](#Range+clear) ⇒ [<code>Range</code>](#Range)
         * [.endCell()](#Range+endCell) ⇒ [<code>Cell</code>](#Cell)
@@ -1518,6 +1519,13 @@ Gets a cell within the range.
 | ri | <code>number</code> | Row index relative to the top-left corner of the range (0-based). |
 | ci | <code>number</code> | Column index relative to the top-left corner of the range (0-based). |
 
+<a name="Range+autoFilter"></a>
+
+#### range.autoFilter() ⇒ [<code>Range</code>](#Range)
+Sets sheet autoFilter to this range.
+
+**Kind**: instance method of [<code>Range</code>](#Range)  
+**Returns**: [<code>Range</code>](#Range) - This range.  
 <a name="Range+cells"></a>
 
 #### range.cells() ⇒ <code>Array.&lt;Array.&lt;Cell&gt;&gt;</code>
@@ -2075,6 +2083,8 @@ A worksheet.
     * [.range(address)](#Sheet+range) ⇒ [<code>Range</code>](#Range)
     * [.range(startCell, endCell)](#Sheet+range) ⇒ [<code>Range</code>](#Range)
     * [.range(startRowNumber, startColumnNameOrNumber, endRowNumber, endColumnNameOrNumber)](#Sheet+range) ⇒ [<code>Range</code>](#Range)
+    * [.autoFilter()](#Sheet+autoFilter) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.autoFilter(range)](#Sheet+autoFilter) ⇒ [<code>Sheet</code>](#Sheet)
     * [.row(rowNumber)](#Sheet+row) ⇒ [<code>Row</code>](#Row)
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>undefined</code> \| <code>Color</code>
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>Color</code> \| <code>string</code> \| <code>number</code>
@@ -2324,6 +2334,25 @@ Gets a range from the given row numbers and column names or numbers.
 | startColumnNameOrNumber | <code>string</code> \| <code>number</code> | The starting cell column name or number. |
 | endRowNumber | <code>number</code> | The ending cell row number. |
 | endColumnNameOrNumber | <code>string</code> \| <code>number</code> | The ending cell column name or number. |
+
+<a name="Sheet+autoFilter"></a>
+
+#### sheet.autoFilter() ⇒ [<code>Sheet</code>](#Sheet)
+Unsets sheet autoFilter.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - This sheet.  
+<a name="Sheet+autoFilter"></a>
+
+#### sheet.autoFilter(range) ⇒ [<code>Sheet</code>](#Sheet)
+Sets sheet autoFilter to a Range.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - This sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| range | [<code>Range</code>](#Range) | The autoFilter range. |
 
 <a name="Sheet+row"></a>
 
