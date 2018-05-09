@@ -396,6 +396,42 @@ describe("Sheet", () => {
         });
     });
 
+    describe("autoFilter", () => {
+        beforeEach(() => {
+            spyOn(sheet, "cell").and.callFake((a, b) => [a, b]);
+        });
+
+        it("should mark a range as the automatic filter", () => {
+            const range = sheet.range("A2:B3");
+
+            sheet.autoFilter(range);
+
+            expect(sheet._autoFilter).toBe(range);
+        });
+
+        it("should add a XML node", () => {
+            let Range = proxyquire("../../lib/Range", {
+                '@noCallThru': true
+            });
+            let startCell = jasmine.createSpyObj("startCell", ["rowNumber", "columnNumber", "columnName"]);
+            startCell.columnName.and.returnValue("B");
+            startCell.columnNumber.and.returnValue(2);
+            startCell.rowNumber.and.returnValue(3);
+
+            let endCell = jasmine.createSpyObj("endCell", ["rowNumber", "columnNumber", "columnName"]);
+            endCell.columnName.and.returnValue("C");
+            endCell.columnNumber.and.returnValue(3);
+            endCell.rowNumber.and.returnValue(3);
+
+            sheet.autoFilter(new Range(startCell, endCell));
+
+            let props = sheet.toXmls().sheet.children.filter((child) => (child.name == "autoFilter"));
+
+            expect(props.length == 1);
+            expect(props[0].attributes.ref).toEqual("B3:C3");
+        });
+    });
+
     describe("row", () => {
         it("should return an existing row", () => {
             const row = sheet._rows[3] = {};
@@ -658,7 +694,7 @@ describe("Sheet", () => {
                 type: 'list',
                 formula1: 'test1, test2, test3'
             });
-            
+
             expect(sheet.dataValidation("A2")).toEqualJson({
                 type: 'list',
                 formula1: 'test1, test2, test3'
@@ -1107,7 +1143,7 @@ describe("Sheet", () => {
                     { name: "sheetData", attributes: {}, children: [] }
                 ]
             });
-            
+
             expect(sheet._sheetPrNode).toBe(sheetPrNode);
         });
 
