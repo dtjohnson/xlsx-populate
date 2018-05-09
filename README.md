@@ -2404,6 +2404,11 @@ A workbook.
     * [.outputAsync([opts])](#Workbook+outputAsync) ⇒ <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ [<code>Sheet</code>](#Sheet) \| <code>undefined</code>
     * [.sheets()](#Workbook+sheets) ⇒ [<code>Array.&lt;Sheet&gt;</code>](#Sheet)
+    * [.property(name)](#Workbook+property) ⇒ <code>\*</code>
+    * [.property(names)](#Workbook+property) ⇒ <code>object.&lt;string, \*&gt;</code>
+    * [.property(name, value)](#Workbook+property) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.property(properties)](#Workbook+property) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.properties()](#Workbook+properties) ⇒ <code>CoreProperties</code>
     * [.toFileAsync(path, [opts])](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
 
 <a name="Workbook+activeSheet"></a>
@@ -2546,6 +2551,62 @@ Get an array of all the sheets in the workbook.
 
 **Kind**: instance method of [<code>Workbook</code>](#Workbook)  
 **Returns**: [<code>Array.&lt;Sheet&gt;</code>](#Sheet) - The sheets.  
+<a name="Workbook+property"></a>
+
+#### workbook.property(name) ⇒ <code>\*</code>
+Gets an individual property.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: <code>\*</code> - The property.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the property. |
+
+<a name="Workbook+property"></a>
+
+#### workbook.property(names) ⇒ <code>object.&lt;string, \*&gt;</code>
+Gets multiple properties.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: <code>object.&lt;string, \*&gt;</code> - Object whose keys are the property names and values are the properties.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;string&gt;</code> | The names of the properties. |
+
+<a name="Workbook+property"></a>
+
+#### workbook.property(name, value) ⇒ [<code>Workbook</code>](#Workbook)
+Sets an individual property.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: [<code>Workbook</code>](#Workbook) - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the property. |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Workbook+property"></a>
+
+#### workbook.property(properties) ⇒ [<code>Workbook</code>](#Workbook)
+Sets multiple properties.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: [<code>Workbook</code>](#Workbook) - The workbook.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| properties | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the property names and values are the values to set. |
+
+<a name="Workbook+properties"></a>
+
+#### workbook.properties() ⇒ <code>CoreProperties</code>
+Get access to core properties object
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: <code>CoreProperties</code> - The core properties.  
 <a name="Workbook+toFileAsync"></a>
 
 #### workbook.toFileAsync(path, [opts]) ⇒ <code>Promise.&lt;undefined&gt;</code>

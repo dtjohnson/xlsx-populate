@@ -5,7 +5,7 @@ const proxyquire = require("proxyquire");
 const Promise = require("jszip").external.Promise;
 
 describe("Workbook", () => {
-    let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, XmlParser, XmlBuilder, Encryptor, blank;
+    let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, CoreProperties, XmlParser, XmlBuilder, Encryptor, blank;
 
     beforeEach(() => {
         // Resolve a promise with a small random delay so they resolve out of order.
@@ -63,6 +63,11 @@ describe("Workbook", () => {
         ContentTypes.prototype.findByPartName = jasmine.createSpy("ContentTypes.findByPartName");
         ContentTypes.prototype.add = jasmine.createSpy("ContentTypes.add");
 
+        CoreProperties = jasmine.createSpy("CoreProperties");
+        CoreProperties.prototype.toString = () => "CORE PROPERTIES";
+        CoreProperties.prototype.get = jasmine.createSpy("CoreProperties.get");
+        CoreProperties.prototype.set = jasmine.createSpy("CoreProperties.set");
+
         workbookNode = {
             name: 'workbook',
             attributes: {},
@@ -114,6 +119,7 @@ describe("Workbook", () => {
             './SharedStrings': SharedStrings,
             './Relationships': Relationships,
             './ContentTypes': ContentTypes,
+            './CoreProperties': CoreProperties,
             './XmlParser': XmlParser,
             './XmlBuilder': XmlBuilder,
             './Encryptor': Encryptor,
@@ -376,6 +382,7 @@ describe("Workbook", () => {
 
             beforeEach(() => {
                 workbook._contentTypes = new ContentTypes();
+                workbook._coreProperties = new CoreProperties();
                 workbook._relationships = new Relationships();
                 workbook._sharedStrings = new SharedStrings();
                 workbook._styleSheet = new StyleSheet();
@@ -401,6 +408,7 @@ describe("Workbook", () => {
                         expect(workbook._setSheetRefs).toHaveBeenCalledWith();
 
                         expect(workbook._zip.file).toHaveBeenCalledWith("[Content_Types].xml", "XML: CONTENT TYPES", { date: new Date(0), createFolders: false });
+                        expect(workbook._zip.file).toHaveBeenCalledWith("docProps/core.xml", "XML: CORE PROPERTIES", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/_rels/workbook.xml.rels", "XML: RELATIONSHIPS", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/sharedStrings.xml", "XML: SHARED STRINGS", { date: new Date(0), createFolders: false });
                         expect(workbook._zip.file).toHaveBeenCalledWith("xl/styles.xml", "XML: STYLE SHEET", { date: new Date(0), createFolders: false });
@@ -600,6 +608,13 @@ describe("Workbook", () => {
             it("should return the style sheet", () => {
                 workbook._styleSheet = "STYLE SHEET";
                 expect(workbook.styleSheet()).toBe("STYLE SHEET");
+            });
+        });
+
+        describe("coreProperties", () => {
+            it("should return the core properties", () => {
+                workbook._coreProperties = "CORE PROPERTIES";
+                expect(workbook.properties()).toBe("CORE PROPERTIES");
             });
         });
 

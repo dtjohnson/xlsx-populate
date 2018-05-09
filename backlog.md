@@ -19,7 +19,6 @@ Backlog of features to implement (in no particular order):
 * Named styles
 * Insert images
 * Frozen rows/columns
-* Workbook metadata (like author)
 * Create defined name
 * Enum of standard number formats?
 * Drawings
