@@ -15,7 +15,7 @@ describe("Range", () => {
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
         style = new Style();
 
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'merged', 'incrementMaxSharedFormulaId', 'dataValidation']);
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'cell', 'merged', 'incrementMaxSharedFormulaId', 'dataValidation', 'autoFilter']);
         sheet.name.and.returnValue('NAME');
         sheet.cell.and.callFake((row, column) => `CELL[${row}, ${column}]`);
         sheet.workbook.and.returnValue('WORKBOOK');
@@ -74,6 +74,12 @@ describe("Range", () => {
                 ["CELL[4, 2]", "CELL[4, 3]"],
                 ["CELL[5, 2]", "CELL[5, 3]"]
             ]);
+        });
+    });
+
+    describe("autoFilter", () => {
+        it("should mark the range as having an automatic filter", () => {
+            expect(range.autoFilter()).toBe(range);
         });
     });
 
