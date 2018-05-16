@@ -2745,7 +2745,11 @@ Convert an Excel number to a date.
 <a name="_"></a>
 
 ### _
-OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
+OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
+https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
+
+Helpful guidance also take from this Github project:
+https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
 
