@@ -29,7 +29,7 @@ bower install xlsx-populate
 ```
 After including the module in the browser, it is available globally as `XlsxPopulate`.
 
-Alternatively, you can require this module using [browserify](http://browserify.org/). Since xlsx-populate uses ES6 features, you will also need to use [babelify](https://github.com/babel/babelify) with [babel-preset-es2015](https://www.npmjs.com/package/babel-preset-es2015).
+Alternatively, you can require this module using [browserify](http://browserify.org/). Since xlsx-populate uses ES6 features, you will also need to use [babelify](https://github.com/babel/babelify) with [babel-preset-env](https://www.npmjs.com/package/babel-preset-env).
 
 ## Usage
 
