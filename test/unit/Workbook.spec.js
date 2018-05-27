@@ -378,9 +378,10 @@ describe("Workbook", () => {
         });
 
         describe("outputAsync", () => {
-            const relationships = [];
+            let relationships;
 
             beforeEach(() => {
+                relationships =[];
                 workbook._contentTypes = new ContentTypes();
                 workbook._coreProperties = new CoreProperties();
                 workbook._relationships = new Relationships();
