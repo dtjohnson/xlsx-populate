@@ -7,7 +7,9 @@ const browserify = require('browserify');
 const babelify = require('babelify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const uglifyjs = require('uglify-js');
+const uglifyComposer = require('gulp-uglify/composer');
 const sourcemaps = require('gulp-sourcemaps');
 const eslint = require("gulp-eslint");
 const runSequence = require('run-sequence').use(gulp);
@@ -18,8 +20,20 @@ const fs = Promise.promisifyAll(require("fs"));
 const karma = require('karma');
 const Jasmine = require("jasmine");
 
+// Use the latest uglify.
+const uglify = uglifyComposer(uglifyjs, console);
+
 const BROWSERIFY_STANDALONE_NAME = "XlsxPopulate";
-const BABEL_CONFIG = { presets: ["es2015"] };
+const BABEL_CONFIG = {
+    presets: [
+        ["env", {
+            targets: {
+                "browsers": ">0.5%"
+            }
+        }]
+    ]
+};
+
 const PATHS = {
     lib: "./lib/**/*.js",
     unit: "./test/unit/**/*.js",
@@ -113,8 +127,10 @@ const runBrowserify = (ignores, bundle) => {
         .bundle()
         .pipe(source(bundle))
         .pipe(buffer())
+        .pipe(gulp.dest(PATHS.browserify.base))
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
+        .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write(PATHS.browserify.sourceMap))
         .pipe(gulp.dest(PATHS.browserify.base));
 };
