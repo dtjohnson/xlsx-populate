@@ -151,6 +151,33 @@ describe("Sheet", () => {
 
             expect(sheet.cell).toHaveBeenCalledWith(5, 4);
         });
+
+        it("should throw an exception on a row number of 0", () => {
+            expect(() => sheet.activeCell(0, 1)).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+            expect(() => sheet.activeCell("A0")).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a row number of -1", () => {
+            expect(() => sheet.activeCell(-1, 1)).toThrow(
+                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of 0", () => {
+            expect(() => sheet.activeCell(1, 0)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of -1", () => {
+            expect(() => sheet.activeCell(1, -1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
+        });
     });
 
     describe("cell", () => {
@@ -170,6 +197,33 @@ describe("Sheet", () => {
             expect(sheet.cell(5, 7)).toBe("CELL");
             expect(sheet.row).toHaveBeenCalledWith(5);
             expect(cell).toHaveBeenCalledWith(7);
+        });
+
+        it("should throw an exception on a row number of 0", () => {
+            expect(() => sheet.cell(0, 1)).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+            expect(() => sheet.cell("A0")).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a row number of -1", () => {
+            expect(() => sheet.cell(-1, 1)).toThrow(
+                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of 0", () => {
+            expect(() => sheet.cell(1, 0)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of -1", () => {
+            expect(() => sheet.cell(1, -1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
         });
     });
 
@@ -253,6 +307,18 @@ describe("Sheet", () => {
                     children: []
                 }
             ]);
+        });
+
+        it("should throw an exception on a column number of 0", () => {
+            expect(() => sheet.activeCell(1, 0)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of -1", () => {
+            expect(() => sheet.activeCell(1, -1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
         });
     });
 
@@ -394,6 +460,42 @@ describe("Sheet", () => {
             expect(sheet.range(1, 'B', 3, 'D')).toEqual(jasmine.any(Range));
             expect(Range).toHaveBeenCalledWith([1, 'B'], [3, 'D']);
         });
+
+        it("should throw an exception on a row number of 0", () => {
+            expect(() => sheet.range(0, 1, 1, 1)).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+            expect(() => sheet.range(1, 1, 0, 1)).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a row number of -1", () => {
+            expect(() => sheet.range(-1, 1, 1, 1)).toThrow(
+                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
+            );
+            expect(() => sheet.range(1, 1, -1, 1)).toThrow(
+                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of 0", () => {
+            expect(() => sheet.range(1, 0, 1, 1)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+            expect(() => sheet.range(1, 1, 1, 0)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a column number of -1", () => {
+            expect(() => sheet.range(1, -1, 1, 1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
+            expect(() => sheet.range(1, 1, 1, -1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
+        });
     });
 
     describe("autoFilter", () => {
@@ -449,6 +551,18 @@ describe("Sheet", () => {
                 },
                 children: []
             });
+        });
+
+        it("should throw an exception on a row number of 0", () => {
+            expect(() => sheet.row(0)).toThrow(
+                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on a row number of -1", () => {
+            expect(() => sheet.row(-1)).toThrow(
+                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
+            );
         });
     });
 
