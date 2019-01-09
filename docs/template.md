@@ -436,7 +436,17 @@ Hyperlinks are also supported on cells using the [Cell.hyperlink](#Cell+hyperlin
 cell.value("Link Text")
     .style({ fontColor: "0563c1", underline: true })
     .hyperlink("http://example.com");
-    
+
+// Set a hyperlink with tooltip
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink("http://example.com", "example.com");
+
+// Set a hyperlink with tooltip by object
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink({ hyperlink: "http://example.com", tooltip: "example.com" });
+
 // Get the hyperlink
 const value = cell.hyperlink(); // Returns 'http://example.com'
 ```
