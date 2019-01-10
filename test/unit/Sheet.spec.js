@@ -910,12 +910,10 @@ describe("Sheet", () => {
                 },
                 children: []
             };
-
-            const theError = new Error('Sheet.printOptions: "unsupportedAttribute" is not supported.');
-
-            expect(() => sheet.printOptions('unsupportedAttribute')).toThrow(theError);
-            expect(() => sheet.printOptions('unsupportedAttribute', undefined)).toThrow(theError);
-            expect(() => sheet.printOptions('unsupportedAttribute', true)).toThrow(theError);
+            const theError = 'Sheet.printOptions: "unsupportedAttribute" is not supported.';
+            expect(() => sheet.printOptions('unsupportedAttribute')).toThrowError(Error, theError);
+            expect(() => sheet.printOptions('unsupportedAttribute', undefined)).toThrowError(Error, theError);
+            expect(() => sheet.printOptions('unsupportedAttribute', true)).toThrowError(Error, theError);
         });
 
         it("should remove a printOptions attribute", () => {
