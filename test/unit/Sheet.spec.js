@@ -864,6 +864,130 @@ describe("Sheet", () => {
         });
     });
 
+    describe("printOptions", () => {
+        it("should return the printOptions attribute value", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    horizontalCentered: 0
+                },
+                children: []
+            };
+            expect(sheet.printOptions('headings')).toBe(true);
+            expect(sheet.printOptions('horizontalCentered')).toBe(false);
+            expect(sheet.printOptions('verticalCentered')).toBe(false);
+
+            delete sheet._printOptionsNode.attributes.headings;
+            expect(sheet.printOptions('headings')).toBe(false);
+        });
+
+        it("should add or update the printOptions attribute", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    horizontalCentered: 0
+                },
+                children: []
+            };
+
+            sheet.printOptions('headings', false);
+            expect(sheet._printOptionsNode.attributes.headings).toBe(0);
+
+            sheet.printOptions('horizontalCentered', true);
+            expect(sheet._printOptionsNode.attributes.horizontalCentered).toBe(1);
+
+            sheet.printOptions('verticalCentered', true);
+            expect(sheet._printOptionsNode.attributes.verticalCentered).toBe(1);
+        });
+
+        it("should throw an error if attempting to access unsupported attributes", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    unsupportedAttribute: 'a value of some kind'
+                },
+                children: []
+            };
+
+            const theError = new Error('Sheet.printOption: "unsupportedAttribute" is not supported.');
+
+            expect(() => sheet.printOptions('unsupportedAttribute')).toThrow(theError);
+            expect(() => sheet.printOptions('unsupportedAttribute', undefined)).toThrow(theError);
+            expect(() => sheet.printOptions('unsupportedAttribute', true)).toThrow(theError);
+        });
+
+        it("should remove a printOptions attribute", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    horizontalCentered: 0
+                },
+                children: []
+            };
+
+            sheet.printOptions('verticalCentered', undefined);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                headings: 1,
+                horizontalCentered: 0
+            });
+
+            sheet.printOptions('headings', undefined)
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                horizontalCentered: 0
+            });
+
+            sheet.printOptions('horizontalCentered', undefined)
+            expect(sheet._printOptionsNode.attributes).toEqualJson({});
+        });
+    });
+
+    describe("printGridLines", () => {
+        it("should return the combined gridLines and gridLinesSet state from printOptions", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    gridLines: 1
+                },
+                children: []
+            };
+
+            expect(sheet.printGridLines()).toBe(false);
+
+            sheet._printOptionsNode.attributes.gridLinesSet = 1;
+            expect(sheet.printGridLines()).toBe(true);
+
+            sheet._printOptionsNode.attributes.gridLines = false;
+            expect(sheet.printGridLines()).toBe(false);
+        });
+
+        it("should add or update the gridLines and gridLinesSet printOptions attributes", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    gridLines: 1
+                },
+                children: []
+            };
+
+            sheet.printGridLines(true);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                headings: 1,
+                gridLines: 1,
+                gridLinesSet: 1
+            });
+
+            sheet.printGridLines(undefined);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                headings: 1
+            });
+        });
+    });
+
     describe("incrementMaxSharedFormulaId", () => {
         it("should increment the max shared formula ID", () => {
             sheet._maxSharedFormulaId = 8;
@@ -974,6 +1098,32 @@ describe("Sheet", () => {
                     ]
                 },
                 { name: 'sheetData', attributes: {}, children: [] },
+                { name: 'printOptions', attributes: {}, children: [] },
+                { name: 'pageMargins', attributes: {}, children: [] }
+            ]);
+        });
+
+        it("should add the printOptions", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    'headings': 1,
+                    'verticalCentered': false
+                },
+                children: []
+            };
+            expect(sheet.toXmls().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
+                { name: 'sheetFormatPr', attributes: {}, children: [] },
+                { name: 'sheetData', attributes: {}, children: [] },
+                {
+                    name: 'printOptions',
+                    attributes: {
+                        'headings': 1,
+                        'verticalCentered': false
+                    },
+                    children: []
+                },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
@@ -993,6 +1143,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["MERGE1", "MERGE2"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
@@ -1012,6 +1163,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["HYPERLINK1", "HYPERLINK2"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
@@ -1056,6 +1208,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["HYPERLINK1"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
