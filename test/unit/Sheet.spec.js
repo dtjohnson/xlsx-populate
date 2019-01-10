@@ -988,6 +988,78 @@ describe("Sheet", () => {
         });
     });
 
+    describe("pageMargins", () => {
+        it("should return the pageMargins attribute value", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {
+                    left: 0.7,
+                    footer: '0.3'
+                },
+                children: []
+            };
+            expect(sheet.pageMargins('left')).toBe(0.7);
+            expect(sheet.pageMargins('footer')).toBe(0.3);
+            expect(sheet.pageMargins('header')).toBeUndefined();
+        });
+
+        it("should add or update the pageMargins attribute", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {
+                    left: 0.7,
+                    footer: '0.3'
+                },
+                children: []
+            };
+
+            sheet.pageMargins('left', '0.3');
+            expect(sheet._pageMarginsNode.attributes.left, 1.2);
+
+            sheet.pageMargins('footer', 0.7);
+            expect(sheet._pageMarginsNode.attributes.footer, 0.3);
+
+            sheet.pageMargins('header', 1.0);
+            expect(sheet._pageMarginsNode.attributes.header, 1.0);
+        });
+
+        it("should throw an error if attempting to assign a value outside of range", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {},
+                children: []
+            };
+            const theError = 'Sheet.pageMargins: value too small - value must be greater than or equal to 0.';
+            expect(() => sheet.pageMargins('left', -0.123)).toThrowError(RangeError, theError);
+            expect(() => sheet.pageMargins('left', '-0.123')).toThrowError(RangeError, theError);
+        });
+
+        it("should remove a pageMargins attribute", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {
+                    left: 0.7,
+                    footer: '0.3'
+                },
+                children: []
+            };
+
+            sheet.pageMargins('header', undefined);
+            expect(sheet._pageMarginsNode.attributes).toEqualJson({
+                left: 0.7,
+                footer: '0.3'
+            });
+
+            sheet.pageMargins('left', undefined);
+            expect(sheet._pageMarginsNode.attributes).toEqualJson({
+                footer: '0.3'
+            });
+
+            sheet.pageMargins('footer', undefined);
+            expect(sheet._pageMarginsNode.attributes).toEqualJson({});
+        });
+    });
+
     describe("incrementMaxSharedFormulaId", () => {
         it("should increment the max shared formula ID", () => {
             sheet._maxSharedFormulaId = 8;
