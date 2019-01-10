@@ -911,7 +911,7 @@ describe("Sheet", () => {
                 children: []
             };
 
-            const theError = new Error('Sheet.printOption: "unsupportedAttribute" is not supported.');
+            const theError = new Error('Sheet.printOptions: "unsupportedAttribute" is not supported.');
 
             expect(() => sheet.printOptions('unsupportedAttribute')).toThrow(theError);
             expect(() => sheet.printOptions('unsupportedAttribute', undefined)).toThrow(theError);
