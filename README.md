@@ -464,7 +464,17 @@ Hyperlinks are also supported on cells using the [Cell.hyperlink](#Cell+hyperlin
 cell.value("Link Text")
     .style({ fontColor: "0563c1", underline: true })
     .hyperlink("http://example.com");
-    
+
+// Set a hyperlink with tooltip
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink("http://example.com", "example.com");
+
+// Set a hyperlink with tooltip by object
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink({ hyperlink: "http://example.com", tooltip: "example.com" });
+
 // Get the hyperlink
 const value = cell.hyperlink(); // Returns 'http://example.com'
 ```
@@ -834,7 +844,7 @@ A cell
         * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ [<code>Cell</code>](#Cell)
         * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
-        * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
+        * [.hyperlink(hyperlink, [tooltip])](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
         * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> \| <code>undefined</code>
         * [.dataValidation(dataValidation)](#Cell+dataValidation) ⇒ [<code>Cell</code>](#Cell)
         * [.tap(callback)](#Cell+tap) ⇒ [<code>Cell</code>](#Cell)
@@ -962,7 +972,7 @@ Gets the hyperlink attached to the cell.
 **Returns**: <code>string</code> \| <code>undefined</code> - The hyperlink or undefined if not set.  
 <a name="Cell+hyperlink"></a>
 
-#### cell.hyperlink(hyperlink) ⇒ [<code>Cell</code>](#Cell)
+#### cell.hyperlink(hyperlink, [tooltip]) ⇒ [<code>Cell</code>](#Cell)
 Set or clear the hyperlink on the cell.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
@@ -970,7 +980,8 @@ Set or clear the hyperlink on the cell.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| hyperlink | <code>string</code> \| <code>undefined</code> | The hyperlink to set or undefined to clear. |
+| hyperlink | <code>string</code> \| <code>object</code> \| <code>undefined</code> | The hyperlink to set or undefined to clear. |
+| [tooltip] | <code>string</code> | The tooltip to set for hyperlink. |
 
 <a name="Cell+dataValidation"></a>
 
@@ -2745,7 +2756,11 @@ Convert an Excel number to a date.
 <a name="_"></a>
 
 ### _
-OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
+OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
+https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
+
+Helpful guidance also take from this Github project:
+https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
 
