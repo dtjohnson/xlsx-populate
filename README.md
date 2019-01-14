@@ -468,15 +468,22 @@ cell.value("Link Text")
 // Set a hyperlink with tooltip
 cell.value("Link Text")
     .style({ fontColor: "0563c1", underline: true })
-    .hyperlink("http://example.com", "example.com");
-
-// Set a hyperlink with tooltip by object
-cell.value("Link Text")
-    .style({ fontColor: "0563c1", underline: true })
     .hyperlink({ hyperlink: "http://example.com", tooltip: "example.com" });
 
 // Get the hyperlink
 const value = cell.hyperlink(); // Returns 'http://example.com'
+
+// Set a hyperlink to email
+cell.value("Click to Email Jeff Bezos")
+    .hyperlink({ email: "jeff@amazon.com", emailSubject: "I know you're a busy man Jeff, but..." });
+
+// Set a hyperlink to an internal cell using an address string.
+cell.value("Click to go to an internal cell")
+    .hyperlink("Sheet2!A1");
+
+// Set a hyperlink to an internal cell using a cell object.
+cell.value("Click to go to an internal cell")
+    .hyperlink(workbook.sheet(0).cell("A1"));
 ```
 
 ### Serving from Express
@@ -844,7 +851,8 @@ A cell
         * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ [<code>Cell</code>](#Cell)
         * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
-        * [.hyperlink(hyperlink, [tooltip])](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
+        * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
+        * [.hyperlink(opts)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
         * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> \| <code>undefined</code>
         * [.dataValidation(dataValidation)](#Cell+dataValidation) ⇒ [<code>Cell</code>](#Cell)
         * [.tap(callback)](#Cell+tap) ⇒ [<code>Cell</code>](#Cell)
@@ -972,7 +980,7 @@ Gets the hyperlink attached to the cell.
 **Returns**: <code>string</code> \| <code>undefined</code> - The hyperlink or undefined if not set.  
 <a name="Cell+hyperlink"></a>
 
-#### cell.hyperlink(hyperlink, [tooltip]) ⇒ [<code>Cell</code>](#Cell)
+#### cell.hyperlink(hyperlink) ⇒ [<code>Cell</code>](#Cell)
 Set or clear the hyperlink on the cell.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
@@ -980,8 +988,23 @@ Set or clear the hyperlink on the cell.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| hyperlink | <code>string</code> \| <code>object</code> \| <code>undefined</code> | The hyperlink to set or undefined to clear. |
-| [tooltip] | <code>string</code> | The tooltip to set for hyperlink. |
+| hyperlink | <code>string</code> \| [<code>Cell</code>](#Cell) \| <code>undefined</code> | The hyperlink to set or undefined to clear. |
+
+<a name="Cell+hyperlink"></a>
+
+#### cell.hyperlink(opts) ⇒ [<code>Cell</code>](#Cell)
+Set the hyperlink options on the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| opts | <code>Object</code> \| [<code>Cell</code>](#Cell) | Options or Cell. If opts is a Cell then an internal hyperlink is added. |
+| [opts.hyperlink] | <code>string</code> \| [<code>Cell</code>](#Cell) | The hyperlink to set, can be a Cell or an internal/external string. |
+| [opts.tooltip] | <code>string</code> | Additional text to help the user understand more about the hyperlink. |
+| [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
+| [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
 
 <a name="Cell+dataValidation"></a>
 
@@ -2103,6 +2126,9 @@ A worksheet.
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ [<code>Sheet</code>](#Sheet)
     * [.usedRange()](#Sheet+usedRange) ⇒ [<code>Range</code>](#Range) \| <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -2424,6 +2450,49 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Sheet+hyperlink"></a>
+
+#### sheet.hyperlink(address) ⇒ <code>string</code> \| <code>undefined</code>
+Get the hyperlink attached to the cell with the given address.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> \| <code>undefined</code> - The hyperlink or undefined if not set.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the hyperlinked cell. |
+
+<a name="Sheet+hyperlink"></a>
+
+#### sheet.hyperlink(address, hyperlink, [internal]) ⇒ [<code>Sheet</code>](#Sheet)
+Set the hyperlink on the cell with the given address.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the hyperlinked cell. |
+| hyperlink | <code>string</code> | The hyperlink to set or undefined to clear. |
+| [internal] | <code>boolean</code> | The flag to force hyperlink to be internal. If true, then autodetect is skipped. |
+
+<a name="Sheet+hyperlink"></a>
+
+#### sheet.hyperlink(address, opts) ⇒ [<code>Sheet</code>](#Sheet)
+Set the hyperlink on the cell with the given address and options.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the hyperlinked cell. |
+| opts | <code>Object</code> \| [<code>Cell</code>](#Cell) | Options or Cell. If opts is a Cell then an internal hyperlink is added. |
+| [opts.hyperlink] | <code>string</code> \| [<code>Cell</code>](#Cell) | The hyperlink to set, can be a Cell or an internal/external string. |
+| [opts.tooltip] | <code>string</code> | Additional text to help the user understand more about the hyperlink. |
+| [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
+| [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
+
 <a name="Workbook"></a>
 
 ### Workbook

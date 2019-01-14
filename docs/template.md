@@ -448,6 +448,14 @@ const value = cell.hyperlink(); // Returns 'http://example.com'
 // Set a hyperlink to email
 cell.value("Click to Email Jeff Bezos")
     .hyperlink({ email: "jeff@amazon.com", emailSubject: "I know you're a busy man Jeff, but..." });
+
+// Set a hyperlink to an internal cell using an address string.
+cell.value("Click to go to an internal cell")
+    .hyperlink("Sheet2!A1");
+
+// Set a hyperlink to an internal cell using a cell object.
+cell.value("Click to go to an internal cell")
+    .hyperlink(workbook.sheet(0).cell("A1"));
 ```
 
 ### Serving from Express
