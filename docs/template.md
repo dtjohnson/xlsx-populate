@@ -436,9 +436,26 @@ Hyperlinks are also supported on cells using the [Cell.hyperlink](#Cell+hyperlin
 cell.value("Link Text")
     .style({ fontColor: "0563c1", underline: true })
     .hyperlink("http://example.com");
-    
+
+// Set a hyperlink with tooltip
+cell.value("Link Text")
+    .style({ fontColor: "0563c1", underline: true })
+    .hyperlink({ hyperlink: "http://example.com", tooltip: "example.com" });
+
 // Get the hyperlink
 const value = cell.hyperlink(); // Returns 'http://example.com'
+
+// Set a hyperlink to email
+cell.value("Click to Email Jeff Bezos")
+    .hyperlink({ email: "jeff@amazon.com", emailSubject: "I know you're a busy man Jeff, but..." });
+
+// Set a hyperlink to an internal cell using an address string.
+cell.value("Click to go to an internal cell")
+    .hyperlink("Sheet2!A1");
+
+// Set a hyperlink to an internal cell using a cell object.
+cell.value("Click to go to an internal cell")
+    .hyperlink(workbook.sheet(0).cell("A1"));
 ```
 
 ### Serving from Express

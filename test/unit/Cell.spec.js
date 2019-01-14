@@ -201,6 +201,12 @@ describe("Cell", () => {
             expect(cell.hyperlink("HYPERLINK")).toBe(cell);
             expect(sheet.hyperlink).toHaveBeenCalledWith("C7", "HYPERLINK");
         });
+
+        it("should set the hyperlink with tooltip on the sheet", () => {
+            const opts = { hyperlink: "HYPERLINK", tooltip: "TOOLTIP" };
+            expect(cell.hyperlink(opts)).toBe(cell);
+            expect(sheet.hyperlink).toHaveBeenCalledWith("C7", opts);
+        });
     });
 
     describe('dataValidation', () => {
