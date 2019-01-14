@@ -440,15 +440,14 @@ cell.value("Link Text")
 // Set a hyperlink with tooltip
 cell.value("Link Text")
     .style({ fontColor: "0563c1", underline: true })
-    .hyperlink("http://example.com", "example.com");
-
-// Set a hyperlink with tooltip by object
-cell.value("Link Text")
-    .style({ fontColor: "0563c1", underline: true })
     .hyperlink({ hyperlink: "http://example.com", tooltip: "example.com" });
 
 // Get the hyperlink
 const value = cell.hyperlink(); // Returns 'http://example.com'
+
+// Set a hyperlink to email
+cell.value("Click to Email Jeff Bezos")
+    .hyperlink({ email: "jeff@amazon.com", emailSubject: "I know you're a busy man Jeff, but..." });
 ```
 
 ### Serving from Express

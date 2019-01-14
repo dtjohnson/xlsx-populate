@@ -806,6 +806,36 @@ describe("Sheet", () => {
             sheet.hyperlink("ADDRESS2", undefined);
             expect(sheet._hyperlinks).toEqualJson({});
         });
+
+        it("should set the hyperlink and the tooltip on the sheet", () => {
+            const opts = {
+                hyperlink: "HYPERLINK",
+                tooltip: "TOOLTIP"
+            };
+            const hyperlink = "HYPERLINK";
+            expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
+            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+                ref: "ADDRESS",
+                "r:id": "ID",
+                tooltip: "TOOLTIP"
+            });
+            expect(sheet._relationships.add).toHaveBeenCalledWith("hyperlink", hyperlink, "External");
+        });
+
+        it("should set the hyperlink as an email on the sheet", () => {
+            const opts = {
+                hyperlink: "HYPERLINK",
+                email: "USER@SERVER.COM",
+                emailSubject: "EMAIL SUBJECT"
+            };
+            const hyperlink = "mailto:USER@SERVER.COM?subject=EMAIL%20SUBJECT";
+            expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
+            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+                ref: "ADDRESS",
+                "r:id": "ID"
+            });
+            expect(sheet._relationships.add).toHaveBeenCalledWith("hyperlink", hyperlink, "External");
+        });
     });
 
     describe("incrementMaxSharedFormulaId", () => {
