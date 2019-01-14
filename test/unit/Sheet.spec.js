@@ -786,6 +786,16 @@ describe("Sheet", () => {
             });
         });
 
+        it("should add an internal hyperlink entry", () => {
+            const hyperlink = "Sheet1!A1";
+            expect(sheet.hyperlink("ADDRESS", hyperlink)).toBe(sheet);
+            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+                ref: "ADDRESS",
+                location: hyperlink,
+                display: hyperlink
+            });
+        });
+
         it("should remove a hyperlink entry", () => {
             sheet._hyperlinks = {
                 ADDRESS1: {},
@@ -805,6 +815,8 @@ describe("Sheet", () => {
 
             sheet.hyperlink("ADDRESS2", undefined);
             expect(sheet._hyperlinks).toEqualJson({});
+
+            // TODO: test that relationship is deleted
         });
 
         it("should set the hyperlink and the tooltip on the sheet", () => {
@@ -822,13 +834,27 @@ describe("Sheet", () => {
             expect(sheet._relationships.add).toHaveBeenCalledWith("hyperlink", hyperlink, "External");
         });
 
-        it("should set the hyperlink as an email on the sheet", () => {
+        it("should add a hyperlink entry using opts.email and opts.emailSubject", () => {
+            const opts = {
+                email: "USER@SERVER.COM",
+                emailSubject: "EMAIL SUBJECT"
+            };
+            const hyperlink = "mailto:USER@SERVER.COM?subject=EMAIL%20SUBJECT";
+            expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
+            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+                ref: "ADDRESS",
+                "r:id": "ID"
+            });
+            expect(sheet._relationships.add).toHaveBeenCalledWith("hyperlink", hyperlink, "External");
+        });
+
+        it("should add a hyperlink entry using opts.hyperlink and ignore opts.email and opts.emailSubject", () => {
             const opts = {
                 hyperlink: "HYPERLINK",
                 email: "USER@SERVER.COM",
                 emailSubject: "EMAIL SUBJECT"
             };
-            const hyperlink = "mailto:USER@SERVER.COM?subject=EMAIL%20SUBJECT";
+            const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
             expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
                 ref: "ADDRESS",
