@@ -23,6 +23,8 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Data Validation](#data-validation)
   * [Method Chaining](#method-chaining)
   * [Hyperlinks](#hyperlinks)
+  * [Print Options](#print-options)
+  * [Page Margins](#page-margins)
   * [Serving from Express](#serving-from-express)
   * [Browser Usage](#browser-usage)
   * [Promises](#promises)
@@ -484,6 +486,43 @@ cell.value("Click to go to an internal cell")
 // Set a hyperlink to an internal cell using a cell object.
 cell.value("Click to go to an internal cell")
     .hyperlink(workbook.sheet(0).cell("A1"));
+```
+
+### Print Options
+Print options are accessed using the [Sheet.printOptions](#Sheet+printOptions) method. Defaults are all assumed to be false, so if the attribute is missing, then the method returns false. A method [Sheet.printGridLines](#Sheet+printGridLines) is provided to offer the convenience of setting both gridLines and gridLinesSet.
+```js
+// Print row and column headings
+sheet.printOptions('headings', true);
+
+// Get the headings flag
+const headings = sheet.printOptions('headings'); // Returns true
+
+// Clear flag for center on page vertically when printing
+sheet.printOptions('verticalCentered', undefined);
+
+// Get the verticalCentered flag
+const verticalCentered = sheet.printOptions('verticalCentered'); // Returns false
+
+// Enable grid lines in print
+sheet.printGridLines(true);
+
+// Now both gridLines and gridLinesSet print options are set
+sheet.printOptions('gridLines') === sheet.printOptions('gridLinesSet') === true; // Returns true
+
+// To disable, just disable one of gridLines or gridLinesSet
+sheet.printOptions('gridLineSets', false);
+
+const isPrintGridLinesEnabled = sheet.printGridLines(); // Returns false
+```
+
+### Page Margins
+Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method.
+```js
+// Set top page margin in inches.
+sheet.pageMargins('top', 1.1);
+
+// Get top page margin in inches.
+const topPageMarginInInches = sheet.pageMargins('top'); // Returns 1.1
 ```
 
 ### Serving from Express
@@ -2129,6 +2168,12 @@ A worksheet.
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.printOptions(attributeName)](#Sheet+printOptions) ⇒ <code>boolean</code>
+    * [.printOptions(attributeName, attributeEnabled)](#Sheet+printOptions) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.printGridLines()](#Sheet+printGridLines) ⇒ <code>boolean</code>
+    * [.printGridLines(enabled)](#Sheet+printGridLines) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.pageMargins(attributeName)](#Sheet+pageMargins) ⇒ <code>number</code>
+    * [.pageMargins(attributeName, attributeStringValue)](#Sheet+pageMargins) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -2492,6 +2537,73 @@ Set the hyperlink on the cell with the given address and options.
 | [opts.tooltip] | <code>string</code> | Additional text to help the user understand more about the hyperlink. |
 | [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
 | [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
+
+<a name="Sheet+printOptions"></a>
+
+#### sheet.printOptions(attributeName) ⇒ <code>boolean</code>
+Get the print option given a valid print option attribute.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| attributeName | <code>string</code> | Attribute name of the printOptions.   gridLines - Used in conjunction with gridLinesSet. If both gridLines and gridlinesSet are true, then grid lines shall print. Otherwise, they shall not (i.e., one or both have false values).   gridLinesSet - Used in conjunction with gridLines. If both gridLines and gridLinesSet are true, then grid lines shall print. Otherwise, they shall not (i.e., one or both have false values).   headings - Print row and column headings.   horizontalCentered - Center on page horizontally when printing.   verticalCentered - Center on page vertically when printing. |
+
+<a name="Sheet+printOptions"></a>
+
+#### sheet.printOptions(attributeName, attributeEnabled) ⇒ [<code>Sheet</code>](#Sheet)
+Set the print option given a valid print option attribute and a value.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| attributeName | <code>string</code> | Attribute name of the printOptions. See get print option for list of valid attributes. |
+| attributeEnabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` then the attribute is removed, otherwise set as a boolean value to enable/disable the print option. |
+
+<a name="Sheet+printGridLines"></a>
+
+#### sheet.printGridLines() ⇒ <code>boolean</code>
+Get the print option for the gridLines attribute value.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+<a name="Sheet+printGridLines"></a>
+
+#### sheet.printGridLines(enabled) ⇒ [<code>Sheet</code>](#Sheet)
+Set the print option for the gridLines attribute value.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| enabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` then attribute is removed, otherwise set as a boolean value to enable/disable the gridLines. |
+
+<a name="Sheet+pageMargins"></a>
+
+#### sheet.pageMargins(attributeName) ⇒ <code>number</code>
+Get the page margin given a valid attribute name.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>number</code> - the attribute value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| attributeName | <code>string</code> | Attribute name of the pageMargins.     left - Left Page Margin in inches.     right - Right page margin in inches.     top - Top Page Margin in inches.     buttom - Bottom Page Margin in inches.     footer - Footer Page Margin in inches.     header - Header Page Margin in inches. |
+
+<a name="Sheet+pageMargins"></a>
+
+#### sheet.pageMargins(attributeName, attributeStringValue) ⇒ [<code>Sheet</code>](#Sheet)
+Set the page margin given a value attribute name and a value.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| attributeName | <code>string</code> | Attribute name of the pageMargins. See get page margin for list of valid attributes. |
+| attributeStringValue | <code>undefined</code> \| <code>number</code> \| <code>string</code> | If the value is `undefined` then the attribute is removed, otherwise set the associated attribute value |
 
 <a name="Workbook"></a>
 

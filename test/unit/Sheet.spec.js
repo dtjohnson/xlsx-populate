@@ -864,6 +864,206 @@ describe("Sheet", () => {
         });
     });
 
+    describe("printOptions", () => {
+        it("should return the printOptions attribute value", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    horizontalCentered: 0
+                },
+                children: []
+            };
+            expect(sheet.printOptions('headings')).toBe(true);
+            expect(sheet.printOptions('horizontalCentered')).toBe(false);
+            expect(sheet.printOptions('verticalCentered')).toBe(false);
+
+            delete sheet._printOptionsNode.attributes.headings;
+            expect(sheet.printOptions('headings')).toBe(false);
+        });
+
+        it("should add or update the printOptions attribute", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    horizontalCentered: 0
+                },
+                children: []
+            };
+
+            expect(sheet.printOptions('headings', false)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes.headings).toBe(0);
+
+            expect(sheet.printOptions('horizontalCentered', true)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes.horizontalCentered).toBe(1);
+
+            expect(sheet.printOptions('verticalCentered', true)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes.verticalCentered).toBe(1);
+        });
+
+        it("should throw an error if attempting to access unsupported attributes", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    unsupportedAttribute: 'a value of some kind'
+                },
+                children: []
+            };
+
+            const theError = 'Sheet.printOptions: "unsupportedAttribute" is not supported.';
+            expect(() => sheet.printOptions('unsupportedAttribute')).toThrowError(Error, theError);
+            expect(() => sheet.printOptions('unsupportedAttribute', undefined)).toThrowError(Error, theError);
+            expect(() => sheet.printOptions('unsupportedAttribute', true)).toThrowError(Error, theError);
+
+            const theOtherError = 'Sheet.printOptions: "anotherUnsupportedAttribute" is not supported.';
+            expect(() => sheet.printOptions('anotherUnsupportedAttribute')).toThrowError(Error, theOtherError);
+            expect(() => sheet.printOptions('anotherUnsupportedAttribute', undefined)).toThrowError(Error, theOtherError);
+            expect(() => sheet.printOptions('anotherUnsupportedAttribute', true)).toThrowError(Error, theOtherError);
+        });
+
+        it("should remove a printOptions attribute", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    horizontalCentered: 0
+                },
+                children: []
+            };
+
+            expect(sheet.printOptions('verticalCentered', undefined)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                headings: 1,
+                horizontalCentered: 0
+            });
+
+            expect(sheet.printOptions('headings', undefined)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                horizontalCentered: 0
+            });
+
+            expect(sheet.printOptions('horizontalCentered', undefined)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({});
+        });
+    });
+
+    describe("printGridLines", () => {
+        it("should return the combined gridLines and gridLinesSet state from printOptions", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    gridLines: 1
+                },
+                children: []
+            };
+
+            expect(sheet.printGridLines()).toBe(false);
+
+            sheet._printOptionsNode.attributes.gridLinesSet = 1;
+            expect(sheet.printGridLines()).toBe(true);
+
+            sheet._printOptionsNode.attributes.gridLines = false;
+            expect(sheet.printGridLines()).toBe(false);
+        });
+
+        it("should add or update the gridLines and gridLinesSet printOptions attributes", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    headings: 1,
+                    gridLines: 1
+                },
+                children: []
+            };
+
+            expect(sheet.printGridLines(true)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                headings: 1,
+                gridLines: 1,
+                gridLinesSet: 1
+            });
+
+            expect(sheet.printGridLines(undefined)).toBe(sheet);
+            expect(sheet._printOptionsNode.attributes).toEqualJson({
+                headings: 1
+            });
+        });
+    });
+
+    describe("pageMargins", () => {
+        it("should return the pageMargins attribute value", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {
+                    left: 0.7,
+                    footer: '0.3'
+                },
+                children: []
+            };
+            expect(sheet.pageMargins('left')).toBe(0.7);
+            expect(sheet.pageMargins('footer')).toBe(0.3);
+            expect(sheet.pageMargins('header')).toBeUndefined();
+        });
+
+        it("should add or update the pageMargins attribute", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {
+                    left: 0.7,
+                    footer: '0.3'
+                },
+                children: []
+            };
+
+            expect(sheet.pageMargins('left', '0.3')).toBe(sheet);
+            expect(sheet._pageMarginsNode.attributes.left, 1.2);
+
+            expect(sheet.pageMargins('footer', 0.7)).toBe(sheet);
+            expect(sheet._pageMarginsNode.attributes.footer, 0.3);
+
+            expect(sheet.pageMargins('header', 1.0)).toBe(sheet);
+            expect(sheet._pageMarginsNode.attributes.header, 1.0);
+        });
+
+        it("should throw an error if attempting to assign a value outside of range", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {},
+                children: []
+            };
+            const theError = 'Sheet.pageMargins: value too small - value must be greater than or equal to 0.';
+            expect(() => sheet.pageMargins('left', -0.123)).toThrowError(RangeError, theError);
+            expect(() => sheet.pageMargins('left', '-0.123')).toThrowError(RangeError, theError);
+        });
+
+        it("should remove a pageMargins attribute", () => {
+            sheet._pageMarginsNode = {
+                name: 'pageMargins',
+                attributes: {
+                    left: 0.7,
+                    footer: '0.3'
+                },
+                children: []
+            };
+
+            expect(sheet.pageMargins('header', undefined)).toBe(sheet);
+            expect(sheet._pageMarginsNode.attributes).toEqualJson({
+                left: 0.7,
+                footer: '0.3'
+            });
+
+            expect(sheet.pageMargins('left', undefined)).toBe(sheet);
+            expect(sheet._pageMarginsNode.attributes).toEqualJson({
+                footer: '0.3'
+            });
+
+            expect(sheet.pageMargins('footer', undefined)).toBe(sheet);
+            expect(sheet._pageMarginsNode.attributes).toEqualJson({});
+        });
+    });
+
     describe("incrementMaxSharedFormulaId", () => {
         it("should increment the max shared formula ID", () => {
             sheet._maxSharedFormulaId = 8;
@@ -974,6 +1174,32 @@ describe("Sheet", () => {
                     ]
                 },
                 { name: 'sheetData', attributes: {}, children: [] },
+                { name: 'printOptions', attributes: {}, children: [] },
+                { name: 'pageMargins', attributes: {}, children: [] }
+            ]);
+        });
+
+        it("should add the printOptions", () => {
+            sheet._printOptionsNode = {
+                name: 'printOptions',
+                attributes: {
+                    'headings': 1,
+                    'verticalCentered': false
+                },
+                children: []
+            };
+            expect(sheet.toXmls().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
+                { name: 'sheetFormatPr', attributes: {}, children: [] },
+                { name: 'sheetData', attributes: {}, children: [] },
+                {
+                    name: 'printOptions',
+                    attributes: {
+                        'headings': 1,
+                        'verticalCentered': false
+                    },
+                    children: []
+                },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
@@ -993,6 +1219,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["MERGE1", "MERGE2"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
@@ -1012,6 +1239,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["HYPERLINK1", "HYPERLINK2"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
@@ -1056,6 +1284,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["HYPERLINK1"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
                 { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
