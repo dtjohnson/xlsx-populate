@@ -892,13 +892,13 @@ describe("Sheet", () => {
                 children: []
             };
 
-            sheet.printOptions('headings', false);
+            expect(sheet.printOptions('headings', false)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes.headings).toBe(0);
 
-            sheet.printOptions('horizontalCentered', true);
+            expect(sheet.printOptions('horizontalCentered', true)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes.horizontalCentered).toBe(1);
 
-            sheet.printOptions('verticalCentered', true);
+            expect(sheet.printOptions('verticalCentered', true)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes.verticalCentered).toBe(1);
         });
 
@@ -910,10 +910,16 @@ describe("Sheet", () => {
                 },
                 children: []
             };
+
             const theError = 'Sheet.printOptions: "unsupportedAttribute" is not supported.';
             expect(() => sheet.printOptions('unsupportedAttribute')).toThrowError(Error, theError);
             expect(() => sheet.printOptions('unsupportedAttribute', undefined)).toThrowError(Error, theError);
             expect(() => sheet.printOptions('unsupportedAttribute', true)).toThrowError(Error, theError);
+
+            const theOtherError = 'Sheet.printOptions: "anotherUnsupportedAttribute" is not supported.';
+            expect(() => sheet.printOptions('anotherUnsupportedAttribute')).toThrowError(Error, theOtherError);
+            expect(() => sheet.printOptions('anotherUnsupportedAttribute', undefined)).toThrowError(Error, theOtherError);
+            expect(() => sheet.printOptions('anotherUnsupportedAttribute', true)).toThrowError(Error, theOtherError);
         });
 
         it("should remove a printOptions attribute", () => {
@@ -926,18 +932,18 @@ describe("Sheet", () => {
                 children: []
             };
 
-            sheet.printOptions('verticalCentered', undefined);
+            expect(sheet.printOptions('verticalCentered', undefined)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes).toEqualJson({
                 headings: 1,
                 horizontalCentered: 0
             });
 
-            sheet.printOptions('headings', undefined)
+            expect(sheet.printOptions('headings', undefined)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes).toEqualJson({
                 horizontalCentered: 0
             });
 
-            sheet.printOptions('horizontalCentered', undefined)
+            expect(sheet.printOptions('horizontalCentered', undefined)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes).toEqualJson({});
         });
     });
@@ -972,14 +978,14 @@ describe("Sheet", () => {
                 children: []
             };
 
-            sheet.printGridLines(true);
+            expect(sheet.printGridLines(true)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes).toEqualJson({
                 headings: 1,
                 gridLines: 1,
                 gridLinesSet: 1
             });
 
-            sheet.printGridLines(undefined);
+            expect(sheet.printGridLines(undefined)).toBe(sheet);
             expect(sheet._printOptionsNode.attributes).toEqualJson({
                 headings: 1
             });
@@ -1011,13 +1017,13 @@ describe("Sheet", () => {
                 children: []
             };
 
-            sheet.pageMargins('left', '0.3');
+            expect(sheet.pageMargins('left', '0.3')).toBe(sheet);
             expect(sheet._pageMarginsNode.attributes.left, 1.2);
 
-            sheet.pageMargins('footer', 0.7);
+            expect(sheet.pageMargins('footer', 0.7)).toBe(sheet);
             expect(sheet._pageMarginsNode.attributes.footer, 0.3);
 
-            sheet.pageMargins('header', 1.0);
+            expect(sheet.pageMargins('header', 1.0)).toBe(sheet);
             expect(sheet._pageMarginsNode.attributes.header, 1.0);
         });
 
@@ -1042,18 +1048,18 @@ describe("Sheet", () => {
                 children: []
             };
 
-            sheet.pageMargins('header', undefined);
+            expect(sheet.pageMargins('header', undefined)).toBe(sheet);
             expect(sheet._pageMarginsNode.attributes).toEqualJson({
                 left: 0.7,
                 footer: '0.3'
             });
 
-            sheet.pageMargins('left', undefined);
+            expect(sheet.pageMargins('left', undefined)).toBe(sheet);
             expect(sheet._pageMarginsNode.attributes).toEqualJson({
                 footer: '0.3'
             });
 
-            sheet.pageMargins('footer', undefined);
+            expect(sheet.pageMargins('footer', undefined)).toBe(sheet);
             expect(sheet._pageMarginsNode.attributes).toEqualJson({});
         });
     });
