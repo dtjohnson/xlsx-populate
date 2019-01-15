@@ -458,6 +458,43 @@ cell.value("Click to go to an internal cell")
     .hyperlink(workbook.sheet(0).cell("A1"));
 ```
 
+### Print Options
+Print options are accessed using the [Sheet.printOptions](#Sheet+printOptions) method. Defaults are all assumed to be false, so if the attribute is missing, then the method returns false. A method [Sheet.printGridLines](#Sheet+printGridLines) is provided to offer the convenience of setting both gridLines and gridLinesSet.
+```js
+// Print row and column headings
+sheet.printOptions('headings', true);
+
+// Get the headings flag
+const headings = sheet.printOptions('headings'); // Returns true
+
+// Clear flag for center on page vertically when printing
+sheet.printOptions('verticalCentered', undefined);
+
+// Get the verticalCentered flag
+const verticalCentered = sheet.printOptions('verticalCentered'); // Returns false
+
+// Enable grid lines in print
+sheet.printGridLines(true);
+
+// Now both gridLines and gridLinesSet print options are set
+sheet.printOptions('gridLines') === sheet.printOptions('gridLinesSet') === true; // Returns true
+
+// To disable, just disable one of gridLines or gridLinesSet
+sheet.printOptions('gridLineSets', false);
+
+const isPrintGridLinesEnabled = sheet.printGridLines(); // Returns false
+```
+
+### Page Margins
+Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method.
+```js
+// Set top page margin in inches.
+sheet.pageMargins('top', 1.1);
+
+// Get top page margin in inches.
+const topPageMarginInInches = sheet.pageMargins('top'); // Returns 1.1
+```
+
 ### Serving from Express
 You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
 ```js
