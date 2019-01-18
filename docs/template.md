@@ -47,7 +47,7 @@ XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
         workbook.sheet("Sheet1").cell("A1").value("This is neat!");
-        
+
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
     });
@@ -64,12 +64,12 @@ XlsxPopulate.fromFileAsync("./Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
         const value = workbook.sheet("Sheet1").cell("A1").value();
-        
+
         // Log the value.
         console.log(value);
     });
 ```
-__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output. 
+__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output.
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulation of multiple cells at once.
@@ -113,7 +113,7 @@ You can access rows and columns in order to change size, hide/show, or access ce
 // Get the B column, set its width and unhide it (assuming it was hidden).
 sheet.column("B").width(25).hidden(false);
 
-const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+const cell = sheet.row(5).cell(3); // Returns the cell at C5.
 ```
 
 ### Managing Sheets
@@ -227,7 +227,7 @@ You can search for occurrences of text in cells within the workbook or sheets an
 // Find all occurrences of the text "foo" in the workbook and replace with "bar".
 workbook.find("foo", "bar"); // Returns array of matched cells
 
-// Find the matches but don't replace. 
+// Find the matches but don't replace.
 workbook.find("foo");
 
 // Just look in the first sheet.
@@ -256,9 +256,9 @@ cell.style({ bold: true, italic: true });
 
 // Get a single style
 const bold = cell.style("bold"); // true
- 
+
 // Get multiple styles
-const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true } 
+const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true }
 ```
 
 Similarly for ranges:
@@ -290,9 +290,9 @@ sheet.column("A").style({ bold: true, italic: true });
 
 // Get a single style
 const bold = sheet.column(3).style("bold");
- 
+
 // Get multiple styles
-const styles = sheet.row(5).style(["bold", "italic"]); 
+const styles = sheet.row(5).style(["bold", "italic"]);
 ```
 Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.
 
@@ -339,6 +339,31 @@ You can also look up the desired format code in Excel:
 * Switch the category to "Custom" if it is not already.
 * The code in the "Type" box is the format you should copy.
 
+### Rich Text
+You can read/write rich text to cells.
+```js
+const cell = workbook.sheet(0).cell('A1');
+
+// transform exsisting string cell to rich text
+cell.toRichText();
+
+// reset a rich text cell
+cell.value('string');
+cell.value(new Date());
+
+// create new cell with rich text
+workbook.sheet(0).cell('B1').toRichText()
+    .add('test', { bold: true, italic: true })
+    .add('123', { italic: true, fontColor: '123456' });
+
+// modify a rich text cell
+cell.value().get(0).style('fontFamily', 'Calibri')
+cell.toRichText().get(0).style('fontFamily', 'Calibri')
+
+// read multiple styles
+cell.toRichText().get(0).style(['fontFamily', 'italic', 'bold'])
+```
+
 ### Dates
 
 Excel stores date/times as the number of days since 1/1/1900 ([sort of](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn't already exist in the cell:
@@ -357,7 +382,7 @@ Data validation is also supported. To set/get/remove a cell data validation:
 // Set the data validation
 cell.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -385,7 +410,7 @@ Similarly for ranges:
 // Set all cells in range with a single shared data validation
 range.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -426,7 +451,7 @@ workbook
             .value(5)
         .cell(0, 0)
             .style("underline", "double");
-        
+
 ```
 
 ### Hyperlinks
@@ -504,14 +529,14 @@ router.get("/download", function (req, res, next) {
         .then(workbook => {
             // Make edits.
             workbook.sheet(0).cell("A1").value("foo");
-            
+
             // Get the output
             return workbook.outputAsync();
         })
         .then(data => {
             // Set the output file name.
             res.attachment("output.xlsx");
-            
+
             // Send the workbook.
             res.send(data);
         })
@@ -607,7 +632,7 @@ workbook.toFileAsync("./out.xlsx", { password: "S3cret!" });
 ```
 The password option is supported in all output methods. N.B. Workbooks will only be encrypted if you supply a password when outputting even if they had a password when reading.
 
-Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.  
+Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.
 
 ## Missing Features
 There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn't supported
@@ -615,7 +640,7 @@ please open an issue to show your support. Better still, feel free to [contribut
 
 ## Submitting an Issue
 If you happen to run into a bug or an issue, please feel free to [submit an issue](https://github.com/dtjohnson/xlsx-populate/issues). I only ask that you please include sample JavaScript code that demonstrates the issue.
-If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue. 
+If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue.
 
 ## Contributing
 
@@ -676,7 +701,7 @@ To make sure your code is consistent and high quality, please make sure to follo
  * Make sure all tests pass successfully.
  * Whenever possible, do not modify/break existing API behavior. This module adheres to the [semantic versioning standard](https://docs.npmjs.com/getting-started/semantic-versioning). So any breaking changes will require a major release.
  * If your feature needs more documentation than just the JSDoc output, please add to the docs/template.md README file.
- 
+
 
 ### Gulp Tasks
 
