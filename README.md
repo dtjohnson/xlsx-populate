@@ -19,6 +19,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Defined Names](#defined-names)
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
+  * [Rich Text](#rich-text)
   * [Dates](#dates)
   * [Data Validation](#data-validation)
   * [Method Chaining](#method-chaining)
@@ -77,7 +78,7 @@ XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
         workbook.sheet("Sheet1").cell("A1").value("This is neat!");
-        
+
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
     });
@@ -94,12 +95,12 @@ XlsxPopulate.fromFileAsync("./Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
         const value = workbook.sheet("Sheet1").cell("A1").value();
-        
+
         // Log the value.
         console.log(value);
     });
 ```
-__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output. 
+__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output.
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulation of multiple cells at once.
@@ -143,7 +144,7 @@ You can access rows and columns in order to change size, hide/show, or access ce
 // Get the B column, set its width and unhide it (assuming it was hidden).
 sheet.column("B").width(25).hidden(false);
 
-const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+const cell = sheet.row(5).cell(3); // Returns the cell at C5.
 ```
 
 ### Managing Sheets
@@ -257,7 +258,7 @@ You can search for occurrences of text in cells within the workbook or sheets an
 // Find all occurrences of the text "foo" in the workbook and replace with "bar".
 workbook.find("foo", "bar"); // Returns array of matched cells
 
-// Find the matches but don't replace. 
+// Find the matches but don't replace.
 workbook.find("foo");
 
 // Just look in the first sheet.
@@ -286,9 +287,9 @@ cell.style({ bold: true, italic: true });
 
 // Get a single style
 const bold = cell.style("bold"); // true
- 
+
 // Get multiple styles
-const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true } 
+const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true }
 ```
 
 Similarly for ranges:
@@ -320,9 +321,9 @@ sheet.column("A").style({ bold: true, italic: true });
 
 // Get a single style
 const bold = sheet.column(3).style("bold");
- 
+
 // Get multiple styles
-const styles = sheet.row(5).style(["bold", "italic"]); 
+const styles = sheet.row(5).style(["bold", "italic"]);
 ```
 Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.
 
@@ -369,6 +370,31 @@ You can also look up the desired format code in Excel:
 * Switch the category to "Custom" if it is not already.
 * The code in the "Type" box is the format you should copy.
 
+### Rich Text
+You can read/write rich text to cells.
+```js
+const cell = workbook.sheet(0).cell('A1');
+
+// transform exsisting string cell to rich text
+cell.toRichText();
+
+// reset a rich text cell
+cell.value('string');
+cell.value(new Date());
+
+// create new cell with rich text
+workbook.sheet(0).cell('B1').toRichText()
+    .add('test', { bold: true, italic: true })
+    .add('123', { italic: true, fontColor: '123456' });
+
+// modify a rich text cell
+cell.value().get(0).style('fontFamily', 'Calibri')
+cell.toRichText().get(0).style('fontFamily', 'Calibri')
+
+// read multiple styles
+cell.toRichText().get(0).style(['fontFamily', 'italic', 'bold'])
+```
+
 ### Dates
 
 Excel stores date/times as the number of days since 1/1/1900 ([sort of](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn't already exist in the cell:
@@ -387,7 +413,7 @@ Data validation is also supported. To set/get/remove a cell data validation:
 // Set the data validation
 cell.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -415,7 +441,7 @@ Similarly for ranges:
 // Set all cells in range with a single shared data validation
 range.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -456,7 +482,7 @@ workbook
             .value(5)
         .cell(0, 0)
             .style("underline", "double");
-        
+
 ```
 
 ### Hyperlinks
@@ -534,14 +560,14 @@ router.get("/download", function (req, res, next) {
         .then(workbook => {
             // Make edits.
             workbook.sheet(0).cell("A1").value("foo");
-            
+
             // Get the output
             return workbook.outputAsync();
         })
         .then(data => {
             // Set the output file name.
             res.attachment("output.xlsx");
-            
+
             // Send the workbook.
             res.send(data);
         })
@@ -637,7 +663,7 @@ workbook.toFileAsync("./out.xlsx", { password: "S3cret!" });
 ```
 The password option is supported in all output methods. N.B. Workbooks will only be encrypted if you supply a password when outputting even if they had a password when reading.
 
-Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.  
+Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.
 
 ## Missing Features
 There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn't supported
@@ -645,7 +671,7 @@ please open an issue to show your support. Better still, feel free to [contribut
 
 ## Submitting an Issue
 If you happen to run into a bug or an issue, please feel free to [submit an issue](https://github.com/dtjohnson/xlsx-populate/issues). I only ask that you please include sample JavaScript code that demonstrates the issue.
-If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue. 
+If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue.
 
 ## Contributing
 
@@ -706,7 +732,7 @@ To make sure your code is consistent and high quality, please make sure to follo
  * Make sure all tests pass successfully.
  * Whenever possible, do not modify/break existing API behavior. This module adheres to the [semantic versioning standard](https://docs.npmjs.com/getting-started/semantic-versioning). So any breaking changes will require a major release.
  * If your feature needs more documentation than just the JSDoc output, please add to the docs/template.md README file.
- 
+
 
 ### Gulp Tasks
 
@@ -879,7 +905,6 @@ A cell
 
 * [Cell](#Cell)
     * _instance_
-        * [.active()](#Cell+active) ⇒ <code>boolean</code>
         * [.active(active)](#Cell+active) ⇒ [<code>Cell</code>](#Cell)
         * [.address([opts])](#Cell+address) ⇒ <code>string</code>
         * [.column()](#Cell+column) ⇒ [<code>Column</code>](#Column)
@@ -887,12 +912,8 @@ A cell
         * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
         * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
         * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
-        * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ [<code>Cell</code>](#Cell)
-        * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
-        * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
         * [.hyperlink(opts)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
-        * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> \| <code>undefined</code>
         * [.dataValidation(dataValidation)](#Cell+dataValidation) ⇒ [<code>Cell</code>](#Cell)
         * [.tap(callback)](#Cell+tap) ⇒ [<code>Cell</code>](#Cell)
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
@@ -901,27 +922,14 @@ A cell
         * [.row()](#Cell+row) ⇒ [<code>Row</code>](#Row)
         * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
         * [.sheet()](#Cell+sheet) ⇒ [<code>Sheet</code>](#Sheet)
-        * [.style(name)](#Cell+style) ⇒ <code>\*</code>
-        * [.style(names)](#Cell+style) ⇒ <code>object.&lt;string, \*&gt;</code>
-        * [.style(name, value)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
-        * [.style(name)](#Cell+style) ⇒ [<code>Range</code>](#Range)
-        * [.style(styles)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.style(style)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
-        * [.value()](#Cell+value) ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
-        * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+        * [.toRichText()](#Cell+toRichText) ⇒ <code>RichTexts</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
 
-<a name="Cell+active"></a>
-
-#### cell.active() ⇒ <code>boolean</code>
-Gets a value indicating whether the cell is the active cell in the sheet.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>boolean</code> - True if active, false otherwise.  
 <a name="Cell+active"></a>
 
 #### cell.active(active) ⇒ [<code>Cell</code>](#Cell)
@@ -993,13 +1001,6 @@ Find the given pattern in the cell and optionally replace it.
 
 <a name="Cell+formula"></a>
 
-#### cell.formula() ⇒ <code>string</code>
-Gets the formula in the cell. Note that if a formula was set as part of a range, the getter will return 'SHARED'. This is a limitation that may be addressed in a future release.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>string</code> - The formula in the cell.  
-<a name="Cell+formula"></a>
-
 #### cell.formula(formula) ⇒ [<code>Cell</code>](#Cell)
 Sets the formula in the cell.
 
@@ -1009,25 +1010,6 @@ Sets the formula in the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | formula | <code>string</code> | The formula to set. |
-
-<a name="Cell+hyperlink"></a>
-
-#### cell.hyperlink() ⇒ <code>string</code> \| <code>undefined</code>
-Gets the hyperlink attached to the cell.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>string</code> \| <code>undefined</code> - The hyperlink or undefined if not set.  
-<a name="Cell+hyperlink"></a>
-
-#### cell.hyperlink(hyperlink) ⇒ [<code>Cell</code>](#Cell)
-Set or clear the hyperlink on the cell.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: [<code>Cell</code>](#Cell) - The cell.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| hyperlink | <code>string</code> \| [<code>Cell</code>](#Cell) \| <code>undefined</code> | The hyperlink to set or undefined to clear. |
 
 <a name="Cell+hyperlink"></a>
 
@@ -1045,13 +1027,6 @@ Set the hyperlink options on the cell.
 | [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
 | [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
 
-<a name="Cell+dataValidation"></a>
-
-#### cell.dataValidation() ⇒ <code>object</code> \| <code>undefined</code>
-Gets the data validation object attached to the cell.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>object</code> \| <code>undefined</code> - The data validation or undefined if not set.  
 <a name="Cell+dataValidation"></a>
 
 #### cell.dataValidation(dataValidation) ⇒ [<code>Cell</code>](#Cell)
@@ -1136,68 +1111,6 @@ Gets the parent sheet.
 **Returns**: [<code>Sheet</code>](#Sheet) - The parent sheet.  
 <a name="Cell+style"></a>
 
-#### cell.style(name) ⇒ <code>\*</code>
-Gets an individual style.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>\*</code> - The style.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name of the style. |
-
-<a name="Cell+style"></a>
-
-#### cell.style(names) ⇒ <code>object.&lt;string, \*&gt;</code>
-Gets multiple styles.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>object.&lt;string, \*&gt;</code> - Object whose keys are the style names and values are the styles.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| names | <code>Array.&lt;string&gt;</code> | The names of the style. |
-
-<a name="Cell+style"></a>
-
-#### cell.style(name, value) ⇒ [<code>Cell</code>](#Cell)
-Sets an individual style.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: [<code>Cell</code>](#Cell) - The cell.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name of the style. |
-| value | <code>\*</code> | The value to set. |
-
-<a name="Cell+style"></a>
-
-#### cell.style(name) ⇒ [<code>Range</code>](#Range)
-Sets the styles in the range starting with the cell.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: [<code>Range</code>](#Range) - The range that was set.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name of the style. |
-|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | 2D array of values to set. |
-
-<a name="Cell+style"></a>
-
-#### cell.style(styles) ⇒ [<code>Cell</code>](#Cell)
-Sets multiple styles.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: [<code>Cell</code>](#Cell) - The cell.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
-
-<a name="Cell+style"></a>
-
 #### cell.style(style) ⇒ [<code>Cell</code>](#Cell)
 Sets to a specific style
 
@@ -1207,25 +1120,6 @@ Sets to a specific style
 | Param | Type | Description |
 | --- | --- | --- |
 | style | [<code>Style</code>](#new_Style_new) | Style object given from stylesheet.createStyle |
-
-<a name="Cell+value"></a>
-
-#### cell.value() ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
-Gets the value of the cell.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code> - The value of the cell.  
-<a name="Cell+value"></a>
-
-#### cell.value(value) ⇒ [<code>Cell</code>](#Cell)
-Sets the value of the cell.
-
-**Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: [<code>Cell</code>](#Cell) - The cell.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>null</code> \| <code>undefined</code> | The value to set. |
 
 <a name="Cell+value"></a>
 
@@ -1246,6 +1140,13 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Cell+toRichText"></a>
+
+#### cell.toRichText() ⇒ <code>RichTexts</code>
+Convert current cell to rich text, if the cell exists some string,the string will add to rich text. otherwise the cell value will becleared. It will do nothing if the cell is already rich text.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>RichTexts</code> - RichTexts object, you can call add(text, styles).  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -2937,11 +2838,7 @@ Convert an Excel number to a date.
 <a name="_"></a>
 
 ### _
-OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
-https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
-
-Helpful guidance also take from this Github project:
-https://github.com/nolze/ms-offcrypto-tool
+OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
 
