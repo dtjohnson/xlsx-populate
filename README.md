@@ -927,6 +927,8 @@ A cell
         * [.row()](#Cell+row) ⇒ [<code>Row</code>](#Row)
         * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
         * [.sheet()](#Cell+sheet) ⇒ [<code>Sheet</code>](#Sheet)
+        * [.style(name)](#Cell+style) ⇒ <code>\*</code>
+        * [.style(names)](#Cell+style) ⇒ <code>object.&lt;string, \*&gt;</code>
         * [.style(name, value)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.style(name)](#Cell+style) ⇒ [<code>Range</code>](#Range)
         * [.style(styles)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
@@ -1159,6 +1161,30 @@ Gets the parent sheet.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
 **Returns**: [<code>Sheet</code>](#Sheet) - The parent sheet.  
+<a name="Cell+style"></a>
+
+#### cell.style(name) ⇒ <code>\*</code>
+Gets an individual style.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>\*</code> - The style.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+
+<a name="Cell+style"></a>
+
+#### cell.style(names) ⇒ <code>object.&lt;string, \*&gt;</code>
+Gets multiple styles.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>object.&lt;string, \*&gt;</code> - Object whose keys are the style names and values are the styles.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| names | <code>Array.&lt;string&gt;</code> | The names of the style. |
+
 <a name="Cell+style"></a>
 
 #### cell.style(name, value) ⇒ [<code>Cell</code>](#Cell)
