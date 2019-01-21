@@ -905,6 +905,7 @@ A cell
 
 * [Cell](#Cell)
     * _instance_
+        * [.active()](#Cell+active) ⇒ <code>boolean</code>
         * [.active(active)](#Cell+active) ⇒ [<code>Cell</code>](#Cell)
         * [.address([opts])](#Cell+address) ⇒ <code>string</code>
         * [.column()](#Cell+column) ⇒ [<code>Column</code>](#Column)
@@ -912,8 +913,12 @@ A cell
         * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
         * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
         * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
+        * [.formula()](#Cell+formula) ⇒ <code>string</code>
         * [.formula(formula)](#Cell+formula) ⇒ [<code>Cell</code>](#Cell)
+        * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
+        * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
         * [.hyperlink(opts)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
+        * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> \| <code>undefined</code>
         * [.dataValidation(dataValidation)](#Cell+dataValidation) ⇒ [<code>Cell</code>](#Cell)
         * [.tap(callback)](#Cell+tap) ⇒ [<code>Cell</code>](#Cell)
         * [.thru(callback)](#Cell+thru) ⇒ <code>\*</code>
@@ -922,7 +927,12 @@ A cell
         * [.row()](#Cell+row) ⇒ [<code>Row</code>](#Row)
         * [.rowNumber()](#Cell+rowNumber) ⇒ <code>number</code>
         * [.sheet()](#Cell+sheet) ⇒ [<code>Sheet</code>](#Sheet)
+        * [.style(name, value)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
+        * [.style(name)](#Cell+style) ⇒ [<code>Range</code>](#Range)
+        * [.style(styles)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.style(style)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
+        * [.value()](#Cell+value) ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
+        * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
         * [.toRichText()](#Cell+toRichText) ⇒ <code>RichTexts</code>
@@ -930,6 +940,13 @@ A cell
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
 
+<a name="Cell+active"></a>
+
+#### cell.active() ⇒ <code>boolean</code>
+Gets a value indicating whether the cell is the active cell in the sheet.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>boolean</code> - True if active, false otherwise.  
 <a name="Cell+active"></a>
 
 #### cell.active(active) ⇒ [<code>Cell</code>](#Cell)
@@ -1001,6 +1018,13 @@ Find the given pattern in the cell and optionally replace it.
 
 <a name="Cell+formula"></a>
 
+#### cell.formula() ⇒ <code>string</code>
+Gets the formula in the cell. Note that if a formula was set as part of a range, the getter will return 'SHARED'. This is a limitation that may be addressed in a future release.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>string</code> - The formula in the cell.  
+<a name="Cell+formula"></a>
+
 #### cell.formula(formula) ⇒ [<code>Cell</code>](#Cell)
 Sets the formula in the cell.
 
@@ -1010,6 +1034,25 @@ Sets the formula in the cell.
 | Param | Type | Description |
 | --- | --- | --- |
 | formula | <code>string</code> | The formula to set. |
+
+<a name="Cell+hyperlink"></a>
+
+#### cell.hyperlink() ⇒ <code>string</code> \| <code>undefined</code>
+Gets the hyperlink attached to the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>string</code> \| <code>undefined</code> - The hyperlink or undefined if not set.  
+<a name="Cell+hyperlink"></a>
+
+#### cell.hyperlink(hyperlink) ⇒ [<code>Cell</code>](#Cell)
+Set or clear the hyperlink on the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| hyperlink | <code>string</code> \| [<code>Cell</code>](#Cell) \| <code>undefined</code> | The hyperlink to set or undefined to clear. |
 
 <a name="Cell+hyperlink"></a>
 
@@ -1027,6 +1070,13 @@ Set the hyperlink options on the cell.
 | [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
 | [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
 
+<a name="Cell+dataValidation"></a>
+
+#### cell.dataValidation() ⇒ <code>object</code> \| <code>undefined</code>
+Gets the data validation object attached to the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>object</code> \| <code>undefined</code> - The data validation or undefined if not set.  
 <a name="Cell+dataValidation"></a>
 
 #### cell.dataValidation(dataValidation) ⇒ [<code>Cell</code>](#Cell)
@@ -1111,6 +1161,44 @@ Gets the parent sheet.
 **Returns**: [<code>Sheet</code>](#Sheet) - The parent sheet.  
 <a name="Cell+style"></a>
 
+#### cell.style(name, value) ⇒ [<code>Cell</code>](#Cell)
+Sets an individual style.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+| value | <code>\*</code> | The value to set. |
+
+<a name="Cell+style"></a>
+
+#### cell.style(name) ⇒ [<code>Range</code>](#Range)
+Sets the styles in the range starting with the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Range</code>](#Range) - The range that was set.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name of the style. |
+|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | 2D array of values to set. |
+
+<a name="Cell+style"></a>
+
+#### cell.style(styles) ⇒ [<code>Cell</code>](#Cell)
+Sets multiple styles.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
+
+<a name="Cell+style"></a>
+
 #### cell.style(style) ⇒ [<code>Cell</code>](#Cell)
 Sets to a specific style
 
@@ -1120,6 +1208,25 @@ Sets to a specific style
 | Param | Type | Description |
 | --- | --- | --- |
 | style | [<code>Style</code>](#new_Style_new) | Style object given from stylesheet.createStyle |
+
+<a name="Cell+value"></a>
+
+#### cell.value() ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
+Gets the value of the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code> - The value of the cell.  
+<a name="Cell+value"></a>
+
+#### cell.value(value) ⇒ [<code>Cell</code>](#Cell)
+Sets the value of the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>null</code> \| <code>undefined</code> | The value to set. |
 
 <a name="Cell+value"></a>
 
