@@ -2209,7 +2209,6 @@ A worksheet.
     * [.pageMargins(attributeName)](#Sheet+pageMargins) ⇒ <code>number</code>
     * [.pageMargins(attributeName, attributeStringValue)](#Sheet+pageMargins) ⇒ [<code>Sheet</code>](#Sheet)
     * [.pane()](#Sheet+pane) ⇒ [<code>PaneOptions</code>](#PaneOptions)
-    * [.pane(nil)](#Sheet+pane) ⇒ [<code>Sheet</code>](#Sheet)
     * [.pane(paneOptions)](#Sheet+pane) ⇒ [<code>Sheet</code>](#Sheet)
     * [.feezePanes(xSplit, ySplit)](#Sheet+feezePanes) ⇒ [<code>Sheet</code>](#Sheet)
     * [.feezePanes(topLeftCell)](#Sheet+feezePanes) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2655,18 +2654,6 @@ Gets sheet view pane options
 **Returns**: [<code>PaneOptions</code>](#PaneOptions) - sheet view pane options  
 <a name="Sheet+pane"></a>
 
-#### sheet.pane(nil) ⇒ [<code>Sheet</code>](#Sheet)
-Removes sheet view pane options
-
-**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
-**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
-
-| Param | Type |
-| --- | --- |
-| nil | <code>null</code> \| <code>undefined</code> | 
-
-<a name="Sheet+pane"></a>
-
 #### sheet.pane(paneOptions) ⇒ [<code>Sheet</code>](#Sheet)
 Sets sheet view pane options
 
@@ -2675,7 +2662,7 @@ Sets sheet view pane options
 
 | Param | Type | Description |
 | --- | --- | --- |
-| paneOptions | [<code>PaneOptions</code>](#PaneOptions) | sheet view pane options |
+| paneOptions | [<code>PaneOptions</code>](#PaneOptions) \| <code>null</code> \| <code>undefined</code> | sheet view pane options |
 
 <a name="Sheet+feezePanes"></a>
 
