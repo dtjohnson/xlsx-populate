@@ -26,6 +26,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Hyperlinks](#hyperlinks)
   * [Print Options](#print-options)
   * [Page Margins](#page-margins)
+  * [SheetView Panes](#sheetview-panes)
   * [Serving from Express](#serving-from-express)
   * [Browser Usage](#browser-usage)
   * [Promises](#promises)
@@ -551,6 +552,31 @@ sheet.pageMargins('top', 1.1);
 const topPageMarginInInches = sheet.pageMargins('top'); // Returns 1.1
 ```
 
+### SheetView Panes
+SheetView Panes are accessed using the [Sheet.pane](#Sheet+pane) method.
+For convenience, we have [Sheet.feezePanes](#Sheet+feezePanes),
+[Sheet.splitPanes](#Sheet+splitPanes), [Sheet.resetPanes](#Sheet+resetPanes),
+and type [PaneOptions](#paneoptions--object).
+```js
+// access Pane options
+sheet.pane(); // return PaneOptions Object
+
+// manully Set Pane options
+const paneOptions = { state: 'frozen', topLeftCell: 'B2', xSplit: 1, ySplit: 1, activePane: 'bottomRight' }
+sheet.pane(paneOptions); // return PaneOptions Object
+
+// freeze panes (freeze first column and first two rows)
+sheet.feezePanes(1, 2);
+// OR
+sheet.feezePanes('B3');
+
+// split panes (Horizontal Split Position: 1000px, Vertical Split Position: 2000px)
+sheet.splitPanes(1000, 2000);
+
+// reset to normal panes (no freeze panes and split panes)
+sheet.resetPanes();
+```
+
 ### Serving from Express
 You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
 ```js
@@ -893,6 +919,14 @@ An object representing a gradient fill.
 <a href="https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx">https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx</a></p>
 <p>Helpful guidance also take from this Github project:
 <a href="https://github.com/nolze/ms-offcrypto-tool">https://github.com/nolze/ms-offcrypto-tool</a></p>
+</dd>
+</dl>
+
+### Typedefs
+
+<dl>
+<dt><a href="#PaneOptions">PaneOptions</a> : <code>Object</code></dt>
+<dd><p><a href="https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1">https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1</a></p>
 </dd>
 </dl>
 
@@ -2208,6 +2242,12 @@ A worksheet.
     * [.printGridLines(enabled)](#Sheet+printGridLines) ⇒ [<code>Sheet</code>](#Sheet)
     * [.pageMargins(attributeName)](#Sheet+pageMargins) ⇒ <code>number</code>
     * [.pageMargins(attributeName, attributeStringValue)](#Sheet+pageMargins) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.pane()](#Sheet+pane) ⇒ [<code>PaneOptions</code>](#PaneOptions)
+    * [.pane(paneOptions)](#Sheet+pane) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.feezePanes(xSplit, ySplit)](#Sheet+feezePanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.feezePanes(topLeftCell)](#Sheet+feezePanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.splitPanes(xSplit, ySplit)](#Sheet+splitPanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.resetPanes()](#Sheet+resetPanes) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -2639,6 +2679,70 @@ Set the page margin given a value attribute name and a value.
 | attributeName | <code>string</code> | Attribute name of the pageMargins. See get page margin for list of valid attributes. |
 | attributeStringValue | <code>undefined</code> \| <code>number</code> \| <code>string</code> | If the value is `undefined` then the attribute is removed, otherwise set the associated attribute value |
 
+<a name="Sheet+pane"></a>
+
+#### sheet.pane() ⇒ [<code>PaneOptions</code>](#PaneOptions)
+Gets sheet view pane options
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>PaneOptions</code>](#PaneOptions) - sheet view pane options  
+<a name="Sheet+pane"></a>
+
+#### sheet.pane(paneOptions) ⇒ [<code>Sheet</code>](#Sheet)
+Sets sheet view pane options
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| paneOptions | [<code>PaneOptions</code>](#PaneOptions) \| <code>null</code> \| <code>undefined</code> | sheet view pane options |
+
+<a name="Sheet+feezePanes"></a>
+
+#### sheet.feezePanes(xSplit, ySplit) ⇒ [<code>Sheet</code>](#Sheet)
+freezes Panes for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| xSplit | <code>number</code> | the number of columns visible in the top pane. |
+| ySplit | <code>number</code> | the number of rows visible in the left pane. |
+
+<a name="Sheet+feezePanes"></a>
+
+#### sheet.feezePanes(topLeftCell) ⇒ [<code>Sheet</code>](#Sheet)
+freezes Panes for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topLeftCell | <code>string</code> | Top Left Visible Cell. Location of the top left visible cell in the bottom right pane (when in Left-To-Right mode). |
+
+<a name="Sheet+splitPanes"></a>
+
+#### sheet.splitPanes(xSplit, ySplit) ⇒ [<code>Sheet</code>](#Sheet)
+Splits Panes for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| xSplit | <code>number</code> | (Horizontal Split Position) Horizontal position of the split, in 1/20th of a point; 0 (zero) if none. |
+| ySplit | <code>number</code> | (Vertical Split Position) VVertical position of the split, in 1/20th of a point; 0 (zero) if none. |
+
+<a name="Sheet+resetPanes"></a>
+
+#### sheet.resetPanes() ⇒ [<code>Sheet</code>](#Sheet)
+resets to default sheet view panes.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
 <a name="Workbook"></a>
 
 ### Workbook
@@ -2974,4 +3078,20 @@ Convert an Excel number to a date.
 OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
+<a name="PaneOptions"></a>
+
+### PaneOptions : <code>Object</code>
+https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| activePane | <code>string</code> | <code>&quot;bottomRight&quot;</code> | Active Pane. The pane that is active. |
+| state | <code>string</code> |  | Split State. Indicates whether the pane has horizontal / vertical splits, and whether those splits are frozen. |
+| topLeftCell | <code>string</code> |  | Top Left Visible Cell. Location of the top left visible cell in the bottom right pane (when in Left-To-Right mode). |
+| xSplit | <code>number</code> | <code>0</code> | (Horizontal Split Position) Horizontal position of the split, in 1/20th of a point; 0 (zero) if none. If the pane is frozen, this value indicates the number of columns visible in the top pane. |
+| ySplit | <code>number</code> | <code>0</code> | (Vertical Split Position) Vertical position of the split, in 1/20th of a point; 0 (zero) if none. If the pane is frozen, this value indicates the number of rows visible in the left pane. |
+
 
