@@ -1174,6 +1174,8 @@ describe("Sheet", () => {
                     ]
                 },
                 { name: 'sheetData', attributes: {}, children: [] },
+                { name: 'printOptions', attributes: {}, children: [] },
+                { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
 
@@ -1198,6 +1200,7 @@ describe("Sheet", () => {
                     },
                     children: []
                 },
+                { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
 
@@ -1216,6 +1219,8 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["MERGE1", "MERGE2"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
+                { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
 
@@ -1234,6 +1239,8 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["HYPERLINK1", "HYPERLINK2"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
+                { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
 
@@ -1277,6 +1284,8 @@ describe("Sheet", () => {
                     attributes: {},
                     children: ["HYPERLINK1"]
                 },
+                { name: 'printOptions', attributes: {}, children: [] },
+                { name: 'pageMargins', attributes: {}, children: [] }
             ]);
         });
     });
