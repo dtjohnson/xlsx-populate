@@ -1004,5 +1004,75 @@ describe("Workbook", () => {
                     });
             });
         });
+        describe("cloneSheet", () => {
+            beforeEach(() => {
+                workbook._sheets = [new Sheet()];
+                spyOn(workbook, "activeSheet").and.returnValue(workbook._sheets[0]);
+                spyOn(workbook, "sheet");
+                workbook._relationships = jasmine.createSpyObj("relationships", ["add"]);
+                workbook._relationships.add.and.returnValue({
+                    attributes: {
+                        Id: 'RID'
+                    }
+                });
+                workbook._maxSheetId = 7;
+            });
+
+            it("should throw an error if the sheet name is invalid", () => {
+                expect(() => workbook.addSheet()).toThrow();
+                expect(() => workbook.addSheet('foo?')).toThrow();
+                expect(() => workbook.addSheet('12345678901234567890123456789012')).toThrow();
+
+                expect(() => workbook.addSheet('foo')).not.toThrow();
+
+                workbook.sheet.and.returnValue(workbook._sheets[0]);
+                expect(() => workbook.addSheet('foo')).toThrow();
+            });
+
+            it("should add the sheet at the end", () => {
+                const sheet = workbook.addSheet('foo');
+                expect(sheet).toEqual(jasmine.any(Sheet));
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[1]).toBe(sheet);
+                expect(sheet.workbook).toBe(workbook);
+                expect(sheet.sheetIdNode).toEqualJson({
+                    name: "sheet",
+                    attributes: {
+                        name: "foo",
+                        sheetId: 8,
+                        'r:id': "RID"
+                    },
+                    children: []
+                });
+                expect(sheet.sheetNode).toBeUndefined();
+                expect(sheet.sheetRelationshipsNode).toBeUndefined();
+            });
+
+            it("should add the sheet at the given index", () => {
+                const sheet1 = workbook.addSheet('foo', 0);
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet1);
+
+                const sheet2 = workbook.addSheet('bar', 2);
+                expect(workbook._sheets.length).toBe(3);
+                expect(workbook._sheets[2]).toBe(sheet2);
+            });
+
+            it("should add the sheet before the given sheet", () => {
+                const sheet = workbook.addSheet('foo', workbook._sheets[0]);
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet);
+            });
+
+            it("should add the sheet before the sheet with the given name", () => {
+                workbook.sheet.and.callFake(name => {
+                    if (name === 'existing') return workbook._sheets[0];
+                });
+
+                const sheet = workbook.addSheet('foo', 'existing');
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet);
+            });
+        });
     });
 });
