@@ -911,6 +911,7 @@ A cell
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+        * [.addPageBreak()](#Cell+addPageBreak) ⇒ [<code>Cell</code>](#Cell)
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -1246,6 +1247,13 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Cell+addPageBreak"></a>
+
+#### cell.addPageBreak() ⇒ [<code>Cell</code>](#Cell)
+Append Horizontal-Pagebreak after the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - the cell.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -1292,6 +1300,7 @@ A column.
     * [.width()](#Column+width) ⇒ <code>undefined</code> \| <code>number</code>
     * [.width(width)](#Column+width) ⇒ [<code>Column</code>](#Column)
     * [.workbook()](#Column+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.addPageBreak()](#Column+addPageBreak) ⇒ [<code>Column</code>](#Column)
 
 <a name="Column+address"></a>
 
@@ -1446,6 +1455,13 @@ Get the parent workbook.
 
 **Kind**: instance method of [<code>Column</code>](#Column)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Column+addPageBreak"></a>
+
+#### column.addPageBreak() ⇒ [<code>Column</code>](#Column)
+Append Vertical-Pagebreak after the column.
+
+**Kind**: instance method of [<code>Column</code>](#Column)  
+**Returns**: [<code>Column</code>](#Column) - the column.  
 <a name="FormulaError"></a>
 
 ### FormulaError
@@ -1979,6 +1995,7 @@ A row.
     * [.style(styles)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.style(style)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.workbook()](#Row+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.addPageBreak()](#Row+addPageBreak) ⇒ [<code>Row</code>](#Row)
 
 <a name="Row+address"></a>
 
@@ -2126,6 +2143,13 @@ Get the parent workbook.
 
 **Kind**: instance method of [<code>Row</code>](#Row)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Row+addPageBreak"></a>
+
+#### row.addPageBreak() ⇒ [<code>Row</code>](#Row)
+Append Horizontal-Pagebreak after the row.
+
+**Kind**: instance method of [<code>Row</code>](#Row)  
+**Returns**: [<code>Row</code>](#Row) - the row.  
 <a name="Sheet"></a>
 
 ### Sheet
@@ -2631,6 +2655,7 @@ A workbook.
     * [.property(properties)](#Workbook+property) ⇒ [<code>Workbook</code>](#Workbook)
     * [.properties()](#Workbook+properties) ⇒ <code>CoreProperties</code>
     * [.toFileAsync(path, [opts])](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
+    * [.cloneSheet(from, name, [indexOrBeforeSheet])](#Workbook+cloneSheet) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Workbook+activeSheet"></a>
 
@@ -2841,6 +2866,20 @@ Write the workbook to file. (Not supported in browsers.)
 | path | <code>string</code> | The path of the file to write. |
 | [opts] | <code>Object</code> | Options |
 | [opts.password] | <code>string</code> | The password to encrypt the workbook. |
+
+<a name="Workbook+cloneSheet"></a>
+
+#### workbook.cloneSheet(from, name, [indexOrBeforeSheet]) ⇒ [<code>Sheet</code>](#Sheet)
+Add a new sheet to the workbook.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The new sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | [<code>Sheet</code>](#Sheet) | The sheet to be cloned. |
+| name | <code>string</code> | The name of the new sheet. Must be unique, less than 31 characters, and may not contain the following characters: \ / * [ ] : ? |
+| [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
 <a name="XlsxPopulate"></a>
 
