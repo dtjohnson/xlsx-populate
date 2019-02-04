@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = workbook => {
-	const sheet = workbook.sheet(0);
+    const sheet = workbook.sheet(0);
     return {
         left: sheet.pageMargins('left'),
         right: sheet.pageMargins('right'),
