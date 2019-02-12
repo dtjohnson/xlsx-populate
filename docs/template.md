@@ -520,6 +520,31 @@ sheet.pageMargins('top', 1.1);
 const topPageMarginInInches = sheet.pageMargins('top'); // Returns 1.1
 ```
 
+### SheetView Panes
+SheetView Panes are accessed using the [Sheet.pane](#Sheet+pane) method.
+For convenience, we have [Sheet.feezePanes](#Sheet+feezePanes),
+[Sheet.splitPanes](#Sheet+splitPanes), [Sheet.resetPanes](#Sheet+resetPanes),
+and type [PaneOptions](#paneoptions--object).
+```js
+// access Pane options
+sheet.pane(); // return PaneOptions Object
+
+// manully Set Pane options
+const paneOptions = { state: 'frozen', topLeftCell: 'B2', xSplit: 1, ySplit: 1, activePane: 'bottomRight' }
+sheet.pane(paneOptions); // return PaneOptions Object
+
+// freeze panes (freeze first column and first two rows)
+sheet.feezePanes(1, 2);
+// OR
+sheet.feezePanes('B3');
+
+// split panes (Horizontal Split Position: 1000px, Vertical Split Position: 2000px)
+sheet.splitPanes(1000, 2000);
+
+// reset to normal panes (no freeze panes and split panes)
+sheet.resetPanes();
+```
+
 ### Serving from Express
 You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
 ```js
