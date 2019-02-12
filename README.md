@@ -19,6 +19,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Defined Names](#defined-names)
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
+  * [Rich Texts](#rich-texts)
   * [Dates](#dates)
   * [Data Validation](#data-validation)
   * [Method Chaining](#method-chaining)
@@ -77,7 +78,7 @@ XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
         workbook.sheet("Sheet1").cell("A1").value("This is neat!");
-        
+
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
     });
@@ -94,12 +95,12 @@ XlsxPopulate.fromFileAsync("./Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
         const value = workbook.sheet("Sheet1").cell("A1").value();
-        
+
         // Log the value.
         console.log(value);
     });
 ```
-__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output. 
+__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output.
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulation of multiple cells at once.
@@ -143,7 +144,7 @@ You can access rows and columns in order to change size, hide/show, or access ce
 // Get the B column, set its width and unhide it (assuming it was hidden).
 sheet.column("B").width(25).hidden(false);
 
-const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+const cell = sheet.row(5).cell(3); // Returns the cell at C5.
 ```
 
 ### Managing Sheets
@@ -257,7 +258,7 @@ You can search for occurrences of text in cells within the workbook or sheets an
 // Find all occurrences of the text "foo" in the workbook and replace with "bar".
 workbook.find("foo", "bar"); // Returns array of matched cells
 
-// Find the matches but don't replace. 
+// Find the matches but don't replace.
 workbook.find("foo");
 
 // Just look in the first sheet.
@@ -286,9 +287,9 @@ cell.style({ bold: true, italic: true });
 
 // Get a single style
 const bold = cell.style("bold"); // true
- 
+
 // Get multiple styles
-const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true } 
+const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true }
 ```
 
 Similarly for ranges:
@@ -320,9 +321,9 @@ sheet.column("A").style({ bold: true, italic: true });
 
 // Get a single style
 const bold = sheet.column(3).style("bold");
- 
+
 // Get multiple styles
-const styles = sheet.row(5).style(["bold", "italic"]); 
+const styles = sheet.row(5).style(["bold", "italic"]);
 ```
 Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.
 
@@ -369,6 +370,43 @@ You can also look up the desired format code in Excel:
 * Switch the category to "Custom" if it is not already.
 * The code in the "Type" box is the format you should copy.
 
+### Rich Texts
+You can read/write rich texts to cells.
+```js
+const cell = workbook.sheet(0).cell('A1');
+// transform exsisting string cell to rich text
+cell.richText();
+cell.value() instanceof RichTexts // true
+
+// you can use both cell.richText() or cell.value() to set rich text
+cell.richText() === cell.value() // true
+
+// reset a rich text cell
+cell.value('string');
+cell.value(new Date());
+
+// create new cell with rich text
+workbook.sheet(0).cell('B1').richText()
+    // support all line separators works
+    .add('123\n', { italic: true, fontColor: '123456' })
+    .add('456\r', { italic: true, fontColor: '654321' })
+    .add('789\r\n', { italic: true, fontColor: 'ff0000' })
+    .add('10\n11\r12', { italic: true, fontColor: '00ff00' });
+// remember to set height to show the whole row
+workbook.sheet(0).row(1).height(100);
+
+// modify a rich text cell
+cell.value().get(0).style('fontFamily', 'Calibri')
+// or
+cell.richText().get(0).style('fontFamily', 'Calibri')
+
+// read multiple styles
+cell.richText().get(0).style(['fontFamily', 'italic', 'bold'])
+
+// delete
+cell.richText().remove(0);
+```
+
 ### Dates
 
 Excel stores date/times as the number of days since 1/1/1900 ([sort of](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn't already exist in the cell:
@@ -387,7 +425,7 @@ Data validation is also supported. To set/get/remove a cell data validation:
 // Set the data validation
 cell.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -415,7 +453,7 @@ Similarly for ranges:
 // Set all cells in range with a single shared data validation
 range.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -456,7 +494,7 @@ workbook
             .value(5)
         .cell(0, 0)
             .style("underline", "double");
-        
+
 ```
 
 ### Hyperlinks
@@ -534,14 +572,14 @@ router.get("/download", function (req, res, next) {
         .then(workbook => {
             // Make edits.
             workbook.sheet(0).cell("A1").value("foo");
-            
+
             // Get the output
             return workbook.outputAsync();
         })
         .then(data => {
             // Set the output file name.
             res.attachment("output.xlsx");
-            
+
             // Send the workbook.
             res.send(data);
         })
@@ -637,7 +675,7 @@ workbook.toFileAsync("./out.xlsx", { password: "S3cret!" });
 ```
 The password option is supported in all output methods. N.B. Workbooks will only be encrypted if you supply a password when outputting even if they had a password when reading.
 
-Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.  
+Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.
 
 ## Missing Features
 There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn't supported
@@ -645,7 +683,7 @@ please open an issue to show your support. Better still, feel free to [contribut
 
 ## Submitting an Issue
 If you happen to run into a bug or an issue, please feel free to [submit an issue](https://github.com/dtjohnson/xlsx-populate/issues). I only ask that you please include sample JavaScript code that demonstrates the issue.
-If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue. 
+If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue.
 
 ## Contributing
 
@@ -706,7 +744,7 @@ To make sure your code is consistent and high quality, please make sure to follo
  * Make sure all tests pass successfully.
  * Whenever possible, do not modify/break existing API behavior. This module adheres to the [semantic versioning standard](https://docs.npmjs.com/getting-started/semantic-versioning). So any breaking changes will require a major release.
  * If your feature needs more documentation than just the JSDoc output, please add to the docs/template.md README file.
- 
+
 
 ### Gulp Tasks
 
@@ -732,13 +770,15 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 | ------------- | ------------- | ----- |
 |bold|`boolean`|`true` for bold, `false` for not bold|
 |italic|`boolean`|`true` for italic, `false` for not italic|
-|underline|`boolean|string`|`true` for single underline, `false` for no underline, `'double'` for double-underline|
+|underline|`boolean\|string`|`true` for single underline, `false` for no underline, `'double'` for double-underline|
 |strikethrough|`boolean`|`true` for strikethrough `false` for not strikethrough|
 |subscript|`boolean`|`true` for subscript, `false` for not subscript (cannot be combined with superscript)|
 |superscript|`boolean`|`true` for superscript, `false` for not superscript (cannot be combined with subscript)|
 |fontSize|`number`|Font size in points. Must be greater than 0.|
 |fontFamily|`string`|Name of font family.|
-|fontColor|`Color|string|number`|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
+|fontGenericFamily|`number`|1: Serif, 2: Sans Serif, 3: Monospace, |
+|fontScheme|`string`|`'minor'`\|`'major'`\|`'none'` |
+|fontColor|`Color\|string\|number`|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
 |horizontalAlignment|`string`|Horizontal alignment. Allowed values: `'left'`, `'center'`, `'right'`, `'fill'`, `'justify'`, `'centerContinuous'`, `'distributed'`|
 |justifyLastLine|`boolean`|a.k.a Justified Distributed. Only applies when horizontalAlignment === `'distributed'`. A boolean value indicating if the cells justified or distributed alignment should be used on the last line of text. (This is typical for East Asian alignments but not typical in other contexts.)|
 |indent|`number`|Number of indents. Must be greater than or equal to 0.|
@@ -752,12 +792,12 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 |rotateTextUp|`boolean`|Shortcut for textRotation of 90 degrees.|
 |rotateTextDown|`boolean`|Shortcut for textRotation of -90 degrees.|
 |verticalText|`boolean`|Special rotation that shows text vertical but individual letters are oriented normally. `true` to rotate, `false` to not rotate.|
-|fill|`SolidFill|PatternFill|GradientFill|Color|string|number`|The cell fill. If Color, will set a solid fill with the color. If string, will set a solid RGB fill. If number, will set a solid theme color fill.|
-|border|`Borders|Border|string|boolean}`|The border settings. If string, will set outside borders to given border style. If true, will set outside border style to `'thin'`.|
-|borderColor|`Color|string|number`|Color of the borders. If string, will set an RGB color. If number, will set a theme color.|
+|fill|`SolidFill\|PatternFill\|GradientFill\|Color\|string\|number`|The cell fill. If Color, will set a solid fill with the color. If string, will set a solid RGB fill. If number, will set a solid theme color fill.|
+|border|`Borders\|Border\|string\|boolean}`|The border settings. If string, will set outside borders to given border style. If true, will set outside border style to `'thin'`.|
+|borderColor|`Color\|string\|number`|Color of the borders. If string, will set an RGB color. If number, will set a theme color.|
 |borderStyle|`string`|Style of the outside borders. Allowed values: `'hair'`, `'dotted'`, `'dashDotDot'`, `'dashed'`, `'mediumDashDotDot'`, `'thin'`, `'slantDashDot'`, `'mediumDashDot'`, `'mediumDashed'`, `'medium'`, `'thick'`, `'double'`|
-|leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder|`Border|string|boolean`|The border settings for the given side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|`Color|string|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
+|leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder|`Border\|string\|boolean`|The border settings for the given side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|`Color\|string\|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |leftBorderStyle, rightBorderStyle, topBorderStyle, bottomBorderStyle, diagonalBorderStyle|`string`|Style of the given side.|
 |diagonalBorderDirection|`string`|Direction of the diagonal border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 |numberFormat|`string`|Number format code. See docs [here](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&rs=en-US&ad=US).|
@@ -776,11 +816,11 @@ An object representing all of the borders.
 
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
-|[left]|`Border|string|boolean`|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[right]|`Border|string|boolean`|The border settings for the right side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[top]|`Border|string|boolean`|The border settings for the top side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[bottom]|`Border|string|boolean`|The border settings for the bottom side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[diagonal]|`Border|string|boolean`|The border settings for the diagonal side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[left]|`Border\|string\|boolean`|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[right]|`Border\|string\|boolean`|The border settings for the right side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[top]|`Border\|string\|boolean`|The border settings for the top side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[bottom]|`Border\|string\|boolean`|The border settings for the bottom side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[diagonal]|`Border\|string\|boolean`|The border settings for the diagonal side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
 
 ### Border
 An object representing an individual border.
@@ -788,7 +828,7 @@ An object representing an individual border.
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |style|`string`|Style of the given border.|
-|color|`Color|string|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
+|color|`Color\|string\|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |[direction]|`string`|For diagonal border, the direction of the border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 
 ### SolidFill
@@ -797,7 +837,7 @@ An object representing a solid fill.
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'solid'`||
-|color|`Color|string|number`|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
+|color|`Color\|string\|number`|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
 
 ### PatternFill
 An object representing a pattern fill.
@@ -806,8 +846,8 @@ An object representing a pattern fill.
 | ------------- | ------------- | ----- |
 |type|`'pattern'`||
 |pattern|`string`|Name of the pattern. Allowed values: `'gray125'`, `'darkGray'`, `'mediumGray'`, `'lightGray'`, `'gray0625'`, `'darkHorizontal'`, `'darkVertical'`, `'darkDown'`, `'darkUp'`, `'darkGrid'`, `'darkTrellis'`, `'lightHorizontal'`, `'lightVertical'`, `'lightDown'`, `'lightUp'`, `'lightGrid'`, `'lightTrellis'`.|
-|foreground|`Color|string|number`|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
-|background|`Color|string|number`|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
+|foreground|`Color\|string\|number`|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
+|background|`Color\|string\|number`|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
 
 ### GradientFill
 An object representing a gradient fill.
@@ -818,7 +858,7 @@ An object representing a gradient fill.
 |[gradientType]|`string`|Type of gradient. Allowed values: `'linear'` (default), `'path'`. With a path gradient, a path is drawn between the top, left, right, and bottom values and a graident is draw from that path to the outside of the cell.|
 |stops|`Array.<{}>`||
 |stops[].position|`number`|The position of the stop from 0 to 1.|
-|stops[].color|`Color|string|number`|Color of the stop. If string, will set an RGB color. If number, will set a theme color.|
+|stops[].color|`Color\|string\|number`|Color of the stop. If string, will set an RGB color. If number, will set a theme color.|
 |[angle]|`number`|If linear gradient, the angle of clockwise rotation of the gradient.|
 |[left]|`number`|If path gradient, the left position of the path as a percentage from 0 to 1.|
 |[right]|`number`|If path gradient, the right position of the path as a percentage from 0 to 1.|
@@ -911,6 +951,7 @@ A cell
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+        * [.richText()](#Cell+richText) ⇒ <code>RichTexts</code>
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -1246,6 +1287,13 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Cell+richText"></a>
+
+#### cell.richText() ⇒ <code>RichTexts</code>
+Convert current cell to rich text, if the cell exists some string,the string will add to rich text. otherwise the cell value will becleared. It will simply return RichTexts Object if the cell is already rich text.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: <code>RichTexts</code> - RichTexts object, you can call add(text, styles).  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -2937,11 +2985,7 @@ Convert an Excel number to a date.
 <a name="_"></a>
 
 ### _
-OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
-https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
-
-Helpful guidance also take from this Github project:
-https://github.com/nolze/ms-offcrypto-tool
+OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
 
