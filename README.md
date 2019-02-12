@@ -387,7 +387,7 @@ cell.value(new Date());
 
 // create new cell with rich text
 workbook.sheet(0).cell('B1').richText()
-    // support all line separators works
+    // support all line separators
     .add('123\n', { italic: true, fontColor: '123456' })
     .add('456\r', { italic: true, fontColor: '654321' })
     .add('789\r\n', { italic: true, fontColor: 'ff0000' })
