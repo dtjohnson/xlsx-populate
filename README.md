@@ -516,9 +516,23 @@ const isPrintGridLinesEnabled = sheet.printGridLines(); // Returns false
 ```
 
 ### Page Margins
-Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method.
+Excel requires that all page margins are defined or none at all. To ensure this, please choose an existing or custom preset. See [Sheet.pageMarginsPreset](#Sheet+pageMarginsPreset).
+
 ```js
-// Set top page margin in inches.
+// Get the current preset
+sheet.pageMarginsPreset(); // Returns undefined
+
+// Switch to an existing preset
+sheet.pageMarginsPreset('normal');
+```
+
+Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method. If a page margin is not set, the preset will fill in the gaps.
+
+```js
+// Get top margin in inches, note that the current preset is currently set to normal (see above)
+sheet.pageMargins('top'); // Returns 0.75
+
+// Set top page margin in inches
 sheet.pageMargins('top', 1.1);
 
 // Get top page margin in inches.
@@ -2174,6 +2188,9 @@ A worksheet.
     * [.printGridLines(enabled)](#Sheet+printGridLines) ⇒ [<code>Sheet</code>](#Sheet)
     * [.pageMargins(attributeName)](#Sheet+pageMargins) ⇒ <code>number</code>
     * [.pageMargins(attributeName, attributeStringValue)](#Sheet+pageMargins) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.pageMarginsPreset()](#Sheet+pageMarginsPreset) ⇒ <code>string</code>
+    * [.pageMarginsPreset(presetName)](#Sheet+pageMarginsPreset) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.pageMarginsPreset(presetName, presetAttributes)](#Sheet+pageMarginsPreset) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -2560,7 +2577,7 @@ Set the print option given a valid print option attribute and a value.
 | Param | Type | Description |
 | --- | --- | --- |
 | attributeName | <code>string</code> | Attribute name of the printOptions. See get print option for list of valid attributes. |
-| attributeEnabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` then the attribute is removed, otherwise set as a boolean value to enable/disable the print option. |
+| attributeEnabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` or `false` then the attribute is removed, otherwise the print option is enabled. |
 
 <a name="Sheet+printGridLines"></a>
 
@@ -2578,12 +2595,13 @@ Set the print option for the gridLines attribute value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| enabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` then attribute is removed, otherwise set as a boolean value to enable/disable the gridLines. |
+| enabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` or `false` then attribute is removed, otherwise gridLines is enabled. |
 
 <a name="Sheet+pageMargins"></a>
 
 #### sheet.pageMargins(attributeName) ⇒ <code>number</code>
 Get the page margin given a valid attribute name.
+If the value is not yet defined, then it will return the current preset value.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>number</code> - the attribute value.  
@@ -2595,7 +2613,7 @@ Get the page margin given a valid attribute name.
 <a name="Sheet+pageMargins"></a>
 
 #### sheet.pageMargins(attributeName, attributeStringValue) ⇒ [<code>Sheet</code>](#Sheet)
-Set the page margin given a value attribute name and a value.
+Set the page margin (or override the preset) given an attribute name and a value.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
@@ -2603,7 +2621,45 @@ Set the page margin given a value attribute name and a value.
 | Param | Type | Description |
 | --- | --- | --- |
 | attributeName | <code>string</code> | Attribute name of the pageMargins. See get page margin for list of valid attributes. |
-| attributeStringValue | <code>undefined</code> \| <code>number</code> \| <code>string</code> | If the value is `undefined` then the attribute is removed, otherwise set the associated attribute value |
+| attributeStringValue | <code>undefined</code> \| <code>number</code> \| <code>string</code> | If `undefined` then set back to preset value, otherwise, set the given attribute value. |
+
+<a name="Sheet+pageMarginsPreset"></a>
+
+#### sheet.pageMarginsPreset() ⇒ <code>string</code>
+Page margins preset is a set of page margins associated with a name.
+The page margin preset acts as a fallback when not explicitly defined by `Sheet.pageMargins`.
+If a sheet already contains page margins, they are defined as the "template" preset.
+Otherwise the preset is undefined and will not be including in the output of `Sheet.toXmls`.
+Available presets include: normal, wide, narrow, template.
+
+Get the page margins preset name. The registered name of a predefined set of attributes.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> - The preset name.  
+<a name="Sheet+pageMarginsPreset"></a>
+
+#### sheet.pageMarginsPreset(presetName) ⇒ [<code>Sheet</code>](#Sheet)
+Set the page margins preset by name, clearing any existing/temporary attribute values.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| presetName | <code>undefined</code> \| <code>string</code> | The preset name. If `undefined`, page margins will not be included in the output of `Sheet.toXmls`. |
+
+<a name="Sheet+pageMarginsPreset"></a>
+
+#### sheet.pageMarginsPreset(presetName, presetAttributes) ⇒ [<code>Sheet</code>](#Sheet)
+Set a new page margins preset by name and attributes object.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| presetName | <code>string</code> | The preset name. |
+| presetAttributes | <code>object</code> | The preset attributes. |
 
 <a name="Workbook"></a>
 
