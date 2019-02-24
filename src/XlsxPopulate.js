@@ -1,6 +1,5 @@
 "use strict";
 
-const externals = require("./externals");
 const Workbook = require("./Workbook");
 const FormulaError = require("./FormulaError");
 const dateConverter = require("./dateConverter");
@@ -56,17 +55,6 @@ class XlsxPopulate {
      */
     static numberToDate(number) {
         return dateConverter.numberToDate(number);
-    }
-
-    /**
-     * The Promise library.
-     * @type {Promise}
-     */
-    static get Promise() {
-        return externals.Promise;
-    }
-    static set Promise(Promise) {
-        externals.Promise = Promise;
     }
 }
 

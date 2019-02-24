@@ -2,12 +2,11 @@
 
 const _ = require("lodash");
 const proxyquire = require("proxyquire");
-const Promise = require("jszip").external.Promise;
 
 const XmlParser = require("./XmlParser").XmlParser;
 
 describe("Workbook", () => {
-    let resolved, fs, externals, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, CoreProperties, XmlBuilder, Encryptor, blank;
+    let resolved, fs, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, CoreProperties, XmlBuilder, Encryptor, blank;
 
     beforeEach(() => {
         // Resolve a promise with a small random delay so they resolve out of order.
@@ -110,14 +109,9 @@ describe("Workbook", () => {
 
         blank = () => "BLANK";
 
-        // proxyquire doesn't like overriding raw objects... a spy obj works.
-        externals = jasmine.createSpyObj("externals", ["_"]);
-        externals.Promise = Promise;
-
         Workbook = proxyquire("./Workbook", {
             fs,
             jszip: JSZip,
-            './externals': externals,
             './StyleSheet': StyleSheet,
             './Sheet': Sheet,
             './SharedStrings': SharedStrings,

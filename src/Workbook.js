@@ -4,7 +4,6 @@ const _ = require("lodash");
 const fs = require("fs");
 const JSZip = require('jszip');
 
-const externals = require("./externals");
 const regexify = require("./regexify");
 const blank = require("./blank")();
 const xmlq = require("./xmlq");
@@ -81,7 +80,7 @@ class Workbook {
      */
     static fromFileAsync(path, opts) {
         if (process.browser) throw new Error("Workbook.fromFileAsync is not supported in the browser");
-        return new externals.Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             fs.readFile(path, (err, data) => {
                 if (err) return reject(err);
                 resolve(data);
@@ -448,7 +447,7 @@ class Workbook {
     toFileAsync(path, opts) {
         if (process.browser) throw new Error("Workbook.toFileAsync is not supported in the browser.");
         return this.outputAsync(opts)
-            .then(data => new externals.Promise((resolve, reject) => {
+            .then(data => new Promise((resolve, reject) => {
                 fs.writeFile(path, data, err => {
                     if (err) return reject(err);
                     resolve();
@@ -566,7 +565,7 @@ class Workbook {
         this._maxSheetId = 0;
         this._sheets = [];
 
-        return externals.Promise.resolve()
+        return Promise.resolve()
             .then(() => {
                 // Make sure the input is a Buffer
                 return this._convertInputToBufferAsync(data, opts.base64)
@@ -627,7 +626,7 @@ class Workbook {
 
                 // Load each sheet.
                 this._sheetsNode = xmlq.findChild(this._node, "sheets");
-                return externals.Promise.all(_.map(this._sheetsNode.children, (sheetIdNode, i) => {
+                return Promise.all(_.map(this._sheetsNode.children, (sheetIdNode, i) => {
                     if (sheetIdNode.attributes.sheetId > this._maxSheetId) this._maxSheetId = sheetIdNode.attributes.sheetId;
 
                     return this._parseNodesAsync([`xl/worksheets/sheet${i + 1}.xml`, `xl/worksheets/_rels/sheet${i + 1}.xml.rels`])
@@ -651,9 +650,9 @@ class Workbook {
      * @private
      */
     _parseNodesAsync(names) {
-        return externals.Promise.all(_.map(names, name => this._zip.file(name)))
-            .then(files => externals.Promise.all(_.map(files, file => file && file.async("string"))))
-            .then(texts => externals.Promise.all(_.map(texts, text => text && xmlParser.parseAsync(text))));
+        return Promise.all(_.map(names, name => this._zip.file(name)))
+            .then(files => Promise.all(_.map(files, file => file && file.async("string"))))
+            .then(texts => Promise.all(_.map(texts, text => text && xmlParser.parseAsync(text))));
     }
 
     /**
@@ -740,12 +739,12 @@ class Workbook {
      * @private
      */
     _convertInputToBufferAsync(input, base64) {
-        return externals.Promise.resolve()
+        return Promise.resolve()
             .then(() => {
                 if (Buffer.isBuffer(input)) return input;
 
                 if (process.browser && input instanceof Blob) {
-                    return new externals.Promise(resolve => {
+                    return new Promise(resolve => {
                         const fileReader = new FileReader();
                         fileReader.onload = event => {
                             resolve(Buffer.from(event.target.result));

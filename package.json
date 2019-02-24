@@ -26,7 +26,8 @@
     "test": "jasmine-ts --config=jasmine.json --project=tsconfig.spec.json",
     "test:watch": "nodemon -e js,ts -w src -x npm test",
     "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json",
-    "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json"
+    "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json",
+    "docs": "typedoc --out docs"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [

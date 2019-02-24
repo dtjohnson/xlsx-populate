@@ -11,7 +11,6 @@
 const _ = require("lodash");
 const cfb = require("cfb");
 const crypto = require("crypto");
-const externals = require("./externals");
 const XmlParser = require("./XmlParser").XmlParser;
 const XmlBuilder = require("./XmlBuilder");
 const xmlq = require("./xmlq");
@@ -243,7 +242,7 @@ class Encryptor {
         if (!Buffer.isBuffer(encryptionInfoBuffer)) encryptionInfoBuffer = Buffer.from(encryptionInfoBuffer);
         if (!Buffer.isBuffer(encryptedPackageBuffer)) encryptedPackageBuffer = Buffer.from(encryptedPackageBuffer);
 
-        return externals.Promise.resolve()
+        return Promise.resolve()
             .then(() => this._parseEncryptionInfoAsync(encryptionInfoBuffer)) // Parse the encryption info XML into an object
             .then(encryptionInfo => {
                 // Convert the password into an encryption key
