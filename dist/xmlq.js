@@ -1,11 +1,17 @@
 "use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const _ = require("lodash");
+const _ = __importStar(require("lodash"));
 /**
  * Append a child to the node.
- * @param {{}} node - The parent node.
- * @param {{}} child - The child node.
- * @returns {undefined}
+ * @param node - The parent node.
+ * @param child - The child node.
  */
 function appendChild(node, child) {
     if (!node.children)
@@ -15,9 +21,9 @@ function appendChild(node, child) {
 exports.appendChild = appendChild;
 /**
  * Append a child if one with the given name is not found.
- * @param {{}} node - The parent node.
- * @param {string} name - The child node name.
- * @returns {{}} The child.
+ * @param node - The parent node.
+ * @param  name - The child node name.
+ * @returns The child.
  */
 function appendChildIfNotFound(node, name) {
     let child = findChild(node, name);
@@ -30,9 +36,9 @@ function appendChildIfNotFound(node, name) {
 exports.appendChildIfNotFound = appendChildIfNotFound;
 /**
  * Find a child with the given name.
- * @param {{}} node - The parent node.
- * @param {string} name - The name to find.
- * @returns {undefined|{}} The child if found.
+ * @param node - The parent node.
+ * @param name - The name to find.
+ * @returns The child if found.
  */
 function findChild(node, name) {
     return _.find(node.children, { name });
@@ -40,10 +46,10 @@ function findChild(node, name) {
 exports.findChild = findChild;
 /**
  * Get an attribute from a child node.
- * @param {{}} node - The parent node.
- * @param {string} name - The name of the child node.
- * @param {string} attribute - The name of the attribute.
- * @returns {undefined|*} The value of the attribute if found.
+ * @param node - The parent node.
+ * @param name - The name of the child node.
+ * @param attribute - The name of the attribute.
+ * @returns The value of the attribute if found.
  */
 function getChildAttribute(node, name, attribute) {
     const child = findChild(node, name);
@@ -53,9 +59,9 @@ function getChildAttribute(node, name, attribute) {
 exports.getChildAttribute = getChildAttribute;
 /**
  * Returns a value indicating whether the node has a child with the given name.
- * @param {{}} node - The parent node.
- * @param {string} name - The name of the child node.
- * @returns {boolean} True if found, false otherwise.
+ * @param node - The parent node.
+ * @param name - The name of the child node.
+ * @returns True if found, false otherwise.
  */
 function hasChild(node, name) {
     return _.some(node.children, { name });
@@ -63,10 +69,9 @@ function hasChild(node, name) {
 exports.hasChild = hasChild;
 /**
  * Insert the child after the specified node.
- * @param {{}} node - The parent node.
- * @param {{}} child - The child node.
- * @param {{}} after - The node to insert after.
- * @returns {undefined}
+ * @param node - The parent node.
+ * @param child - The child node.
+ * @param after - The node to insert after.
  */
 function insertAfter(node, child, after) {
     if (!node.children)
@@ -77,10 +82,9 @@ function insertAfter(node, child, after) {
 exports.insertAfter = insertAfter;
 /**
  * Insert the child before the specified node.
- * @param {{}} node - The parent node.
- * @param {{}} child - The child node.
- * @param {{}} before - The node to insert before.
- * @returns {undefined}
+ * @param node - The parent node.
+ * @param child - The child node.
+ * @param before - The node to insert before.
  */
 function insertBefore(node, child, before) {
     if (!node.children)
@@ -91,10 +95,9 @@ function insertBefore(node, child, before) {
 exports.insertBefore = insertBefore;
 /**
  * Insert a child node in the correct order.
- * @param {{}} node - The parent node.
- * @param {{}} child - The child node.
- * @param {Array.<string>} nodeOrder - The order of the node names.
- * @returns {undefined}
+ * @param node - The parent node.
+ * @param child - The child node.
+ * @param nodeOrder - The order of the node names.
  */
 function insertInOrder(node, child, nodeOrder) {
     const childIndex = nodeOrder.indexOf(child.name);
@@ -112,8 +115,8 @@ function insertInOrder(node, child, nodeOrder) {
 exports.insertInOrder = insertInOrder;
 /**
  * Check if the node is empty (no attributes and no children).
- * @param {{}} node - The node.
- * @returns {boolean} True if empty, false otherwise.
+ * @param node - The node.
+ * @returns True if empty, false otherwise.
  */
 function isEmpty(node) {
     return _.isEmpty(node.children) && _.isEmpty(node.attributes);
@@ -121,9 +124,8 @@ function isEmpty(node) {
 exports.isEmpty = isEmpty;
 /**
  * Remove a child node.
- * @param {{}} node - The parent node.
- * @param {string|{}} child - The child node or name of node.
- * @returns {undefined}
+ * @param node - The parent node.
+ * @param child - The child node or name of node.
  */
 function removeChild(node, child) {
     if (!node.children)
@@ -140,9 +142,8 @@ function removeChild(node, child) {
 exports.removeChild = removeChild;
 /**
  * Set/unset the attributes on the node.
- * @param {{}} node - The node.
- * @param {{}} attributes - The attributes to set.
- * @returns {undefined}
+ * @param node - The node.
+ * @param attributes - The attributes to set.
  */
 function setAttributes(node, attributes) {
     _.forOwn(attributes, (value, attribute) => {
@@ -160,10 +161,10 @@ function setAttributes(node, attributes) {
 exports.setAttributes = setAttributes;
 /**
  * Set attributes on a child node, creating the child if necessary.
- * @param {{}} node - The parent node.
- * @param {string} name - The name of the child node.
- * @param {{}} attributes - The attributes to set.
- * @returns {{}} The child.
+ * @param node - The parent node.
+ * @param name - The name of the child node.
+ * @param attributes - The attributes to set.
+ * @returns The child.
  */
 function setChildAttributes(node, name, attributes) {
     let child = findChild(node, name);
@@ -187,9 +188,8 @@ function setChildAttributes(node, name, attributes) {
 exports.setChildAttributes = setChildAttributes;
 /**
  * Remove the child node if empty.
- * @param {{}} node - The parent node.
- * @param {string|{}} child - The child or name of child node.
- * @returns {undefined}
+ * @param node - The parent node.
+ * @param child - The child or name of child node.
  */
 function removeChildIfEmpty(node, child) {
     if (typeof child === 'string')

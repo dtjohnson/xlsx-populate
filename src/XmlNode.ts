@@ -1,28 +1,27 @@
 // TODO: This is a reworked API for XML nodes.
 
-const XML_DECLARATION = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>`;
+const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 
-export interface XmlAttributes {
-    [index:string]: string|number
+export interface IXmlAttributes { // TODO: Switch to Map?
+    [index: string]: string|number;
 }
 
 export type XmlChild = XmlNode|string|number;
 
 /**
  * Escape a string for use in XML by replacing &, ", ', <, and >.
- * @param {*} value - The value to escape.
- * @param {boolean} [isAttribute] - A flag indicating if this is an attribute.
- * @returns {string} The escaped string.
- * @private
+ * @param value - The value to escape.
+ * @param [isAttribute] - A flag indicating if this is an attribute.
+ * @returns The escaped string.
  */
-function escapeString(value: number|string, isAttribute: boolean) {
+function escapeString(value: number|string, isAttribute: boolean): string {
     value = value.toString()
-        .replace(/&/g, "&amp;") // Escape '&' first as the other escapes add them.
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+        .replace(/&/g, '&amp;') // Escape '&' first as the other escapes add them.
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 
     if (isAttribute) {
-        value = value.replace(/"/g, "&quot;");
+        value = value.replace(/"/g, '&quot;');
     }
 
     return value;
@@ -33,16 +32,16 @@ export class XmlNode {
 
     public children?: XmlChild[];
 
-    public attributes?: XmlAttributes;
+    public attributes?: IXmlAttributes;
 
-    public constructor(name: string, attributes?: XmlAttributes) {
+    public constructor(name: string, attributes?: IXmlAttributes) {
         this.name = name;
         if (attributes) this.setAttributes(attributes);
     }
 
-    public setAttributes(attributes: XmlAttributes) {
+    public setAttributes(attributes: IXmlAttributes): void {
         if (!this.attributes) this.attributes = {};
-        for (let key in attributes) {
+        for (const key in attributes) {
             if (attributes.hasOwnProperty(key)) {
                 this.attributes[key] = attributes[key];
             }
@@ -56,8 +55,7 @@ export class XmlNode {
 
     public findChildWithName(name: string): XmlNode|undefined {
         if (!this.children) return;
-        for (let i = 0; i < this.children.length; i++) {
-            const child = this.children[i];
+        for (const child of this.children) {
             if (child instanceof XmlNode && child.name === name) return child;
         }
     }
@@ -84,7 +82,7 @@ export class XmlNode {
         let str = `<${this.name}`;
 
         if (this.attributes) {
-            for (let key in this.attributes) {
+            for (const key in this.attributes) {
                 if (this.attributes.hasOwnProperty(key)) {
                     str += ` ${key}="${escapeString(this.attributes[key], true)}"`;
                 }
@@ -92,7 +90,7 @@ export class XmlNode {
         }
 
         if (this.children && this.children.length) {
-            str += ">";
+            str += '>';
 
             // Recursively add any children.
             this.children.forEach(child => {
@@ -103,7 +101,7 @@ export class XmlNode {
             str += `</${this.name}>`;
         } else {
             // Self-close the tag if no children.
-            str += "/>";
+            str += '/>';
         }
 
         if (includeDeclaration) {

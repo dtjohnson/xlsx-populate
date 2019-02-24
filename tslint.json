@@ -44,7 +44,15 @@
     },
     "prefer-for-of": true,
     "promise-function-async": false, // Not necessary now that types are enforced. Also, some interfaces don't follow pattern.
-    "typedef": false, // TODO: Not sure about this one. It enforces a stable API but is often not necessary.
+    "typedef": [
+      true,
+      "call-signature",
+      "arrow-call-signature",
+      "parameter",
+      "property-declaration",
+      "object-destructuring",
+      "array-destructuring"
+    ],
     "typedef-whitespace": {
       "options": [
         {
@@ -271,7 +279,7 @@
     "ter-no-tabs": true,
 
     // ECMAScript 6
-    "ter-arrow-body-style": [true, "as-needed"],
+    "ter-arrow-body-style": false,
     "ter-arrow-parens": [true, "as-needed"],
     "ter-arrow-spacing": true,
     "ter-prefer-arrow-callback": true,
@@ -296,9 +304,9 @@
       // all other rules (trailingUnderscore: forbid, format: camelCase) still apply
       {"type": "parameter", "modifiers": "unused", "leadingUnderscore": "allow"},
       // require leading underscores for private properties and methods, all other rules still apply
-      //          {"type": "member", "modifiers": "private", "leadingUnderscore": "forbid"},
+      {"type": "member", "modifiers": "private", "leadingUnderscore": "allow"},
       // same for protected
-      //          {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
+      {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
       // exclicitly disable the format check only for method toJSON
       {"type": "method", "filter": "^toJSON$", "format": null},
       // enforce UPPER_CASE for all public static readonly(!) properties
@@ -327,7 +335,7 @@
     "no-unused": true,
     "no-var-before-return": true,
     "object-shorthand-properties-first": true,
-    "parameter-properties": [true, "leading", "member-access", "readonly"],
+    "parameter-properties": [true, "leading", "member-access"],
     "prefer-const-enum": true
   }
 }

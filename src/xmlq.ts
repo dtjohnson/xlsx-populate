@@ -5,7 +5,7 @@ import * as _ from 'lodash';
  * @param node - The parent node.
  * @param child - The child node.
  */
-export function appendChild(node: any, child: any) {
+export function appendChild(node: any, child: any): void {
     if (!node.children) node.children = [];
     node.children.push(child);
 }

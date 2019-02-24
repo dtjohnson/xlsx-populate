@@ -1,55 +1,58 @@
 /**
+ * @module xlsx-populate
+ */
+/**
  * A formula error (e.g. #DIV/0!).
  */
 export declare class FormulaError {
-    private _error;
+    private readonly _error;
     /**
      * \#DIV/0! error.
-     * @type {FormulaError}
      */
-    static DIV0: FormulaError;
+    static readonly DIV0: FormulaError;
     /**
      * \#N/A error.
-     * @type {FormulaError}
      */
-    static NA: FormulaError;
+    static readonly NA: FormulaError;
     /**
      * \#NAME? error.
-     * @type {FormulaError}
      */
-    static NAME: FormulaError;
+    static readonly NAME: FormulaError;
     /**
      * \#NULL! error.
-     * @type {FormulaError}
      */
-    static NULL: FormulaError;
+    static readonly NULL: FormulaError;
     /**
      * \#NUM! error.
-     * @type {FormulaError}
      */
-    static NUM: FormulaError;
+    static readonly NUM: FormulaError;
     /**
      * \#REF! error.
-     * @type {FormulaError}
      */
-    static REF: FormulaError;
+    static readonly REF: FormulaError;
     /**
      * \#VALUE! error.
-     * @type {FormulaError}
      */
-    static VALUE: FormulaError;
-    static ERRORS: FormulaError[];
+    static readonly VALUE: FormulaError;
+    /**
+     * Array of standard errors.
+     */
+    static readonly ERRORS: ReadonlyArray<FormulaError>;
     /**
      * Get the matching FormulaError object.
-     * @param {string} error - The error code.
-     * @returns {FormulaError} The matching FormulaError or a new object if no match.
+     * @param error - The error code.
+     * @returns The matching FormulaError or a new object if no match.
      * @ignore
      */
     static getError(error: string): FormulaError;
-    constructor(_error: string);
+    /**
+     * Creates a new instance of Formula Error.
+     * @param error - The error code.
+     */
+    private constructor();
     /**
      * Get the error code.
-     * @returns {string} The error code.
+     * @returns The error code.
      */
     error(): string;
 }

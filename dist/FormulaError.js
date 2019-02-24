@@ -1,20 +1,23 @@
 "use strict";
+/**
+ * @module xlsx-populate
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * A formula error (e.g. #DIV/0!).
  */
 class FormulaError {
-    // /**
-    //  * Creates a new instance of Formula Error.
-    //  * @param {string} error - The error code.
-    //  */
+    /**
+     * Creates a new instance of Formula Error.
+     * @param error - The error code.
+     */
     constructor(_error) {
         this._error = _error;
     }
     /**
      * Get the matching FormulaError object.
-     * @param {string} error - The error code.
-     * @returns {FormulaError} The matching FormulaError or a new object if no match.
+     * @param error - The error code.
+     * @returns The matching FormulaError or a new object if no match.
      * @ignore
      */
     static getError(error) {
@@ -22,10 +25,9 @@ class FormulaError {
             return value instanceof FormulaError && value.error() === error;
         }) || new FormulaError(error);
     }
-    ;
     /**
      * Get the error code.
-     * @returns {string} The error code.
+     * @returns The error code.
      */
     error() {
         return this._error;
@@ -33,39 +35,35 @@ class FormulaError {
 }
 /**
  * \#DIV/0! error.
- * @type {FormulaError}
  */
-FormulaError.DIV0 = new FormulaError("#DIV/0!");
+FormulaError.DIV0 = new FormulaError('#DIV/0!');
 /**
  * \#N/A error.
- * @type {FormulaError}
  */
-FormulaError.NA = new FormulaError("#N/A");
+FormulaError.NA = new FormulaError('#N/A');
 /**
  * \#NAME? error.
- * @type {FormulaError}
  */
-FormulaError.NAME = new FormulaError("#NAME?");
+FormulaError.NAME = new FormulaError('#NAME?');
 /**
  * \#NULL! error.
- * @type {FormulaError}
  */
-FormulaError.NULL = new FormulaError("#NULL!");
+FormulaError.NULL = new FormulaError('#NULL!');
 /**
  * \#NUM! error.
- * @type {FormulaError}
  */
-FormulaError.NUM = new FormulaError("#NUM!");
+FormulaError.NUM = new FormulaError('#NUM!');
 /**
  * \#REF! error.
- * @type {FormulaError}
  */
-FormulaError.REF = new FormulaError("#REF!");
+FormulaError.REF = new FormulaError('#REF!');
 /**
  * \#VALUE! error.
- * @type {FormulaError}
  */
-FormulaError.VALUE = new FormulaError("#VALUE!");
+FormulaError.VALUE = new FormulaError('#VALUE!');
+/**
+ * Array of standard errors.
+ */
 FormulaError.ERRORS = [
     FormulaError.DIV0,
     FormulaError.NA,
@@ -73,7 +71,7 @@ FormulaError.ERRORS = [
     FormulaError.NULL,
     FormulaError.NUM,
     FormulaError.REF,
-    FormulaError.VALUE
+    FormulaError.VALUE,
 ];
 exports.FormulaError = FormulaError;
 //# sourceMappingURL=FormulaError.js.map

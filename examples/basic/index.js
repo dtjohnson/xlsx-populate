@@ -1,14 +1,14 @@
 "use strict";
 
-const XlsxPopulate = require('../../lib/XlsxPopulate');
+const { Workbook } = require('../../dist/');
 
-// Load the input workbook from file.
-XlsxPopulate.fromBlankAsync()
-    .then(workbook => {
-        // Modify the workbook.
-        workbook.sheet("Sheet1").cell("A1").value("This is neat!");
+(async () => {
+    // Load the input workbook from file.
+    const workbook = await Workbook.fromBlankAsync();
 
-        // Write to file.
-        return workbook.toFileAsync("./out.xlsx");
-    })
-    .catch(err => console.error(err));
+    // Modify the workbook.
+    workbook.sheet("Sheet1").cell("A1").value("This is neat!");
+
+    // Write to file.
+    await workbook.toFileAsync("./out.xlsx");
+})();

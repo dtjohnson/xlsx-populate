@@ -1,83 +1,83 @@
 /**
+ * @module xlsx-populate
+ */
+
+/**
  * A formula error (e.g. #DIV/0!).
  */
 export class FormulaError {
     /**
      * \#DIV/0! error.
-     * @type {FormulaError}
      */
-    static DIV0 = new FormulaError("#DIV/0!");
+    public static readonly DIV0 = new FormulaError('#DIV/0!');
 
     /**
      * \#N/A error.
-     * @type {FormulaError}
      */
-    static NA = new FormulaError("#N/A");
+    public static readonly NA = new FormulaError('#N/A');
 
     /**
      * \#NAME? error.
-     * @type {FormulaError}
      */
-    static NAME = new FormulaError("#NAME?");
+    public static readonly NAME = new FormulaError('#NAME?');
 
     /**
      * \#NULL! error.
-     * @type {FormulaError}
      */
-    static NULL = new FormulaError("#NULL!");
+    public static readonly NULL = new FormulaError('#NULL!');
 
     /**
      * \#NUM! error.
-     * @type {FormulaError}
      */
-    static NUM = new FormulaError("#NUM!");
+    public static readonly NUM = new FormulaError('#NUM!');
 
     /**
      * \#REF! error.
-     * @type {FormulaError}
      */
-    static REF = new FormulaError("#REF!");
+    public static readonly REF = new FormulaError('#REF!');
 
     /**
      * \#VALUE! error.
-     * @type {FormulaError}
      */
-    static VALUE = new FormulaError("#VALUE!");
+    public static readonly VALUE = new FormulaError('#VALUE!');
 
-    static ERRORS: FormulaError[] = [
+    /**
+     * Array of standard errors.
+     */
+    public static readonly ERRORS: ReadonlyArray<FormulaError> = [
         FormulaError.DIV0,
         FormulaError.NA,
         FormulaError.NAME,
         FormulaError.NULL,
         FormulaError.NUM,
         FormulaError.REF,
-        FormulaError.VALUE
+        FormulaError.VALUE,
     ];
 
     /**
      * Get the matching FormulaError object.
-     * @param {string} error - The error code.
-     * @returns {FormulaError} The matching FormulaError or a new object if no match.
+     * @param error - The error code.
+     * @returns The matching FormulaError or a new object if no match.
      * @ignore
      */
-    static getError(error: string): FormulaError {
+    public static getError(error: string): FormulaError {
         return FormulaError.ERRORS.find(value => {
             return value instanceof FormulaError && value.error() === error;
         }) || new FormulaError(error);
-    };
+    }
 
-    // /**
-    //  * Creates a new instance of Formula Error.
-    //  * @param {string} error - The error code.
-    //  */
-    constructor(private _error: string) {
+    /**
+     * Creates a new instance of Formula Error.
+     * @param error - The error code.
+     */
+    private constructor(private readonly _error: string) {
     }
 
     /**
      * Get the error code.
-     * @returns {string} The error code.
+     * @returns The error code.
      */
-    error() {
+    public error(): string {
         return this._error;
     }
 }

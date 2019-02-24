@@ -1,13 +1,13 @@
-export interface XmlAttributes {
+export interface IXmlAttributes {
     [index: string]: string | number;
 }
 export declare type XmlChild = XmlNode | string | number;
 export declare class XmlNode {
     name: string;
     children?: XmlChild[];
-    attributes?: XmlAttributes;
-    constructor(name: string, attributes?: XmlAttributes);
-    setAttributes(attributes: XmlAttributes): void;
+    attributes?: IXmlAttributes;
+    constructor(name: string, attributes?: IXmlAttributes);
+    setAttributes(attributes: IXmlAttributes): void;
     appendChild(child: XmlChild): void;
     findChildWithName(name: string): XmlNode | undefined;
     hasChild(name: string): boolean;
