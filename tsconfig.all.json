@@ -5,6 +5,6 @@ Targets all files.
 
 {
   "extends": "./tsconfig.spec.json",
-  "include": [],
+  "include": ["src"],
   "exclude": []
 }

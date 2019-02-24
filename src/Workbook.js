@@ -5,7 +5,7 @@ const fs = require("fs");
 const JSZip = require('jszip');
 
 const regexify = require("./regexify");
-const blank = require("./blank")();
+const BLANK = require("./blank").BLANK;
 const xmlq = require("./xmlq");
 const Sheet = require("./Sheet");
 const ContentTypes = require("./ContentTypes");
@@ -57,7 +57,7 @@ class Workbook {
      * @ignore
      */
     static fromBlankAsync() {
-        return Workbook.fromDataAsync(blank);
+        return Workbook.fromDataAsync(BLANK);
     }
 
     /**

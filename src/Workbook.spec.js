@@ -4,6 +4,7 @@ const _ = require("lodash");
 const proxyquire = require("proxyquire");
 
 const XmlParser = require("./XmlParser").XmlParser;
+const BLANK = require('./blank').BLANK;
 
 describe("Workbook", () => {
     let resolved, fs, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, CoreProperties, XmlBuilder, Encryptor, blank;
@@ -107,8 +108,6 @@ describe("Workbook", () => {
         Encryptor.prototype.encrypt = jasmine.createSpy("Encryptor.encrypt").and.callFake(input => `ENCRYPTED(${input})`);
         Encryptor.prototype.decryptAsync = jasmine.createSpy("Encryptor.decryptAsync").and.callFake(input => Promise.resolve(`DECRYPTED(${input})`));
 
-        blank = () => "BLANK";
-
         Workbook = proxyquire("./Workbook", {
             fs,
             jszip: JSZip,
@@ -120,7 +119,6 @@ describe("Workbook", () => {
             './CoreProperties': CoreProperties,
             './XmlBuilder': XmlBuilder,
             './Encryptor': Encryptor,
-            './blank': blank,
             '@noCallThru': true
         });
     });
@@ -134,7 +132,7 @@ describe("Workbook", () => {
             it("should init with blank data", () => {
                 return Workbook.fromBlankAsync()
                     .then(workbook => {
-                        expect(Workbook.prototype._init).toHaveBeenCalledWith("BLANK", undefined);
+                        expect(Workbook.prototype._init).toHaveBeenCalledWith(BLANK, undefined);
                         expect(workbook).toBe("WORKBOOK");
                     });
             });

@@ -1,0 +1,333 @@
+{
+  "extends": [
+    "tslint-consistent-codestyle",
+    "tslint-eslint-rules"
+  ],
+  "rules": {
+    /* tslint rules */
+    // TypeScript-specific
+    "adjacent-overload-signatures": true,
+    "ban-ts-ignore": false, // Is sometimes necessary
+    "ban-types": {
+      "options": [
+        ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+        [
+          "Function",
+          "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+        ],
+        ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+        ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+        ["String", "Avoid using the `String` type. Did you mean `string`?"],
+        ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+      ]
+    },
+    "member-access": [true, "check-accessor", "check-constructor", "check-parameter-property"],
+    "member-ordering": {
+      "options": {
+        "order": "statics-first"
+      }
+    },
+    "no-any": false, // Is sometimes necessary
+    "no-empty-interface": true,
+    "no-import-side-effect": false, // Sometimes necessary for legacy packages
+    "no-inferrable-types": [true, "ignore-params"],
+    "no-internal-module": true,
+    "no-magic-numbers": false, // Too annoying
+    "no-namespace": true,
+    "no-non-null-assertion": false, // Often necessary
+    "no-parameter-reassignment": false, // Annoying to follow
+    "no-reference": true,
+    "no-unnecessary-type-assertion": true,
+    "no-var-requires": true,
+    "only-arrow-functions": {
+      "options": ["allow-declarations", "allow-named-functions"]
+    },
+    "prefer-for-of": true,
+    "promise-function-async": false, // Not necessary now that types are enforced. Also, some interfaces don't follow pattern.
+    "typedef": false, // TODO: Not sure about this one. It enforces a stable API but is often not necessary.
+    "typedef-whitespace": {
+      "options": [
+        {
+          "call-signature": "nospace",
+          "index-signature": "nospace",
+          "parameter": "nospace",
+          "property-declaration": "nospace",
+          "variable-declaration": "nospace"
+        },
+        {
+          "call-signature": "onespace",
+          "index-signature": "onespace",
+          "parameter": "onespace",
+          "property-declaration": "onespace",
+          "variable-declaration": "onespace"
+        }
+      ]
+    },
+    "unified-signatures": true,
+
+    // Functionality
+    "await-promise": true,
+    "ban-comma-operator": true,
+    "ban": false, // Nothing to ban at this point
+    "curly": [true, "ignore-same-line"],
+    "forin": true,
+    "function-constructor": true,
+    "import-blacklist": [true, "rxjs/Rx"],
+    "label-position": true,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-console": true,
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-super": true,
+    "no-duplicate-switch-case": true,
+    "no-duplicate-variable": true,
+    "no-dynamic-delete": true,
+    "no-empty": true,
+    "no-eval": true,
+    "no-floating-promises": true,
+    "no-for-in-array": true,
+    "no-implicit-dependencies": true,
+    "no-inferred-empty-object-type": true,
+    "no-invalid-template-strings": true,
+    "no-invalid-this": true,
+    "no-misused-new": true,
+    "no-null-keyword": true,
+    "no-object-literal-type-assertion": true,
+    "no-return-await": false, // I like return await as it is explicit about what it returns
+    "no-shadowed-variable": true,
+    "no-sparse-arrays": true,
+    "no-string-literal": true,
+    "no-string-throw": true,
+    "no-submodule-imports": false, // Some libraries require this
+    "no-switch-case-fall-through": true,
+    "no-this-assignment": true,
+    "no-unbound-method": true,
+    "no-unnecessary-class": [true, "allow-empty-class", "allow-constructor-only"],
+    "no-unsafe-any": true,
+    "no-unsafe-finally": true,
+    "no-unused-expression": true,
+    "no-use-before-declare": true,
+    "no-var-keyword": true,
+    "no-void-expression": [true, "ignore-arrow-function-shorthand"],
+    "prefer-conditional-expression": false, // If the lines are long enough, a ternary is unreadable
+    "prefer-object-spread": true,
+    "radix": true,
+    "restrict-plus-operands": true,
+    "strict-boolean-expressions": true,
+    "strict-type-predicates": true,
+    "switch-default": true,
+    "triple-equals": true,
+    "unnecessary-constructor": true,
+    "use-default-type-parameter": true,
+    "use-isnan": true,
+
+    // Maintainability
+    "cyclomatic-complexity": true,
+    "deprecation": true,
+    "eofline": true,
+    "indent": [true, "spaces", 4],
+    "linebreak-style": false,
+    "max-classes-per-file": { "options": [1] },
+    "max-file-line-count": false, // Sometimes long files are necessary
+    "max-line-length": [true, 140],
+    "no-default-export": false,
+    "no-default-import": false, // Some packages require this
+    "no-duplicate-imports": true,
+    "no-mergeable-namespace": true,
+    "no-require-imports": true,
+    "object-literal-sort-keys": false, // No fixer so too annoying
+    "prefer-const": true,
+    "prefer-readonly": true,
+    "trailing-comma": {
+      "options": {
+        "esSpecCompliant": true,
+        "multiline": "always",
+        "singleline": "never"
+      }
+    },
+    "align": [true, "parameters", "statements"],
+    "array-type": [true, "array"],
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "arrow-return-shorthand": true,
+    "binary-expression-operand-order": true,
+    "callable-types": true,
+    "class-name": true,
+    "comment-format": {
+      "options": ["check-space"]
+    },
+    "comment-type": [true, "doc", "singleline"],
+    "completed-docs": false, // Redundant when defining types and using good names
+    "encoding": true,
+    "file-header": false, // Not necessary
+    "file-name-casing": false, // Depends on the framework
+    "import-spacing": true,
+    "increment-decrement": false, // These are not as confusing as people claim
+    "interface-name": [true, "always-prefix"],
+    "interface-over-type-literal": true,
+    "jsdoc-format": true,
+    "match-default-export-name": false, // Not valuable as package maintainers can name whatever they want
+    "newline-before-return": false, // Prevents concise small function bodies
+    "newline-per-chained-call": false, // Prevents concise one-liners
+    "new-parens": true,
+    "no-angle-bracket-type-assertion": true,
+    "no-boolean-literal-compare": true,
+    "no-consecutive-blank-lines": true,
+    "no-irregular-whitespace": true,
+    "no-parameter-properties": false, // Critical to Angular's dependency injection
+    "no-redundant-jsdoc": true,
+    "no-reference-import": true,
+    "no-trailing-whitespace": false, // Don't care about this
+    "no-unnecessary-callback-wrapper": true,
+    "no-unnecessary-initializer": true,
+    "no-unnecessary-qualifier": true,
+    "number-literal-format": true,
+    "object-literal-key-quotes": [true, "as-needed"],
+    "object-literal-shorthand": true,
+    "one-line": { "options": ["check-catch", "check-else", "check-finally", "check-open-brace", "check-whitespace"] },
+    "one-variable-per-declaration": { "options": ["ignore-for-loop"] },
+    "ordered-imports": {
+      "options": {
+        "import-sources-order": "case-insensitive",
+        "module-source-path": "full",
+        "named-imports-order": "case-insensitive"
+      }
+    },
+    "prefer-function-over-method": false, // Not realistic in class-oriented designs
+    "prefer-method-signature": true,
+    "prefer-switch": true,
+    "prefer-template": true,
+    "prefer-while": true,
+    "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+    "return-undefined": true,
+    "semicolon": { "options": ["always"] },
+    "space-before-function-paren": {
+      "options": {
+        "anonymous": "never",
+        "asyncArrow": "always",
+        "constructor": "never",
+        "method": "never",
+        "named": "never"
+      }
+    },
+    "space-within-parens": [true, 0],
+    "switch-final-break": [true, "always"],
+    "type-literal-delimiter": true,
+    "unnecessary-bind": true,
+    "variable-name": {
+      "options": ["ban-keywords", "check-format", "allow-pascal-case", "allow-leading-underscore"]
+    },
+    "whitespace": {
+      "options": [
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-separator",
+        "check-type",
+        "check-typecast",
+        "check-module"
+      ]
+    },
+
+
+    /* tslint-eslint-rules */
+    // Possible Errors
+    "no-constant-condition": true,
+    "no-control-regex": true,
+    "no-duplicate-case": true,
+    "no-empty-character-class": true,
+    "no-ex-assign": true,
+    "no-extra-boolean-cast": true,
+    "no-extra-semi": true,
+    "no-inner-declarations": true,
+    "no-invalid-regexp": true,
+    "ter-no-irregular-whitespace": true,
+    "no-regex-spaces": true,
+    "no-unexpected-multiline": true,
+    "valid-jsdoc": false,
+    "valid-typeof": true,
+
+    // Best Practices
+    "no-multi-spaces": true,
+    "ter-no-proto": true,
+    "ter-no-script-url": true,
+    "ter-no-self-compare": true,
+
+    // Stylistic Issues
+    "array-bracket-spacing": true,
+    "block-spacing": true,
+    "brace-style": [true, "1tbs"],
+    "ter-computed-property-spacing": true,
+    "ter-func-call-spacing": true,
+    "ter-indent": [true, 4, {"SwitchCase": 1}],
+    "ter-max-len": [true, {"code": 140}],
+    "ter-newline-after-var": false, // Doesn't allow for small function bodies
+    "ter-no-mixed-spaces-and-tabs": true,
+    "object-curly-spacing": [true, "always"],
+    "ter-padded-blocks": [true, "never"],
+    "sort-imports": false, // No fixer so this sucks: https://github.com/buzinas/tslint-eslint-rules/issues/330
+    "space-in-parens": true,
+    "ter-no-tabs": true,
+
+    // ECMAScript 6
+    "ter-arrow-body-style": [true, "as-needed"],
+    "ter-arrow-parens": [true, "as-needed"],
+    "ter-arrow-spacing": true,
+    "ter-prefer-arrow-callback": true,
+
+
+    /* tslint-consistent-codestyle */
+    "const-parameters": true,
+    "early-exit": false, // Sometimes inverting the expression is more confusing than a big if block.
+    "ext-curly": false,
+    "naming-convention": [ // Taken from https://github.com/ajafff/tslint-consistent-codestyle/blob/master/docs/naming-convention.md#examples
+      true,
+      // forbid leading and trailing underscores and enforce camelCase on EVERY name. will be overridden by subtypes if needed
+      {"type": "default", "format": "camelCase", "leadingUnderscore": "forbid", "trailingUnderscore": "forbid"},
+      // require all global constants to be camelCase or UPPER_CASE
+      // all other variables and functions still need to be camelCase
+      {"type": "variable", "modifiers": ["global", "const"], "format": ["camelCase","UPPER_CASE"]},
+      // override the above format option for exported constants to allow only UPPER_CASE
+      {"type": "variable", "modifiers": ["export", "const"], "format": "UPPER_CASE"},
+      // require exported constant variables that are initialized with functions to be camelCase
+      {"type": "functionVariable", "modifiers": ["export", "const"], "format": "camelCase"},
+      // allow leading underscores for unused parameters, because `tsc --noUnusedParameters` will not flag underscore prefixed parameters
+      // all other rules (trailingUnderscore: forbid, format: camelCase) still apply
+      {"type": "parameter", "modifiers": "unused", "leadingUnderscore": "allow"},
+      // require leading underscores for private properties and methods, all other rules still apply
+      //          {"type": "member", "modifiers": "private", "leadingUnderscore": "forbid"},
+      // same for protected
+      //          {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
+      // exclicitly disable the format check only for method toJSON
+      {"type": "method", "filter": "^toJSON$", "format": null},
+      // enforce UPPER_CASE for all public static readonly(!) properties
+      {"type": "property", "modifiers": ["public", "static", "const"], "format": "UPPER_CASE"},
+      // enforce PascalCase for classes, interfaces, enums, etc. Remember, there are still no underscores allowed.
+      {"type": "type", "format": "PascalCase"},
+      // abstract classes must have the prefix "Abstract". The following part of the name must be valid PascalCase
+      {"type": "class", "modifiers": "abstract", "prefix": "Abstract"},
+      // interface names must start with "I". The following part of the name must be valid PascalCase
+      {"type": "interface", "prefix": "I"},
+      // generic type parameters must start with "T"
+      // most of the time it will only be T, which is totally valid, because an empty string conforms to the PascalCase check
+      // By convention T, U and V are used for generics. You could enforce that with "regex": "^[TUV]$" and if you are care that much for performance, you could disable every other check by setting a falsy value
+      {"type": "genericTypeParameter", "prefix": "T"},
+      // enum members must be in PascalCase. Without this config, enumMember would inherit UPPER_CASE from public static const property
+      {"type": "enumMember", "format": "PascalCase"}
+    ],
+    "no-as-type-assertion": false, // Prefer to <type> assertion
+    "no-accessor-recursion": true,
+    "no-collapsible-if": true,
+    "no-else-after-return": true,
+    "no-return-undefined": true,
+    "no-static-this": true,
+    "no-unnecessary-else": true,
+    "no-unnecessary-type-annotation": true, // TODO: Same type annotation concern above
+    "no-unused": true,
+    "no-var-before-return": true,
+    "object-shorthand-properties-first": true,
+    "parameter-properties": [true, "leading", "member-access", "readonly"],
+    "prefer-const-enum": true
+  }
+}

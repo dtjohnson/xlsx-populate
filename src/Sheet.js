@@ -10,7 +10,7 @@ const xmlq = require("./xmlq");
 const regexify = require("./regexify");
 const addressConverter = require("./addressConverter");
 const ArgHandler = require("./ArgHandler");
-const colorIndexes = require("./colorIndexes").colorIndexes;
+const COLORS = require("./colors").COLORS;
 
 // Order of the nodes as defined by the spec.
 const nodeOrder = [
@@ -414,7 +414,7 @@ class Sheet {
                 const color = {};
                 if (tabColorNode.attributes.hasOwnProperty('rgb')) color.rgb = tabColorNode.attributes.rgb;
                 else if (tabColorNode.attributes.hasOwnProperty('theme')) color.theme = tabColorNode.attributes.theme;
-                else if (tabColorNode.attributes.hasOwnProperty('indexed')) color.rgb = colorIndexes[tabColorNode.attributes.indexed];
+                else if (tabColorNode.attributes.hasOwnProperty('indexed')) color.rgb = COLORS[tabColorNode.attributes.indexed];
 
                 if (tabColorNode.attributes.hasOwnProperty('tint')) color.tint = tabColorNode.attributes.tint;
 

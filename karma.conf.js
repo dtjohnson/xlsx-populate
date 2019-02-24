@@ -13,9 +13,7 @@ module.exports = config => {
         reporters: ["progress", "karma-typescript"],
         browsers: ["Chrome"],
         karmaTypescriptConfig: {
-            include: ["src"],
-            exclude: [],
-            tsconfig: "./tsconfig.karma.json"
+            tsconfig: "./tsconfig.all.json"
         }
     });
 };

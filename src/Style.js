@@ -5,7 +5,7 @@
 const ArgHandler = require("./ArgHandler");
 const _ = require("lodash");
 const xmlq = require("./xmlq");
-const colorIndexes = require("./colorIndexes").colorIndexes;
+const COLORS = require("./colors").COLORS;
 
 /**
  * A style.
@@ -68,7 +68,7 @@ class Style {
         const color = {};
         if (child.attributes.hasOwnProperty('rgb')) color.rgb = child.attributes.rgb;
         else if (child.attributes.hasOwnProperty('theme')) color.theme = child.attributes.theme;
-        else if (child.attributes.hasOwnProperty('indexed')) color.rgb = colorIndexes[child.attributes.indexed];
+        else if (child.attributes.hasOwnProperty('indexed')) color.rgb = COLORS[child.attributes.indexed];
 
         if (child.attributes.hasOwnProperty('tint')) color.tint = child.attributes.tint;
 
