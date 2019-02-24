@@ -1,0 +1,10 @@
+/*
+Config file used by karma-typescript.
+Targets all files.
+*/
+
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [],
+  "exclude": []
+}

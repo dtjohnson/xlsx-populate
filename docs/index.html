@@ -1,0 +1,1078 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>xlsx-populate</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">xlsx-populate</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> xlsx-populate</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p><a href="https://www.npmjs.org/package/xlsx-populate"><img src="http://img.shields.io/npm/v/xlsx-populate.svg" alt="view on npm"></a>
+					<a href="https://www.npmjs.org/package/xlsx-populate"><img src="http://img.shields.io/npm/dm/xlsx-populate.svg" alt="npm module downloads per month"></a>
+					<a href="https://travis-ci.org/dtjohnson/xlsx-populate"><img src="https://travis-ci.org/dtjohnson/xlsx-populate.svg?branch=master" alt="Build Status"></a>
+				<a href="https://david-dm.org/dtjohnson/xlsx-populate"><img src="https://david-dm.org/dtjohnson/xlsx-populate.svg" alt="Dependency Status"></a></p>
+				<h1 id="xlsx-populate">xlsx-populate</h1>
+				<p>Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, encryption, and a focus on keeping existing workbook features and styles in tact.</p>
+				<h2 id="table-of-contents">Table of Contents</h2>
+				<!-- toc -->
+				<h2 id="installation">Installation</h2>
+				<h3 id="node-js">Node.js</h3>
+				<pre><code class="language-bash">npm install xlsx-populate</code></pre>
+				<p>Note that xlsx-populate uses ES6 features so only Node.js v4+ is supported.</p>
+				<h3 id="browser">Browser</h3>
+				<p>A functional browser example can be found in <a href="https://gitcdn.xyz/repo/dtjohnson/xlsx-populate/master/examples/browser/index.html">examples/browser/index.html</a>.</p>
+				<p>xlsx-populate is written first for Node.js. We use <a href="http://browserify.org/">browserify</a> and <a href="https://github.com/babel/babelify">babelify</a> to transpile and pack up the module for use in the browser.</p>
+				<p>You have a number of options to include the code in the browser. You can download the combined, minified code from the browser directory in this repository or you can install with bower:</p>
+				<pre><code class="language-bash">bower install xlsx-populate</code></pre>
+				<p>After including the module in the browser, it is available globally as <code>XlsxPopulate</code>.</p>
+				<p>Alternatively, you can require this module using <a href="http://browserify.org/">browserify</a>. Since xlsx-populate uses ES6 features, you will also need to use <a href="https://github.com/babel/babelify">babelify</a> with <a href="https://www.npmjs.com/package/babel-preset-env">babel-preset-env</a>.</p>
+				<h2 id="usage">Usage</h2>
+				<p>xlsx-populate has an <a href="#api-reference">extensive API</a> for working with Excel workbooks. This section reviews the most common functions and use cases. Examples can also be found in the examples directory of the source code.</p>
+				<h3 id="populating-data">Populating Data</h3>
+				<p>To populate data in a workbook, you first load one (either blank, from data, or from file). Then you can access sheets and
+				cells within the workbook to manipulate them.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> XlsxPopulate = <span class="hljs-built_in">require</span>(<span class="hljs-string">'xlsx-populate'</span>);
+
+<span class="hljs-comment">// Load a new blank workbook</span>
+XlsxPopulate.fromBlankAsync()
+    .then(<span class="hljs-function"><span class="hljs-params">workbook</span> =&gt;</span> {
+        <span class="hljs-comment">// Modify the workbook.</span>
+        workbook.sheet(<span class="hljs-string">"Sheet1"</span>).cell(<span class="hljs-string">"A1"</span>).value(<span class="hljs-string">"This is neat!"</span>);
+
+        <span class="hljs-comment">// Write to file.</span>
+        <span class="hljs-keyword">return</span> workbook.toFileAsync(<span class="hljs-string">"./out.xlsx"</span>);
+    });</code></pre>
+				<h3 id="parsing-data">Parsing Data</h3>
+				<p>You can pull data out of existing workbooks using <a href="#Cell+value">Cell.value</a> as a getter without any arguments:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> XlsxPopulate = <span class="hljs-built_in">require</span>(<span class="hljs-string">'xlsx-populate'</span>);
+
+<span class="hljs-comment">// Load an existing workbook</span>
+XlsxPopulate.fromFileAsync(<span class="hljs-string">"./Book1.xlsx"</span>)
+    .then(<span class="hljs-function"><span class="hljs-params">workbook</span> =&gt;</span> {
+        <span class="hljs-comment">// Modify the workbook.</span>
+        <span class="hljs-keyword">const</span> value = workbook.sheet(<span class="hljs-string">"Sheet1"</span>).cell(<span class="hljs-string">"A1"</span>).value();
+
+        <span class="hljs-comment">// Log the value.</span>
+        <span class="hljs-built_in">console</span>.log(value);
+    });</code></pre>
+				<p><strong>Note</strong>: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The <a href="#Cell+value">value</a> method will return the value of the cells at the time the workbook was saved. xlsx-populate will <em>not</em> recalculate the values as you manipulate the workbook and will <em>not</em> write the values to the output. </p>
+				<h3 id="ranges">Ranges</h3>
+				<p>xlsx-populate also supports ranges of cells to allow parsing/manipulation of multiple cells at once.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> r = workbook.sheet(<span class="hljs-number">0</span>).range(<span class="hljs-string">"A1:C3"</span>);
+
+<span class="hljs-comment">// Set all cell values to the same value:</span>
+r.value(<span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// Set the values using a 2D array:</span>
+r.value([
+    [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>],
+    [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>],
+    [<span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>]
+]);
+
+<span class="hljs-comment">// Set the values using a callback function:</span>
+r.value(<span class="hljs-function">(<span class="hljs-params">cell, ri, ci, range</span>) =&gt;</span> <span class="hljs-built_in">Math</span>.random());</code></pre>
+				<p>A common use case is to simply pull all of the values out all at once. You can easily do that with the <a href="#Sheet+usedRange">Sheet.usedRange</a> method.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get 2D array of all values in the worksheet.</span>
+<span class="hljs-keyword">const</span> values = workbook.sheet(<span class="hljs-string">"Sheet1"</span>).usedRange().value();</code></pre>
+				<p>Alternatively, you can set the values in a range with only the top-left cell in the range:</p>
+				<pre><code class="language-js">workbook.sheet(<span class="hljs-number">0</span>).cell(<span class="hljs-string">"A1"</span>).value([
+    [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>],
+    [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>],
+    [<span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>]
+]);</code></pre>
+				<p>The set range is returned.</p>
+				<h3 id="rows-and-columns">Rows and Columns</h3>
+				<p>You can access rows and columns in order to change size, hide/show, or access cells within:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get the B column, set its width and unhide it (assuming it was hidden).</span>
+sheet.column(<span class="hljs-string">"B"</span>).width(<span class="hljs-number">25</span>).hidden(<span class="hljs-literal">false</span>);
+
+<span class="hljs-keyword">const</span> cell = sheet.row(<span class="hljs-number">5</span>).cell(<span class="hljs-number">3</span>); <span class="hljs-comment">// Returns the cell at C5. </span></code></pre>
+				<h3 id="managing-sheets">Managing Sheets</h3>
+				<p>xlsx-populate supports a number of options for managing sheets.</p>
+				<p>You can get a sheet by name or index or get all of the sheets as an array:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get sheet by index</span>
+<span class="hljs-keyword">const</span> sheet1 = workbook.sheet(<span class="hljs-number">0</span>);
+
+<span class="hljs-comment">// Get sheet by name</span>
+<span class="hljs-keyword">const</span> sheet2 = workbook.sheet(<span class="hljs-string">"Sheet2"</span>);
+
+<span class="hljs-comment">// Get all sheets as an array</span>
+<span class="hljs-keyword">const</span> sheets = workbook.sheets();</code></pre>
+				<p>You can add new sheets:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Add a new sheet named 'New 1' at the end of the workbook</span>
+<span class="hljs-keyword">const</span> newSheet1 = workbook.addSheet(<span class="hljs-string">'New 1'</span>);
+
+<span class="hljs-comment">// Add a new sheet named 'New 2' at index 1 (0-based)</span>
+<span class="hljs-keyword">const</span> newSheet2 = workbook.addSheet(<span class="hljs-string">'New 2'</span>, <span class="hljs-number">1</span>);
+
+<span class="hljs-comment">// Add a new sheet named 'New 3' before the sheet named 'Sheet1'</span>
+<span class="hljs-keyword">const</span> newSheet3 = workbook.addSheet(<span class="hljs-string">'New 3'</span>, <span class="hljs-string">'Sheet1'</span>);
+
+<span class="hljs-comment">// Add a new sheet named 'New 4' before the sheet named 'Sheet1' using a Sheet reference.</span>
+<span class="hljs-keyword">const</span> sheet = workbook.sheet(<span class="hljs-string">'Sheet1'</span>);
+<span class="hljs-keyword">const</span> newSheet4 = workbook.addSheet(<span class="hljs-string">'New 4'</span>, sheet);</code></pre>
+				<p><em>Note: the sheet rename method does not rename references to the sheet so formulas, etc. can be broken. Use with caution!</em></p>
+				<p>You can rename sheets:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Rename the first sheet.</span>
+<span class="hljs-keyword">const</span> sheet = workbook.sheet(<span class="hljs-number">0</span>).name(<span class="hljs-string">"new sheet name"</span>);</code></pre>
+				<p>You can move sheets:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Move 'Sheet1' to the end</span>
+workbook.moveSheet(<span class="hljs-string">"Sheet1"</span>);
+
+<span class="hljs-comment">// Move 'Sheet1' to index 2</span>
+workbook.moveSheet(<span class="hljs-string">"Sheet1"</span>, <span class="hljs-number">2</span>);
+
+<span class="hljs-comment">// Move 'Sheet1' before 'Sheet2'</span>
+workbook.moveSheet(<span class="hljs-string">"Sheet1"</span>, <span class="hljs-string">"Sheet2"</span>);</code></pre>
+				<p>The above methods can all use sheet references instead of names as well. And you can also move a sheet using a method on the sheet:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Move the sheet before 'Sheet2'</span>
+sheet.move(<span class="hljs-string">"Sheet2"</span>);</code></pre>
+				<p>You can delete sheets:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Delete 'Sheet1'</span>
+workbook.deleteSheet(<span class="hljs-string">"Sheet1"</span>);
+
+<span class="hljs-comment">// Delete sheet with index 2</span>
+workbook.deleteSheet(<span class="hljs-number">2</span>);
+
+<span class="hljs-comment">// Delete from sheet reference</span>
+workbook.sheet(<span class="hljs-number">0</span>).delete();</code></pre>
+				<p>You can get/set the active sheet:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get the active sheet</span>
+<span class="hljs-keyword">const</span> sheet = workbook.activeSheet();
+
+<span class="hljs-comment">// Check if the current sheet is active</span>
+sheet.active() <span class="hljs-comment">// returns true or false</span>
+
+<span class="hljs-comment">// Activate the sheet</span>
+sheet.active(<span class="hljs-literal">true</span>);
+
+<span class="hljs-comment">// Or from the workbook</span>
+workbook.activeSheet(<span class="hljs-string">"Sheet2"</span>);</code></pre>
+				<h3 id="defined-names">Defined Names</h3>
+				<p>Excel supports creating defined names that refer to addresses, formulas, or constants. These defined names can be scoped
+					to the entire workbook or just individual sheets. xlsx-populate supports looking up defined names that refer to cells or
+					ranges. (Dereferencing other names will result in an error.) Defined names are particularly useful if you are populating
+				data into a known template. Then you do need to know the exact location.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Look up workbook-scoped name and set the value to 5.</span>
+workbook.definedName(<span class="hljs-string">"some name"</span>).value(<span class="hljs-number">5</span>);
+
+<span class="hljs-comment">// Look of a name scoped to the first sheet and set the value to "foo".</span>
+workbook.sheet(<span class="hljs-number">0</span>).definedName(<span class="hljs-string">"some other name"</span>).value(<span class="hljs-string">"foo"</span>);</code></pre>
+				<p>You can also create, modify, or delete defined names:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Create/modify a workbook-scope defined name</span>
+workbook.definedName(<span class="hljs-string">"some name"</span>, <span class="hljs-string">"TRUE"</span>);
+
+<span class="hljs-comment">// Delete a sheet-scoped defined name:</span>
+workbook.sheet(<span class="hljs-number">0</span>).definedName(<span class="hljs-string">"some name"</span>, <span class="hljs-literal">null</span>);</code></pre>
+				<h3 id="find-and-replace">Find and Replace</h3>
+				<p>You can search for occurrences of text in cells within the workbook or sheets and optionally replace them.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Find all occurrences of the text "foo" in the workbook and replace with "bar".</span>
+workbook.find(<span class="hljs-string">"foo"</span>, <span class="hljs-string">"bar"</span>); <span class="hljs-comment">// Returns array of matched cells</span>
+
+<span class="hljs-comment">// Find the matches but don't replace. </span>
+workbook.find(<span class="hljs-string">"foo"</span>);
+
+<span class="hljs-comment">// Just look in the first sheet.</span>
+workbook.sheet(<span class="hljs-number">0</span>).find(<span class="hljs-string">"foo"</span>);
+
+<span class="hljs-comment">// Check if a particular cell matches the value.</span>
+workbook.sheet(<span class="hljs-string">"Sheet1"</span>).cell(<span class="hljs-string">"A1"</span>).find(<span class="hljs-string">"foo"</span>); <span class="hljs-comment">// Returns true or false</span></code></pre>
+				<p>Like <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace">String.replace</a>, the find method can also take a RegExp search pattern and replace can take a function callback:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Use a RegExp to replace all lowercase letters with uppercase</span>
+workbook.find(<span class="hljs-regexp">/[a-z]+/g</span>, match =&gt; match.toUpperCase());</code></pre>
+				<h3 id="styles">Styles</h3>
+				<p>xlsx-populate supports a wide range of cell formatting. See the <a href="#style-reference">Style Reference</a> for the various options.</p>
+				<p>To set/set a cell style:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Set a single style</span>
+cell.style(<span class="hljs-string">"bold"</span>, <span class="hljs-literal">true</span>);
+
+<span class="hljs-comment">// Set multiple styles</span>
+cell.style({ <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">italic</span>: <span class="hljs-literal">true</span> });
+
+<span class="hljs-comment">// Get a single style</span>
+<span class="hljs-keyword">const</span> bold = cell.style(<span class="hljs-string">"bold"</span>); <span class="hljs-comment">// true</span>
+
+<span class="hljs-comment">// Get multiple styles</span>
+<span class="hljs-keyword">const</span> styles = cell.style([<span class="hljs-string">"bold"</span>, <span class="hljs-string">"italic"</span>]); <span class="hljs-comment">// { bold: true, italic: true } </span></code></pre>
+				<p>Similarly for ranges:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Set all cells in range with a single style</span>
+range.style(<span class="hljs-string">"bold"</span>, <span class="hljs-literal">true</span>);
+
+<span class="hljs-comment">// Set with a 2D array</span>
+range.style(<span class="hljs-string">"bold"</span>, [[<span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>], [<span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>]]);
+
+<span class="hljs-comment">// Set with a callback function</span>
+range.style(<span class="hljs-string">"bold"</span>, (cell, ri, ci, range) =&gt; <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>);
+
+<span class="hljs-comment">// Set multiple styles using any combination</span>
+range.style({
+    <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">italic</span>: [[<span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>], [<span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>]],
+    <span class="hljs-attr">underline</span>: <span class="hljs-function">(<span class="hljs-params">cell, ri, ci, range</span>) =&gt;</span> <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span>
+});</code></pre>
+				<p>If you are setting styles for many cells, performance is far better if you set for an entire row or column:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Set a single style</span>
+sheet.row(<span class="hljs-number">1</span>).style(<span class="hljs-string">"bold"</span>, <span class="hljs-literal">true</span>);
+
+<span class="hljs-comment">// Set multiple styles</span>
+sheet.column(<span class="hljs-string">"A"</span>).style({ <span class="hljs-attr">bold</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">italic</span>: <span class="hljs-literal">true</span> });
+
+<span class="hljs-comment">// Get a single style</span>
+<span class="hljs-keyword">const</span> bold = sheet.column(<span class="hljs-number">3</span>).style(<span class="hljs-string">"bold"</span>);
+
+<span class="hljs-comment">// Get multiple styles</span>
+<span class="hljs-keyword">const</span> styles = sheet.row(<span class="hljs-number">5</span>).style([<span class="hljs-string">"bold"</span>, <span class="hljs-string">"italic"</span>]); </code></pre>
+				<p>Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.</p>
+				<p>Some styles take values that are more complex objects:</p>
+				<pre><code class="language-js">cell.style(<span class="hljs-string">"fill"</span>, {
+    <span class="hljs-attr">type</span>: <span class="hljs-string">"pattern"</span>,
+    <span class="hljs-attr">pattern</span>: <span class="hljs-string">"darkDown"</span>,
+    <span class="hljs-attr">foreground</span>: {
+        <span class="hljs-attr">rgb</span>: <span class="hljs-string">"ff0000"</span>
+    },
+    <span class="hljs-attr">background</span>: {
+        <span class="hljs-attr">theme</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">tint</span>: <span class="hljs-number">0.4</span>
+    }
+});</code></pre>
+				<p>There are often shortcuts for the setters, but the getters will always return the full objects:</p>
+				<pre><code class="language-js">cell.style(<span class="hljs-string">"fill"</span>, <span class="hljs-string">"0000ff"</span>);
+
+<span class="hljs-keyword">const</span> fill = cell.style(<span class="hljs-string">"fill"</span>);
+<span class="hljs-comment">/*
+fill is now set to:
+{
+    type: "solid",
+    color: {
+        rgb: "0000ff"
+    }
+}
+*/</span></code></pre>
+				<p>Number formats are one of the most common styles. They can be set using the <code>numberFormat</code> style.</p>
+				<pre><code class="language-js">cell.style(<span class="hljs-string">"numberFormat"</span>, <span class="hljs-string">"0.00"</span>);</code></pre>
+				<p>Information on how number format codes work can be found <a href="https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&amp;rs=en-US&amp;ad=US">here</a>.
+				You can also look up the desired format code in Excel:</p>
+				<ul>
+					<li>Right-click on a cell in Excel with the number format you want.</li>
+					<li>Click on &quot;Format Cells...&quot;</li>
+					<li>Switch the category to &quot;Custom&quot; if it is not already.</li>
+					<li>The code in the &quot;Type&quot; box is the format you should copy.</li>
+				</ul>
+				<h3 id="dates">Dates</h3>
+				<p>Excel stores date/times as the number of days since 1/1/1900 (<a href="https://en.wikipedia.org/wiki/Leap_year_bug">sort of</a>). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn&#39;t already exist in the cell:</p>
+				<pre><code class="language-js">cell.value(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2017</span>, <span class="hljs-number">1</span>, <span class="hljs-number">22</span>)).style(<span class="hljs-string">"numberFormat"</span>, <span class="hljs-string">"dddd, mmmm dd, yyyy"</span>);</code></pre>
+				<p>When fetching the value of the cell, it will be returned as a number. To convert it to a date use <a href="#XlsxPopulate.numberToDate">XlsxPopulate.numberToDate</a>:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> num = cell.value(); <span class="hljs-comment">// 42788</span>
+<span class="hljs-keyword">const</span> date = XlsxPopulate.numberToDate(num); <span class="hljs-comment">// Wed Feb 22 2017 00:00:00 GMT-0500 (Eastern Standard Time)</span></code></pre>
+				<h3 id="data-validation">Data Validation</h3>
+				<p>Data validation is also supported. To set/get/remove a cell data validation:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Set the data validation</span>
+cell.dataValidation({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'list'</span>,
+    <span class="hljs-attr">allowBlank</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">showInputMessage</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">prompt</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">promptTitle</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">showErrorMessage</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">error</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">errorTitle</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">operator</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">formula1</span>: <span class="hljs-string">'$A:$A'</span>,<span class="hljs-comment">//Required</span>
+    formula2: <span class="hljs-string">'String'</span>
+});
+
+<span class="hljs-comment">//Here is a short version of the one above.</span>
+cell.dataValidation(<span class="hljs-string">'$A:$A'</span>);
+
+<span class="hljs-comment">// Get the data validation</span>
+<span class="hljs-keyword">const</span> obj = cell.dataValidation(); <span class="hljs-comment">// Returns an object</span>
+
+<span class="hljs-comment">// Remove the data validation</span>
+cell.dataValidation(<span class="hljs-literal">null</span>); <span class="hljs-comment">//Returns the cell</span></code></pre>
+				<p>Similarly for ranges:</p>
+				<pre><code class="language-js">
+<span class="hljs-comment">// Set all cells in range with a single shared data validation</span>
+range.dataValidation({
+    <span class="hljs-attr">type</span>: <span class="hljs-string">'list'</span>,
+    <span class="hljs-attr">allowBlank</span>: <span class="hljs-literal">false</span>, 
+    <span class="hljs-attr">showInputMessage</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">prompt</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">promptTitle</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">showErrorMessage</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">error</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">errorTitle</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">operator</span>: <span class="hljs-string">'String'</span>,
+    <span class="hljs-attr">formula1</span>: <span class="hljs-string">'Item1,Item2,Item3,Item4'</span>,<span class="hljs-comment">//Required</span>
+    formula2: <span class="hljs-string">'String'</span>
+});
+
+<span class="hljs-comment">//Here is a short version of the one above.</span>
+range.dataValidation(<span class="hljs-string">'Item1,Item2,Item3,Item4'</span>);
+
+<span class="hljs-comment">// Get the data validation</span>
+<span class="hljs-keyword">const</span> obj = range.dataValidation(); <span class="hljs-comment">// Returns an object</span>
+
+<span class="hljs-comment">// Remove the data validation</span>
+range.dataValidation(<span class="hljs-literal">null</span>); <span class="hljs-comment">//Returns the Range</span></code></pre>
+				<p>Please note, the data validation gets applied to the entire range, <em>not</em> each Cell in the range.</p>
+				<h3 id="method-chaining">Method Chaining</h3>
+				<p>xlsx-populate uses method-chaining similar to that found in <a href="https://jquery.com/">jQuery</a> and <a href="https://d3js.org/">d3</a>. This lets you construct large chains of setters as desired:</p>
+				<pre><code class="language-js">workbook
+    .sheet(<span class="hljs-number">0</span>)
+        .cell(<span class="hljs-string">"A1"</span>)
+            .value(<span class="hljs-string">"foo"</span>)
+            .style(<span class="hljs-string">"bold"</span>, <span class="hljs-literal">true</span>)
+        .relativeCell(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>)
+            .formula(<span class="hljs-string">"A1"</span>)
+            .style(<span class="hljs-string">"italic"</span>, <span class="hljs-literal">true</span>)
+.workbook()
+    .sheet(<span class="hljs-number">1</span>)
+        .range(<span class="hljs-string">"A1:B3"</span>)
+            .value(<span class="hljs-number">5</span>)
+        .cell(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+            .style(<span class="hljs-string">"underline"</span>, <span class="hljs-string">"double"</span>);
+</code></pre>
+				<h3 id="hyperlinks">Hyperlinks</h3>
+				<p>Hyperlinks are also supported on cells using the <a href="#Cell+hyperlink">Cell.hyperlink</a> method. The method will <em>not</em> style the content to look like a hyperlink. You must do that yourself:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Set a hyperlink</span>
+cell.value(<span class="hljs-string">"Link Text"</span>)
+    .style({ <span class="hljs-attr">fontColor</span>: <span class="hljs-string">"0563c1"</span>, <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> })
+    .hyperlink(<span class="hljs-string">"http://example.com"</span>);
+
+<span class="hljs-comment">// Set a hyperlink with tooltip</span>
+cell.value(<span class="hljs-string">"Link Text"</span>)
+    .style({ <span class="hljs-attr">fontColor</span>: <span class="hljs-string">"0563c1"</span>, <span class="hljs-attr">underline</span>: <span class="hljs-literal">true</span> })
+    .hyperlink({ <span class="hljs-attr">hyperlink</span>: <span class="hljs-string">"http://example.com"</span>, <span class="hljs-attr">tooltip</span>: <span class="hljs-string">"example.com"</span> });
+
+<span class="hljs-comment">// Get the hyperlink</span>
+<span class="hljs-keyword">const</span> value = cell.hyperlink(); <span class="hljs-comment">// Returns 'http://example.com'</span>
+
+<span class="hljs-comment">// Set a hyperlink to email</span>
+cell.value(<span class="hljs-string">"Click to Email Jeff Bezos"</span>)
+    .hyperlink({ <span class="hljs-attr">email</span>: <span class="hljs-string">"jeff@amazon.com"</span>, <span class="hljs-attr">emailSubject</span>: <span class="hljs-string">"I know you're a busy man Jeff, but..."</span> });
+
+<span class="hljs-comment">// Set a hyperlink to an internal cell using an address string.</span>
+cell.value(<span class="hljs-string">"Click to go to an internal cell"</span>)
+    .hyperlink(<span class="hljs-string">"Sheet2!A1"</span>);
+
+<span class="hljs-comment">// Set a hyperlink to an internal cell using a cell object.</span>
+cell.value(<span class="hljs-string">"Click to go to an internal cell"</span>)
+    .hyperlink(workbook.sheet(<span class="hljs-number">0</span>).cell(<span class="hljs-string">"A1"</span>));</code></pre>
+				<h3 id="print-options">Print Options</h3>
+				<p>Print options are accessed using the <a href="#Sheet+printOptions">Sheet.printOptions</a> method. Defaults are all assumed to be false, so if the attribute is missing, then the method returns false. A method <a href="#Sheet+printGridLines">Sheet.printGridLines</a> is provided to offer the convenience of setting both gridLines and gridLinesSet.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Print row and column headings</span>
+sheet.printOptions(<span class="hljs-string">'headings'</span>, <span class="hljs-literal">true</span>);
+
+<span class="hljs-comment">// Get the headings flag</span>
+<span class="hljs-keyword">const</span> headings = sheet.printOptions(<span class="hljs-string">'headings'</span>); <span class="hljs-comment">// Returns true</span>
+
+<span class="hljs-comment">// Clear flag for center on page vertically when printing</span>
+sheet.printOptions(<span class="hljs-string">'verticalCentered'</span>, <span class="hljs-literal">undefined</span>);
+
+<span class="hljs-comment">// Get the verticalCentered flag</span>
+<span class="hljs-keyword">const</span> verticalCentered = sheet.printOptions(<span class="hljs-string">'verticalCentered'</span>); <span class="hljs-comment">// Returns false</span>
+
+<span class="hljs-comment">// Enable grid lines in print</span>
+sheet.printGridLines(<span class="hljs-literal">true</span>);
+
+<span class="hljs-comment">// Now both gridLines and gridLinesSet print options are set</span>
+sheet.printOptions(<span class="hljs-string">'gridLines'</span>) === sheet.printOptions(<span class="hljs-string">'gridLinesSet'</span>) === <span class="hljs-literal">true</span>; <span class="hljs-comment">// Returns true</span>
+
+<span class="hljs-comment">// To disable, just disable one of gridLines or gridLinesSet</span>
+sheet.printOptions(<span class="hljs-string">'gridLineSets'</span>, <span class="hljs-literal">false</span>);
+
+<span class="hljs-keyword">const</span> isPrintGridLinesEnabled = sheet.printGridLines(); <span class="hljs-comment">// Returns false</span></code></pre>
+				<h3 id="page-margins">Page Margins</h3>
+				<p>Excel requires that all page margins are defined or none at all. To ensure this, please choose an existing or custom preset. See <a href="#Sheet+pageMarginsPreset">Sheet.pageMarginsPreset</a>.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get the current preset</span>
+sheet.pageMarginsPreset(); <span class="hljs-comment">// Returns undefined</span>
+
+<span class="hljs-comment">// Switch to an existing preset</span>
+sheet.pageMarginsPreset(<span class="hljs-string">'normal'</span>);</code></pre>
+				<p>Page margins are accessed using the <a href="#Sheet+pageMargins">Sheet.pageMargins</a> method. If a page margin is not set, the preset will fill in the gaps.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get top margin in inches, note that the current preset is currently set to normal (see above)</span>
+sheet.pageMargins(<span class="hljs-string">'top'</span>); <span class="hljs-comment">// Returns 0.75</span>
+
+<span class="hljs-comment">// Set top page margin in inches</span>
+sheet.pageMargins(<span class="hljs-string">'top'</span>, <span class="hljs-number">1.1</span>);
+
+<span class="hljs-comment">// Get top page margin in inches.</span>
+<span class="hljs-keyword">const</span> topPageMarginInInches = sheet.pageMargins(<span class="hljs-string">'top'</span>); <span class="hljs-comment">// Returns 1.1</span></code></pre>
+				<h3 id="serving-from-express">Serving from Express</h3>
+				<p>You can serve the workbook from <a href="http://expressjs.com/">express</a> or other web servers with something like this:</p>
+				<pre><code class="language-js">router.get(<span class="hljs-string">"/download"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-comment">// Open the workbook.</span>
+    XlsxPopulate.fromFileAsync(<span class="hljs-string">"input.xlsx"</span>)
+        .then(<span class="hljs-function"><span class="hljs-params">workbook</span> =&gt;</span> {
+            <span class="hljs-comment">// Make edits.</span>
+            workbook.sheet(<span class="hljs-number">0</span>).cell(<span class="hljs-string">"A1"</span>).value(<span class="hljs-string">"foo"</span>);
+
+            <span class="hljs-comment">// Get the output</span>
+            <span class="hljs-keyword">return</span> workbook.outputAsync();
+        })
+        .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
+            <span class="hljs-comment">// Set the output file name.</span>
+            res.attachment(<span class="hljs-string">"output.xlsx"</span>);
+
+            <span class="hljs-comment">// Send the workbook.</span>
+            res.send(data);
+        })
+        .catch(next);
+});</code></pre>
+				<h3 id="browser-usage">Browser Usage</h3>
+				<p>Usage in the browser is almost the same. A functional example can be found in <a href="https://gitcdn.xyz/repo/dtjohnson/xlsx-populate/master/examples/browser/index.html">examples/browser/index.html</a>. The library is exposed globally as <code>XlsxPopulate</code>. Existing workbooks can be loaded from a file:</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Assuming there is a file input in the page with the id 'file-input'</span>
+<span class="hljs-keyword">var</span> file = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"file-input"</span>).files[<span class="hljs-number">0</span>];
+
+<span class="hljs-comment">// A File object is a special kind of blob.</span>
+XlsxPopulate.fromDataAsync(file)
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">workbook</span>) </span>{
+        <span class="hljs-comment">// ...</span>
+    });</code></pre>
+				<p>You can also load from AJAX if you set the responseType to &#39;arraybuffer&#39;:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">var</span> req = <span class="hljs-keyword">new</span> XMLHttpRequest();
+req.open(<span class="hljs-string">"GET"</span>, <span class="hljs-string">"http://..."</span>, <span class="hljs-literal">true</span>);
+req.responseType = <span class="hljs-string">"arraybuffer"</span>;
+req.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span> (req.readyState === <span class="hljs-number">4</span> &amp;&amp; req.status === <span class="hljs-number">200</span>){
+        XlsxPopulate.fromDataAsync(req.response)
+            .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">workbook</span>) </span>{
+                <span class="hljs-comment">// ...</span>
+            });
+    }
+};
+
+req.send();</code></pre>
+				<p>To download the workbook, you can either export as a blob (default behavior) or as a base64 string. You can then insert a link into the DOM and click it:</p>
+				<pre><code class="language-js">workbook.outputAsync()
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">blob</span>) </span>{
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.navigator &amp;&amp; <span class="hljs-built_in">window</span>.navigator.msSaveOrOpenBlob) {
+            <span class="hljs-comment">// If IE, you must uses a different method.</span>
+            <span class="hljs-built_in">window</span>.navigator.msSaveOrOpenBlob(blob, <span class="hljs-string">"out.xlsx"</span>);
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">var</span> url = <span class="hljs-built_in">window</span>.URL.createObjectURL(blob);
+            <span class="hljs-keyword">var</span> a = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">"a"</span>);
+            <span class="hljs-built_in">document</span>.body.appendChild(a);
+            a.href = url;
+            a.download = <span class="hljs-string">"out.xlsx"</span>;
+            a.click();
+            <span class="hljs-built_in">window</span>.URL.revokeObjectURL(url);
+            <span class="hljs-built_in">document</span>.body.removeChild(a);
+        }
+    });</code></pre>
+				<p>Alternatively, you can download via a data URI, but this is not supported by IE:</p>
+				<pre><code class="language-js">workbook.outputAsync(<span class="hljs-string">"base64"</span>)
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">base64</span>) </span>{
+        location.href = <span class="hljs-string">"data:"</span> + XlsxPopulate.MIME_TYPE + <span class="hljs-string">";base64,"</span> + base64;
+    });</code></pre>
+				<h3 id="promises">Promises</h3>
+				<p>xlsx-populate uses <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">promises</a> to manage async input/output. By default it uses the <code>Promise</code> defined in the browser or Node.js. In browsers that don&#39;t support promises (IE) a <a href="https://stuk.github.io/jszip/documentation/api_jszip/external.html">polyfill is used via JSZip</a>.</p>
+				<pre><code class="language-js"><span class="hljs-comment">// Get the current promise library in use.</span>
+<span class="hljs-comment">// Helpful for getting a usable Promise library in IE.</span>
+<span class="hljs-keyword">var</span> <span class="hljs-built_in">Promise</span> = XlsxPopulate.Promise;</code></pre>
+				<p>If you prefer, you can override the default <code>Promise</code> library used with another ES6 compliant library like <a href="http://bluebirdjs.com/">bluebird</a>.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> <span class="hljs-built_in">Promise</span> = <span class="hljs-built_in">require</span>(<span class="hljs-string">"bluebird"</span>);
+<span class="hljs-keyword">const</span> XlsxPopulate = <span class="hljs-built_in">require</span>(<span class="hljs-string">"xlsx-populate"</span>);
+XlsxPopulate.Promise = <span class="hljs-built_in">Promise</span>;</code></pre>
+				<h3 id="encryption">Encryption</h3>
+				<p>XLSX Agile encryption and descryption are supported so you can read and write password-protected workbooks. To read a protected workbook, pass the password in as an option:</p>
+				<pre><code class="language-js">XlsxPopulate.fromFileAsync(<span class="hljs-string">"./Book1.xlsx"</span>, { <span class="hljs-attr">password</span>: <span class="hljs-string">"S3cret!"</span> })
+    .then(<span class="hljs-function"><span class="hljs-params">workbook</span> =&gt;</span> {
+        <span class="hljs-comment">// ...</span>
+    });</code></pre>
+				<p>Similarly, to write a password encrypted workbook:</p>
+				<pre><code class="language-js">workbook.toFileAsync(<span class="hljs-string">"./out.xlsx"</span>, { <span class="hljs-attr">password</span>: <span class="hljs-string">"S3cret!"</span> });</code></pre>
+				<p>The password option is supported in all output methods. N.B. Workbooks will only be encrypted if you supply a password when outputting even if they had a password when reading.</p>
+				<p>Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.  </p>
+				<h2 id="missing-features">Missing Features</h2>
+				<p>There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn&#39;t supported
+				please open an issue to show your support. Better still, feel free to <a href="#contributing">contribute</a> a pull request!</p>
+				<h2 id="submitting-an-issue">Submitting an Issue</h2>
+				<p>If you happen to run into a bug or an issue, please feel free to <a href="https://github.com/dtjohnson/xlsx-populate/issues">submit an issue</a>. I only ask that you please include sample JavaScript code that demonstrates the issue.
+				If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to <a href="https://github.com/dtjohnson">dtjohnson</a> after creating the issue. </p>
+				<h2 id="contributing">Contributing</h2>
+				<p>Pull requests are very much welcome! If you&#39;d like to contribute, please make sure to read this section carefully first.</p>
+				<h3 id="how-xlsx-populate-works">How xlsx-populate Works</h3>
+				<p>An XLSX workbook is essentially a zip of a bunch of XML files. xlsx-populate uses <a href="https://stuk.github.io/jszip/">JSZip</a>
+					to unzip the workbook and <a href="https://github.com/isaacs/sax-js">sax-js</a> to parse the XML documents into corresponding objects.
+					As you call methods, xlsx-populate manipulates the content of those objects. When you generate the output, xlsx-populate
+					uses <a href="https://github.com/oozcitak/xmlbuilder-js">xmlbuilder-js</a> to convert the objects back to XML and then uses JSZip to
+				rezip them back into a workbook.</p>
+				<p>The way in which xlsx-populate manipulates objects that are essentially the XML data is very different from the usual way
+					parser/generator libraries work. Most other libraries will deserialize the XML into a rich object model. That model is then
+					manipulated and serialized back into XML upon generation. The challenge with this approach is that the Office Open XML spec is <a href="http://www.ecma-international.org/publications/standards/Ecma-376.htm">HUGE</a>.
+					It is extremely difficult for libraries to be able to support the entire specification. So these other libraries will deserialize
+					only the portion of the spec they support and any other content/styles in the workbook they don&#39;t support are lost. Since
+					xlsx-populate just manipulates the XML data, it is able to preserve styles and other content while still only supporting
+				a fraction of the spec.</p>
+				<h3 id="setting-up-your-environment">Setting up your Environment</h3>
+				<p>You&#39;ll need to make sure <a href="https://nodejs.org/en/">Node.js</a> v4+ is installed (as xlsx-populate uses ES6 syntax). You&#39;ll also
+				need to install <a href="https://github.com/gulpjs/gulp">gulp</a>:</p>
+				<pre><code class="language-bash">npm install -g gulp</code></pre>
+				<p>Make sure you have <a href="https://git-scm.com/">git</a> installed. Then follow <a href="https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project">this guide</a> to see how to check out code, branch, and
+					then submit your code as a pull request. When you check out the code, you&#39;ll first need to install the npm dependencies.
+				From the project root, run:</p>
+				<pre><code class="language-bash">npm install</code></pre>
+				<p>The default gulp task is set up to watch the source files for updates and retest while you edit. From the project root just run:</p>
+				<pre><code class="language-bash">gulp</code></pre>
+				<p>You should see the test output in your console window. As you edit files the tests will run again and show you if you&#39;ve
+				broken anything. (Note that if you&#39;ve added new files you&#39;ll need to restart gulp for the new files to be watched.)</p>
+				<p>Now write your code and make sure to add <a href="https://jasmine.github.io/">Jasmine</a> unit tests. When you are finished, you need
+				to build the code for the browser. Do that by running the gulp build command:</p>
+				<pre><code class="language-bash">gulp build</code></pre>
+				<p>Verify all is working, check in your code, and submit a pull request.</p>
+				<h3 id="pull-request-checklist">Pull Request Checklist</h3>
+				<p>To make sure your code is consistent and high quality, please make sure to follow this checklist before submitting a pull request:</p>
+				<ul>
+					<li>Your code must follow the getter/setter pattern using a single function for both. Check <code>arguments.length</code> or use <code>ArgHandler</code> to distinguish.</li>
+					<li>You must use valid <a href="http://usejsdoc.org/">JSDoc</a> comments on <em>all</em> methods and classes. Use <code>@private</code> for private methods and <code>@ignore</code> for any public methods that are internal to xlsx-populate and should not be included in the public API docs.</li>
+					<li>You must adhere to the configured <a href="http://eslint.org/">ESLint</a> linting rules. You can configure your IDE to display rule violations live or you can run <code>gulp lint</code> to see them.</li>
+					<li>Use <a href="http://es6-features.org/#Constants">ES6</a> syntax. (This should be enforced by ESLint.)</li>
+					<li>Make sure to have full <a href="https://jasmine.github.io/">Jasmine</a> unit test coverage for your code.</li>
+					<li>Make sure all tests pass successfully.</li>
+					<li>Whenever possible, do not modify/break existing API behavior. This module adheres to the <a href="https://docs.npmjs.com/getting-started/semantic-versioning">semantic versioning standard</a>. So any breaking changes will require a major release.</li>
+					<li>If your feature needs more documentation than just the JSDoc output, please add to the docs/template.md README file.</li>
+				</ul>
+				<h3 id="gulp-tasks">Gulp Tasks</h3>
+				<p>xlsx-populate uses <a href="https://github.com/gulpjs/gulp">gulp</a> as a build tool. There are a number of tasks:</p>
+				<ul>
+					<li><strong>browser</strong> - Transpile and build client-side JavaScript project bundle using <a href="http://browserify.org/">browserify</a> and <a href="https://github.com/babel/babelify">babelify</a>.</li>
+					<li><strong>lint</strong> - Check project source code style using <a href="http://eslint.org/">ESLint</a>.</li>
+					<li><strong>unit</strong> - Run <a href="https://jasmine.github.io/">Jasmine</a> unit tests.</li>
+					<li><strong>unit-browser</strong> - Run the unit tests in real browsers using <a href="https://karma-runner.github.io/1.0/index.html">Karma</a>.</li>
+					<li><strong>e2e-parse</strong> - End-to-end tests of parsing data out of sample workbooks that were created in Microsoft Excel.</li>
+					<li><strong>e2e-generate</strong> - End-to-end tests of generating workbooks using xlsx-populate. To verify the workbooks were truly generated correctly they need to be opened in Microsoft Excel and verified. This task automates this verification using the .NET Excel Interop library with <a href="https://github.com/tjanczuk/edge">Edge.js</a> acting as a bridge between Node.js and C#. Note that these tests will <em>only</em> run on Windows with Microsoft Excel and the <a href="https://msdn.microsoft.com/en-us/library/kh3965hw.aspx">Primary Interop Assemblies installed</a>.</li>
+					<li><strong>e2e-browser</strong> - End-to-end tests of usage of the browserify bundle in real browsers using Karma.</li>
+					<li><strong>blank</strong> - Convert a blank XLSX template into a JS buffer module to support <a href="#XlsxPopulate.fromBlankAsync">fromBlankAsync</a>.</li>
+					<li><strong>docs</strong> - Build this README doc by combining docs/template.md, API docs generated with <a href="https://github.com/jsdoc2md/jsdoc-to-markdown">jsdoc-to-markdown</a>, and a table of contents generated with <a href="https://github.com/jonschlinkert/markdown-toc">markdown-toc</a>.</li>
+					<li><strong>watch</strong> - Watch files for changes and then run associated gulp task. (Used by the default task.)</li>
+					<li><strong>build</strong> - Run all gulp tasks, including linting and tests, and build the docs and browser bundle.</li>
+					<li><strong>default</strong> - Run blank, unit, and docs tasks and watch the source files for those tasks for changes.</li>
+				</ul>
+				<h2 id="style-reference">Style Reference</h2>
+				<h3 id="styles">Styles</h3>
+				<table>
+					<thead>
+						<tr>
+							<th>Style Name</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>bold</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> for bold, <code>false</code> for not bold</td>
+						</tr>
+						<tr>
+							<td>italic</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> for italic, <code>false</code> for not italic</td>
+						</tr>
+						<tr>
+							<td>underline</td>
+							<td>`boolean</td>
+							<td>string`</td>
+						</tr>
+						<tr>
+							<td>strikethrough</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> for strikethrough <code>false</code> for not strikethrough</td>
+						</tr>
+						<tr>
+							<td>subscript</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> for subscript, <code>false</code> for not subscript (cannot be combined with superscript)</td>
+						</tr>
+						<tr>
+							<td>superscript</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> for superscript, <code>false</code> for not superscript (cannot be combined with subscript)</td>
+						</tr>
+						<tr>
+							<td>fontSize</td>
+							<td><code>number</code></td>
+							<td>Font size in points. Must be greater than 0.</td>
+						</tr>
+						<tr>
+							<td>fontFamily</td>
+							<td><code>string</code></td>
+							<td>Name of font family.</td>
+						</tr>
+						<tr>
+							<td>fontColor</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>horizontalAlignment</td>
+							<td><code>string</code></td>
+							<td>Horizontal alignment. Allowed values: <code>&#39;left&#39;</code>, <code>&#39;center&#39;</code>, <code>&#39;right&#39;</code>, <code>&#39;fill&#39;</code>, <code>&#39;justify&#39;</code>, <code>&#39;centerContinuous&#39;</code>, <code>&#39;distributed&#39;</code></td>
+						</tr>
+						<tr>
+							<td>justifyLastLine</td>
+							<td><code>boolean</code></td>
+							<td>a.k.a Justified Distributed. Only applies when horizontalAlignment === <code>&#39;distributed&#39;</code>. A boolean value indicating if the cells justified or distributed alignment should be used on the last line of text. (This is typical for East Asian alignments but not typical in other contexts.)</td>
+						</tr>
+						<tr>
+							<td>indent</td>
+							<td><code>number</code></td>
+							<td>Number of indents. Must be greater than or equal to 0.</td>
+						</tr>
+						<tr>
+							<td>verticalAlignment</td>
+							<td><code>string</code></td>
+							<td>Vertical alignment. Allowed values: <code>&#39;top&#39;</code>, <code>&#39;center&#39;</code>, <code>&#39;bottom&#39;</code>, <code>&#39;justify&#39;</code>, <code>&#39;distributed&#39;</code></td>
+						</tr>
+						<tr>
+							<td>wrapText</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> to wrap the text in the cell, <code>false</code> to not wrap.</td>
+						</tr>
+						<tr>
+							<td>shrinkToFit</td>
+							<td><code>boolean</code></td>
+							<td><code>true</code> to shrink the text in the cell to fit, <code>false</code> to not shrink.</td>
+						</tr>
+						<tr>
+							<td>textDirection</td>
+							<td><code>string</code></td>
+							<td>Direction of the text. Allowed values: <code>&#39;left-to-right&#39;</code>, <code>&#39;right-to-left&#39;</code></td>
+						</tr>
+						<tr>
+							<td>textRotation</td>
+							<td><code>number</code></td>
+							<td>Counter-clockwise angle of rotation in degrees. Must be [-90, 90] where negative numbers indicate clockwise rotation.</td>
+						</tr>
+						<tr>
+							<td>angleTextCounterclockwise</td>
+							<td><code>boolean</code></td>
+							<td>Shortcut for textRotation of 45 degrees.</td>
+						</tr>
+						<tr>
+							<td>angleTextClockwise</td>
+							<td><code>boolean</code></td>
+							<td>Shortcut for textRotation of -45 degrees.</td>
+						</tr>
+						<tr>
+							<td>rotateTextUp</td>
+							<td><code>boolean</code></td>
+							<td>Shortcut for textRotation of 90 degrees.</td>
+						</tr>
+						<tr>
+							<td>rotateTextDown</td>
+							<td><code>boolean</code></td>
+							<td>Shortcut for textRotation of -90 degrees.</td>
+						</tr>
+						<tr>
+							<td>verticalText</td>
+							<td><code>boolean</code></td>
+							<td>Special rotation that shows text vertical but individual letters are oriented normally. <code>true</code> to rotate, <code>false</code> to not rotate.</td>
+						</tr>
+						<tr>
+							<td>fill</td>
+							<td>`SolidFill</td>
+							<td>PatternFill</td>
+						</tr>
+						<tr>
+							<td>border</td>
+							<td>`Borders</td>
+							<td>Border</td>
+						</tr>
+						<tr>
+							<td>borderColor</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>borderStyle</td>
+							<td><code>string</code></td>
+							<td>Style of the outside borders. Allowed values: <code>&#39;hair&#39;</code>, <code>&#39;dotted&#39;</code>, <code>&#39;dashDotDot&#39;</code>, <code>&#39;dashed&#39;</code>, <code>&#39;mediumDashDotDot&#39;</code>, <code>&#39;thin&#39;</code>, <code>&#39;slantDashDot&#39;</code>, <code>&#39;mediumDashDot&#39;</code>, <code>&#39;mediumDashed&#39;</code>, <code>&#39;medium&#39;</code>, <code>&#39;thick&#39;</code>, <code>&#39;double&#39;</code></td>
+						</tr>
+						<tr>
+							<td>leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder</td>
+							<td>`Border</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>leftBorderStyle, rightBorderStyle, topBorderStyle, bottomBorderStyle, diagonalBorderStyle</td>
+							<td><code>string</code></td>
+							<td>Style of the given side.</td>
+						</tr>
+						<tr>
+							<td>diagonalBorderDirection</td>
+							<td><code>string</code></td>
+							<td>Direction of the diagonal border(s) from left to right. Allowed values: <code>&#39;up&#39;</code>, <code>&#39;down&#39;</code>, <code>&#39;both&#39;</code></td>
+						</tr>
+						<tr>
+							<td>numberFormat</td>
+							<td><code>string</code></td>
+							<td>Number format code. See docs <a href="https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&amp;rs=en-US&amp;ad=US">here</a>.</td>
+						</tr>
+				</tbody></table>
+				<h3 id="color">Color</h3>
+				<p>An object representing a color.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>[rgb]</td>
+							<td><code>string</code></td>
+							<td>RGB color code (e.g. <code>&#39;ff0000&#39;</code>). Either rgb or theme is required.</td>
+						</tr>
+						<tr>
+							<td>[theme]</td>
+							<td><code>number</code></td>
+							<td>Index of a theme color. Either rgb or theme is required.</td>
+						</tr>
+						<tr>
+							<td>[tint]</td>
+							<td><code>number</code></td>
+							<td>Optional tint value of the color from -1 to 1. Particularly useful for theme colors. 0.0 means no tint, -1.0 means 100% darken, and 1.0 means 100% lighten.</td>
+						</tr>
+				</tbody></table>
+				<h3 id="borders">Borders</h3>
+				<p>An object representing all of the borders.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>[left]</td>
+							<td>`Border</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>[right]</td>
+							<td>`Border</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>[top]</td>
+							<td>`Border</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>[bottom]</td>
+							<td>`Border</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>[diagonal]</td>
+							<td>`Border</td>
+							<td>string</td>
+						</tr>
+				</tbody></table>
+				<h3 id="border">Border</h3>
+				<p>An object representing an individual border.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>style</td>
+							<td><code>string</code></td>
+							<td>Style of the given border.</td>
+						</tr>
+						<tr>
+							<td>color</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>[direction]</td>
+							<td><code>string</code></td>
+							<td>For diagonal border, the direction of the border(s) from left to right. Allowed values: <code>&#39;up&#39;</code>, <code>&#39;down&#39;</code>, <code>&#39;both&#39;</code></td>
+						</tr>
+				</tbody></table>
+				<h3 id="solidfill">SolidFill</h3>
+				<p>An object representing a solid fill.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>type</td>
+							<td><code>&#39;solid&#39;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>color</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+				</tbody></table>
+				<h3 id="patternfill">PatternFill</h3>
+				<p>An object representing a pattern fill.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>type</td>
+							<td><code>&#39;pattern&#39;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>pattern</td>
+							<td><code>string</code></td>
+							<td>Name of the pattern. Allowed values: <code>&#39;gray125&#39;</code>, <code>&#39;darkGray&#39;</code>, <code>&#39;mediumGray&#39;</code>, <code>&#39;lightGray&#39;</code>, <code>&#39;gray0625&#39;</code>, <code>&#39;darkHorizontal&#39;</code>, <code>&#39;darkVertical&#39;</code>, <code>&#39;darkDown&#39;</code>, <code>&#39;darkUp&#39;</code>, <code>&#39;darkGrid&#39;</code>, <code>&#39;darkTrellis&#39;</code>, <code>&#39;lightHorizontal&#39;</code>, <code>&#39;lightVertical&#39;</code>, <code>&#39;lightDown&#39;</code>, <code>&#39;lightUp&#39;</code>, <code>&#39;lightGrid&#39;</code>, <code>&#39;lightTrellis&#39;</code>.</td>
+						</tr>
+						<tr>
+							<td>foreground</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>background</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+				</tbody></table>
+				<h3 id="gradientfill">GradientFill</h3>
+				<p>An object representing a gradient fill.</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Property</th>
+							<th>Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td>type</td>
+							<td><code>&#39;gradient&#39;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>[gradientType]</td>
+							<td><code>string</code></td>
+							<td>Type of gradient. Allowed values: <code>&#39;linear&#39;</code> (default), <code>&#39;path&#39;</code>. With a path gradient, a path is drawn between the top, left, right, and bottom values and a graident is draw from that path to the outside of the cell.</td>
+						</tr>
+						<tr>
+							<td>stops</td>
+							<td><code>Array.&lt;{}&gt;</code></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>stops[].position</td>
+							<td><code>number</code></td>
+							<td>The position of the stop from 0 to 1.</td>
+						</tr>
+						<tr>
+							<td>stops[].color</td>
+							<td>`Color</td>
+							<td>string</td>
+						</tr>
+						<tr>
+							<td>[angle]</td>
+							<td><code>number</code></td>
+							<td>If linear gradient, the angle of clockwise rotation of the gradient.</td>
+						</tr>
+						<tr>
+							<td>[left]</td>
+							<td><code>number</code></td>
+							<td>If path gradient, the left position of the path as a percentage from 0 to 1.</td>
+						</tr>
+						<tr>
+							<td>[right]</td>
+							<td><code>number</code></td>
+							<td>If path gradient, the right position of the path as a percentage from 0 to 1.</td>
+						</tr>
+						<tr>
+							<td>[top]</td>
+							<td><code>number</code></td>
+							<td>If path gradient, the top position of the path as a percentage from 0 to 1.</td>
+						</tr>
+						<tr>
+							<td>[bottom]</td>
+							<td><code>number</code></td>
+							<td>If path gradient, the bottom position of the path as a percentage from 0 to 1.</td>
+						</tr>
+				</tbody></table>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_formulaerror_.html">"<wbr>Formula<wbr>Error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_xmlnode_.html">"<wbr>Xml<wbr>Node"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_xmlparser_.html">"<wbr>Xml<wbr>Parser"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_addressconverter_.html">"address<wbr>Converter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_colorindexes_.html">"color<wbr>Indexes"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_xmlq_.html">"xmlq"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

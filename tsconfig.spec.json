@@ -1,0 +1,17 @@
+/*
+Config used for test files.
+Used by IDEs for code support of tests.
+*/
+
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "jasmine"
+    ]
+  },
+  "include": [
+    "src/**/*.spec.ts"
+  ],
+  "exclude": []
+}
