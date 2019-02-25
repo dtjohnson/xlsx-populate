@@ -1,27 +1,31 @@
+/**
+ * @module xlsx-populate
+ */
+
 import { SAXParser } from 'sax';
 
 // Regex to check if string is all whitespace.
 const allWhitespaceRegex = /^\s+$/;
 
-interface INode {
-    name: string,
+export interface INode {
+    name: string;
     attributes: {
-        [index:string]: string|number
-    },
-    children: (INode|string|number)[]
+        [index: string]: string|number;
+    };
+    children: (INode|string|number)[];
 }
 
 /**
  * XML parser.
- * @private
+ * @ignore
  */
 export class XmlParser {
     /**
      * Parse the XML text into a JSON object.
-     * @param {string} xmlText - The XML text.
-     * @returns {{}} The JSON object.
+     * @param xmlText - The XML text.
+     * @returns The JSON object.
      */
-    parseAsync(xmlText: string): Promise<INode> {
+    public parseAsync(xmlText: string): Promise<INode> {
         return new Promise((resolve, reject) => {
             // Create the SAX parser.
             const parser = new SAXParser(true);
@@ -41,7 +45,7 @@ export class XmlParser {
                         current.children.push(text);
                     }
                 } else {
-                    current.children.push(this._covertToNumberIfNumber(text));
+                    current.children.push(this.covertToNumberIfNumber(text));
                 }
             };
 
@@ -60,14 +64,14 @@ export class XmlParser {
             };
 
             // On close tag: Pop the stack.
-            parser.onclosetag = (tagName: string) => {
+            parser.onclosetag = (_tagName: string) => {
                 stack.pop();
                 current = stack[stack.length - 1];
             };
 
             // On attribute: Try to convert the value to a number and add to the current node.
             parser.onattribute = (attribute: { name: string; value: string }) => {
-                current.attributes[attribute.name] = this._covertToNumberIfNumber(attribute.value);
+                current.attributes[attribute.name] = this.covertToNumberIfNumber(attribute.value);
             };
 
             // On end: Resolve the promise.
@@ -80,11 +84,10 @@ export class XmlParser {
 
     /**
      * Convert the string to a number if it looks like one.
-     * @param {string} str - The string to convert.
-     * @returns {string|number} The number if converted or the string if not.
-     * @private
+     * @param str - The string to convert.
+     * @returns The number if converted or the string if not.
      */
-    _covertToNumberIfNumber(str: string): number|string {
+    private covertToNumberIfNumber(str: string): number|string {
         const num = Number(str);
         return num.toString() === str ? num : str;
     }

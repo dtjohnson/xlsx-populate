@@ -1,10 +1,13 @@
 "use strict";
+/**
+ * @module xlsx-populate
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 const ADDRESS_REGEX = /^(?:'?(.+?)'?!)?(?:(\$)?([A-Z]+)(\$)?(\d+)(?::(\$)?([A-Z]+)(\$)?(\d+))?|(\$)?([A-Z]+):(\$)?([A-Z]+)|(\$)?(\d+):(\$)?(\d+))$/;
 /**
  * Convert a column name to a number.
- * @param {string} name - The column name.
- * @returns {number} The number.
+ * @param name - The column name.
+ * @returns The number.
  */
 function columnNameToNumber(name) {
     name = name.toUpperCase();
@@ -18,11 +21,11 @@ function columnNameToNumber(name) {
 exports.columnNameToNumber = columnNameToNumber;
 /**
  * Convert a column number to a name.
- * @param {number} number - The column number.
- * @returns {string} The name.
+ * @param num - The column number.
+ * @returns The name.
  */
-function columnNumberToName(number) {
-    let dividend = number;
+function columnNumberToName(num) {
+    let dividend = num;
     let name = '';
     let modulo = 0;
     while (dividend > 0) {
@@ -35,8 +38,8 @@ function columnNumberToName(number) {
 exports.columnNumberToName = columnNumberToName;
 /**
  * Convert an address to a reference object.
- * @param {string} address - The address.
- * @returns {{}} The reference object.
+ * @param address - The address.
+ * @returns The reference object.
  */
 function fromAddress(address) {
     const match = address.match(ADDRESS_REGEX);
@@ -53,12 +56,12 @@ function fromAddress(address) {
             startColumnName,
             startColumnNumber: columnNameToNumber(startColumnName),
             startRowAnchored: !!match[4],
-            startRowNumber: parseInt(match[5]),
+            startRowNumber: parseInt(match[5], 10),
             endColumnAnchored: !!match[6],
             endColumnName,
             endColumnNumber: columnNameToNumber(endColumnName),
             endRowAnchored: !!match[8],
-            endRowNumber: parseInt(match[9]),
+            endRowNumber: parseInt(match[9], 10),
         };
     }
     else if (match[3]) {
@@ -69,7 +72,7 @@ function fromAddress(address) {
             columnName,
             columnNumber: columnNameToNumber(columnName),
             rowAnchored: !!match[4],
-            rowNumber: parseInt(match[5]),
+            rowNumber: parseInt(match[5], 10),
         };
     }
     else if (match[11] && match[11] !== match[13]) {
@@ -98,20 +101,20 @@ function fromAddress(address) {
         ref = {
             type: 'rowRange',
             startRowAnchored: !!match[14],
-            startRowNumber: parseInt(match[15]),
+            startRowNumber: parseInt(match[15], 10),
             endRowAnchored: !!match[16],
-            endRowNumber: parseInt(match[17]),
+            endRowNumber: parseInt(match[17], 10),
         };
     }
     else if (match[15]) {
         ref = {
             type: 'row',
             rowAnchored: !!match[14],
-            rowNumber: parseInt(match[15]),
+            rowNumber: parseInt(match[15], 10),
         };
     }
     if (!ref)
-        throw new Error("Unsupported address type.");
+        throw new Error('Unsupported address type.');
     if (match[1])
         ref.sheetName = match[1].replace(/''/g, "'");
     return ref;
@@ -119,71 +122,75 @@ function fromAddress(address) {
 exports.fromAddress = fromAddress;
 /**
  * Convert a reference object to an address.
- * @param {{}} ref - The reference object.
- * @returns {string} The address.
+ * @param ref - The reference object.
+ * @returns The address.
  */
 function toAddress(ref) {
     let a, b;
     const sheetName = ref.sheetName;
-    if (ref.type === 'cell') {
-        a = {
-            columnName: ref.columnName,
-            columnNumber: ref.columnNumber,
-            columnAnchored: ref.columnAnchored,
-            rowNumber: ref.rowNumber,
-            rowAnchored: ref.rowAnchored
-        };
-    }
-    else if (ref.type === 'range') {
-        a = {
-            columnName: ref.startColumnName,
-            columnNumber: ref.startColumnNumber,
-            columnAnchored: ref.startColumnAnchored,
-            rowNumber: ref.startRowNumber,
-            rowAnchored: ref.startRowAnchored
-        };
-        b = {
-            columnName: ref.endColumnName,
-            columnNumber: ref.endColumnNumber,
-            columnAnchored: ref.endColumnAnchored,
-            rowNumber: ref.endRowNumber,
-            rowAnchored: ref.endRowAnchored
-        };
-    }
-    else if (ref.type === 'column') {
-        a = b = {
-            columnName: ref.columnName,
-            columnNumber: ref.columnNumber,
-            columnAnchored: ref.columnAnchored
-        };
-    }
-    else if (ref.type === 'row') {
-        a = b = {
-            rowNumber: ref.rowNumber,
-            rowAnchored: ref.rowAnchored
-        };
-    }
-    else if (ref.type === 'columnRange') {
-        a = {
-            columnName: ref.startColumnName,
-            columnNumber: ref.startColumnNumber,
-            columnAnchored: ref.startColumnAnchored
-        };
-        b = {
-            columnName: ref.endColumnName,
-            columnNumber: ref.endColumnNumber,
-            columnAnchored: ref.endColumnAnchored
-        };
-    }
-    else if (ref.type === 'rowRange') {
-        a = {
-            rowNumber: ref.startRowNumber,
-            rowAnchored: ref.startRowAnchored
-        };
-        b = {
-            rowNumber: ref.endRowNumber,
-            rowAnchored: ref.endRowAnchored
-        };
+    switch (ref.type) {
+        case 'cell':
+            a = {
+                columnName: ref.columnName,
+                columnNumber: ref.columnNumber,
+                columnAnchored: ref.columnAnchored,
+                rowNumber: ref.rowNumber,
+                rowAnchored: ref.rowAnchored,
+            };
+            break;
+        case 'range':
+            a = {
+                columnName: ref.startColumnName,
+                columnNumber: ref.startColumnNumber,
+                columnAnchored: ref.startColumnAnchored,
+                rowNumber: ref.startRowNumber,
+                rowAnchored: ref.startRowAnchored,
+            };
+            b = {
+                columnName: ref.endColumnName,
+                columnNumber: ref.endColumnNumber,
+                columnAnchored: ref.endColumnAnchored,
+                rowNumber: ref.endRowNumber,
+                rowAnchored: ref.endRowAnchored,
+            };
+            break;
+        case 'column':
+            a = b = {
+                columnName: ref.columnName,
+                columnNumber: ref.columnNumber,
+                columnAnchored: ref.columnAnchored,
+            };
+            break;
+        case 'row':
+            a = b = {
+                rowNumber: ref.rowNumber,
+                rowAnchored: ref.rowAnchored,
+            };
+            break;
+        case 'columnRange':
+            a = {
+                columnName: ref.startColumnName,
+                columnNumber: ref.startColumnNumber,
+                columnAnchored: ref.startColumnAnchored,
+            };
+            b = {
+                columnName: ref.endColumnName,
+                columnNumber: ref.endColumnNumber,
+                columnAnchored: ref.endColumnAnchored,
+            };
+            break;
+        case 'rowRange':
+            a = {
+                rowNumber: ref.startRowNumber,
+                rowAnchored: ref.startRowAnchored,
+            };
+            b = {
+                rowNumber: ref.endRowNumber,
+                rowAnchored: ref.endRowAnchored,
+            };
+            break;
+        default:
+            throw new Error('Unknown type');
     }
     let address = '';
     if (sheetName)

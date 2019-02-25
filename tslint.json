@@ -42,12 +42,11 @@
     "only-arrow-functions": {
       "options": ["allow-declarations", "allow-named-functions"]
     },
-    "prefer-for-of": true,
+    "prefer-for-of": false, // Doesn't handle string iteration properly
     "promise-function-async": false, // Not necessary now that types are enforced. Also, some interfaces don't follow pattern.
     "typedef": [
       true,
       "call-signature",
-      "arrow-call-signature",
       "parameter",
       "property-declaration",
       "object-destructuring",
@@ -139,7 +138,7 @@
     "linebreak-style": false,
     "max-classes-per-file": { "options": [1] },
     "max-file-line-count": false, // Sometimes long files are necessary
-    "max-line-length": [true, 140],
+    "max-line-length": [true, 170],
     "no-default-export": false,
     "no-default-import": false, // Some packages require this
     "no-duplicate-imports": true,
@@ -194,7 +193,7 @@
     "object-literal-key-quotes": [true, "as-needed"],
     "object-literal-shorthand": true,
     "one-line": { "options": ["check-catch", "check-else", "check-finally", "check-open-brace", "check-whitespace"] },
-    "one-variable-per-declaration": { "options": ["ignore-for-loop"] },
+    "one-variable-per-declaration": false,
     "ordered-imports": {
       "options": {
         "import-sources-order": "case-insensitive",
@@ -269,7 +268,7 @@
     "ter-computed-property-spacing": true,
     "ter-func-call-spacing": true,
     "ter-indent": [true, 4, {"SwitchCase": 1}],
-    "ter-max-len": [true, {"code": 140}],
+    "ter-max-len": [true, {"code": 170}],
     "ter-newline-after-var": false, // Doesn't allow for small function bodies
     "ter-no-mixed-spaces-and-tabs": true,
     "object-curly-spacing": [true, "always"],
@@ -334,7 +333,7 @@
     "no-unnecessary-type-annotation": true, // TODO: Same type annotation concern above
     "no-unused": true,
     "no-var-before-return": true,
-    "object-shorthand-properties-first": true,
+    "object-shorthand-properties-first": false,
     "parameter-properties": [true, "leading", "member-access"],
     "prefer-const-enum": true
   }

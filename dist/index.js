@@ -2,10 +2,12 @@
 /**
  * @module xlsx-populate
  */
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-var colors_1 = require("./colors");
-exports.COLORS = colors_1.COLORS;
-var FormulaError_1 = require("./FormulaError");
-exports.FormulaError = FormulaError_1.FormulaError;
+__export(require("./addressConverter"));
+__export(require("./colors"));
+__export(require("./FormulaError"));
 exports.Workbook = require('./Workbook');
 //# sourceMappingURL=index.js.map

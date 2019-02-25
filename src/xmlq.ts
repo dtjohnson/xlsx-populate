@@ -1,11 +1,13 @@
 import * as _ from 'lodash';
 
+import { INode } from './XmlParser';
+
 /**
  * Append a child to the node.
  * @param node - The parent node.
  * @param child - The child node.
  */
-export function appendChild(node: any, child: any): void {
+export function appendChild(node: INode, child: INode): void {
     if (!node.children) node.children = [];
     node.children.push(child);
 }
@@ -16,7 +18,7 @@ export function appendChild(node: any, child: any): void {
  * @param  name - The child node name.
  * @returns The child.
  */
-export function appendChildIfNotFound(node: any, name: any) {
+export function appendChildIfNotFound(node: INode, name: string): INode {
     let child = findChild(node, name);
     if (!child) {
         child = { name, attributes: {}, children: [] };
@@ -32,8 +34,8 @@ export function appendChildIfNotFound(node: any, name: any) {
  * @param name - The name to find.
  * @returns The child if found.
  */
-export function findChild(node: any, name: any): any {
-    return _.find(node.children, { name });
+export function findChild(node: INode, name: string): INode|undefined {
+    return _.find(node.children, { name }) as INode|undefined;
 }
 
 /**
@@ -43,7 +45,7 @@ export function findChild(node: any, name: any): any {
  * @param attribute - The name of the attribute.
  * @returns The value of the attribute if found.
  */
-export function getChildAttribute(node: any, name: any, attribute: any) {
+export function getChildAttribute(node: INode, name: string, attribute: string): undefined|string|number {
     const child = findChild(node, name);
     if (child) return child.attributes && child.attributes[attribute];
 }
@@ -54,7 +56,7 @@ export function getChildAttribute(node: any, name: any, attribute: any) {
  * @param name - The name of the child node.
  * @returns True if found, false otherwise.
  */
-export function hasChild(node: any, name: any) {
+export function hasChild(node: INode, name: string): boolean {
     return _.some(node.children, { name });
 }
 
@@ -64,7 +66,7 @@ export function hasChild(node: any, name: any) {
  * @param child - The child node.
  * @param after - The node to insert after.
  */
-export function insertAfter(node: any, child: any, after: any) {
+export function insertAfter(node: INode, child: INode, after: INode): void {
     if (!node.children) node.children = [];
     const index = node.children.indexOf(after);
     node.children.splice(index + 1, 0, child);
@@ -76,7 +78,7 @@ export function insertAfter(node: any, child: any, after: any) {
  * @param child - The child node.
  * @param before - The node to insert before.
  */
-export function insertBefore(node: any, child: any, before: any) {
+export function insertBefore(node: INode, child: INode, before: INode): void {
     if (!node.children) node.children = [];
     const index = node.children.indexOf(before);
     node.children.splice(index, 0, child);
@@ -88,7 +90,7 @@ export function insertBefore(node: any, child: any, before: any) {
  * @param child - The child node.
  * @param nodeOrder - The order of the node names.
  */
-export function insertInOrder(node: any, child: any, nodeOrder: any) {
+export function insertInOrder(node: INode, child: INode, nodeOrder: string[]): void {
     const childIndex = nodeOrder.indexOf(child.name);
     if (node.children && childIndex >= 0) {
         for (let i = childIndex + 1; i < nodeOrder.length; i++) {
@@ -108,7 +110,7 @@ export function insertInOrder(node: any, child: any, nodeOrder: any) {
  * @param node - The node.
  * @returns True if empty, false otherwise.
  */
-export function isEmpty(node: any) {
+export function isEmpty(node: INode): boolean {
     return _.isEmpty(node.children) && _.isEmpty(node.attributes);
 }
 
@@ -117,7 +119,7 @@ export function isEmpty(node: any) {
  * @param node - The parent node.
  * @param child - The child node or name of node.
  */
-export function removeChild(node: any, child: any) {
+export function removeChild(node: INode, child: string|INode): void {
     if (!node.children) return;
     if (typeof child === 'string') {
         _.remove(node.children, { name: child });
@@ -132,7 +134,7 @@ export function removeChild(node: any, child: any) {
  * @param node - The node.
  * @param attributes - The attributes to set.
  */
-export function setAttributes(node: any, attributes: any) {
+export function setAttributes(node: INode, attributes: { [index: string]: string|number }): void {
     _.forOwn(attributes, (value: any, attribute: any) => {
         if (_.isNil(value)) {
             if (node.attributes) delete node.attributes[attribute];
@@ -150,7 +152,7 @@ export function setAttributes(node: any, attributes: any) {
  * @param attributes - The attributes to set.
  * @returns The child.
  */
-export function setChildAttributes(node: any, name: any, attributes: any) {
+export function setChildAttributes(node: INode, name: string, attributes: { [index: string]: string|number }): undefined|INode {
     let child = findChild(node, name);
     _.forOwn(attributes, (value: any, attribute: any) => {
         if (_.isNil(value)) {
@@ -174,7 +176,7 @@ export function setChildAttributes(node: any, name: any, attributes: any) {
  * @param node - The parent node.
  * @param child - The child or name of child node.
  */
-export function removeChildIfEmpty(node: any, child: any) {
+export function removeChildIfEmpty(node: INode, child: undefined|string|INode): void {
     if (typeof child === 'string') child = findChild(node, child);
     if (child && isEmpty(child)) removeChild(node, child);
 }

@@ -1,17 +1,20 @@
 "use strict";
+/**
+ * @module xlsx-populate
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
 const sax_1 = require("sax");
 // Regex to check if string is all whitespace.
 const allWhitespaceRegex = /^\s+$/;
 /**
  * XML parser.
- * @private
+ * @ignore
  */
 class XmlParser {
     /**
      * Parse the XML text into a JSON object.
-     * @param {string} xmlText - The XML text.
-     * @returns {{}} The JSON object.
+     * @param xmlText - The XML text.
+     * @returns The JSON object.
      */
     parseAsync(xmlText) {
         return new Promise((resolve, reject) => {
@@ -31,7 +34,7 @@ class XmlParser {
                     }
                 }
                 else {
-                    current.children.push(this._covertToNumberIfNumber(text));
+                    current.children.push(this.covertToNumberIfNumber(text));
                 }
             };
             // On open tag start: Create a child element. If this is the root element, set it as parsed. Otherwise, add
@@ -48,13 +51,13 @@ class XmlParser {
                 current = child;
             };
             // On close tag: Pop the stack.
-            parser.onclosetag = (tagName) => {
+            parser.onclosetag = (_tagName) => {
                 stack.pop();
                 current = stack[stack.length - 1];
             };
             // On attribute: Try to convert the value to a number and add to the current node.
             parser.onattribute = (attribute) => {
-                current.attributes[attribute.name] = this._covertToNumberIfNumber(attribute.value);
+                current.attributes[attribute.name] = this.covertToNumberIfNumber(attribute.value);
             };
             // On end: Resolve the promise.
             parser.onend = () => resolve(parsed);
@@ -64,11 +67,10 @@ class XmlParser {
     }
     /**
      * Convert the string to a number if it looks like one.
-     * @param {string} str - The string to convert.
-     * @returns {string|number} The number if converted or the string if not.
-     * @private
+     * @param str - The string to convert.
+     * @returns The number if converted or the string if not.
      */
-    _covertToNumberIfNumber(str) {
+    covertToNumberIfNumber(str) {
         const num = Number(str);
         return num.toString() === str ? num : str;
     }

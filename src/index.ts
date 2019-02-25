@@ -2,6 +2,7 @@
  * @module xlsx-populate
  */
 
-export { COLORS } from './colors';
-export { FormulaError } from './FormulaError';
+export * from './addressConverter';
+export * from './colors';
+export * from './FormulaError';
 export const Workbook = require('./Workbook');
