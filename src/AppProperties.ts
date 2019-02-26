@@ -31,7 +31,7 @@ export class AppProperties {
             .case<boolean>(() => {
                 const docSecurityNode = xmlq.findChild(this.node, 'DocSecurity');
                 if (!docSecurityNode) return false;
-                return docSecurityNode.children[0] === 1;
+                return !!(docSecurityNode.children && docSecurityNode.children.length && docSecurityNode.children[0] === 1);
             })
             .case<boolean, this>('boolean', value => {
                 const docSecurityNode = xmlq.appendChildIfNotFound(this.node, 'DocSecurity');

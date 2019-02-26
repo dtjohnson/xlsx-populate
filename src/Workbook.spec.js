@@ -115,7 +115,7 @@ describe("Workbook", () => {
             './Sheet': Sheet,
             './SharedStrings': SharedStrings,
             './Relationships': Relationships,
-            './ContentTypes': ContentTypes,
+            './ContentTypes': { ContentTypes },
             './CoreProperties': CoreProperties,
             './XmlBuilder': XmlBuilder,
             './Encryptor': Encryptor,

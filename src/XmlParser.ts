@@ -9,10 +9,10 @@ const allWhitespaceRegex = /^\s+$/;
 
 export interface INode {
     name: string;
-    attributes: {
+    attributes?: {
         [index: string]: string|number;
     };
-    children: (INode|string|number)[];
+    children?: (INode|string|number)[];
 }
 
 /**
@@ -41,10 +41,12 @@ export class XmlParser {
             // On text nodes: If it is all whitespace, do nothing. Otherwise, try to convert to a number and add as a child.
             parser.ontext = (text: string) => {
                 if (allWhitespaceRegex.test(text)) {
-                    if (current && current.attributes['xml:space'] === 'preserve') {
+                    if (current && current.attributes && current.attributes['xml:space'] === 'preserve') {
+                        if (!current.children) current.children = [];
                         current.children.push(text);
                     }
                 } else {
+                    if (!current.children) current.children = [];
                     current.children.push(this.covertToNumberIfNumber(text));
                 }
             };
@@ -52,8 +54,9 @@ export class XmlParser {
             // On open tag start: Create a child element. If this is the root element, set it as parsed. Otherwise, add
             // it as a child to the current node.
             (parser as any).onopentagstart = (node: { name: string }) => {
-                const child = { name: node.name, attributes: {}, children: [] };
+                const child = { name: node.name };
                 if (current) {
+                    if (!current.children) current.children = [];
                     current.children.push(child);
                 } else {
                     parsed = child;
@@ -71,6 +74,7 @@ export class XmlParser {
 
             // On attribute: Try to convert the value to a number and add to the current node.
             parser.onattribute = (attribute: { name: string; value: string }) => {
+                if (!current.attributes) current.attributes = {};
                 current.attributes[attribute.name] = this.covertToNumberIfNumber(attribute.value);
             };
 

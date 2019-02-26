@@ -1,59 +1,65 @@
-"use strict";
+/**
+ * @module xlsx-populate
+ */
 
-const _ = require("lodash");
+import { INode } from './XmlParser';
+import * as xmlq from './xmlq';
 
 /**
  * A content type collection.
  * @ignore
  */
-class ContentTypes {
+export class ContentTypes {
     /**
      * Creates a new instance of ContentTypes
-     * @param {{}} node - The node.
+     * @param node - The node.
      */
-    constructor(node) {
-        this._node = node;
-    }
+    public constructor(private node: INode) {}
 
     /**
      * Add a new content type.
-     * @param {string} partName - The part name.
-     * @param {string} contentType - The content type.
-     * @returns {{}} The new content type.
+     * @param partName - The part name.
+     * @param contentType - The content type.
+     * @returns The new content type.
      */
-    add(partName, contentType) {
+    public add(partName: string, contentType: string): INode {
         const node = {
-            name: "Override",
+            name: 'Override',
             attributes: {
                 PartName: partName,
-                ContentType: contentType
-            }
+                ContentType: contentType,
+            },
         };
 
-        this._node.children.push(node);
+        xmlq.appendChild(this.node, node);
+
         return node;
     }
 
     /**
      * Find a content type by part name.
-     * @param {string} partName - The part name.
-     * @returns {{}|undefined} The matching content type or undefined if not found.
+     * @param partName - The part name.
+     * @returns The matching content type or undefined if not found.
      */
-    findByPartName(partName) {
-        return _.find(this._node.children, node => node.attributes.PartName === partName);
+    public findByPartName(partName: string): INode|undefined {
+        if (!this.node.children) return;
+        for (const node of this.node.children) {
+            if (typeof node !== 'string' && typeof node !== 'number' && node.attributes && node.attributes.PartName === partName) {
+                return node;
+            }
+        }
     }
 
     /**
      * Convert the collection to an XML object.
-     * @returns {{}} The XML.
+     * @returns The XML.
      */
-    toXml() {
-        return this._node;
+    public toXml(): INode {
+        return this.node;
     }
 }
 
-module.exports = ContentTypes;
-
+// tslint:disable
 /*
 [Content_Types].xml
 
