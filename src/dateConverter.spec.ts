@@ -1,18 +1,8 @@
-"use strict";
+import * as dateConverter from './dateConverter';
 
-const proxyquire = require("proxyquire");
-
-describe("dateConverter", () => {
-    let dateConverter;
-
-    beforeEach(() => {
-        dateConverter = proxyquire("./dateConverter", {
-            '@noCallThru': true
-        });
-    });
-
-    describe("dateToNumber", () => {
-        it("should convert date to number", () => {
+describe('dateConverter', () => {
+    describe('dateToNumber', () => {
+        it('should convert date to number', () => {
             expect(dateConverter.dateToNumber(new Date('01 Jan 1900 00:00:00'))).toBe(1);
             expect(dateConverter.dateToNumber(new Date('28 Feb 1900 00:00:00'))).toBe(59);
             expect(dateConverter.dateToNumber(new Date('01 Mar 1900 00:00:00'))).toBe(61);
@@ -21,8 +11,8 @@ describe("dateConverter", () => {
         });
     });
 
-    describe("numberToDate", () => {
-        it("should convert number to date", () => {
+    describe('numberToDate', () => {
+        it('should convert number to date', () => {
             expect(dateConverter.numberToDate(1)).toEqual(new Date('01 Jan 1900 00:00:00'));
             expect(dateConverter.numberToDate(59)).toEqual(new Date('28 Feb 1900 00:00:00'));
             expect(dateConverter.numberToDate(61)).toEqual(new Date('01 Mar 1900 00:00:00'));
