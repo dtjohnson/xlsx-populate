@@ -4,7 +4,7 @@ const _ = require("lodash");
 const fs = require("fs");
 const JSZip = require('jszip');
 
-const regexify = require("./regexify");
+const regexify = require("./regexify").regexify;
 const BLANK = require("./blank").BLANK;
 const xmlq = require("./xmlq");
 const Sheet = require("./Sheet");

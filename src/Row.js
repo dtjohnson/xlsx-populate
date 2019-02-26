@@ -2,7 +2,7 @@
 
 const _ = require("lodash");
 const Cell = require("./Cell");
-const regexify = require("./regexify");
+const regexify = require("./regexify").regexify;
 const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require('./addressConverter');
 
