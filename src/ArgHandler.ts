@@ -1,4 +1,5 @@
 /**
+ * TODO: Deprecated
  * @module xlsx-populate
  */
 
@@ -64,7 +65,7 @@ export class ArgHandler {
         for (let i = 0; i < this._cases.length; i++) {
             const c = this._cases[i];
             if (this._argsMatchTypes(args, c.types)) {
-                return c.handler.apply(undefined, args);
+                return c.handler.bind(undefined)(...args);
             }
         }
 

@@ -1,48 +1,56 @@
-"use strict";
+/**
+ * @module xlsx-populate
+ */
 
-const _ = require("lodash");
-const xmlq = require("./xmlq");
-const ArgHandler = require("./ArgHandler").ArgHandler;
+import { OverloadHandler } from './OverloadHandler';
+import { INode } from './XmlParser';
+import * as xmlq from './xmlq';
 
 /**
  * App properties
  * @ignore
  */
-class AppProperties {
+export class AppProperties {
     /**
      * Creates a new instance of AppProperties
-     * @param {{}} node - The node.
+     * @param node - The node.
      */
-    constructor(node) {
-        this._node = node;
-    }
+    public constructor(private node: INode) {}
 
-    isSecure(value) {
-        return new ArgHandler("Range.formula")
-            .case(() => {
-                const docSecurityNode = xmlq.findChild(this._node, "DocSecurity");
+    /**
+     * Get a value indicating whether the workbook is secure or not.
+     */
+    public isSecure(): boolean;
+    /**
+     * Set a value indicating whether the workbook is secure or not.
+     * @param value - The value to set.
+     */
+    public isSecure(value: boolean): this;
+    public isSecure(...args: any[]): any {
+        return new OverloadHandler('AppProperties.isSecure')
+            .case<boolean>(() => {
+                const docSecurityNode = xmlq.findChild(this.node, 'DocSecurity');
                 if (!docSecurityNode) return false;
                 return docSecurityNode.children[0] === 1;
             })
-            .case('boolean', value => {
-                const docSecurityNode = xmlq.appendChildIfNotFound(this._node, "DocSecurity");
-                docSecurityNode.children = [value ? 1 : 0];
+            .case<boolean, this>('boolean', value => {
+                const docSecurityNode = xmlq.appendChildIfNotFound(this.node, 'DocSecurity');
+                docSecurityNode.children = [ value ? 1 : 0 ];
                 return this;
             })
-            .handle(arguments);
+            .handle(args);
     }
 
     /**
      * Convert the collection to an XML object.
-     * @returns {{}} The XML.
+     * @returns The XML.
      */
-    toXml() {
-        return this._node;
+    public toXml(): INode {
+        return this.node;
     }
 }
 
-module.exports = AppProperties;
-
+// tslint:disable
 /*
 docProps/app.xml
 

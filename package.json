@@ -88,6 +88,7 @@
     "replacestream": "^4.0.3",
     "run-sequence": "^2.2.1",
     "ts-node": "^8.0.2",
+    "ts-node-dev": "^1.0.0-pre.32",
     "tslint": "^5.13.0",
     "tslint-consistent-codestyle": "^1.15.0",
     "tslint-eslint-rules": "^5.4.0",
