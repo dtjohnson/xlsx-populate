@@ -9,7 +9,7 @@ const Relationships = require("./Relationships");
 const xmlq = require("./xmlq");
 const regexify = require("./regexify");
 const addressConverter = require("./addressConverter");
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const COLORS = require("./colors").COLORS;
 
 // Order of the nodes as defined by the spec.

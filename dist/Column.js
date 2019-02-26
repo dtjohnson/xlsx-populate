@@ -1,5 +1,5 @@
 "use strict";
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require('./addressConverter');
 // Default column width.
 const defaultColumnWidth = 9.140625;

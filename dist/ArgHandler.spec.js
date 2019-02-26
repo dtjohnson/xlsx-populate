@@ -1,15 +1,12 @@
 "use strict";
-const proxyquire = require("proxyquire");
-describe("ArgHandler", () => {
-    let ArgHandler, argHandler, handlers, Style;
+const ArgHandler = require("./ArgHandler").ArgHandler;
+fdescribe("ArgHandler", () => {
+    let argHandler, handlers, Style;
     beforeEach(() => {
         Style = class {
         };
         if (!Style.name)
             Style.name = "Style";
-        ArgHandler = proxyquire("./ArgHandler", {
-            '@noCallThru': true
-        });
         handlers = {
             empty: jasmine.createSpy("empty").and.returnValue('empty'),
             nil: jasmine.createSpy("nil").and.returnValue("nil"),

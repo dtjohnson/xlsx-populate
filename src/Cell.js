@@ -1,7 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require("./addressConverter");
 const dateConverter = require("./dateConverter");
 const regexify = require("./regexify");

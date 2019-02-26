@@ -3,7 +3,7 @@
 const _ = require("lodash");
 const Cell = require("./Cell");
 const regexify = require("./regexify");
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require('./addressConverter');
 
 /**

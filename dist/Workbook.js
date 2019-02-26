@@ -15,7 +15,7 @@ const StyleSheet = require("./StyleSheet");
 const Encryptor = require("./Encryptor");
 const XmlParser = require("./XmlParser").XmlParser;
 const XmlBuilder = require("./XmlBuilder");
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require("./addressConverter");
 // Options for adding files to zip. Do not create folders and use a fixed time at epoch.
 // The default JSZip behavior uses current time, which causes idential workbooks to be different each time.

@@ -1,5 +1,5 @@
 "use strict";
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require("./addressConverter");
 /**
  * A range of cells.

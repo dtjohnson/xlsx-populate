@@ -1,6 +1,6 @@
 "use strict";
 /* eslint camelcase:off */
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 const _ = require("lodash");
 const xmlq = require("./xmlq");
 const COLORS = require("./colors").COLORS;

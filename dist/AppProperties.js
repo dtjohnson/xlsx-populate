@@ -1,7 +1,7 @@
 "use strict";
 const _ = require("lodash");
 const xmlq = require("./xmlq");
-const ArgHandler = require("./ArgHandler");
+const ArgHandler = require("./ArgHandler").ArgHandler;
 /**
  * App properties
  * @ignore
