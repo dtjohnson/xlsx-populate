@@ -1004,5 +1004,42 @@ describe("Workbook", () => {
                     });
             });
         });
+
+        describe('cloneSheet', () => {
+            beforeEach(() => {
+                workbook._sheets = [new Sheet()];
+                spyOn(workbook, "activeSheet").and.returnValue(workbook._sheets[0]);
+                spyOn(workbook, "sheet");
+                workbook._relationships = jasmine.createSpyObj("relationships", ["add"]);
+                workbook._relationships.add.and.returnValue({
+                    attributes: {
+                        Id: 'RID'
+                    }
+                });
+            });
+
+            it("should throw an error if params are invalid", () => {
+                expect(() => workbook.cloneSheet()).toThrow();
+                const from = workbook.addSheet('foo');
+                expect(() => workbook.cloneSheet(from)).toThrow();
+            });
+
+            it("should add the sheet at the end", () => {
+                const from = workbook._sheets[0];
+                const sheet = workbook.cloneSheet(from, 'foo');
+                expect(sheet).toEqual(jasmine.any(Sheet));
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[1]).toBe(sheet);
+                expect(sheet.workbook).toBe(workbook);
+            });
+
+            it("should add the sheet before the given sheet", () => {
+                const from = workbook._sheets[0];
+                const sheet = workbook.cloneSheet(from, 'foo', workbook._sheets[0]);
+                expect(workbook._sheets.length).toBe(2);
+                expect(workbook._sheets[0]).toBe(sheet);
+            });
+
+        });
     });
 });
