@@ -1905,4 +1905,27 @@ describe("Sheet", () => {
             });
         });
     });
+
+    describe("_addPageBreak", () => {
+        it("should add colBreaks attribute", () => {
+            expect(sheet.addPageBreak(1, true)).toBe(sheet);
+            const colBreaksNode = sheet._node.children.find(c => c.name === 'colBreaks');
+            expect(colBreaksNode).not.toBeNull();
+            expect(colBreaksNode.children.length).toEqual(1);
+            expect(colBreaksNode.attributes).toEqualJson({
+                count: 1,
+                manualBreakCount: 1
+            });
+        });
+        it("should add rowBreaks attribute", () => {
+            expect(sheet.addPageBreak(1)).toBe(sheet);
+            const colBreaksNode = sheet._node.children.find(c => c.name === 'rowBreaks');
+            expect(colBreaksNode).not.toBeNull();
+            expect(colBreaksNode.children.length).toEqual(1);
+            expect(colBreaksNode.attributes).toEqualJson({
+                count: 1,
+                manualBreakCount: 1
+            });
+        });
+    }); 
 });

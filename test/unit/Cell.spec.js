@@ -41,7 +41,7 @@ describe("Cell", () => {
         sheet.range.and.returnValue(range);
         sheet.dataValidation.and.returnValue("DATAVALIDATION");
 
-        row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber']);
+        row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber', 'addPageBreak']);
         row.sheet.and.returnValue(sheet);
         row.workbook.and.returnValue(workbook);
         row.rowNumber.and.returnValue(7);
@@ -241,13 +241,12 @@ describe("Cell", () => {
                 formula1: 'test1, test2, test3',
                 formula2: ''
             });
-        })
+        });
 
         it("should get the dataValidation from the cell", () => {
             expect(cell.dataValidation()).toBe("DATAVALIDATION");
             expect(sheet.dataValidation).toHaveBeenCalledWith("C7");
         });
-
     });
 
     describe("find", () => {
@@ -458,6 +457,12 @@ describe("Cell", () => {
     describe("workbook", () => {
         it("should return the workbook from the row", () => {
             expect(cell.workbook()).toBe(workbook);
+        });
+    });
+    
+    describe('addPageBreak', () => {
+        it("should add a rowBreak and return the cell", () => {
+            expect(cell.addPageBreak()).toBe(cell);
         });
     });
 

@@ -47,7 +47,7 @@ describe("Column", () => {
             }
         ];
 
-        sheet = jasmine.createSpyObj('sheet', ['cell', 'name', 'workbook', 'forEachExistingRow']);
+        sheet = jasmine.createSpyObj('sheet', ['cell', 'name', 'workbook', 'forEachExistingRow', 'addPageBreak']);
         sheet.cell.and.returnValue('CELL');
         sheet.name.and.returnValue('NAME');
         sheet.workbook.and.returnValue(workbook);
@@ -224,6 +224,12 @@ describe("Column", () => {
     describe("workbook", () => {
         it("should return the workbook", () => {
             expect(column.workbook()).toBe(workbook);
+        });
+    });
+
+    describe('addPageBreak', () => {
+        it("should add a colBreak and return the column", () => {
+            expect(column.addPageBreak()).toBe(column);
         });
     });
 

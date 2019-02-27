@@ -35,7 +35,7 @@ describe("Row", () => {
         workbook = jasmine.createSpyObj("workbook", ["sharedStrings", "styleSheet"]);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId', 'forEachExistingColumnNumber']);
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId', 'forEachExistingColumnNumber', 'addPageBreak']);
         sheet.name.and.returnValue('NAME');
         sheet.workbook.and.returnValue(workbook);
         sheet.existingColumnStyleId.and.callFake(columnNumber => columnNumber === 4 ? "STYLE_ID" : undefined);
@@ -236,6 +236,12 @@ describe("Row", () => {
     describe("workbook", () => {
         it("should return the workbook", () => {
             expect(row.workbook()).toBe(workbook);
+        });
+    });
+
+    describe('addPageBreak', () => {
+        it("should add a rowBreak and return the row", () => {
+            expect(row.addPageBreak()).toBe(row);
         });
     });
 
