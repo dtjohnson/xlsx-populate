@@ -115,6 +115,18 @@ describe("Row", () => {
             expect(row.cell('C')).toEqual(jasmine.any(Cell));
             expect(Cell).toHaveBeenCalledWith(row, 3, 3);
         });
+
+        it("should throw an exception on an index of 0", () => {
+            expect(() => row.cell(0)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on an index of -1", () => {
+            expect(() => row.cell(-1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
+        });
     });
 
     describe("height", () => {
@@ -281,6 +293,18 @@ describe("Row", () => {
             expect(row.hasCell(1)).toBe(false);
             expect(row.hasCell(2)).toBe(true);
             expect(row.hasCell(3)).toBe(false);
+        });
+
+        it("should throw an exception on an index of 0", () => {
+            expect(() => row.hasCell(0)).toThrow(
+                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
+            );
+        });
+
+        it("should throw an exception on an index of -1", () => {
+            expect(() => row.hasCell(-1)).toThrow(
+                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
+            );
         });
     });
 
