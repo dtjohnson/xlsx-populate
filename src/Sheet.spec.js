@@ -28,7 +28,7 @@ describe("Sheet", () => {
             './Row': Row,
             './Column': Column,
             './Cell': Cell,
-            './Relationships': Relationships,
+            './Relationships': { Relationships },
             '@noCallThru': true
         });
 

@@ -7,12 +7,13 @@ import { SAXParser } from 'sax';
 // Regex to check if string is all whitespace.
 const allWhitespaceRegex = /^\s+$/;
 
+export type NodeChild = INode|string|number;
 export interface INode {
     name: string;
     attributes?: {
         [index: string]: string|number;
     };
-    children?: (INode|string|number)[];
+    children?: NodeChild[];
 }
 
 /**
