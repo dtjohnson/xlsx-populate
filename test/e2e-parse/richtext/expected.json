@@ -1,1 +1,15 @@
-"Calibri"
+[
+  {"fontFamily": "Calibri", "fontColor": {"rgb": "FFFFC000"}},
+  "test",
+  {"bold": true, "italic": true},
+  "123\r\n",
+  {"italic": true, "fontColor": {"rgb": "123456"}},
+  "456\r\n",
+  {"underline": true, "fontColor": {"rgb": "654321"}},
+  "789\r\n",
+  {"strikethrough": true, "fontColor": {"rgb": "FF0000"}},
+  "10\r\n11\r\n12",
+  {"subscript": true, "fontColor": {"rgb": "00FF00"}},
+  {"superscript": true, "fontSize": 20,
+    "fontFamily":  "Arial", "fontGenericFamily": 1, "fontScheme":  "major"}
+]
