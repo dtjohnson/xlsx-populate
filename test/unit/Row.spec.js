@@ -23,7 +23,7 @@ describe("Row", () => {
             '@noCallThru': true
         });
 
-        const Style = class {}
+        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
@@ -117,15 +117,11 @@ describe("Row", () => {
         });
 
         it("should throw an exception on an index of 0", () => {
-            expect(() => row.cell(0)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
+            expect(() => row.cell(0)).toThrowError(RangeError);
         });
 
         it("should throw an exception on an index of -1", () => {
-            expect(() => row.cell(-1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
+            expect(() => row.cell(-1)).toThrowError(RangeError);
         });
     });
 
@@ -296,15 +292,11 @@ describe("Row", () => {
         });
 
         it("should throw an exception on an index of 0", () => {
-            expect(() => row.hasCell(0)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
+            expect(() => row.hasCell(0)).toThrowError(RangeError);
         });
 
         it("should throw an exception on an index of -1", () => {
-            expect(() => row.hasCell(-1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
+            expect(() => row.hasCell(-1)).toThrowError(RangeError);
         });
     });
 

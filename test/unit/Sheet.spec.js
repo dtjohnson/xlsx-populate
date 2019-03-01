@@ -150,33 +150,6 @@ describe("Sheet", () => {
 
             expect(sheet.cell).toHaveBeenCalledWith(5, 4);
         });
-
-        it("should throw an exception on a row number of 0", () => {
-            expect(() => sheet.activeCell(0, 1)).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-            expect(() => sheet.activeCell("A0")).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a row number of -1", () => {
-            expect(() => sheet.activeCell(-1, 1)).toThrow(
-                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of 0", () => {
-            expect(() => sheet.activeCell(1, 0)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of -1", () => {
-            expect(() => sheet.activeCell(1, -1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
-        });
     });
 
     describe("cell", () => {
@@ -196,33 +169,6 @@ describe("Sheet", () => {
             expect(sheet.cell(5, 7)).toBe("CELL");
             expect(sheet.row).toHaveBeenCalledWith(5);
             expect(cell).toHaveBeenCalledWith(7);
-        });
-
-        it("should throw an exception on a row number of 0", () => {
-            expect(() => sheet.cell(0, 1)).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-            expect(() => sheet.cell("A0")).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a row number of -1", () => {
-            expect(() => sheet.cell(-1, 1)).toThrow(
-                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of 0", () => {
-            expect(() => sheet.cell(1, 0)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of -1", () => {
-            expect(() => sheet.cell(1, -1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
         });
     });
 
@@ -306,18 +252,6 @@ describe("Sheet", () => {
                     children: []
                 }
             ]);
-        });
-
-        it("should throw an exception on a column number of 0", () => {
-            expect(() => sheet.activeCell(1, 0)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of -1", () => {
-            expect(() => sheet.activeCell(1, -1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
         });
     });
 
@@ -459,42 +393,6 @@ describe("Sheet", () => {
             expect(sheet.range(1, 'B', 3, 'D')).toEqual(jasmine.any(Range));
             expect(Range).toHaveBeenCalledWith([1, 'B'], [3, 'D']);
         });
-
-        it("should throw an exception on a row number of 0", () => {
-            expect(() => sheet.range(0, 1, 1, 1)).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-            expect(() => sheet.range(1, 1, 0, 1)).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a row number of -1", () => {
-            expect(() => sheet.range(-1, 1, 1, 1)).toThrow(
-                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
-            );
-            expect(() => sheet.range(1, 1, -1, 1)).toThrow(
-                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of 0", () => {
-            expect(() => sheet.range(1, 0, 1, 1)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
-            expect(() => sheet.range(1, 1, 1, 0)).toThrow(
-                new RangeError("Invaid column index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on a column number of -1", () => {
-            expect(() => sheet.range(1, -1, 1, 1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
-            expect(() => sheet.range(1, 1, 1, -1)).toThrow(
-                new RangeError("Invaid column index -1. Remember that spreadsheets use 1 indexing.")
-            );
-        });
     });
 
     describe("autoFilter", () => {
@@ -511,24 +409,24 @@ describe("Sheet", () => {
         });
 
         it("should add a XML node", () => {
-            let Range = proxyquire("../../lib/Range", {
+            const Range = proxyquire("../../lib/Range", {
                 '@noCallThru': true
             });
-            let startCell = jasmine.createSpyObj("startCell", ["rowNumber", "columnNumber", "columnName"]);
+            const startCell = jasmine.createSpyObj("startCell", ["rowNumber", "columnNumber", "columnName"]);
             startCell.columnName.and.returnValue("B");
             startCell.columnNumber.and.returnValue(2);
             startCell.rowNumber.and.returnValue(3);
 
-            let endCell = jasmine.createSpyObj("endCell", ["rowNumber", "columnNumber", "columnName"]);
+            const endCell = jasmine.createSpyObj("endCell", ["rowNumber", "columnNumber", "columnName"]);
             endCell.columnName.and.returnValue("C");
             endCell.columnNumber.and.returnValue(3);
             endCell.rowNumber.and.returnValue(3);
 
             sheet.autoFilter(new Range(startCell, endCell));
 
-            let props = sheet.toXmls().sheet.children.filter((child) => (child.name == "autoFilter"));
+            const props = sheet.toXmls().sheet.children.filter(child => child.name === "autoFilter");
 
-            expect(props.length == 1);
+            expect(props.length === 1);
             expect(props[0].attributes.ref).toEqual("B3:C3");
         });
     });
@@ -553,15 +451,11 @@ describe("Sheet", () => {
         });
 
         it("should throw an exception on a row number of 0", () => {
-            expect(() => sheet.row(0)).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
+            expect(() => sheet.row(0)).toThrowError(RangeError);
         });
 
         it("should throw an exception on a row number of -1", () => {
-            expect(() => sheet.row(-1)).toThrow(
-                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
-            );
+            expect(() => sheet.row(-1)).toThrowError(RangeError);
         });
     });
 
@@ -902,7 +796,7 @@ describe("Sheet", () => {
         it("should add an internal hyperlink entry", () => {
             const hyperlink = "Sheet1!A1";
             expect(sheet.hyperlink("ADDRESS", hyperlink)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 location: hyperlink,
                 display: hyperlink
@@ -939,7 +833,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 "r:id": "ID",
                 tooltip: "TOOLTIP"
@@ -954,7 +848,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "mailto:USER@SERVER.COM?subject=EMAIL%20SUBJECT";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 "r:id": "ID"
             });
@@ -969,7 +863,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 "r:id": "ID"
             });
@@ -1121,7 +1015,7 @@ describe("Sheet", () => {
                 name: 'pageMargins',
                 attributes: {
                     left: 123,
-                    top: 456,
+                    top: 456
                 },
                 children: []
             };
@@ -1379,21 +1273,21 @@ describe("Sheet", () => {
                     children: []
                 };
                 expect(sheet.toXmls().sheet.children).toEqualJson([
-                  {
-                    "name": "sheetPr",
-                    "attributes": {},
-                    "children": []
-                  },
-                  {
-                    "name": "sheetFormatPr",
-                    "attributes": {},
-                    "children": []
-                  },
-                  {
-                    "name": "sheetData",
-                    "attributes": {},
-                    "children": []
-                  }
+                    {
+                        name: "sheetPr",
+                        attributes: {},
+                        children: []
+                    },
+                    {
+                        name: "sheetFormatPr",
+                        attributes: {},
+                        children: []
+                    },
+                    {
+                        name: "sheetData",
+                        attributes: {},
+                        children: []
+                    }
                 ]);
             });
         });
@@ -1535,7 +1429,7 @@ describe("Sheet", () => {
                     { name: 'sheetData', attributes: {}, children: [] },
                     {
                         name: 'pageMargins',
-                        attributes: sheet._pageMarginsPresets['wide'],
+                        attributes: sheet._pageMarginsPresets.wide,
                         children: []
                     }
                 ]);
@@ -1547,7 +1441,7 @@ describe("Sheet", () => {
                     { name: 'sheetData', attributes: {}, children: [] },
                     {
                         name: 'pageMargins',
-                        attributes: sheet._pageMarginsPresets['normal'],
+                        attributes: sheet._pageMarginsPresets.normal,
                         children: []
                     }
                 ]);
@@ -1562,8 +1456,7 @@ describe("Sheet", () => {
                         right: 2,
                         top: 3,
                         bottom: 4,
-                        header: 5,
-                        bottom: 6
+                        header: 5
                     },
                     children: []
                 };
@@ -1590,7 +1483,7 @@ describe("Sheet", () => {
                         footer: 'FOOTER'
                     },
                     children: []
-                }
+                };
                 expect(sheet.pageMarginsPreset('test', {
                     left: 6,
                     right: 5,
@@ -1609,7 +1502,7 @@ describe("Sheet", () => {
                     { name: 'sheetData', attributes: {}, children: [] },
                     {
                         name: 'pageMargins',
-                        attributes: sheet._pageMarginsPresets['normal'],
+                        attributes: sheet._pageMarginsPresets.normal,
                         children: []
                     }
                 ]);

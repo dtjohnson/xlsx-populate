@@ -11,7 +11,7 @@ describe("Column", () => {
             '@noCallThru': true
         });
 
-        const Style = class {}
+        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
@@ -79,18 +79,6 @@ describe("Column", () => {
         it("should return a cell", () => {
             expect(column.cell(7)).toBe('CELL');
             expect(sheet.cell).toHaveBeenCalledWith(7, 5);
-        });
-
-        it("should throw an exception on an index of 0", () => {
-            expect(() => column.cell(0)).toThrow(
-                new RangeError("Invaid row index 0. Remember that spreadsheets use 1 indexing.")
-            );
-        });
-
-        it("should throw an exception on an index of -1", () => {
-            expect(() => column.cell(-1)).toThrow(
-                new RangeError("Invaid row index -1. Remember that spreadsheets use 1 indexing.")
-            );
         });
     });
 
