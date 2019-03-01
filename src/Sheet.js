@@ -383,6 +383,8 @@ class Sheet {
      * @returns {Row} The row with the given number.
      */
     row(rowNumber) {
+        if (rowNumber < 1) throw new RangeError(`Invalid row number ${rowNumber}. Remember that spreadsheets use 1-based indexing.`);
+
         if (this._rows[rowNumber]) return this._rows[rowNumber];
 
         const rowNode = {

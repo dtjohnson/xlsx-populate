@@ -49,6 +49,8 @@ class Row {
             columnNumber = addressConverter.columnNameToNumber(columnNameOrNumber);
         }
 
+        if (columnNumber < 1) throw new RangeError(`Invalid column number ${columnNumber}. Remember that spreadsheets use 1-based indexing.`);
+
         // Return an existing cell.
         if (this._cells[columnNumber]) return this._cells[columnNumber];
 
@@ -259,6 +261,7 @@ class Row {
      * @ignore
      */
     hasCell(columnNumber) {
+        if (columnNumber < 1) throw new RangeError(`Invalid column number ${columnNumber}. Remember that spreadsheets use 1-based indexing.`);
         return !!this._cells[columnNumber];
     }
 

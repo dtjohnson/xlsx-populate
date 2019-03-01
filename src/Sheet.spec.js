@@ -412,21 +412,21 @@ describe("Sheet", () => {
             let Range = proxyquire("./Range", {
                 '@noCallThru': true
             });
-            let startCell = jasmine.createSpyObj("startCell", ["rowNumber", "columnNumber", "columnName"]);
+            const startCell = jasmine.createSpyObj("startCell", ["rowNumber", "columnNumber", "columnName"]);
             startCell.columnName.and.returnValue("B");
             startCell.columnNumber.and.returnValue(2);
             startCell.rowNumber.and.returnValue(3);
 
-            let endCell = jasmine.createSpyObj("endCell", ["rowNumber", "columnNumber", "columnName"]);
+            const endCell = jasmine.createSpyObj("endCell", ["rowNumber", "columnNumber", "columnName"]);
             endCell.columnName.and.returnValue("C");
             endCell.columnNumber.and.returnValue(3);
             endCell.rowNumber.and.returnValue(3);
 
             sheet.autoFilter(new Range(startCell, endCell));
 
-            let props = sheet.toXmls().sheet.children.filter((child) => (child.name == "autoFilter"));
+            const props = sheet.toXmls().sheet.children.filter(child => child.name === "autoFilter");
 
-            expect(props.length == 1);
+            expect(props.length === 1);
             expect(props[0].attributes.ref).toEqual("B3:C3");
         });
     });
@@ -448,6 +448,14 @@ describe("Sheet", () => {
                 },
                 children: []
             });
+        });
+
+        it("should throw an exception on a row number of 0", () => {
+            expect(() => sheet.row(0)).toThrowError(RangeError);
+        });
+
+        it("should throw an exception on a row number of -1", () => {
+            expect(() => sheet.row(-1)).toThrowError(RangeError);
         });
     });
 
@@ -807,7 +815,7 @@ describe("Sheet", () => {
         it("should add an internal hyperlink entry", () => {
             const hyperlink = "Sheet1!A1";
             expect(sheet.hyperlink("ADDRESS", hyperlink)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqual({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 location: hyperlink,
                 display: hyperlink
@@ -844,7 +852,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqual({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 "r:id": "ID",
                 tooltip: "TOOLTIP"
@@ -859,7 +867,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "mailto:USER@SERVER.COM?subject=EMAIL%20SUBJECT";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqual({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 "r:id": "ID"
             });
@@ -874,7 +882,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks["ADDRESS"].attributes).toEqual({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
                 ref: "ADDRESS",
                 "r:id": "ID"
             });
@@ -1026,7 +1034,7 @@ describe("Sheet", () => {
                 name: 'pageMargins',
                 attributes: {
                     left: 123,
-                    top: 456,
+                    top: 456
                 },
                 children: []
             };
@@ -1283,22 +1291,22 @@ describe("Sheet", () => {
                     attributes: {},
                     children: []
                 };
-                expect(sheet.toXmls().sheet.children).toEqual([
-                  {
-                    "name": "sheetPr",
-                    "attributes": {},
-                    "children": []
-                  },
-                  {
-                    "name": "sheetFormatPr",
-                    "attributes": {},
-                    "children": []
-                  },
-                  {
-                    "name": "sheetData",
-                    "attributes": {},
-                    "children": []
-                  }
+                expect(sheet.toXmls().sheet.children).toEqualJson([
+                    {
+                        name: "sheetPr",
+                        attributes: {},
+                        children: []
+                    },
+                    {
+                        name: "sheetFormatPr",
+                        attributes: {},
+                        children: []
+                    },
+                    {
+                        name: "sheetData",
+                        attributes: {},
+                        children: []
+                    }
                 ]);
             });
         });
@@ -1440,7 +1448,7 @@ describe("Sheet", () => {
                     { name: 'sheetData', attributes: {}, children: [] },
                     {
                         name: 'pageMargins',
-                        attributes: sheet._pageMarginsPresets['wide'],
+                        attributes: sheet._pageMarginsPresets.wide,
                         children: []
                     }
                 ]);
@@ -1452,7 +1460,7 @@ describe("Sheet", () => {
                     { name: 'sheetData', attributes: {}, children: [] },
                     {
                         name: 'pageMargins',
-                        attributes: sheet._pageMarginsPresets['normal'],
+                        attributes: sheet._pageMarginsPresets.normal,
                         children: []
                     }
                 ]);
@@ -1467,8 +1475,7 @@ describe("Sheet", () => {
                         right: 2,
                         top: 3,
                         bottom: 4,
-                        header: 5,
-                        bottom: 6
+                        header: 5
                     },
                     children: []
                 };
@@ -1495,7 +1502,7 @@ describe("Sheet", () => {
                         footer: 'FOOTER'
                     },
                     children: []
-                }
+                };
                 expect(sheet.pageMarginsPreset('test', {
                     left: 6,
                     right: 5,
@@ -1514,7 +1521,7 @@ describe("Sheet", () => {
                     { name: 'sheetData', attributes: {}, children: [] },
                     {
                         name: 'pageMargins',
-                        attributes: sheet._pageMarginsPresets['normal'],
+                        attributes: sheet._pageMarginsPresets.normal,
                         children: []
                     }
                 ]);
