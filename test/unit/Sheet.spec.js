@@ -3,7 +3,7 @@
 const proxyquire = require("proxyquire");
 
 describe("Sheet", () => {
-    let Sheet, Range, Row, Cell, Column, Relationships, sheet, idNode, sheetNode, workbook;
+    let Sheet, Range, Row, Cell, Column, Relationships, sheet, idNode, sheetNode, workbook, PageBreaks;
 
     beforeEach(() => {
         let i = 0;
@@ -18,6 +18,7 @@ describe("Sheet", () => {
         Column = jasmine.createSpy("Column");
         Cell = jasmine.createSpy("Cell");
         Cell.prototype.address = jasmine.createSpy("Cell.address").and.returnValue("ADDRESS");
+        PageBreaks = jasmine.createSpy("PageBreaks", ["add", "remove", "list"]);
 
         Relationships = jasmine.createSpy("Relationships");
         Relationships.prototype.findById = jasmine.createSpy("Relationships.findById").and.callFake(id => ({ attributes: { Target: `TARGET:${id}` } }));
@@ -1906,26 +1907,33 @@ describe("Sheet", () => {
         });
     });
 
-    describe("_addPageBreak", () => {
-        it("should add colBreaks attribute", () => {
-            expect(sheet.addPageBreak(1, true)).toBe(sheet);
-            const colBreaksNode = sheet._node.children.find(c => c.name === 'colBreaks');
-            expect(colBreaksNode).not.toBeNull();
-            expect(colBreaksNode.children.length).toEqual(1);
-            expect(colBreaksNode.attributes).toEqualJson({
-                count: 1,
-                manualBreakCount: 1
-            });
+    describe("pageBreaks", () => {
+        it("should return an Object that holds vertical and horizontal page-breaks", () => {
+            const pageBreaks = sheet.pageBreaks();
+            expect(sheet.verticalPageBreaks()).toEqual(pageBreaks.colBreaks);
+            expect(sheet.horizontalPageBreaks()).toEqual(pageBreaks.rowBreaks);
         });
-        it("should add rowBreaks attribute", () => {
-            expect(sheet.addPageBreak(1)).toBe(sheet);
-            const colBreaksNode = sheet._node.children.find(c => c.name === 'rowBreaks');
-            expect(colBreaksNode).not.toBeNull();
-            expect(colBreaksNode.children.length).toEqual(1);
-            expect(colBreaksNode.attributes).toEqualJson({
-                count: 1,
-                manualBreakCount: 1
-            });
+        it("should return vertical page-breaks", () => {
+            expect(sheet.verticalPageBreaks().count).toBe(0);
         });
-    }); 
+        it("should add a horizontal page-break", () => {
+            const pageBreaks = sheet.horizontalPageBreaks();
+            expect(pageBreaks.add(1)).toBe(pageBreaks);
+            expect(pageBreaks.count).toBe(1);
+        });
+        it("should return horizontal page-breaks", () => {
+            expect(sheet.horizontalPageBreaks().count).toBe(0);
+        });
+        it("should and then remove a vertical page-break", () => {
+            const pageBreaks = sheet.verticalPageBreaks();
+            expect(pageBreaks.add(1)).toBe(pageBreaks);
+            expect(pageBreaks.count).toBe(1);
+            expect(pageBreaks.remove(0)).toBe(pageBreaks);
+            expect(pageBreaks.count).toBe(0);
+        });
+        it("should return list of page-breaks ", () => {
+            expect(sheet.verticalPageBreaks().list.length).toBe(0);
+            expect(sheet.horizontalPageBreaks().list.length).toBe(0);
+        });
+    });
 });

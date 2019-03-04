@@ -33,7 +33,7 @@ describe("Cell", () => {
 
         range = jasmine.createSpyObj('range', ['value', 'style']);
 
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation', 'verticalPageBreaks']);
         sheet.activeCell.and.returnValue("ACTIVE CELL");
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
