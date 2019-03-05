@@ -87,6 +87,16 @@ describe("RichTexts", () => {
         });
     });
 
+    it("should get concatenated text", () => {
+        const rt = new RichTexts(cell);
+        rt.add('hello')
+            .add(' I', { fontColor: 'FF0000FF' })
+            .add("'m \n ")
+            .add('lester');
+
+        expect(rt.text).toBe("hello I'm \r\n lester");
+    });
+
     describe("change related cell", () => {
         it("should change related cell", () => {
             const rt = new RichTexts(cell);
@@ -171,7 +181,11 @@ describe("RichTexts", () => {
                 expect(fragment.style("subscript")).toBe(false);
                 fragment.style("subscript", true);
                 expect(fragment.style("subscript")).toBe(true);
-                expect(fontNode.children).toEqualJson([{ name: "vertAlign", attributes: { val: "subscript" }, children: [] }]);
+                expect(fontNode.children).toEqualJson([{
+                    name: "vertAlign",
+                    attributes: { val: "subscript" },
+                    children: []
+                }]);
                 fragment.style("subscript", false);
                 expect(fragment.style("subscript")).toBe(false);
                 expect(fontNode.children).toEqualJson([]);
@@ -183,7 +197,11 @@ describe("RichTexts", () => {
                 expect(fragment.style("superscript")).toBe(false);
                 fragment.style("superscript", true);
                 expect(fragment.style("superscript")).toBe(true);
-                expect(fontNode.children).toEqualJson([{ name: "vertAlign", attributes: { val: "superscript" }, children: [] }]);
+                expect(fontNode.children).toEqualJson([{
+                    name: "vertAlign",
+                    attributes: { val: "superscript" },
+                    children: []
+                }]);
                 fragment.style("superscript", false);
                 expect(fragment.style("superscript")).toBe(false);
                 expect(fontNode.children).toEqualJson([]);
@@ -207,7 +225,11 @@ describe("RichTexts", () => {
                 expect(fragment.style("fontFamily")).toBe(undefined);
                 fragment.style("fontFamily", "Comic Sans MS");
                 expect(fragment.style("fontFamily")).toBe("Comic Sans MS");
-                expect(fontNode.children).toEqualJson([{ name: 'rFont', attributes: { val: "Comic Sans MS" }, children: [] }]);
+                expect(fontNode.children).toEqualJson([{
+                    name: 'rFont',
+                    attributes: { val: "Comic Sans MS" },
+                    children: []
+                }]);
                 fragment.style("fontFamily", undefined);
                 expect(fragment.style("fontFamily")).toBe(undefined);
                 expect(fontNode.children).toEqualJson([]);
@@ -252,7 +274,11 @@ describe("RichTexts", () => {
 
                 fragment.style("fontColor", { theme: 3, tint: -0.2 });
                 expect(fragment.style("fontColor")).toEqualJson({ theme: 3, tint: -0.2 });
-                expect(fontNode.children).toEqualJson([{ name: 'color', attributes: { theme: 3, tint: -0.2 }, children: [] }]);
+                expect(fontNode.children).toEqualJson([{
+                    name: 'color',
+                    attributes: { theme: 3, tint: -0.2 },
+                    children: []
+                }]);
 
                 fragment.style("fontColor", undefined);
                 expect(fragment.style("fontColor")).toBe(undefined);

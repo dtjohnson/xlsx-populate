@@ -365,6 +365,10 @@ richtext.add('to the first!', {italic: true, fontColor: 'FF123456'}, 0);
 // add to the second
 richtext.add('to the second!', {}, 1);
 
+// get concatenate text
+// returns 'to the first!123\r\n456\r\n789\r\n10\r\n11\r\n12to the last!'
+richtext.text;
+
 // modify a rich text cell
 cell.value().get(0).style('fontFamily', 'Calibri')
 

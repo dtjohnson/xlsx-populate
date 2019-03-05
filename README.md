@@ -396,6 +396,10 @@ richtext.add('to the first!', {italic: true, fontColor: 'FF123456'}, 0);
 // add to the second
 richtext.add('to the second!', {}, 1);
 
+// get concatenate text
+// returns 'to the first!123\r\n456\r\n789\r\n10\r\n11\r\n12to the last!'
+richtext.text;
+
 // modify a rich text cell
 cell.value().get(0).style('fontFamily', 'Calibri')
 
@@ -895,10 +899,10 @@ An object representing a gradient fill.
 <dd><p>A range of cells.</p>
 </dd>
 <dt><a href="#RichTextFragment">RichTextFragment</a></dt>
-<dd><p>Rich text.</p>
+<dd><p>A Rich text fragment.</p>
 </dd>
 <dt><a href="#RichTexts">RichTexts</a></dt>
-<dd><p>a RichTexts instance contains many <a href="#RichTextFragment">RichTextFragment</a>.</p>
+<dd><p>A RichTexts class that contains many <a href="#RichTextFragment">RichTextFragment</a>.</p>
 </dd>
 <dt><a href="#Row">Row</a></dt>
 <dd><p>A row.</p>
@@ -2019,7 +2023,7 @@ Callback used by thru.
 <a name="RichTextFragment"></a>
 
 ### RichTextFragment
-Rich text.
+A Rich text fragment.
 
 **Kind**: global class  
 
@@ -2115,7 +2119,7 @@ Sets multiple styles.
 <a name="RichTexts"></a>
 
 ### RichTexts
-a RichTexts instance contains many [RichTextFragment](#RichTextFragment).
+A RichTexts class that contains many [RichTextFragment](#RichTextFragment).
 
 **Kind**: global class  
 
