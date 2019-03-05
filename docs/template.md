@@ -342,20 +342,15 @@ You can also look up the desired format code in Excel:
 ### Rich Texts
 You can read/write rich texts to cells.
 ```js
+const RichTexts = require('xlsx-Populate').RichTexts;
+
 const cell = workbook.sheet(0).cell('A1');
-// transform exsisting string cell to rich text
-cell.richText();
-cell.value() instanceof RichTexts // true
-
-// you can use both cell.richText() or cell.value() to set rich text
-cell.richText() === cell.value() // true
-
-// reset a rich text cell
-cell.value('string');
-cell.value(new Date());
+// set value to rich text
+const richtext = new RichTexts(cell);
+cell.value(richtext)
 
 // create new cell with rich text
-workbook.sheet(0).cell('B1').richText()
+richtext
     // support all line separators
     .add('123\n', { italic: true, fontColor: '123456' })
     .add('456\r', { italic: true, fontColor: '654321' })
@@ -364,16 +359,20 @@ workbook.sheet(0).cell('B1').richText()
 // remember to set height to show the whole row
 workbook.sheet(0).row(1).height(100);
 
+// add to the first
+richtext.add('to the first!', {italic: true, fontColor: 'FF123456'}, 0);
+
+// add to the second
+richtext.add('to the second!', {}, 1);
+
 // modify a rich text cell
 cell.value().get(0).style('fontFamily', 'Calibri')
-// or
-cell.richText().get(0).style('fontFamily', 'Calibri')
 
 // read multiple styles
-cell.richText().get(0).style(['fontFamily', 'italic', 'bold'])
+cell.value().get(0).style(['fontFamily', 'italic', 'bold'])
 
-// delete
-cell.richText().remove(0);
+// delete rich text fragment
+cell.value().remove(0);
 ```
 
 ### Dates
