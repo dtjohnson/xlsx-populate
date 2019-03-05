@@ -11,7 +11,7 @@ describe("Column", () => {
             '@noCallThru': true
         });
 
-        const Style = class {}
+        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);

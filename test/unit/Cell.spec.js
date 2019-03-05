@@ -820,6 +820,14 @@ describe("Cell", () => {
             expect(sharedStrings.getStringByIndex).toHaveBeenCalledWith(5);
         });
 
+        it("should parse string values with no shared string child", () => {
+            node.attributes.t = "s";
+            node.children = [];
+
+            cell._parseNode(node);
+            expect(cell._value).toBe("");
+        });
+
         it("should parse simple string values", () => {
             node.attributes.t = "str";
             node.children = [{

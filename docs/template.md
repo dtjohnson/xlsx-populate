@@ -522,9 +522,23 @@ const isPrintGridLinesEnabled = sheet.printGridLines(); // Returns false
 ```
 
 ### Page Margins
-Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method.
+Excel requires that all page margins are defined or none at all. To ensure this, please choose an existing or custom preset. See [Sheet.pageMarginsPreset](#Sheet+pageMarginsPreset).
+
 ```js
-// Set top page margin in inches.
+// Get the current preset
+sheet.pageMarginsPreset(); // Returns undefined
+
+// Switch to an existing preset
+sheet.pageMarginsPreset('normal');
+```
+
+Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method. If a page margin is not set, the preset will fill in the gaps.
+
+```js
+// Get top margin in inches, note that the current preset is currently set to normal (see above)
+sheet.pageMargins('top'); // Returns 0.75
+
+// Set top page margin in inches
 sheet.pageMargins('top', 1.1);
 
 // Get top page margin in inches.

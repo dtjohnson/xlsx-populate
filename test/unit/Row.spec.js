@@ -23,7 +23,7 @@ describe("Row", () => {
             '@noCallThru': true
         });
 
-        const Style = class {}
+        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
@@ -114,6 +114,14 @@ describe("Row", () => {
             rowNode.attributes.s = 3;
             expect(row.cell('C')).toEqual(jasmine.any(Cell));
             expect(Cell).toHaveBeenCalledWith(row, 3, 3);
+        });
+
+        it("should throw an exception on an index of 0", () => {
+            expect(() => row.cell(0)).toThrowError(RangeError);
+        });
+
+        it("should throw an exception on an index of -1", () => {
+            expect(() => row.cell(-1)).toThrowError(RangeError);
         });
     });
 
@@ -281,6 +289,14 @@ describe("Row", () => {
             expect(row.hasCell(1)).toBe(false);
             expect(row.hasCell(2)).toBe(true);
             expect(row.hasCell(3)).toBe(false);
+        });
+
+        it("should throw an exception on an index of 0", () => {
+            expect(() => row.hasCell(0)).toThrowError(RangeError);
+        });
+
+        it("should throw an exception on an index of -1", () => {
+            expect(() => row.hasCell(-1)).toThrowError(RangeError);
         });
     });
 
