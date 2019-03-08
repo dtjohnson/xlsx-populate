@@ -21,7 +21,7 @@
     "XlsxPopulate": "./browser/xlsx-populate.js"
   },
   "scripts": {
-    "test": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json && npm run e2e-parse",
+    "test": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
     "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json",
     "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json",
     "test:windows": "npm-run-all test e2e-parse e2e-generate",
