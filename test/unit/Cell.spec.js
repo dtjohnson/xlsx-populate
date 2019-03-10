@@ -14,7 +14,7 @@ describe("Cell", () => {
             '@noCallThru': true
         });
 
-        const Style = class {}
+        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue(4);
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
@@ -460,9 +460,9 @@ describe("Cell", () => {
         });
     });
     
-    describe('addPageBreak', () => {
+    describe('addHorizontalPageBreak', () => {
         it("should add a rowBreak and return the cell", () => {
-            expect(cell.addPageBreak()).toBe(cell);
+            expect(cell.addHorizontalPageBreak()).toBe(cell);
         });
     });
 
