@@ -4,7 +4,7 @@ const _ = require('lodash');
 const proxyquire = require("proxyquire");
 
 describe("Row", () => {
-    let Row, Cell, row, rowNode, sheet, style, styleSheet, workbook;
+    let Row, Cell, row, rowNode, sheet, style, styleSheet, workbook, horizontalPageBreaks;
 
     beforeEach(() => {
         let i = 1;
@@ -35,9 +35,12 @@ describe("Row", () => {
         workbook = jasmine.createSpyObj("workbook", ["sharedStrings", "styleSheet"]);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId', 'forEachExistingColumnNumber']);
+        horizontalPageBreaks = jasmine.createSpyObj("horizontalPageBreaks", ["add"]);
+
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId', 'forEachExistingColumnNumber', 'horizontalPageBreaks']);
         sheet.name.and.returnValue('NAME');
         sheet.workbook.and.returnValue(workbook);
+        sheet.horizontalPageBreaks.and.returnValue(horizontalPageBreaks);
         sheet.existingColumnStyleId.and.callFake(columnNumber => columnNumber === 4 ? "STYLE_ID" : undefined);
         sheet.forEachExistingColumnNumber.and.callFake(callback => _.forEach([1, 2, 4], callback));
 
@@ -244,6 +247,12 @@ describe("Row", () => {
     describe("workbook", () => {
         it("should return the workbook", () => {
             expect(row.workbook()).toBe(workbook);
+        });
+    });
+
+    describe('addPageBreak', () => {
+        it("should add a rowBreak and return the row", () => {
+            expect(row.addPageBreak()).toBe(row);
         });
     });
 
