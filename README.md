@@ -2687,6 +2687,7 @@ A workbook.
     * [.property(properties)](#Workbook+property) ⇒ [<code>Workbook</code>](#Workbook)
     * [.properties()](#Workbook+properties) ⇒ <code>CoreProperties</code>
     * [.toFileAsync(path, [opts])](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
+    * [.cloneSheet(from, name, [indexOrBeforeSheet])](#Workbook+cloneSheet) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Workbook+activeSheet"></a>
 
@@ -2897,6 +2898,22 @@ Write the workbook to file. (Not supported in browsers.)
 | path | <code>string</code> | The path of the file to write. |
 | [opts] | <code>Object</code> | Options |
 | [opts.password] | <code>string</code> | The password to encrypt the workbook. |
+
+<a name="Workbook+cloneSheet"></a>
+
+#### workbook.cloneSheet(from, name, [indexOrBeforeSheet]) ⇒ [<code>Sheet</code>](#Sheet)
+Add a new sheet to the workbook.
+
+**WARN:** this function has limits:  if you clone a sheet with some images or other things link outside the Sheet object, these things in the cloned sheet will be locked when you open in MS Excel app.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The new sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | [<code>Sheet</code>](#Sheet) | The sheet to be cloned. |
+| name | <code>string</code> | The name of the new sheet. Must be unique, less than 31 characters, and may not contain the following characters: \ / * [ ] : ? |
+| [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
 <a name="XlsxPopulate"></a>
 
