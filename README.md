@@ -852,6 +852,9 @@ An object representing a gradient fill.
 <dt><a href="#FormulaError">FormulaError</a></dt>
 <dd><p>A formula error (e.g. #DIV/0!).</p>
 </dd>
+<dt><a href="#PageBreaks">PageBreaks</a></dt>
+<dd><p>PageBreaks</p>
+</dd>
 <dt><a href="#Range">Range</a></dt>
 <dd><p>A range of cells.</p>
 </dd>
@@ -925,6 +928,7 @@ A cell
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+        * [.addHorizontalPageBreak()](#Cell+addHorizontalPageBreak) ⇒ [<code>Cell</code>](#Cell)
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -1260,6 +1264,13 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Cell+addHorizontalPageBreak"></a>
+
+#### cell.addHorizontalPageBreak() ⇒ [<code>Cell</code>](#Cell)
+Append horizontal page break after the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - the cell.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -1306,6 +1317,7 @@ A column.
     * [.width()](#Column+width) ⇒ <code>undefined</code> \| <code>number</code>
     * [.width(width)](#Column+width) ⇒ [<code>Column</code>](#Column)
     * [.workbook()](#Column+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.addPageBreak()](#Column+addPageBreak) ⇒ [<code>Column</code>](#Column)
 
 <a name="Column+address"></a>
 
@@ -1460,6 +1472,13 @@ Get the parent workbook.
 
 **Kind**: instance method of [<code>Column</code>](#Column)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Column+addPageBreak"></a>
+
+#### column.addPageBreak() ⇒ [<code>Column</code>](#Column)
+Append vertical page break after the column.
+
+**Kind**: instance method of [<code>Column</code>](#Column)  
+**Returns**: [<code>Column</code>](#Column) - the column.  
 <a name="FormulaError"></a>
 
 ### FormulaError
@@ -1528,6 +1547,57 @@ Get the error code.
 \#VALUE! error.
 
 **Kind**: static property of [<code>FormulaError</code>](#FormulaError)  
+<a name="PageBreaks"></a>
+
+### PageBreaks
+PageBreaks
+
+**Kind**: global class  
+
+* [PageBreaks](#PageBreaks)
+    * [.count](#PageBreaks+count) ⇒ <code>number</code>
+    * [.list](#PageBreaks+list) ⇒ <code>Array</code>
+    * [.add(id)](#PageBreaks+add) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+    * [.remove(index)](#PageBreaks+remove) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+
+<a name="PageBreaks+count"></a>
+
+#### pageBreaks.count ⇒ <code>number</code>
+get count of the page-breaks
+
+**Kind**: instance property of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: <code>number</code> - the page-breaks' count  
+<a name="PageBreaks+list"></a>
+
+#### pageBreaks.list ⇒ <code>Array</code>
+get list of page-breaks
+
+**Kind**: instance property of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: <code>Array</code> - list of the page-breaks  
+<a name="PageBreaks+add"></a>
+
+#### pageBreaks.add(id) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+add page-breaks by row/column id
+
+**Kind**: instance method of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - the page-breaks  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>number</code> | row/column id (rowNumber/colNumber) |
+
+<a name="PageBreaks+remove"></a>
+
+#### pageBreaks.remove(index) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+remove page-breaks by index
+
+**Kind**: instance method of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - the page-breaks  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | index of list |
+
 <a name="Range"></a>
 
 ### Range
@@ -1993,6 +2063,7 @@ A row.
     * [.style(styles)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.style(style)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.workbook()](#Row+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.addPageBreak()](#Row+addPageBreak) ⇒ [<code>Row</code>](#Row)
 
 <a name="Row+address"></a>
 
@@ -2140,6 +2211,13 @@ Get the parent workbook.
 
 **Kind**: instance method of [<code>Row</code>](#Row)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Row+addPageBreak"></a>
+
+#### row.addPageBreak() ⇒ [<code>Row</code>](#Row)
+Append horizontal page break after the row.
+
+**Kind**: instance method of [<code>Row</code>](#Row)  
+**Returns**: [<code>Row</code>](#Row) - the row.  
 <a name="Sheet"></a>
 
 ### Sheet
@@ -2179,6 +2257,9 @@ A worksheet.
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ [<code>Sheet</code>](#Sheet)
     * [.usedRange()](#Sheet+usedRange) ⇒ [<code>Range</code>](#Range) \| <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.pageBreaks()](#Sheet+pageBreaks) ⇒ <code>Object</code>
+    * [.verticalPageBreaks()](#Sheet+verticalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+    * [.horizontalPageBreaks()](#Sheet+horizontalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2512,6 +2593,27 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Sheet+pageBreaks"></a>
+
+#### sheet.pageBreaks() ⇒ <code>Object</code>
+Gets all page breaks.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>Object</code> - the object holds both vertical and horizontal PageBreaks.  
+<a name="Sheet+verticalPageBreaks"></a>
+
+#### sheet.verticalPageBreaks() ⇒ [<code>PageBreaks</code>](#PageBreaks)
+Gets the vertical page breaks.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - vertical PageBreaks.  
+<a name="Sheet+horizontalPageBreaks"></a>
+
+#### sheet.horizontalPageBreaks() ⇒ [<code>PageBreaks</code>](#PageBreaks)
+Gets the horizontal page breaks.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - horizontal PageBreaks.  
 <a name="Sheet+hyperlink"></a>
 
 #### sheet.hyperlink(address) ⇒ <code>string</code> \| <code>undefined</code>

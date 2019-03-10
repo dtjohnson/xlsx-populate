@@ -4,7 +4,7 @@ const _ = require("lodash");
 const proxyquire = require("proxyquire");
 
 describe("Column", () => {
-    let Column, column, columnNode, sheet, style, styleSheet, workbook, existingRows;
+    let Column, column, columnNode, sheet, style, styleSheet, workbook, existingRows, verticalPageBreaks;
 
     beforeEach(() => {
         Column = proxyquire("../../lib/Column", {
@@ -22,6 +22,8 @@ describe("Column", () => {
 
         workbook = jasmine.createSpyObj("workbook", ["sharedStrings", "styleSheet"]);
         workbook.styleSheet.and.returnValue(styleSheet);
+
+        verticalPageBreaks = jasmine.createSpyObj("verticalPageBreaks", ["add"]);
 
         existingRows = [
             {
@@ -47,10 +49,11 @@ describe("Column", () => {
             }
         ];
 
-        sheet = jasmine.createSpyObj('sheet', ['cell', 'name', 'workbook', 'forEachExistingRow']);
+        sheet = jasmine.createSpyObj('sheet', ['cell', 'name', 'workbook', 'forEachExistingRow', 'verticalPageBreaks']);
         sheet.cell.and.returnValue('CELL');
         sheet.name.and.returnValue('NAME');
         sheet.workbook.and.returnValue(workbook);
+        sheet.verticalPageBreaks.and.returnValue(verticalPageBreaks);
         sheet.forEachExistingRow.and.callFake(callback => _.forEach(existingRows, callback));
 
         columnNode = {
@@ -224,6 +227,12 @@ describe("Column", () => {
     describe("workbook", () => {
         it("should return the workbook", () => {
             expect(column.workbook()).toBe(workbook);
+        });
+    });
+
+    describe('addPageBreak', () => {
+        it("should add a colBreak and return the column", () => {
+            expect(column.addPageBreak()).toBe(column);
         });
     });
 
