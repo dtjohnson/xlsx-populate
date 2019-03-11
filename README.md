@@ -20,7 +20,9 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
   * [Rich Texts](#rich-texts)
-    + [Notes on how we handle rich texts](#notes-on-how-we-handle-rich-texts)
+    + [Supported styles](#supported-styles)
+    + [Usage](#usage-1)
+    + [Notes](#notes)
   * [Dates](#dates)
   * [Data Validation](#data-validation)
   * [Method Chaining](#method-chaining)
@@ -373,6 +375,13 @@ You can also look up the desired format code in Excel:
 
 ### Rich Texts
 You can read/write rich texts to cells.
+
+#### Supported styles
+`bold`, `italic`, `underline`, `strikethrough`, `subscript`, `fontSize`,
+`fontFamily`, `fontGenericFamily`, `fontScheme`, `fontColor`.
+See the [Style Reference](#style-reference) for the various options.
+
+#### Usage
 You can read and modify rich texts on an existing rich text cell:
 ```js
 // assume A1 is a rich text cell
@@ -386,15 +395,17 @@ richtext.text();
 // loop through each rich text fragment
 for (let i = 0; i < richtext.length; i++) {
     const fragment = richtext.get(i);
-    // get the style
+    // Get the style
     fragment.style('bold');
-    // get many styles
+    // Get many styles
     fragment.style(['bold', 'italic']);
-    // set one style
+    // Set one style
     fragment.style('bold', true);
-    // get the value
+    // Set many styles
+    fragment.style({ 'bold': true, 'italic': true });
+    // Get the value
     fragment.value();
-    // set the value
+    // Set the value
     fragment.value('hello');
 }
 
@@ -410,8 +421,7 @@ How to set a cell to rich texts:
 const RichText = require('xlsx-Populate').RichText;
 const cell = workbook.sheet(0).cell('A1');
 // set a cell value to rich text
-const richtext = new RichText();
-cell.value(richtext)
+cell.value(new RichText());
 
 // add two rich text fragments
 cell.value()
@@ -428,7 +438,7 @@ cell.value().add('text', { bold: true }, 1);
 // add after the last fragment
 cell.value().add('text', { bold: true });
 ```
-#### Notes on how we handle rich texts
+#### Notes
 We make a deep copy of the richtext instance when assign it to a cell, which
 means you can only modify the content of the richtext before calling `cell.value(richtext)`. 
 Any modification to the richtext instance after calling `cell.value(richtext)` will not
@@ -469,7 +479,7 @@ cell1.value() === cell2.value() // returns false
 
 Whenever you call `richtext.add(text, styles, index)`, we will detect if the given `text`
 contains line separators (`\n`, `\r`, `\r\n`), if it does, we will call
-cell.style('wrapText', true) for you. MS Excel needs wrapText to be true
+`cell.style('wrapText', true)` for you. MS Excel needs wrapText to be true
 to have the new lines displayed, otherwise you will see the texts in one line.
 You may also need to set row height to have all lines displayed.
 ```js
