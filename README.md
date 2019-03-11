@@ -517,9 +517,23 @@ const isPrintGridLinesEnabled = sheet.printGridLines(); // Returns false
 ```
 
 ### Page Margins
-Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method.
+Excel requires that all page margins are defined or none at all. To ensure this, please choose an existing or custom preset. See [Sheet.pageMarginsPreset](#Sheet+pageMarginsPreset).
+
 ```js
-// Set top page margin in inches.
+// Get the current preset
+sheet.pageMarginsPreset(); // Returns undefined
+
+// Switch to an existing preset
+sheet.pageMarginsPreset('normal');
+```
+
+Page margins are accessed using the [Sheet.pageMargins](#Sheet+pageMargins) method. If a page margin is not set, the preset will fill in the gaps.
+
+```js
+// Get top margin in inches, note that the current preset is currently set to normal (see above)
+sheet.pageMargins('top'); // Returns 0.75
+
+// Set top page margin in inches
 sheet.pageMargins('top', 1.1);
 
 // Get top page margin in inches.
@@ -864,6 +878,9 @@ An object representing a gradient fill.
 <dt><a href="#FormulaError">FormulaError</a></dt>
 <dd><p>A formula error (e.g. #DIV/0!).</p>
 </dd>
+<dt><a href="#PageBreaks">PageBreaks</a></dt>
+<dd><p>PageBreaks</p>
+</dd>
 <dt><a href="#Range">Range</a></dt>
 <dd><p>A range of cells.</p>
 </dd>
@@ -945,6 +962,7 @@ A cell
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+        * [.addHorizontalPageBreak()](#Cell+addHorizontalPageBreak) ⇒ [<code>Cell</code>](#Cell)
     * _inner_
         * [~tapCallback](#Cell..tapCallback) ⇒ <code>undefined</code>
         * [~thruCallback](#Cell..thruCallback) ⇒ <code>\*</code>
@@ -1280,6 +1298,13 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Cell+addHorizontalPageBreak"></a>
+
+#### cell.addHorizontalPageBreak() ⇒ [<code>Cell</code>](#Cell)
+Append horizontal page break after the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - the cell.  
 <a name="Cell..tapCallback"></a>
 
 #### Cell~tapCallback ⇒ <code>undefined</code>
@@ -1326,6 +1351,7 @@ A column.
     * [.width()](#Column+width) ⇒ <code>undefined</code> \| <code>number</code>
     * [.width(width)](#Column+width) ⇒ [<code>Column</code>](#Column)
     * [.workbook()](#Column+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.addPageBreak()](#Column+addPageBreak) ⇒ [<code>Column</code>](#Column)
 
 <a name="Column+address"></a>
 
@@ -1480,6 +1506,13 @@ Get the parent workbook.
 
 **Kind**: instance method of [<code>Column</code>](#Column)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Column+addPageBreak"></a>
+
+#### column.addPageBreak() ⇒ [<code>Column</code>](#Column)
+Append vertical page break after the column.
+
+**Kind**: instance method of [<code>Column</code>](#Column)  
+**Returns**: [<code>Column</code>](#Column) - the column.  
 <a name="FormulaError"></a>
 
 ### FormulaError
@@ -1548,6 +1581,57 @@ Get the error code.
 \#VALUE! error.
 
 **Kind**: static property of [<code>FormulaError</code>](#FormulaError)  
+<a name="PageBreaks"></a>
+
+### PageBreaks
+PageBreaks
+
+**Kind**: global class  
+
+* [PageBreaks](#PageBreaks)
+    * [.count](#PageBreaks+count) ⇒ <code>number</code>
+    * [.list](#PageBreaks+list) ⇒ <code>Array</code>
+    * [.add(id)](#PageBreaks+add) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+    * [.remove(index)](#PageBreaks+remove) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+
+<a name="PageBreaks+count"></a>
+
+#### pageBreaks.count ⇒ <code>number</code>
+get count of the page-breaks
+
+**Kind**: instance property of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: <code>number</code> - the page-breaks' count  
+<a name="PageBreaks+list"></a>
+
+#### pageBreaks.list ⇒ <code>Array</code>
+get list of page-breaks
+
+**Kind**: instance property of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: <code>Array</code> - list of the page-breaks  
+<a name="PageBreaks+add"></a>
+
+#### pageBreaks.add(id) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+add page-breaks by row/column id
+
+**Kind**: instance method of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - the page-breaks  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>number</code> | row/column id (rowNumber/colNumber) |
+
+<a name="PageBreaks+remove"></a>
+
+#### pageBreaks.remove(index) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+remove page-breaks by index
+
+**Kind**: instance method of [<code>PageBreaks</code>](#PageBreaks)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - the page-breaks  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | index of list |
+
 <a name="Range"></a>
 
 ### Range
@@ -2013,6 +2097,7 @@ A row.
     * [.style(styles)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.style(style)](#Row+style) ⇒ [<code>Cell</code>](#Cell)
     * [.workbook()](#Row+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.addPageBreak()](#Row+addPageBreak) ⇒ [<code>Row</code>](#Row)
 
 <a name="Row+address"></a>
 
@@ -2160,6 +2245,13 @@ Get the parent workbook.
 
 **Kind**: instance method of [<code>Row</code>](#Row)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Row+addPageBreak"></a>
+
+#### row.addPageBreak() ⇒ [<code>Row</code>](#Row)
+Append horizontal page break after the row.
+
+**Kind**: instance method of [<code>Row</code>](#Row)  
+**Returns**: [<code>Row</code>](#Row) - the row.  
 <a name="Sheet"></a>
 
 ### Sheet
@@ -2199,6 +2291,9 @@ A worksheet.
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ [<code>Sheet</code>](#Sheet)
     * [.usedRange()](#Sheet+usedRange) ⇒ [<code>Range</code>](#Range) \| <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ [<code>Workbook</code>](#Workbook)
+    * [.pageBreaks()](#Sheet+pageBreaks) ⇒ <code>Object</code>
+    * [.verticalPageBreaks()](#Sheet+verticalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+    * [.horizontalPageBreaks()](#Sheet+horizontalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2208,10 +2303,13 @@ A worksheet.
     * [.printGridLines(enabled)](#Sheet+printGridLines) ⇒ [<code>Sheet</code>](#Sheet)
     * [.pageMargins(attributeName)](#Sheet+pageMargins) ⇒ <code>number</code>
     * [.pageMargins(attributeName, attributeStringValue)](#Sheet+pageMargins) ⇒ [<code>Sheet</code>](#Sheet)
-    * [.pane()](#Sheet+pane) ⇒ [<code>PaneOptions</code>](#PaneOptions)
-    * [.pane(paneOptions)](#Sheet+pane) ⇒ [<code>Sheet</code>](#Sheet)
-    * [.feezePanes(xSplit, ySplit)](#Sheet+feezePanes) ⇒ [<code>Sheet</code>](#Sheet)
-    * [.feezePanes(topLeftCell)](#Sheet+feezePanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.pageMarginsPreset()](#Sheet+pageMarginsPreset) ⇒ <code>string</code>
+    * [.pageMarginsPreset(presetName)](#Sheet+pageMarginsPreset) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.pageMarginsPreset(presetName, presetAttributes)](#Sheet+pageMarginsPreset) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.panes()](#Sheet+panes) ⇒ [<code>PaneOptions</code>](#PaneOptions)
+    * [.panes(paneOptions)](#Sheet+panes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.freezePanes(xSplit, ySplit)](#Sheet+freezePanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.freezePanes(topLeftCell)](#Sheet+freezePanes) ⇒ [<code>Sheet</code>](#Sheet)
     * [.splitPanes(xSplit, ySplit)](#Sheet+splitPanes) ⇒ [<code>Sheet</code>](#Sheet)
     * [.resetPanes()](#Sheet+resetPanes) ⇒ [<code>Sheet</code>](#Sheet)
 
@@ -2535,6 +2633,27 @@ Gets the parent workbook.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>Workbook</code>](#Workbook) - The parent workbook.  
+<a name="Sheet+pageBreaks"></a>
+
+#### sheet.pageBreaks() ⇒ <code>Object</code>
+Gets all page breaks.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>Object</code> - the object holds both vertical and horizontal PageBreaks.  
+<a name="Sheet+verticalPageBreaks"></a>
+
+#### sheet.verticalPageBreaks() ⇒ [<code>PageBreaks</code>](#PageBreaks)
+Gets the vertical page breaks.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - vertical PageBreaks.  
+<a name="Sheet+horizontalPageBreaks"></a>
+
+#### sheet.horizontalPageBreaks() ⇒ [<code>PageBreaks</code>](#PageBreaks)
+Gets the horizontal page breaks.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>PageBreaks</code>](#PageBreaks) - horizontal PageBreaks.  
 <a name="Sheet+hyperlink"></a>
 
 #### sheet.hyperlink(address) ⇒ <code>string</code> \| <code>undefined</code>
@@ -2600,7 +2719,7 @@ Set the print option given a valid print option attribute and a value.
 | Param | Type | Description |
 | --- | --- | --- |
 | attributeName | <code>string</code> | Attribute name of the printOptions. See get print option for list of valid attributes. |
-| attributeEnabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` then the attribute is removed, otherwise set as a boolean value to enable/disable the print option. |
+| attributeEnabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` or `false` then the attribute is removed, otherwise the print option is enabled. |
 
 <a name="Sheet+printGridLines"></a>
 
@@ -2618,12 +2737,12 @@ Set the print option for the gridLines attribute value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| enabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` then attribute is removed, otherwise set as a boolean value to enable/disable the gridLines. |
+| enabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` or `false` then attribute is removed, otherwise gridLines is enabled. |
 
 <a name="Sheet+pageMargins"></a>
 
 #### sheet.pageMargins(attributeName) ⇒ <code>number</code>
-Get the page margin given a valid attribute name.
+Get the page margin given a valid attribute name.If the value is not yet defined, then it will return the current preset value.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>number</code> - the attribute value.  
@@ -2635,7 +2754,7 @@ Get the page margin given a valid attribute name.
 <a name="Sheet+pageMargins"></a>
 
 #### sheet.pageMargins(attributeName, attributeStringValue) ⇒ [<code>Sheet</code>](#Sheet)
-Set the page margin given a value attribute name and a value.
+Set the page margin (or override the preset) given an attribute name and a value.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
@@ -2643,18 +2762,50 @@ Set the page margin given a value attribute name and a value.
 | Param | Type | Description |
 | --- | --- | --- |
 | attributeName | <code>string</code> | Attribute name of the pageMargins. See get page margin for list of valid attributes. |
-| attributeStringValue | <code>undefined</code> \| <code>number</code> \| <code>string</code> | If the value is `undefined` then the attribute is removed, otherwise set the associated attribute value |
+| attributeStringValue | <code>undefined</code> \| <code>number</code> \| <code>string</code> | If `undefined` then set back to preset value, otherwise, set the given attribute value. |
 
-<a name="Sheet+pane"></a>
+<a name="Sheet+pageMarginsPreset"></a>
 
-#### sheet.pane() ⇒ [<code>PaneOptions</code>](#PaneOptions)
+#### sheet.pageMarginsPreset() ⇒ <code>string</code>
+Page margins preset is a set of page margins associated with a name.The page margin preset acts as a fallback when not explicitly defined by `Sheet.pageMargins`.If a sheet already contains page margins, it attempts to auto-detect, otherwise they are defined as the template preset.If no page margins exist, then the preset is undefined and will not be included in the output of `Sheet.toXmls`.Available presets include: normal, wide, narrow, template.Get the page margins preset name. The registered name of a predefined set of attributes.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> - The preset name.  
+<a name="Sheet+pageMarginsPreset"></a>
+
+#### sheet.pageMarginsPreset(presetName) ⇒ [<code>Sheet</code>](#Sheet)
+Set the page margins preset by name, clearing any existing/temporary attribute values.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| presetName | <code>undefined</code> \| <code>string</code> | The preset name. If `undefined`, page margins will not be included in the output of `Sheet.toXmls`. |
+
+<a name="Sheet+pageMarginsPreset"></a>
+
+#### sheet.pageMarginsPreset(presetName, presetAttributes) ⇒ [<code>Sheet</code>](#Sheet)
+Set a new page margins preset by name and attributes object.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| presetName | <code>string</code> | The preset name. |
+| presetAttributes | <code>object</code> | The preset attributes. |
+
+<a name="Sheet+panes"></a>
+
+#### sheet.panes() ⇒ [<code>PaneOptions</code>](#PaneOptions)
 Gets sheet view pane options
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>PaneOptions</code>](#PaneOptions) - sheet view pane options  
-<a name="Sheet+pane"></a>
+<a name="Sheet+panes"></a>
 
-#### sheet.pane(paneOptions) ⇒ [<code>Sheet</code>](#Sheet)
+#### sheet.panes(paneOptions) ⇒ [<code>Sheet</code>](#Sheet)
 Sets sheet view pane options
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
@@ -2664,9 +2815,9 @@ Sets sheet view pane options
 | --- | --- | --- |
 | paneOptions | [<code>PaneOptions</code>](#PaneOptions) \| <code>null</code> \| <code>undefined</code> | sheet view pane options |
 
-<a name="Sheet+feezePanes"></a>
+<a name="Sheet+freezePanes"></a>
 
-#### sheet.feezePanes(xSplit, ySplit) ⇒ [<code>Sheet</code>](#Sheet)
+#### sheet.freezePanes(xSplit, ySplit) ⇒ [<code>Sheet</code>](#Sheet)
 freezes Panes for this sheet.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
@@ -2677,9 +2828,9 @@ freezes Panes for this sheet.
 | xSplit | <code>number</code> | the number of columns visible in the top pane. |
 | ySplit | <code>number</code> | the number of rows visible in the left pane. |
 
-<a name="Sheet+feezePanes"></a>
+<a name="Sheet+freezePanes"></a>
 
-#### sheet.feezePanes(topLeftCell) ⇒ [<code>Sheet</code>](#Sheet)
+#### sheet.freezePanes(topLeftCell) ⇒ [<code>Sheet</code>](#Sheet)
 freezes Panes for this sheet.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
@@ -2735,6 +2886,7 @@ A workbook.
     * [.property(properties)](#Workbook+property) ⇒ [<code>Workbook</code>](#Workbook)
     * [.properties()](#Workbook+properties) ⇒ <code>CoreProperties</code>
     * [.toFileAsync(path, [opts])](#Workbook+toFileAsync) ⇒ <code>Promise.&lt;undefined&gt;</code>
+    * [.cloneSheet(from, name, [indexOrBeforeSheet])](#Workbook+cloneSheet) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Workbook+activeSheet"></a>
 
@@ -2945,6 +3097,20 @@ Write the workbook to file. (Not supported in browsers.)
 | path | <code>string</code> | The path of the file to write. |
 | [opts] | <code>Object</code> | Options |
 | [opts.password] | <code>string</code> | The password to encrypt the workbook. |
+
+<a name="Workbook+cloneSheet"></a>
+
+#### workbook.cloneSheet(from, name, [indexOrBeforeSheet]) ⇒ [<code>Sheet</code>](#Sheet)
+Add a new sheet to the workbook.**WARN:** this function has limits:  if you clone a sheet with some images or other things link outside the Sheet object, these things in the cloned sheet will be locked when you open in MS Excel app.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The new sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| from | [<code>Sheet</code>](#Sheet) | The sheet to be cloned. |
+| name | <code>string</code> | The name of the new sheet. Must be unique, less than 31 characters, and may not contain the following characters: \ / * [ ] : ? |
+| [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
 <a name="XlsxPopulate"></a>
 

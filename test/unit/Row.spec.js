@@ -4,7 +4,7 @@ const _ = require('lodash');
 const proxyquire = require("proxyquire");
 
 describe("Row", () => {
-    let Row, Cell, row, rowNode, sheet, style, styleSheet, workbook;
+    let Row, Cell, row, rowNode, sheet, style, styleSheet, workbook, horizontalPageBreaks;
 
     beforeEach(() => {
         let i = 1;
@@ -23,7 +23,7 @@ describe("Row", () => {
             '@noCallThru': true
         });
 
-        const Style = class {}
+        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
@@ -35,9 +35,12 @@ describe("Row", () => {
         workbook = jasmine.createSpyObj("workbook", ["sharedStrings", "styleSheet"]);
         workbook.styleSheet.and.returnValue(styleSheet);
 
-        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId', 'forEachExistingColumnNumber']);
+        horizontalPageBreaks = jasmine.createSpyObj("horizontalPageBreaks", ["add"]);
+
+        sheet = jasmine.createSpyObj('sheet', ['name', 'workbook', 'existingColumnStyleId', 'forEachExistingColumnNumber', 'horizontalPageBreaks']);
         sheet.name.and.returnValue('NAME');
         sheet.workbook.and.returnValue(workbook);
+        sheet.horizontalPageBreaks.and.returnValue(horizontalPageBreaks);
         sheet.existingColumnStyleId.and.callFake(columnNumber => columnNumber === 4 ? "STYLE_ID" : undefined);
         sheet.forEachExistingColumnNumber.and.callFake(callback => _.forEach([1, 2, 4], callback));
 
@@ -114,6 +117,14 @@ describe("Row", () => {
             rowNode.attributes.s = 3;
             expect(row.cell('C')).toEqual(jasmine.any(Cell));
             expect(Cell).toHaveBeenCalledWith(row, 3, 3);
+        });
+
+        it("should throw an exception on an index of 0", () => {
+            expect(() => row.cell(0)).toThrowError(RangeError);
+        });
+
+        it("should throw an exception on an index of -1", () => {
+            expect(() => row.cell(-1)).toThrowError(RangeError);
         });
     });
 
@@ -239,6 +250,12 @@ describe("Row", () => {
         });
     });
 
+    describe('addPageBreak', () => {
+        it("should add a rowBreak and return the row", () => {
+            expect(row.addPageBreak()).toBe(row);
+        });
+    });
+
     /* INTERNAL */
 
     describe("clearCellsUsingSharedFormula", () => {
@@ -281,6 +298,14 @@ describe("Row", () => {
             expect(row.hasCell(1)).toBe(false);
             expect(row.hasCell(2)).toBe(true);
             expect(row.hasCell(3)).toBe(false);
+        });
+
+        it("should throw an exception on an index of 0", () => {
+            expect(() => row.hasCell(0)).toThrowError(RangeError);
+        });
+
+        it("should throw an exception on an index of -1", () => {
+            expect(() => row.hasCell(-1)).toThrowError(RangeError);
         });
     });
 
