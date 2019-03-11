@@ -20,6 +20,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Find and Replace](#find-and-replace)
   * [Styles](#styles)
   * [Rich Texts](#rich-texts)
+    + [Notes on how we handle rich texts](#notes-on-how-we-handle-rich-texts)
   * [Dates](#dates)
   * [Data Validation](#data-validation)
   * [Method Chaining](#method-chaining)
@@ -372,42 +373,111 @@ You can also look up the desired format code in Excel:
 
 ### Rich Texts
 You can read/write rich texts to cells.
+You can read and modify rich texts on an existing rich text cell:
 ```js
-const RichTexts = require('xlsx-Populate').RichTexts;
-
+// assume A1 is a rich text cell
+const RichText = require('xlsx-Populate').RichText;
 const cell = workbook.sheet(0).cell('A1');
-// set value to rich text
-const richtext = new RichTexts(cell);
+cell.value() instanceof RichText // returns true
+const richtext = cell.value();
+// get the concatenate text
+richtext.text();
+
+// loop through each rich text fragment
+for (let i = 0; i < richtext.length; i++) {
+    const fragment = richtext.get(i);
+    // get the style
+    fragment.style('bold');
+    // get many styles
+    fragment.style(['bold', 'italic']);
+    // set one style
+    fragment.style('bold', true);
+    // get the value
+    fragment.value();
+    // set the value
+    fragment.value('hello');
+}
+
+// remove the first rich text fragment
+richtext.remove(0);
+
+// clear this rich texts
+richtext.clear();
+```
+
+How to set a cell to rich texts:
+```js
+const RichText = require('xlsx-Populate').RichText;
+const cell = workbook.sheet(0).cell('A1');
+// set a cell value to rich text
+const richtext = new RichText();
 cell.value(richtext)
 
-// create new cell with rich text
-richtext
-    // support all line separators
-    .add('123\n', { italic: true, fontColor: '123456' })
-    .add('456\r', { italic: true, fontColor: '654321' })
-    .add('789\r\n', { italic: true, fontColor: 'ff0000' })
-    .add('10\n11\r12', { italic: true, fontColor: '00ff00' });
+// add two rich text fragments
+cell.value()
+    .add('hello ', { italic: true, bold: true })
+    .add('world!', { fontColor: 'FF0000' });
+````
+
+You can specify the index when adding rich text fragment.
+```js
+// add before the first fragment
+cell.value().add('text', { bold: true }, 0);
+// add before the second fragment
+cell.value().add('text', { bold: true }, 1);
+// add after the last fragment
+cell.value().add('text', { bold: true });
+```
+#### Notes on how we handle rich texts
+We make a deep copy of the richtext instance when assign it to a cell, which
+means you can only modify the content of the richtext before calling `cell.value(richtext)`. 
+Any modification to the richtext instance after calling `cell.value(richtext)` will not
+save to the cell. i.e.
+```js
+const richtext = new RichText();
+richtext.add('hello');
+cell.value(richtext);
+cell.value().text(); // returns 'hello'
+
+richtext.add(' world')
+richtext.text(); // returns 'hello world' 
+cell.value().text(); // returns 'hello'
+cell.value() === richtext; // returns false
+
+cell.value().add(' world');
+cell.value().text(); // returns 'hello world'
+```
+
+This means you can create a rich text instance and assign it to any cells! Each cell does
+not share the same instance but creates a deep copy of the instance.
+```js
+const sheet = workbook.sheet(0);
+const richtext = new RichText();
+richtext.add('hello');
+const range = sheet.range("A1:C3");
+range.value(richtext);
+// they do not share the same instance
+sheet.cell('A1').value() === sheet.cell('C1').value() // returns false
+```
+
+You can get the rich text from a cell and set it to anoher cell.
+```js
+const richtext = cell1.value();
+cell2.value(richtext);
+cell1.value() === cell2.value() // returns false
+```
+
+Whenever you call `richtext.add(text, styles, index)`, we will detect if the given `text`
+contains line separators (`\n`, `\r`, `\r\n`), if it does, we will call
+cell.style('wrapText', true) for you. MS Excel needs wrapText to be true
+to have the new lines displayed, otherwise you will see the texts in one line.
+You may also need to set row height to have all lines displayed.
+```js
+cell.value()
+    // it support all line separators
+    .add('123\n456\r789\r\n10', { italic: true, fontColor: '123456' })
 // remember to set height to show the whole row
 workbook.sheet(0).row(1).height(100);
-
-// add to the first
-richtext.add('to the first!', {italic: true, fontColor: 'FF123456'}, 0);
-
-// add to the second
-richtext.add('to the second!', {}, 1);
-
-// get concatenate text
-// returns 'to the first!123\r\n456\r\n789\r\n10\r\n11\r\n12to the last!'
-richtext.text;
-
-// modify a rich text cell
-cell.value().get(0).style('fontFamily', 'Calibri')
-
-// read multiple styles
-cell.value().get(0).style(['fontFamily', 'italic', 'bold'])
-
-// delete rich text fragment
-cell.value().remove(0);
 ```
 
 ### Dates
@@ -898,11 +968,11 @@ An object representing a gradient fill.
 <dt><a href="#Range">Range</a></dt>
 <dd><p>A range of cells.</p>
 </dd>
+<dt><a href="#RichText">RichText</a></dt>
+<dd><p>A RichText class that contains many <a href="#RichTextFragment">RichTextFragment</a>.</p>
+</dd>
 <dt><a href="#RichTextFragment">RichTextFragment</a></dt>
 <dd><p>A Rich text fragment.</p>
-</dd>
-<dt><a href="#RichTexts">RichTexts</a></dt>
-<dd><p>A RichTexts class that contains many <a href="#RichTextFragment">RichTextFragment</a>.</p>
 </dd>
 <dt><a href="#Row">Row</a></dt>
 <dd><p>A row.</p>
@@ -970,7 +1040,7 @@ A cell
         * [.style(name)](#Cell+style) ⇒ [<code>Range</code>](#Range)
         * [.style(styles)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
         * [.style(style)](#Cell+style) ⇒ [<code>Cell</code>](#Cell)
-        * [.value()](#Cell+value) ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
+        * [.value()](#Cell+value) ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| [<code>RichText</code>](#RichText) \| <code>undefined</code>
         * [.value(value)](#Cell+value) ⇒ [<code>Cell</code>](#Cell)
         * [.value()](#Cell+value) ⇒ [<code>Range</code>](#Range)
         * [.workbook()](#Cell+workbook) ⇒ [<code>Workbook</code>](#Workbook)
@@ -1273,11 +1343,11 @@ Sets to a specific style
 
 <a name="Cell+value"></a>
 
-#### cell.value() ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code>
+#### cell.value() ⇒ <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| [<code>RichText</code>](#RichText) \| <code>undefined</code>
 Gets the value of the cell.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| <code>undefined</code> - The value of the cell.  
+**Returns**: <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>Date</code> \| [<code>RichText</code>](#RichText) \| <code>undefined</code> - The value of the cell.  
 <a name="Cell+value"></a>
 
 #### cell.value(value) ⇒ [<code>Cell</code>](#Cell)
@@ -1288,7 +1358,7 @@ Sets the value of the cell.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>null</code> \| <code>undefined</code> | The value to set. |
+| value | <code>string</code> \| <code>boolean</code> \| <code>number</code> \| <code>null</code> \| <code>undefined</code> \| [<code>RichText</code>](#RichText) | The value to set. |
 
 <a name="Cell+value"></a>
 
@@ -2020,6 +2090,125 @@ Callback used by thru.
 | --- | --- | --- |
 | range | [<code>Range</code>](#Range) | The range. |
 
+<a name="RichText"></a>
+
+### RichText
+A RichText class that contains many [RichTextFragment](#RichTextFragment).
+
+**Kind**: global class  
+
+* [RichText](#RichText)
+    * [new RichText([node])](#new_RichText_new)
+    * [.cell](#RichText+cell) ⇒ [<code>Cell</code>](#Cell) \| <code>undefined</code>
+    * [.length](#RichText+length) ⇒ <code>number</code>
+    * [.text()](#RichText+text) ⇒ <code>string</code>
+    * [.getInstanceWithCellRef(cell)](#RichText+getInstanceWithCellRef) ⇒ [<code>RichText</code>](#RichText)
+    * [.copy([cell])](#RichText+copy) ⇒ [<code>RichText</code>](#RichText)
+    * [.get(index)](#RichText+get) ⇒ [<code>RichTextFragment</code>](#RichTextFragment)
+    * [.remove(index)](#RichText+remove) ⇒ [<code>RichText</code>](#RichText)
+    * [.add(text, [styles], [index])](#RichText+add) ⇒ [<code>RichText</code>](#RichText)
+    * [.clear()](#RichText+clear) ⇒ [<code>RichText</code>](#RichText)
+
+<a name="new_RichText_new"></a>
+
+#### new RichText([node])
+Creates a new instance of RichText. If you get the instance by calling `Cell.value()`,adding a text contains line separator will trigger [Cell.style](Cell.style)('wrapText', true), whichwill make MS Excel show the new line. i.e. In MS Excel, Tap "alt+Enter" in a cell, the cellwill set wrap text to true automatically.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [node] | <code>undefined</code> \| <code>null</code> \| <code>Object</code> | The node stored in the shared string |
+
+<a name="RichText+cell"></a>
+
+#### richText.cell ⇒ [<code>Cell</code>](#Cell) \| <code>undefined</code>
+Gets which cell this [RichText](#RichText) instance belongs to.
+
+**Kind**: instance property of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>Cell</code>](#Cell) \| <code>undefined</code> - The cell this instance belongs to.  
+<a name="RichText+length"></a>
+
+#### richText.length ⇒ <code>number</code>
+Gets the how many rich text fragment this [RichText](#RichText) instance contains
+
+**Kind**: instance property of [<code>RichText</code>](#RichText)  
+**Returns**: <code>number</code> - The number of fragments this [RichText](#RichText) instance has.  
+<a name="RichText+text"></a>
+
+#### richText.text() ⇒ <code>string</code>
+Gets concatenated text without styles.
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: <code>string</code> - concatenated text  
+<a name="RichText+getInstanceWithCellRef"></a>
+
+#### richText.getInstanceWithCellRef(cell) ⇒ [<code>RichText</code>](#RichText)
+Gets the instance with cell reference defined.
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>RichText</code>](#RichText) - The instance with cell reference defined.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| cell | [<code>Cell</code>](#Cell) | Cell reference. |
+
+<a name="RichText+copy"></a>
+
+#### richText.copy([cell]) ⇒ [<code>RichText</code>](#RichText)
+Returns a deep copy of this instance.If cell reference is provided, it checks line separators and calls`cell.style('wrapText', true)` when needed.
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>RichText</code>](#RichText) - A deep copied instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [cell] | [<code>Cell</code>](#Cell) \| <code>undefined</code> | The cell reference. |
+
+<a name="RichText+get"></a>
+
+#### richText.get(index) ⇒ [<code>RichTextFragment</code>](#RichTextFragment)
+Gets the ith fragment of this [RichText](#RichText) instance.
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>RichTextFragment</code>](#RichTextFragment) - A rich text fragment  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | The index |
+
+<a name="RichText+remove"></a>
+
+#### richText.remove(index) ⇒ [<code>RichText</code>](#RichText)
+Removes a rich text fragment. This instance will be mutated.
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>RichText</code>](#RichText) - the rich text instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | the index of the fragment to remove |
+
+<a name="RichText+add"></a>
+
+#### richText.add(text, [styles], [index]) ⇒ [<code>RichText</code>](#RichText)
+Adds a rich text fragment to the last or after the given index. This instance will be mutated.
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>RichText</code>](#RichText) - the rich text instance  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| text | <code>string</code> | the text |
+| [styles] | <code>Object</code> | the styles js object, i.e. {fontSize: 12} |
+| [index] | <code>number</code> \| <code>undefined</code> \| <code>null</code> | the index of the fragment to add |
+
+<a name="RichText+clear"></a>
+
+#### richText.clear() ⇒ [<code>RichText</code>](#RichText)
+Clears this rich text
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
+**Returns**: [<code>RichText</code>](#RichText) - the rich text instance  
 <a name="RichTextFragment"></a>
 
 ### RichTextFragment
@@ -2028,7 +2217,7 @@ A Rich text fragment.
 **Kind**: global class  
 
 * [RichTextFragment](#RichTextFragment)
-    * [new RichTextFragment(value, [styles], [cell])](#new_RichTextFragment_new)
+    * [new RichTextFragment(value, [styles], richText)](#new_RichTextFragment_new)
     * [.value()](#RichTextFragment+value) ⇒ <code>string</code>
     * [.value(text)](#RichTextFragment+value) ⇒ [<code>RichTextFragment</code>](#RichTextFragment)
     * [.style(name)](#RichTextFragment+style) ⇒ <code>\*</code>
@@ -2038,15 +2227,15 @@ A Rich text fragment.
 
 <a name="new_RichTextFragment_new"></a>
 
-#### new RichTextFragment(value, [styles], [cell])
+#### new RichTextFragment(value, [styles], richText)
 Creates a new instance of RichTextFragment.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>string</code> | text value |
-| [styles] | <code>object</code> \| <code>undefined</code> \| <code>null</code> | multiple styles |
-| [cell] | [<code>Cell</code>](#Cell) \| <code>undefined</code> \| <code>null</code> | the cell that display the rich text |
+| value | <code>string</code> \| <code>Object</code> | Text value or XML node |
+| [styles] | <code>object</code> \| <code>undefined</code> \| <code>null</code> | Multiple styles. |
+| richText | [<code>RichText</code>](#RichText) | The rich text instance where this fragment belongs to. |
 
 <a name="RichTextFragment+value"></a>
 
@@ -2116,113 +2305,6 @@ Sets multiple styles.
 | --- | --- | --- |
 | styles | <code>object.&lt;string, \*&gt;</code> | Object whose keys are the style names and values are the styles to set. |
 
-<a name="RichTexts"></a>
-
-### RichTexts
-A RichTexts class that contains many [RichTextFragment](#RichTextFragment).
-
-**Kind**: global class  
-
-* [RichTexts](#RichTexts)
-    * [new RichTexts([cell], [node])](#new_RichTexts_new)
-    * [.cell](#RichTexts+cell) ⇒ [<code>Cell</code>](#Cell)
-    * [.cell](#RichTexts+cell)
-    * [.length](#RichTexts+length) ⇒ <code>number</code>
-    * [.text](#RichTexts+text) ⇒ <code>string</code>
-    * [.get(index)](#RichTexts+get) ⇒ [<code>RichTextFragment</code>](#RichTextFragment)
-    * [.remove(index)](#RichTexts+remove) ⇒ [<code>RichTexts</code>](#RichTexts)
-    * [.add(text, [styles], [index])](#RichTexts+add) ⇒ [<code>RichTexts</code>](#RichTexts)
-    * [.clear()](#RichTexts+clear) ⇒ [<code>RichTexts</code>](#RichTexts)
-
-<a name="new_RichTexts_new"></a>
-
-#### new RichTexts([cell], [node])
-Creates a new instance of RichTexts. If cell is provided, adding a [RichTextFragment](#RichTextFragment) withtext contains line separator will trigger [Cell.style](Cell.style)('wrapText', true), whichwill make MS Excel show the new line. i.e. In MS Excel, Tap "alt+Enter" in a cell, the cellwill set wrap text to true automatically. You need to manually set wrapText=true if cellis not provided.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [cell] | [<code>Cell</code>](#Cell) \| <code>undefined</code> | The cell that contains this rich text |
-| [node] | <code>undefined</code> \| <code>null</code> \| <code>Object</code> | The node stored in the shared string |
-
-<a name="RichTexts+cell"></a>
-
-#### richTexts.cell ⇒ [<code>Cell</code>](#Cell)
-Gets which cell this [RichTexts](#RichTexts) instance belongs to.
-
-**Kind**: instance property of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: [<code>Cell</code>](#Cell) - The cell this instance belongs to.  
-<a name="RichTexts+cell"></a>
-
-#### richTexts.cell
-Sets which cell this [RichTexts](#RichTexts) instance belongs to.
-
-**Kind**: instance property of [<code>RichTexts</code>](#RichTexts)  
-**See**: [RichTexts](#RichTexts)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cell | [<code>Cell</code>](#Cell) | The cell this instance should belong to. |
-
-<a name="RichTexts+length"></a>
-
-#### richTexts.length ⇒ <code>number</code>
-Gets the how many rich text fragment this [RichTexts](#RichTexts) instance contains
-
-**Kind**: instance property of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: <code>number</code> - The number of fragments this [RichTexts](#RichTexts) instance has.  
-<a name="RichTexts+text"></a>
-
-#### richTexts.text ⇒ <code>string</code>
-Gets concatenated text without styles.
-
-**Kind**: instance property of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: <code>string</code> - concatenated text  
-<a name="RichTexts+get"></a>
-
-#### richTexts.get(index) ⇒ [<code>RichTextFragment</code>](#RichTextFragment)
-Gets the ith fragment of this [RichTexts](#RichTexts) instance.
-
-**Kind**: instance method of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: [<code>RichTextFragment</code>](#RichTextFragment) - A rich text fragment  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | The index |
-
-<a name="RichTexts+remove"></a>
-
-#### richTexts.remove(index) ⇒ [<code>RichTexts</code>](#RichTexts)
-Removes a rich text fragment. This instance will be mutated.
-
-**Kind**: instance method of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: [<code>RichTexts</code>](#RichTexts) - the rich text instance  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| index | <code>number</code> | the index of the fragment to remove |
-
-<a name="RichTexts+add"></a>
-
-#### richTexts.add(text, [styles], [index]) ⇒ [<code>RichTexts</code>](#RichTexts)
-Adds a rich text fragment to the last or after the given index. This instance will be mutated.
-
-**Kind**: instance method of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: [<code>RichTexts</code>](#RichTexts) - the rich text instance  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| text | <code>string</code> | the text |
-| [styles] | <code>Object</code> | the styles js object, i.e. {fontSize: 12} |
-| [index] | <code>number</code> \| <code>undefined</code> \| <code>null</code> | the index of the fragment to add |
-
-<a name="RichTexts+clear"></a>
-
-#### richTexts.clear() ⇒ [<code>RichTexts</code>](#RichTexts)
-Clears this rich text
-
-**Kind**: instance method of [<code>RichTexts</code>](#RichTexts)  
-**Returns**: [<code>RichTexts</code>](#RichTexts) - the rich text instance  
 <a name="Row"></a>
 
 ### Row
@@ -3152,7 +3234,7 @@ Write the workbook to file. (Not supported in browsers.)
     * [.Promise](#XlsxPopulate.Promise) : <code>Promise</code>
     * [.MIME_TYPE](#XlsxPopulate.MIME_TYPE) : <code>string</code>
     * [.FormulaError](#XlsxPopulate.FormulaError) : [<code>FormulaError</code>](#FormulaError)
-    * [.RichTexts](#XlsxPopulate.RichTexts) : [<code>RichTexts</code>](#RichTexts)
+    * [.RichText](#XlsxPopulate.RichText) : [<code>RichText</code>](#RichText)
     * [.dateToNumber(date)](#XlsxPopulate.dateToNumber) ⇒ <code>number</code>
     * [.fromBlankAsync()](#XlsxPopulate.fromBlankAsync) ⇒ [<code>Promise.&lt;Workbook&gt;</code>](#Workbook)
     * [.fromDataAsync(data, [opts])](#XlsxPopulate.fromDataAsync) ⇒ [<code>Promise.&lt;Workbook&gt;</code>](#Workbook)
@@ -3177,9 +3259,9 @@ The XLSX mime type.
 Formula error class.
 
 **Kind**: static property of [<code>XlsxPopulate</code>](#XlsxPopulate)  
-<a name="XlsxPopulate.RichTexts"></a>
+<a name="XlsxPopulate.RichText"></a>
 
-#### XlsxPopulate.RichTexts : [<code>RichTexts</code>](#RichTexts)
+#### XlsxPopulate.RichText : [<code>RichText</code>](#RichText)
 RichTexts class
 
 **Kind**: static property of [<code>XlsxPopulate</code>](#XlsxPopulate)  

@@ -1,11 +1,10 @@
 "use strict";
-const RichTexts = require("../../../lib/XlsxPopulate").RichTexts;
+const RichText = require("../../../lib/XlsxPopulate").RichText;
 
 module.exports = workbook => {
     const sheet = workbook.sheet(0);
     const cell = sheet.cell('A1');
-    const rt = new RichTexts(cell);
-    cell.value(rt);
+    const rt = new RichText();
     rt.add('test', { bold: true, fontFamily: 'Arial' })
         .add('123\n', { italic: true, fontColor: 'FF0101' })
         .add('456\r', { underline: true })
@@ -14,4 +13,5 @@ module.exports = workbook => {
     rt.add('hello');
     rt.remove(5);
     rt.add('hello', {}, 0);
+    cell.value(rt);
 };

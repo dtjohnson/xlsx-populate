@@ -341,42 +341,111 @@ You can also look up the desired format code in Excel:
 
 ### Rich Texts
 You can read/write rich texts to cells.
+You can read and modify rich texts on an existing rich text cell:
 ```js
-const RichTexts = require('xlsx-Populate').RichTexts;
-
+// assume A1 is a rich text cell
+const RichText = require('xlsx-Populate').RichText;
 const cell = workbook.sheet(0).cell('A1');
-// set value to rich text
-const richtext = new RichTexts(cell);
+cell.value() instanceof RichText // returns true
+const richtext = cell.value();
+// get the concatenate text
+richtext.text();
+
+// loop through each rich text fragment
+for (let i = 0; i < richtext.length; i++) {
+    const fragment = richtext.get(i);
+    // get the style
+    fragment.style('bold');
+    // get many styles
+    fragment.style(['bold', 'italic']);
+    // set one style
+    fragment.style('bold', true);
+    // get the value
+    fragment.value();
+    // set the value
+    fragment.value('hello');
+}
+
+// remove the first rich text fragment
+richtext.remove(0);
+
+// clear this rich texts
+richtext.clear();
+```
+
+How to set a cell to rich texts:
+```js
+const RichText = require('xlsx-Populate').RichText;
+const cell = workbook.sheet(0).cell('A1');
+// set a cell value to rich text
+const richtext = new RichText();
 cell.value(richtext)
 
-// create new cell with rich text
-richtext
-    // support all line separators
-    .add('123\n', { italic: true, fontColor: '123456' })
-    .add('456\r', { italic: true, fontColor: '654321' })
-    .add('789\r\n', { italic: true, fontColor: 'ff0000' })
-    .add('10\n11\r12', { italic: true, fontColor: '00ff00' });
+// add two rich text fragments
+cell.value()
+    .add('hello ', { italic: true, bold: true })
+    .add('world!', { fontColor: 'FF0000' });
+````
+
+You can specify the index when adding rich text fragment.
+```js
+// add before the first fragment
+cell.value().add('text', { bold: true }, 0);
+// add before the second fragment
+cell.value().add('text', { bold: true }, 1);
+// add after the last fragment
+cell.value().add('text', { bold: true });
+```
+#### Notes on how we handle rich texts
+We make a deep copy of the richtext instance when assign it to a cell, which
+means you can only modify the content of the richtext before calling `cell.value(richtext)`. 
+Any modification to the richtext instance after calling `cell.value(richtext)` will not
+save to the cell. i.e.
+```js
+const richtext = new RichText();
+richtext.add('hello');
+cell.value(richtext);
+cell.value().text(); // returns 'hello'
+
+richtext.add(' world')
+richtext.text(); // returns 'hello world' 
+cell.value().text(); // returns 'hello'
+cell.value() === richtext; // returns false
+
+cell.value().add(' world');
+cell.value().text(); // returns 'hello world'
+```
+
+This means you can create a rich text instance and assign it to any cells! Each cell does
+not share the same instance but creates a deep copy of the instance.
+```js
+const sheet = workbook.sheet(0);
+const richtext = new RichText();
+richtext.add('hello');
+const range = sheet.range("A1:C3");
+range.value(richtext);
+// they do not share the same instance
+sheet.cell('A1').value() === sheet.cell('C1').value() // returns false
+```
+
+You can get the rich text from a cell and set it to anoher cell.
+```js
+const richtext = cell1.value();
+cell2.value(richtext);
+cell1.value() === cell2.value() // returns false
+```
+
+Whenever you call `richtext.add(text, styles, index)`, we will detect if the given `text`
+contains line separators (`\n`, `\r`, `\r\n`), if it does, we will call
+cell.style('wrapText', true) for you. MS Excel needs wrapText to be true
+to have the new lines displayed, otherwise you will see the texts in one line.
+You may also need to set row height to have all lines displayed.
+```js
+cell.value()
+    // it support all line separators
+    .add('123\n456\r789\r\n10', { italic: true, fontColor: '123456' })
 // remember to set height to show the whole row
 workbook.sheet(0).row(1).height(100);
-
-// add to the first
-richtext.add('to the first!', {italic: true, fontColor: 'FF123456'}, 0);
-
-// add to the second
-richtext.add('to the second!', {}, 1);
-
-// get concatenate text
-// returns 'to the first!123\r\n456\r\n789\r\n10\r\n11\r\n12to the last!'
-richtext.text;
-
-// modify a rich text cell
-cell.value().get(0).style('fontFamily', 'Calibri')
-
-// read multiple styles
-cell.value().get(0).style(['fontFamily', 'italic', 'bold'])
-
-// delete rich text fragment
-cell.value().remove(0);
 ```
 
 ### Dates

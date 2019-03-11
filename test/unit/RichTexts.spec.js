@@ -1,10 +1,10 @@
 "use strict";
 
 const XlsxPoplate = require('../../lib/XlsxPopulate');
-const RichTexts = require('../../lib/RichTexts');
+const RichText = require('../../lib/RichText');
 const RichTextFragment = require('../../lib/RichTextFragment');
 
-describe("RichTexts", () => {
+describe("RichText", () => {
     let cell, workbook, cell2, cell3;
 
     beforeEach(done => {
@@ -19,14 +19,14 @@ describe("RichTexts", () => {
     });
 
     it('global export', () => {
-        expect(RichTexts === XlsxPoplate.RichTexts).toBe(true);
+        expect(RichText === XlsxPoplate.RichText).toBe(true);
     });
 
-    describe("add/get with cell provided", () => {
+    describe("add/get", () => {
         it("should add and get normal text", () => {
-            const rt = new RichTexts(cell);
+            const rt = new RichText();
             cell.value(rt);
-            expect(cell.value() instanceof RichTexts).toBe(true);
+            expect(cell.value() instanceof RichText).toBe(true);
             rt.add('hello');
             rt.add('hello2');
             expect(rt.length).toBe(2);
@@ -35,82 +35,100 @@ describe("RichTexts", () => {
         });
 
         it("should transfer line separator to \r\n", () => {
-            const rt = new RichTexts(cell);
-            cell.value(rt);
+            const rt = new RichText();
             rt.add('hello\n');
             rt.add('hel\r\nlo2');
             rt.add('hel\rlo2');
+            cell.value(rt);
             expect(rt.get(0).value()).toBe('hello\r\n');
             expect(rt.get(1).value()).toBe('hel\r\nlo2');
             expect(rt.get(2).value()).toBe('hel\r\nlo2');
         });
 
         it("should set wrapText to true", () => {
-            const rt = new RichTexts(cell);
-            cell.value(rt);
+            const rt = new RichText();
             rt.add('hello\n');
+            cell.value(rt);
             expect(cell.style('wrapText')).toBe(true);
         });
 
-        it("should set bold", () => {
-            const rt = new RichTexts(cell);
-            cell.value(rt);
+        it("should set style", () => {
+            const rt = new RichText();
             rt.add('hello\n', { bold: true });
+            cell.value(rt);
             expect(rt.get(0).style('bold')).toBe(true);
         });
     });
 
-    describe("add/get without cell provided", () => {
-        it("should add and get normal text", () => {
-            const rt = new RichTexts();
-            rt.add('hello');
-            rt.add('hello2');
-            expect(rt.length).toBe(2);
-            expect(rt.get(0).value()).toBe('hello');
-            expect(rt.get(1).value()).toBe('hello2');
-        });
-
-        it("should transfer line separator to \r\n", () => {
-            const rt = new RichTexts();
-            rt.add('hello\n');
-            rt.add('hel\r\nlo2');
-            rt.add('hel\rlo2');
-            expect(rt.get(0).value()).toBe('hello\r\n');
-            expect(rt.get(1).value()).toBe('hel\r\nlo2');
-            expect(rt.get(2).value()).toBe('hel\r\nlo2');
-        });
-
-        it("should set bold", () => {
-            const rt = new RichTexts();
-            rt.add('hello\n', { bold: true });
-            expect(rt.get(0).style('bold')).toBe(true);
-        });
+    it("should clear the rich text", () => {
+        const rt = new RichText();
+        rt.add('hello');
+        rt.clear();
+        expect(rt.text()).toBe('');
     });
 
     it("should get concatenated text", () => {
-        const rt = new RichTexts(cell);
+        const rt = new RichText();
         rt.add('hello')
             .add(' I', { fontColor: 'FF0000FF' })
             .add("'m \n ")
             .add('lester');
 
-        expect(rt.text).toBe("hello I'm \r\n lester");
+        expect(rt.text()).toBe("hello I'm \r\n lester");
     });
 
     describe("change related cell", () => {
-        it("should change related cell", () => {
-            const rt = new RichTexts(cell);
-            rt.add('hello');
-            expect(rt.cell).toBe(cell);
-            rt.cell = cell2;
-            expect(rt.cell).toBe(cell2);
+        it("should set wrapText to true in the new cell", () => {
+            const rt = new RichText();
+            rt.add('hello\n');
+            cell.value(rt);
+            expect(cell.style('wrapText')).toBe(true);
+        });
+    });
+
+    describe('Cell.value', () => {
+        it('should assign a deep copy of rich text instance', () => {
+            const rt = new RichText();
+            rt.add('string\n');
+            cell.value(rt);
+            cell2.value(rt);
+            const value1 = cell.value(), value2 = cell2.value();
+            expect(value1).not.toBe(rt);
+            expect(value2).not.toBe(rt);
+            expect(value1).not.toBe(value2);
+
+            value1.add('test');
+            expect(cell.value().text()).toBe('string\r\ntest');
+            expect(cell2.value().text()).toBe('string\r\n');
         });
 
-        it("should set wrapText to true in the new cell", () => {
-            const rt = new RichTexts(cell);
-            rt.add('hello\n');
-            rt.cell = cell2;
-            expect(cell2.style('wrapText')).toBe(true);
+        it('should get instance with cell reference', () => {
+            const rt = new RichText();
+            rt.add('string');
+            cell.value(rt);
+            expect(cell.value().cell).toBe(cell);
+        });
+
+        it('should re-assign cell reference', () => {
+            const rt = new RichText();
+            rt.add('string');
+            cell.value(rt);
+            expect(cell.value().cell).toBe(cell);
+            const value = cell.value();
+            cell2.value(value);
+            expect(cell2.value().cell).toBe(cell2);
+        });
+    });
+
+    describe('Sheet.range', () => {
+        it('should set range of rich texts', () => {
+            const rt = new RichText();
+            rt.add('string');
+            workbook.sheet(0).range('A1:C3').value(rt);
+            expect(cell.value().cell).toBe(cell);
+            expect(cell.value().text()).toBe('string');
+            expect(cell.value()).not.toBe(rt);
+            expect(cell.value()).not.toBe(cell2.value());
         });
     });
 
