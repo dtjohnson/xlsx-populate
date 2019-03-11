@@ -1,0 +1,23 @@
+{
+  "sheet1": {
+    "xSplit": 1,
+    "ySplit": 1,
+    "topLeftCell": "B2",
+    "activePane": "bottomRight",
+    "state": "frozen"
+  },
+  "sheet2": {
+    "xSplit": 4248,
+    "ySplit": 1440,
+    "topLeftCell": "E5",
+    "activePane": "bottomRight",
+    "state": "split"
+  },
+  "sheet3": {
+    "xSplit": 4,
+    "ySplit": 4,
+    "topLeftCell": "E5",
+    "activePane": "bottomRight",
+    "state": "frozenSplit"
+  }
+}
