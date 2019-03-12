@@ -1,0 +1,44 @@
+{
+  "sheet1": {
+    "FreezePanes": true,
+    "Split": true,
+    "SplitColumn": 1,
+    "SplitRow": 1
+  },
+  "sheet2": {
+    "FreezePanes": true,
+    "Split": true,
+    "SplitColumn": 0,
+    "SplitRow": 1
+  },
+  "sheet3": {
+    "FreezePanes": true,
+    "Split": true,
+    "SplitColumn": 1,
+    "SplitRow": 0
+  },
+  "sheet4": {
+    "FreezePanes": true,
+    "Split": true,
+    "SplitColumn": 1,
+    "SplitRow": 1
+  },
+  "sheet5": {
+    "FreezePanes": true,
+    "Split": true,
+    "SplitColumn": 1,
+    "SplitRow": 0
+  },
+  "sheet6": {
+    "FreezePanes": true,
+    "Split": true,
+    "SplitColumn": 0,
+    "SplitRow": 1
+  },
+  "sheet7": {
+    "Split": true,
+    "FreezePanes": false,
+    "SplitColumn": 2,
+    "SplitRow": 6
+  }
+}
