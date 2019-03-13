@@ -359,6 +359,20 @@ describe("Sheet", () => {
             expect(sheet.name("a new name")).toBe(sheet);
             expect(sheet.name()).toBe("a new name");
         });
+
+        it("sheet name should be a string", () => {
+            idNode = {
+                name: 'sheet',
+                attributes: {
+                    name: 1,
+                    sheetId: '1',
+                    'r:id': 'rId1'
+                },
+                children: []
+            };
+            sheet = new Sheet(workbook, idNode, sheetNode);
+            expect(sheet.name()).toBe("1");
+        });
     });
 
     describe("range", () => {
