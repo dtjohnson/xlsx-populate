@@ -29,6 +29,7 @@ Excel XLSX parser/generator written in JavaScript with Node.js and browser suppo
   * [Hyperlinks](#hyperlinks)
   * [Print Options](#print-options)
   * [Page Margins](#page-margins)
+  * [SheetView Panes](#sheetview-panes)
   * [Serving from Express](#serving-from-express)
   * [Browser Usage](#browser-usage)
   * [Promises](#promises)
@@ -660,6 +661,31 @@ sheet.pageMargins('top', 1.1);
 const topPageMarginInInches = sheet.pageMargins('top'); // Returns 1.1
 ```
 
+### SheetView Panes
+SheetView Panes are accessed using the [Sheet.panes](#Sheet+panes) method.
+For convenience, we have [Sheet.freezePanes](#Sheet+freezePanes),
+[Sheet.splitPanes](#Sheet+splitPanes), [Sheet.resetPanes](#Sheet+resetPanes),
+and type [PaneOptions](#paneoptions--object).
+```js
+// access Pane options
+sheet.panes(); // return PaneOptions Object
+
+// manually Set Pane options, WARNING: setting wrong options may result in excel fails to open.
+const paneOptions = { state: 'frozen', topLeftCell: 'B2', xSplit: 1, ySplit: 1, activePane: 'bottomRight' }
+sheet.panes(paneOptions); // return PaneOptions Object
+
+// freeze panes (freeze first column and first two rows)
+sheet.freezePanes(1, 2);
+// OR
+sheet.freezePanes('B3');
+
+// split panes (Horizontal Split Position: 1000 / 20 pt, Vertical Split Position: 2000 / 20 pt)
+sheet.splitPanes(1000, 2000);
+
+// reset to normal panes (no freeze panes and split panes)
+sheet.resetPanes();
+```
+
 ### Serving from Express
 You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
 ```js
@@ -1016,6 +1042,14 @@ An object representing a gradient fill.
 </dd>
 </dl>
 
+### Typedefs
+
+<dl>
+<dt><a href="#PaneOptions">PaneOptions</a> : <code>Object</code></dt>
+<dd><p><a href="https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1">https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1</a></p>
+</dd>
+</dl>
+
 <a name="Cell"></a>
 
 ### Cell
@@ -1030,7 +1064,7 @@ A cell
         * [.address([opts])](#Cell+address) ⇒ <code>string</code>
         * [.column()](#Cell+column) ⇒ [<code>Column</code>](#Column)
         * [.clear()](#Cell+clear) ⇒ [<code>Cell</code>](#Cell)
-        * [.columnName()](#Cell+columnName) ⇒ <code>number</code>
+        * [.columnName()](#Cell+columnName) ⇒ <code>string</code>
         * [.columnNumber()](#Cell+columnNumber) ⇒ <code>number</code>
         * [.find(pattern, [replacement])](#Cell+find) ⇒ <code>boolean</code>
         * [.formula()](#Cell+formula) ⇒ <code>string</code>
@@ -1113,11 +1147,11 @@ Clears the contents from the cell.
 **Returns**: [<code>Cell</code>](#Cell) - The cell.  
 <a name="Cell+columnName"></a>
 
-#### cell.columnName() ⇒ <code>number</code>
+#### cell.columnName() ⇒ <code>string</code>
 Gets the column name of the cell.
 
 **Kind**: instance method of [<code>Cell</code>](#Cell)  
-**Returns**: <code>number</code> - The column name.  
+**Returns**: <code>string</code> - The column name.  
 <a name="Cell+columnNumber"></a>
 
 #### cell.columnNumber() ⇒ <code>number</code>
@@ -2621,6 +2655,12 @@ A worksheet.
     * [.pageMarginsPreset()](#Sheet+pageMarginsPreset) ⇒ <code>string</code>
     * [.pageMarginsPreset(presetName)](#Sheet+pageMarginsPreset) ⇒ [<code>Sheet</code>](#Sheet)
     * [.pageMarginsPreset(presetName, presetAttributes)](#Sheet+pageMarginsPreset) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.panes()](#Sheet+panes) ⇒ [<code>PaneOptions</code>](#PaneOptions)
+    * [.panes(paneOptions)](#Sheet+panes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.freezePanes(xSplit, ySplit)](#Sheet+freezePanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.freezePanes(topLeftCell)](#Sheet+freezePanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.splitPanes(xSplit, ySplit)](#Sheet+splitPanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.resetPanes()](#Sheet+resetPanes) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -3112,6 +3152,70 @@ Set a new page margins preset by name and attributes object.
 | presetName | <code>string</code> | The preset name. |
 | presetAttributes | <code>object</code> | The preset attributes. |
 
+<a name="Sheet+panes"></a>
+
+#### sheet.panes() ⇒ [<code>PaneOptions</code>](#PaneOptions)
+Gets sheet view pane options
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>PaneOptions</code>](#PaneOptions) - sheet view pane options  
+<a name="Sheet+panes"></a>
+
+#### sheet.panes(paneOptions) ⇒ [<code>Sheet</code>](#Sheet)
+Sets sheet view pane options
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| paneOptions | [<code>PaneOptions</code>](#PaneOptions) \| <code>null</code> \| <code>undefined</code> | sheet view pane options |
+
+<a name="Sheet+freezePanes"></a>
+
+#### sheet.freezePanes(xSplit, ySplit) ⇒ [<code>Sheet</code>](#Sheet)
+Freezes Panes for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| xSplit | <code>number</code> | the number of columns visible in the top pane. 0 (zero) if none. |
+| ySplit | <code>number</code> | the number of rows visible in the left pane. 0 (zero) if none. |
+
+<a name="Sheet+freezePanes"></a>
+
+#### sheet.freezePanes(topLeftCell) ⇒ [<code>Sheet</code>](#Sheet)
+freezes Panes for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| topLeftCell | <code>string</code> | Top Left Visible Cell. Location of the top left visible cell in the bottom right pane (when in Left-To-Right mode). |
+
+<a name="Sheet+splitPanes"></a>
+
+#### sheet.splitPanes(xSplit, ySplit) ⇒ [<code>Sheet</code>](#Sheet)
+Splits Panes for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| xSplit | <code>number</code> | (Horizontal Split Position) Horizontal position of the split, in 1/20th of a point; 0 (zero) if none. |
+| ySplit | <code>number</code> | (Vertical Split Position) VVertical position of the split, in 1/20th of a point; 0 (zero) if none. |
+
+<a name="Sheet+resetPanes"></a>
+
+#### sheet.resetPanes() ⇒ [<code>Sheet</code>](#Sheet)
+resets to default sheet view panes.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
 <a name="Workbook"></a>
 
 ### Workbook
@@ -3475,4 +3579,20 @@ Helpful guidance also take from this Github project:
 https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
+<a name="PaneOptions"></a>
+
+### PaneOptions : <code>Object</code>
+https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| activePane | <code>string</code> | <code>&quot;bottomRight&quot;</code> | Active Pane. The pane that is active. |
+| state | <code>string</code> |  | Split State. Indicates whether the pane has horizontal / vertical splits, and whether those splits are frozen. |
+| topLeftCell | <code>string</code> |  | Top Left Visible Cell. Location of the top left visible cell in the bottom right pane (when in Left-To-Right mode). |
+| xSplit | <code>number</code> |  | (Horizontal Split Position) Horizontal position of the split, in 1/20th of a point; 0 (zero) if none. If the pane is frozen, this value indicates the number of columns visible in the top pane. |
+| ySplit | <code>number</code> |  | (Vertical Split Position) Vertical position of the split, in 1/20th of a point; 0 (zero) if none. If the pane is frozen, this value indicates the number of rows visible in the left pane. |
+
 
