@@ -9,7 +9,10 @@ const edge = require('edge-js');
 
 const XlsxPopulate = require("../../lib/XlsxPopulate");
 
-const interopPath = glob.sync("C:\\Program Files\\Microsoft Office\\root\\Office*\\ADDINS\\**\\Microsoft.Office.Interop.Excel.dll")[0];
+let interopPath = glob.sync("C:\\Program Files\\Microsoft Office\\root\\Office*\\ADDINS\\**\\Microsoft.Office.Interop.Excel.dll")[0];
+if (!interopPath) {
+    interopPath = glob.sync("C:\\Program Files (x86)\\Microsoft Office\\root\\Office*\\DCF\\Microsoft.Office.Interop.Excel.dll")[0];
+}
 if (!interopPath) throw new Error("Unable to find the Microsoft.Office.Interop.Excel.dll!");
 
 // const testCases = ["./encrypted/"]; // To focus
