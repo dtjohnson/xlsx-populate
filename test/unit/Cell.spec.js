@@ -1,6 +1,7 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
+const RichTexts = require('../../lib/RichText');
 
 describe("Cell", () => {
     let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
@@ -586,7 +587,8 @@ describe("Cell", () => {
         });
 
         it("should set a rich text value", () => {
-            cell._value = [{ name: 'r' }];
+            const rt = new RichTexts();
+            cell._value = rt;
 
             expect(cell.toXml()).toEqualJson({
                 name: 'c',
@@ -599,7 +601,7 @@ describe("Cell", () => {
                     children: [7]
                 }]
             });
-            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith([{ name: 'r' }]);
+            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith(rt.toXml());
         });
 
         it("should set a true bool value", () => {
