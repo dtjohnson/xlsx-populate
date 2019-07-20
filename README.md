@@ -1789,8 +1789,8 @@ A range of cells.
         * [.startCell()](#Range+startCell) ⇒ [<code>Cell</code>](#Cell)
         * [.style(name)](#Range+style) ⇒ <code>Array.&lt;Array.&lt;\*&gt;&gt;</code>
         * [.style(names)](#Range+style) ⇒ <code>Object.&lt;string, Array.&lt;Array.&lt;\*&gt;&gt;&gt;</code>
-        * [.style(name)](#Range+style) ⇒ [<code>Range</code>](#Range)
-        * [.style(name)](#Range+style) ⇒ [<code>Range</code>](#Range)
+        * [.style(name, callback)](#Range+style) ⇒ [<code>Range</code>](#Range)
+        * [.style(name, values)](#Range+style) ⇒ [<code>Range</code>](#Range)
         * [.style(name, value)](#Range+style) ⇒ [<code>Range</code>](#Range)
         * [.style(styles)](#Range+style) ⇒ [<code>Range</code>](#Range)
         * [.style(style)](#Range+style) ⇒ [<code>Range</code>](#Range)
@@ -2001,7 +2001,7 @@ Gets multiple styles for each cell.
 
 <a name="Range+style"></a>
 
-#### range.style(name) ⇒ [<code>Range</code>](#Range)
+#### range.style(name, callback) ⇒ [<code>Range</code>](#Range)
 Set the style in each cell to the result of a function called for each.
 
 **Kind**: instance method of [<code>Range</code>](#Range)  
@@ -2010,11 +2010,11 @@ Set the style in each cell to the result of a function called for each.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the style. |
-|  | [<code>mapCallback</code>](#Range..mapCallback) | The callback to provide value for the cell. |
+| callback | [<code>mapCallback</code>](#Range..mapCallback) | The callback to provide value for the cell. |
 
 <a name="Range+style"></a>
 
-#### range.style(name) ⇒ [<code>Range</code>](#Range)
+#### range.style(name, values) ⇒ [<code>Range</code>](#Range)
 Sets the style in each cell to the corresponding value in the given 2D array of values.
 
 **Kind**: instance method of [<code>Range</code>](#Range)  
@@ -2023,7 +2023,7 @@ Sets the style in each cell to the corresponding value in the given 2D array of 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the style. |
-|  | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The style values to set. |
+| values | <code>Array.&lt;Array.&lt;\*&gt;&gt;</code> | The style values to set. |
 
 <a name="Range+style"></a>
 
