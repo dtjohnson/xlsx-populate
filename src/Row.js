@@ -220,6 +220,15 @@ class Row {
         return this.sheet().workbook();
     }
 
+    /**
+     * Append horizontal page break after the row.
+     * @returns {Row} the row.
+     */
+    addPageBreak() {
+        this.sheet().horizontalPageBreaks().add(this.rowNumber());
+        return this;
+    }
+
     /* INTERNAL */
 
     /**

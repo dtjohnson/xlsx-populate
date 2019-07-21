@@ -176,12 +176,31 @@ class Style {
         xmlq.removeChildIfEmpty(this._fontNode, 'name');
     }
 
+    _get_fontGenericFamily() {
+        return xmlq.getChildAttribute(this._fontNode, 'family', "val");
+    }
+
+    _set_fontGenericFamily(genericFamily) {
+        xmlq.setChildAttributes(this._fontNode, 'family', { val: genericFamily });
+        xmlq.removeChildIfEmpty(this._fontNode, 'family');
+    }
+
     _get_fontColor() {
         return this._getColor(this._fontNode, "color");
     }
 
     _set_fontColor(color) {
         this._setColor(this._fontNode, "color", color);
+    }
+
+    _get_fontScheme() {
+        // can be 'minor', 'major', 'none'
+        return xmlq.getChildAttribute(this._fontNode, 'scheme', "val");
+    }
+
+    _set_fontScheme(scheme) {
+        xmlq.setChildAttributes(this._fontNode, 'scheme', { val: scheme });
+        xmlq.removeChildIfEmpty(this._fontNode, 'scheme');
     }
 
     _get_horizontalAlignment() {

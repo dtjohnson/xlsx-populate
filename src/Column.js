@@ -211,6 +211,15 @@ class Column {
         return this.sheet().workbook();
     }
 
+    /**
+     * Append vertical page break after the column.
+     * @returns {Column} the column.
+     */
+    addPageBreak() {
+        this.sheet().verticalPageBreaks().add(this.columnNumber());
+        return this;
+    }
+
     /* INTERNAL */
 
     /**
