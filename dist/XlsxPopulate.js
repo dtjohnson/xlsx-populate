@@ -2,6 +2,7 @@
 const Workbook = require("./Workbook");
 const FormulaError = require("./FormulaError");
 const dateConverter = require("./dateConverter");
+const RichText = require("./RichText");
 /**
  * xlsx-poulate namespace.
  * @namespace
@@ -61,5 +62,10 @@ XlsxPopulate.MIME_TYPE = Workbook.MIME_TYPE;
  * @type {FormulaError}
  */
 XlsxPopulate.FormulaError = FormulaError;
+/**
+ * RichTexts class
+ * @type {RichText}
+ */
+XlsxPopulate.RichText = RichText;
 module.exports = XlsxPopulate;
 //# sourceMappingURL=XlsxPopulate.js.map

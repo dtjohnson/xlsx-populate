@@ -159,10 +159,10 @@ describe("Style", () => {
             expect(style.style("fontGenericFamily")).toBe(undefined);
             style.style("fontGenericFamily", 1);
             expect(style.style("fontGenericFamily")).toBe(1);
-            expect(fontNode.children).toEqualJson([{ name: 'family', attributes: { val: 1 }, children: [] }]);
+            expect(fontNode.children).toEqual([{ name: 'family', attributes: { val: 1 }, children: [] }]);
             style.style("fontGenericFamily", undefined);
             expect(style.style("fontGenericFamily")).toBe(undefined);
-            expect(fontNode.children).toEqualJson([]);
+            expect(fontNode.children).toEqual([]);
         });
     });
 
@@ -171,10 +171,10 @@ describe("Style", () => {
             expect(style.style("fontScheme")).toBe(undefined);
             style.style("fontScheme", 'minor');
             expect(style.style("fontScheme")).toBe('minor');
-            expect(fontNode.children).toEqualJson([{ name: 'scheme', attributes: { val: 'minor' }, children: [] }]);
+            expect(fontNode.children).toEqual([{ name: 'scheme', attributes: { val: 'minor' }, children: [] }]);
             style.style("fontScheme", undefined);
             expect(style.style("fontScheme")).toBe(undefined);
-            expect(fontNode.children).toEqualJson([]);
+            expect(fontNode.children).toEqual([]);
         });
     });
 

@@ -1,12 +1,15 @@
 "use strict";
 const proxyquire = require("proxyquire");
 describe("Cell", () => {
-    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
+    let Cell, cell, cellNode, RichText, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
     beforeEach(() => {
         FormulaError = jasmine.createSpyObj("FormulaError", ["getError"]);
         FormulaError.getError.and.returnValue("ERROR");
         Cell = proxyquire("./Cell", {
             './FormulaError': FormulaError,
+            '@noCallThru': true
+        });
+        RichText = proxyquire("./RichText", {
             '@noCallThru': true
         });
         const Style = class {
@@ -25,14 +28,14 @@ describe("Cell", () => {
         workbook.sharedStrings.and.returnValue(sharedStrings);
         workbook.styleSheet.and.returnValue(styleSheet);
         range = jasmine.createSpyObj('range', ['value', 'style']);
-        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation']);
+        sheet = jasmine.createSpyObj('sheet', ['createStyle', 'activeCell', 'updateMaxSharedFormulaId', 'name', 'column', 'clearCellsUsingSharedFormula', 'cell', 'range', 'hyperlink', 'dataValidation', 'verticalPageBreaks']);
         sheet.activeCell.and.returnValue("ACTIVE CELL");
         sheet.name.and.returnValue("NAME");
         sheet.column.and.returnValue("COLUMN");
         sheet.hyperlink.and.returnValue("HYPERLINK");
         sheet.range.and.returnValue(range);
         sheet.dataValidation.and.returnValue("DATAVALIDATION");
-        row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber']);
+        row = jasmine.createSpyObj('row', ['sheet', 'workbook', 'rowNumber', 'addPageBreak']);
         row.sheet.and.returnValue(sheet);
         row.workbook.and.returnValue(workbook);
         row.rowNumber.and.returnValue(7);
@@ -382,6 +385,11 @@ describe("Cell", () => {
             expect(cell.workbook()).toBe(workbook);
         });
     });
+    describe('addHorizontalPageBreak', () => {
+        it("should add a rowBreak and return the cell", () => {
+            expect(cell.addHorizontalPageBreak()).toBe(cell);
+        });
+    });
     /* INTERNAL */
     describe("getSharedRefFormula", () => {
         it("should return the shared ref formula", () => {
@@ -484,7 +492,8 @@ describe("Cell", () => {
             expect(sharedStrings.getIndexForString).toHaveBeenCalledWith('STRING');
         });
         it("should set a rich text value", () => {
-            cell._value = [{ name: 'r' }];
+            const rt = new RichText();
+            cell._value = rt;
             expect(cell.toXml()).toEqual({
                 name: 'c',
                 attributes: {
@@ -496,7 +505,7 @@ describe("Cell", () => {
                         children: [7]
                     }]
             });
-            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith([{ name: 'r' }]);
+            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith(rt.toXml());
         });
         it("should set a true bool value", () => {
             cell._value = true;
@@ -690,6 +699,12 @@ describe("Cell", () => {
             cell._parseNode(node);
             expect(cell._value).toBe("STRING");
             expect(sharedStrings.getStringByIndex).toHaveBeenCalledWith(5);
+        });
+        it("should parse string values with no shared string child", () => {
+            node.attributes.t = "s";
+            node.children = [];
+            cell._parseNode(node);
+            expect(cell._value).toBe("");
         });
         it("should parse simple string values", () => {
             node.attributes.t = "str";

@@ -830,7 +830,7 @@ describe("Sheet", () => {
         it("should add an internal hyperlink entry", () => {
             const hyperlink = "Sheet1!A1";
             expect(sheet.hyperlink("ADDRESS", hyperlink)).toBe(sheet);
-            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqual({
                 ref: "ADDRESS",
                 location: hyperlink,
                 display: hyperlink
@@ -867,7 +867,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqual({
                 ref: "ADDRESS",
                 "r:id": "ID",
                 tooltip: "TOOLTIP"
@@ -882,7 +882,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "mailto:USER@SERVER.COM?subject=EMAIL%20SUBJECT";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqual({
                 ref: "ADDRESS",
                 "r:id": "ID"
             });
@@ -897,7 +897,7 @@ describe("Sheet", () => {
             };
             const hyperlink = "HYPERLINK";
             expect(sheet.hyperlink("ADDRESS", opts)).toBe(sheet);
-            expect(sheet._hyperlinks.ADDRESS.attributes).toEqualJson({
+            expect(sheet._hyperlinks.ADDRESS.attributes).toEqual({
                 ref: "ADDRESS",
                 "r:id": "ID"
             });
@@ -1306,7 +1306,7 @@ describe("Sheet", () => {
                     attributes: {},
                     children: []
                 };
-                expect(sheet.toXmls().sheet.children).toEqualJson([
+                expect(sheet.toXmls().sheet.children).toEqual([
                     {
                         name: "sheetPr",
                         attributes: {},
@@ -1984,7 +1984,7 @@ describe("Sheet", () => {
 
         it('should set freeze panes by xSplit and ySplit', () => {
             sheet.freezePanes(1, 1);
-            expect(sheet.panes()).toEqualJson({
+            expect(sheet.panes()).toEqual({
                 xSplit: 1,
                 ySplit: 1,
                 topLeftCell: "B2",
@@ -1995,7 +1995,7 @@ describe("Sheet", () => {
 
         it('should set freeze panes by topLeftCell', () => {
             sheet.freezePanes('B2');
-            expect(sheet.panes()).toEqualJson({
+            expect(sheet.panes()).toEqual({
                 xSplit: 1,
                 ySplit: 1,
                 topLeftCell: "B2",
@@ -2020,7 +2020,7 @@ describe("Sheet", () => {
 
         it('should set split panes', () => {
             sheet.splitPanes(2000, 1000);
-            expect(sheet.panes()).toEqualJson({
+            expect(sheet.panes()).toEqual({
                 xSplit: 2000,
                 ySplit: 1000,
                 activePane: "bottomRight",

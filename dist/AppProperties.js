@@ -1,7 +1,17 @@
 "use strict";
-const _ = require("lodash");
-const xmlq = require("./xmlq");
-const ArgHandler = require("./ArgHandler").ArgHandler;
+/**
+ * @module xlsx-populate
+ */
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const OverloadHandler_1 = require("./OverloadHandler");
+const xmlq = __importStar(require("./xmlq"));
 /**
  * App properties
  * @ignore
@@ -9,33 +19,64 @@ const ArgHandler = require("./ArgHandler").ArgHandler;
 class AppProperties {
     /**
      * Creates a new instance of AppProperties
-     * @param {{}} node - The node.
+     * @param node - The node.
      */
     constructor(node) {
-        this._node = node;
+        this.node = node;
     }
-    isSecure(value) {
-        return new ArgHandler("Range.formula")
+    isSecure(...args) {
+        return new OverloadHandler_1.OverloadHandler('AppProperties.isSecure')
             .case(() => {
-            const docSecurityNode = xmlq.findChild(this._node, "DocSecurity");
+            const docSecurityNode = xmlq.findChild(this.node, 'DocSecurity');
             if (!docSecurityNode)
                 return false;
-            return docSecurityNode.children[0] === 1;
+            return !!(docSecurityNode.children && docSecurityNode.children.length && docSecurityNode.children[0] === 1);
         })
             .case('boolean', value => {
-            const docSecurityNode = xmlq.appendChildIfNotFound(this._node, "DocSecurity");
+            const docSecurityNode = xmlq.appendChildIfNotFound(this.node, 'DocSecurity');
             docSecurityNode.children = [value ? 1 : 0];
             return this;
         })
-            .handle(arguments);
+            .handle(args);
     }
     /**
      * Convert the collection to an XML object.
-     * @returns {{}} The XML.
+     * @returns The XML.
      */
     toXml() {
-        return this._node;
+        return this.node;
     }
 }
-module.exports = AppProperties;
+exports.AppProperties = AppProperties;
+// tslint:disable
+/*
+docProps/app.xml
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
+    <Application>Microsoft Excel</Application>
+<DocSecurity>1</DocSecurity>
+<ScaleCrop>false</ScaleCrop>
+<HeadingPairs>
+<vt:vector size="2" baseType="variant">
+    <vt:variant>
+<vt:lpstr>Worksheets</vt:lpstr>
+</vt:variant>
+<vt:variant>
+<vt:i4>1</vt:i4>
+</vt:variant>
+</vt:vector>
+</HeadingPairs>
+<TitlesOfParts>
+<vt:vector size="1" baseType="lpstr">
+    <vt:lpstr>Sheet1</vt:lpstr>
+</vt:vector>
+</TitlesOfParts>
+<Company/>
+<LinksUpToDate>false</LinksUpToDate>
+<SharedDoc>false</SharedDoc>
+<HyperlinksChanged>false</HyperlinksChanged>
+<AppVersion>16.0300</AppVersion>
+</Properties>
+ */
 //# sourceMappingURL=AppProperties.js.map

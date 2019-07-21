@@ -4,9 +4,9 @@ const Cell = require("./Cell");
 const Row = require("./Row");
 const Column = require("./Column");
 const Range = require("./Range");
-const Relationships = require("./Relationships");
+const Relationships = require("./Relationships").Relationships;
 const xmlq = require("./xmlq");
-const regexify = require("./regexify");
+const regexify = require("./regexify").regexify;
 const addressConverter = require("./addressConverter");
 const ArgHandler = require("./ArgHandler").ArgHandler;
 const COLORS = require("./colors").COLORS;
@@ -18,7 +18,7 @@ const nodeOrder = [
     "conditionalFormatting", "dataValidations", "hyperlinks", "printOptions",
     "pageMargins", "pageSetup", "headerFooter", "rowBreaks", "colBreaks",
     "customProperties", "cellWatches", "ignoredErrors", "smartTags", "drawing",
-    "drawingHF", "picture", "oleObjects", "controls", "webPublishItems", "tableParts",
+    "drawingHF", "legacyDrawing", "legacyDrawingHF", "picture", "oleObjects", "controls", "webPublishItems", "tableParts",
     "extLst"
 ];
 /**
@@ -301,7 +301,7 @@ class Sheet {
     name() {
         return new ArgHandler('Sheet.name')
             .case(() => {
-            return this._idNode.attributes.name;
+            return `${this._idNode.attributes.name}`;
         })
             .case('string', name => {
             this._idNode.attributes.name = name;
@@ -364,6 +364,8 @@ class Sheet {
      * @returns {Row} The row with the given number.
      */
     row(rowNumber) {
+        if (rowNumber < 1)
+            throw new RangeError(`Invalid row number ${rowNumber}. Remember that spreadsheets use 1-based indexing.`);
         if (this._rows[rowNumber])
             return this._rows[rowNumber];
         const rowNode = {
@@ -473,6 +475,27 @@ class Sheet {
      */
     workbook() {
         return this._workbook;
+    }
+    /**
+     * Gets all page breaks.
+     * @returns {{}} the object holds both vertical and horizontal PageBreaks.
+     */
+    pageBreaks() {
+        return this._pageBreaks;
+    }
+    /**
+     * Gets the vertical page breaks.
+     * @returns {PageBreaks} vertical PageBreaks.
+     */
+    verticalPageBreaks() {
+        return this._pageBreaks.colBreaks;
+    }
+    /**
+     * Gets the horizontal page breaks.
+     * @returns {PageBreaks} horizontal PageBreaks.
+     */
+    horizontalPageBreaks() {
+        return this._pageBreaks.rowBreaks;
     }
     /* INTERNAL */
     /**
@@ -833,6 +856,13 @@ class Sheet {
                 }
             }, nodeOrder);
         }
+        // Add the PageBreaks nodes if needed.
+        ['colBreaks', 'rowBreaks'].forEach(name => {
+            const breaks = this[`_${name}Node`];
+            if (breaks.attributes.count) {
+                xmlq.insertInOrder(node, breaks, nodeOrder);
+            }
+        });
         return {
             id: this._idNode,
             sheet: node,
@@ -1041,6 +1071,111 @@ class Sheet {
             return this;
         })
             .handle(arguments);
+    }
+    /**
+     * https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.pane?view=openxml-2.8.1
+     * @typedef {Object} PaneOptions
+     * @property {string} activePane=bottomRight Active Pane. The pane that is active.
+     * @property {string} state Split State. Indicates whether the pane has horizontal / vertical splits,
+     * and whether those splits are frozen.
+     * @property {string} topLeftCell Top Left Visible Cell. Location of the top left visible cell in the bottom
+     * right pane (when in Left-To-Right mode).
+     * @property {number} xSplit (Horizontal Split Position) Horizontal position of the split, in 1/20th of a point;
+     * 0 (zero) if none. If the pane is frozen, this value indicates the number of columns visible in the top pane.
+     * @property {number} ySplit (Vertical Split Position) Vertical position of the split, in 1/20th of a point; 0
+     * (zero) if none. If the pane is frozen, this value indicates the number of rows visible in the left pane.
+     */ /**
+    * Gets sheet view pane options
+    * @return {PaneOptions} sheet view pane options
+    */ /**
+    * Sets sheet view pane options
+    * @param {PaneOptions|null|undefined} paneOptions sheet view pane options
+    * @return {Sheet} The sheet
+    */
+    panes() {
+        const supportedStates = ['split', 'frozen', 'frozenSplit'];
+        const supportedActivePanes = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight'];
+        const checkStateName = this._getCheckAttributeNameHelper('pane.state', supportedStates);
+        const checkActivePane = this._getCheckAttributeNameHelper('pane.activePane', supportedActivePanes);
+        const sheetViewNode = this._getOrCreateSheetViewNode();
+        let paneNode = xmlq.findChild(sheetViewNode, 'pane');
+        return new ArgHandler('Sheet.pane')
+            .case(() => {
+            if (paneNode) {
+                const result = _.cloneDeep(paneNode.attributes);
+                if (!result.state)
+                    result.state = 'split';
+                return result;
+            }
+        })
+            .case(['nil'], () => {
+            xmlq.removeChild(sheetViewNode, 'pane');
+            return this;
+        })
+            .case(['object'], paneAttributes => {
+            const attributes = _.assign({ activePane: 'bottomRight' }, paneAttributes);
+            checkStateName(attributes.state);
+            checkActivePane(attributes.activePane);
+            if (paneNode) {
+                paneNode.attributes = attributes;
+            }
+            else {
+                paneNode = {
+                    name: "pane",
+                    attributes,
+                    children: []
+                };
+                xmlq.appendChild(sheetViewNode, paneNode);
+            }
+            return this;
+        })
+            .handle(arguments);
+    }
+    /**
+     * Freezes Panes for this sheet.
+     * @param {number} xSplit the number of columns visible in the top pane. 0 (zero) if none.
+     * @param {number} ySplit the number of rows visible in the left pane. 0 (zero) if none.
+     * @return {Sheet} The sheet
+     */ /**
+    * freezes Panes for this sheet.
+    * @param {string} topLeftCell Top Left Visible Cell. Location of the top left visible cell in the bottom
+    * right pane (when in Left-To-Right mode).
+    * @return {Sheet} The sheet
+    */
+    freezePanes() {
+        return new ArgHandler('Sheet.feezePanes')
+            .case(['integer', 'integer'], (xSplit, ySplit) => {
+            const topLeftCell = addressConverter.columnNumberToName(xSplit + 1) + (ySplit + 1);
+            let activePane = xSplit === 0 ? 'bottomLeft' : 'bottomRight';
+            activePane = ySplit === 0 ? 'topRight' : activePane;
+            return this.panes({ state: 'frozen', topLeftCell, xSplit, ySplit, activePane });
+        })
+            .case(['string'], topLeftCell => {
+            const ref = addressConverter.fromAddress(topLeftCell);
+            const xSplit = ref.columnNumber - 1, ySplit = ref.rowNumber - 1;
+            let activePane = xSplit === 0 ? 'bottomLeft' : 'bottomRight';
+            activePane = ySplit === 0 ? 'topRight' : activePane;
+            return this.panes({ state: 'frozen', topLeftCell, xSplit, ySplit, activePane });
+        })
+            .handle(arguments);
+    }
+    /**
+     * Splits Panes for this sheet.
+     * @param {number} xSplit (Horizontal Split Position) Horizontal position of the split,
+     * in 1/20th of a point; 0 (zero) if none.
+     * @param {number} ySplit (Vertical Split Position) VVertical position of the split,
+     * in 1/20th of a point; 0 (zero) if none.
+     * @return {Sheet} The sheet
+     */
+    splitPanes(xSplit, ySplit) {
+        return this.panes({ state: 'split', xSplit, ySplit });
+    }
+    /**
+     * resets to default sheet view panes.
+     * @return {Sheet} The sheet
+     */
+    resetPanes() {
+        return this.panes(null);
     }
     /* PRIVATE */
     /**
@@ -1286,6 +1421,27 @@ class Sheet {
             this._pageMarginsPresetName = undefined;
             this._pageMarginsNode = { name: 'pageMargins', attributes: {}, children: [] };
         }
+        // Create the pageBreaks
+        ['colBreaks', 'rowBreaks'].forEach(name => {
+            this[`_${name}Node`] = xmlq.findChild(this._node, name);
+            if (this[`_${name}Node`]) {
+                xmlq.removeChild(this._node, this[`_${name}Node`]);
+            }
+            else {
+                this[`_${name}Node`] = {
+                    name,
+                    children: [],
+                    attributes: {
+                        count: 0,
+                        manualBreakCount: 0
+                    }
+                };
+            }
+        });
+        this._pageBreaks = {
+            colBreaks: new PageBreaks(this._colBreaksNode),
+            rowBreaks: new PageBreaks(this._rowBreaksNode)
+        };
     }
 }
 module.exports = Sheet;

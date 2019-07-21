@@ -3,10 +3,11 @@ const _ = require("lodash");
 const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require("./addressConverter");
 const dateConverter = require("./dateConverter");
-const regexify = require("./regexify");
+const regexify = require("./regexify").regexify;
 const xmlq = require("./xmlq");
 const FormulaError = require("./FormulaError");
 const Style = require("./Style");
+const RichText = require("./RichText");
 /**
  * A cell
  */
@@ -86,7 +87,7 @@ class Cell {
     }
     /**
      * Gets the column name of the cell.
-     * @returns {number} The column name.
+     * @returns {string} The column name.
      */
     columnName() {
         return addressConverter.columnNumberToName(this.columnNumber());
@@ -206,12 +207,11 @@ class Cell {
      * @callback Cell~tapCallback
      * @param {Cell} cell - The cell
      * @returns {undefined}
-     */
-    /**
-     * Invoke a callback on the cell and return the cell. Useful for method chaining.
-     * @param {Cell~tapCallback} callback - The callback function.
-     * @returns {Cell} The cell.
-     */
+     */ /**
+    * Invoke a callback on the cell and return the cell. Useful for method chaining.
+    * @param {Cell~tapCallback} callback - The callback function.
+    * @returns {Cell} The cell.
+    */
     tap(callback) {
         callback(this);
         return this;
@@ -221,12 +221,11 @@ class Cell {
      * @callback Cell~thruCallback
      * @param {Cell} cell - The cell
      * @returns {*} The value to return from thru.
-     */
-    /**
-     * Invoke a callback on the cell and return the value provided by the callback. Useful for method chaining.
-     * @param {Cell~thruCallback} callback - The callback function.
-     * @returns {*} The return value of the callback.
-     */
+     */ /**
+    * Invoke a callback on the cell and return the value provided by the callback. Useful for method chaining.
+    * @param {Cell~thruCallback} callback - The callback function.
+    * @returns {*} The return value of the callback.
+    */
     thru(callback) {
         return callback(this);
     }
@@ -344,10 +343,10 @@ class Cell {
     }
     /**
      * Gets the value of the cell.
-     * @returns {string|boolean|number|Date|undefined} The value of the cell.
+     * @returns {string|boolean|number|Date|RichText|undefined} The value of the cell.
      */ /**
     * Sets the value of the cell.
-    * @param {string|boolean|number|null|undefined} value - The value to set.
+    * @param {string|boolean|number|null|undefined|RichText} value - The value to set.
     * @returns {Cell} The cell.
     */ /**
     * Sets the values in the range starting with the cell.
@@ -357,6 +356,9 @@ class Cell {
     value() {
         return new ArgHandler('Cell.value')
             .case(() => {
+            if (this._value instanceof RichText) {
+                return this._value.getInstanceWithCellRef(this);
+            }
             return this._value;
         })
             .case("array", values => {
@@ -367,7 +369,12 @@ class Cell {
         })
             .case('*', value => {
             this.clear();
-            this._value = value;
+            if (value instanceof RichText) {
+                this._value = value.copy(this);
+            }
+            else {
+                this._value = value;
+            }
             return this;
         })
             .handle(arguments);
@@ -378,6 +385,14 @@ class Cell {
      */
     workbook() {
         return this.row().workbook();
+    }
+    /**
+     * Append horizontal page break after the cell.
+     * @returns {Cell} the cell.
+     */
+    addHorizontalPageBreak() {
+        this.row().addPageBreak();
+        return this;
     }
     /* INTERNAL */
     /**
@@ -445,7 +460,7 @@ class Cell {
         else if (!_.isNil(this._value)) {
             // Add the value. Don't emit value if a formula is set as Excel will show this stale value.
             let type, text;
-            if (typeof this._value === "string" || _.isArray(this._value)) { // TODO: Rich text is array for now
+            if (typeof this._value === "string") {
                 type = "s";
                 text = this.workbook().sharedStrings().getIndexForString(this._value);
             }
@@ -458,6 +473,10 @@ class Cell {
             }
             else if (this._value instanceof Date) {
                 text = dateConverter.dateToNumber(this._value);
+            }
+            else if (this._value instanceof RichText || typeof this._value === "object" && this._value.constructor.name === "RichText") { // Hack to make Jasmine test work
+                type = "s";
+                text = this.workbook().sharedStrings().getIndexForString(this._value.toXml());
             }
             if (type)
                 node.attributes.t = type;
@@ -533,8 +552,18 @@ class Cell {
         const type = node.attributes.t;
         if (type === "s") {
             // String value.
-            const sharedIndex = xmlq.findChild(node, 'v').children[0];
-            this._value = this.workbook().sharedStrings().getStringByIndex(sharedIndex);
+            const vNode = xmlq.findChild(node, 'v');
+            if (vNode) {
+                const sharedIndex = vNode.children[0];
+                this._value = this.workbook().sharedStrings().getStringByIndex(sharedIndex);
+                // rich text
+                if (_.isArray(this._value)) {
+                    this._value = new RichText(this._value);
+                }
+            }
+            else {
+                this._value = '';
+            }
         }
         else if (type === "str") {
             // Simple string value.

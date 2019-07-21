@@ -14,7 +14,7 @@ describe("Cell", () => {
             '@noCallThru': true
         });
 
-        RichText = proxyquire("../../lib/RichText", {
+        RichText = proxyquire("./RichText", {
             '@noCallThru': true
         });
 

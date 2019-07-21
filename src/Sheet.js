@@ -11,6 +11,7 @@ const regexify = require("./regexify").regexify;
 const addressConverter = require("./addressConverter");
 const ArgHandler = require("./ArgHandler").ArgHandler;
 const COLORS = require("./colors").COLORS;
+const PageBreaks = require('./PageBreaks');
 
 // Order of the nodes as defined by the spec.
 const nodeOrder = [

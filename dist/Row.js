@@ -1,7 +1,7 @@
 "use strict";
 const _ = require("lodash");
 const Cell = require("./Cell");
-const regexify = require("./regexify");
+const regexify = require("./regexify").regexify;
 const ArgHandler = require("./ArgHandler").ArgHandler;
 const addressConverter = require('./addressConverter');
 /**
@@ -43,6 +43,8 @@ class Row {
         if (typeof columnNameOrNumber === 'string') {
             columnNumber = addressConverter.columnNameToNumber(columnNameOrNumber);
         }
+        if (columnNumber < 1)
+            throw new RangeError(`Invalid column number ${columnNumber}. Remember that spreadsheets use 1-based indexing.`);
         // Return an existing cell.
         if (this._cells[columnNumber])
             return this._cells[columnNumber];
@@ -202,6 +204,14 @@ class Row {
     workbook() {
         return this.sheet().workbook();
     }
+    /**
+     * Append horizontal page break after the row.
+     * @returns {Row} the row.
+     */
+    addPageBreak() {
+        this.sheet().horizontalPageBreaks().add(this.rowNumber());
+        return this;
+    }
     /* INTERNAL */
     /**
      * Clear cells that are using a given shared formula ID.
@@ -242,6 +252,8 @@ class Row {
      * @ignore
      */
     hasCell(columnNumber) {
+        if (columnNumber < 1)
+            throw new RangeError(`Invalid column number ${columnNumber}. Remember that spreadsheets use 1-based indexing.`);
         return !!this._cells[columnNumber];
     }
     /**
