@@ -1,10 +1,9 @@
 "use strict";
 
 const proxyquire = require("proxyquire");
-const RichTexts = require('../../lib/RichText');
 
 describe("Cell", () => {
-    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
+    let Cell, cell, cellNode, RichText, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
 
     beforeEach(() => {
         FormulaError = jasmine.createSpyObj("FormulaError", ["getError"]);
@@ -12,6 +11,10 @@ describe("Cell", () => {
 
         Cell = proxyquire("../../lib/Cell", {
             './FormulaError': FormulaError,
+            '@noCallThru': true
+        });
+
+        RichText = proxyquire("../../lib/RichText", {
             '@noCallThru': true
         });
 
@@ -587,7 +590,7 @@ describe("Cell", () => {
         });
 
         it("should set a rich text value", () => {
-            const rt = new RichTexts();
+            const rt = new RichText();
             cell._value = rt;
 
             expect(cell.toXml()).toEqualJson({
