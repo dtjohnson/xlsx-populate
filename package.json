@@ -31,7 +31,7 @@
     "lint": "tslint src/**/*.ts",
     "karma": "karma start --single-run",
     "karma:watch": "karma start",
-    "blank": "node blank/build"
+    "blank": "ts-node -P blank/tsconfig.json blank/build.ts"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [

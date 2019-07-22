@@ -1,7 +1,5 @@
-'use strict';
-
-const path = require('path');
-const fs = require('fs');
+import * as fs from 'fs';
+import * as path from 'path';
 
 const blankPath = path.join(__dirname, 'blank.xlsx');
 const templatePath = path.join(__dirname, 'template.ts');
