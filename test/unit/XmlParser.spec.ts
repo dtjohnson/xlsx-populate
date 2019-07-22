@@ -1,4 +1,4 @@
-import { XmlParser } from './XmlParser';
+import { XmlParser } from '../../src/XmlParser';
 
 describe('XmlParser', () => {
     let xmlParser: XmlParser;

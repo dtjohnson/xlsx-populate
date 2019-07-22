@@ -1,4 +1,4 @@
-import * as addressConverter from './addressConverter';
+import * as addressConverter from '../../src/addressConverter';
 
 describe("addressConverter", () => {
     describe("columnNameToNumber", () => {

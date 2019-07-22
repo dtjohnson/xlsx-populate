@@ -1,4 +1,4 @@
-import * as dateConverter from './dateConverter';
+import * as dateConverter from '../../src/dateConverter';
 
 describe('dateConverter', () => {
     describe('dateToNumber', () => {

@@ -1,5 +1,5 @@
-import { ContentTypes } from './ContentTypes';
-import { INode } from './XmlParser';
+import { ContentTypes } from '../../src/ContentTypes';
+import { INode } from '../../src/XmlParser';
 
 describe('ContentTypes', () => {
     let contentTypes: ContentTypes, contentTypesNode: INode;

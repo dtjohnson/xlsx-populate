@@ -6,7 +6,7 @@ describe("Range", () => {
     let Range, range, startCell, endCell, sheet, style;
 
     beforeEach(() => {
-        Range = proxyquire("./Range", {
+        Range = proxyquire("../../src/Range", {
             '@noCallThru': true
         });
 

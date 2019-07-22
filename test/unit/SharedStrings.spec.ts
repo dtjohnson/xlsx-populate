@@ -1,5 +1,5 @@
-import { SharedStrings } from './SharedStrings';
-import { INode } from './XmlParser';
+import { SharedStrings } from '../../src/SharedStrings';
+import { INode } from '../../src/XmlParser';
 
 describe('SharedStrings', () => {
     let sharedStrings: SharedStrings, sharedStringsNode: INode;

@@ -65,8 +65,5 @@ IDEs use this for code support.
   },
   "include": [
     "src"
-  ],
-  "exclude": [
-    "src/**/*.spec.ts"
   ]
 }

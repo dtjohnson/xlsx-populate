@@ -18,7 +18,7 @@ describe("XlsxPopulate", () => {
 
         FormulaError = () => {};
 
-        XlsxPopulate = proxyquire("./XlsxPopulate", {
+        XlsxPopulate = proxyquire("../../src/XlsxPopulate", {
             './dateConverter': dateConverter,
             './Workbook': Workbook,
             './FormulaError': FormulaError,

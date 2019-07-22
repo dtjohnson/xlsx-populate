@@ -1,4 +1,4 @@
-import { regexify } from './regexify';
+import { regexify } from '../../src/regexify';
 
 describe('regexify', () => {
     it('should return the regex with lastIndex reset', () => {

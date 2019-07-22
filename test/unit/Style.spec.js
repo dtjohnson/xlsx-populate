@@ -9,7 +9,7 @@ describe("Style", () => {
     let Style, style, styleSheet, id, xfNode, fontNode, fillNode, borderNode, emptyBorderNode;
 
     beforeEach(() => {
-        Style = proxyquire("./Style", {
+        Style = proxyquire("../../src/Style", {
             '@noCallThru': true
         });
         styleSheet = jasmine.createSpyObj("styleSheet", ['getNumberFormatCode', 'getNumberFormatId']);

@@ -5,15 +5,13 @@ module.exports = config => {
         // logLevel: config.LOG_DEBUG,
         frameworks: ["jasmine", "karma-typescript"],
         files: [
-            "src/**/*.ts"
+            "src/**/*.ts",
+            "test/unit/**/*.ts"
         ],
         preprocessors: {
             "**/*.ts": "karma-typescript"
         },
         reporters: ["progress", "karma-typescript"],
-        browsers: ["Chrome"],
-        karmaTypescriptConfig: {
-            tsconfig: "./tsconfig.all.json"
-        }
+        browsers: ["Chrome"]
     });
 };

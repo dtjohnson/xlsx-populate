@@ -23,7 +23,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "jasmine-ts --config=jasmine.json --project=tsconfig.spec.json",
+    "test": "jasmine-ts --config=test/unit/jasmine.json --project=test/tsconfig.json",
     "test:watch": "nodemon -e js,ts -w src -x npm test",
     "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json",
     "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json",

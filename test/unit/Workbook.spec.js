@@ -3,8 +3,8 @@
 const _ = require("lodash");
 const proxyquire = require("proxyquire");
 
-const XmlParser = require("./XmlParser").XmlParser;
-const BLANK = require('./blank').BLANK;
+const XmlParser = require("../../src/XmlParser").XmlParser;
+const BLANK = require('../../src/blank').BLANK;
 
 describe("Workbook", () => {
     let resolved, fs, JSZip, workbookNode, Workbook, StyleSheet, Sheet, SharedStrings, Relationships, ContentTypes, CoreProperties, XmlBuilder, Encryptor, blank;
@@ -108,7 +108,7 @@ describe("Workbook", () => {
         Encryptor.prototype.encrypt = jasmine.createSpy("Encryptor.encrypt").and.callFake(input => `ENCRYPTED(${input})`);
         Encryptor.prototype.decryptAsync = jasmine.createSpy("Encryptor.decryptAsync").and.callFake(input => Promise.resolve(`DECRYPTED(${input})`));
 
-        Workbook = proxyquire("./Workbook", {
+        Workbook = proxyquire("../../src/Workbook", {
             fs,
             jszip: JSZip,
             './StyleSheet': StyleSheet,

@@ -1,5 +1,5 @@
-import { Relationships } from './Relationships';
-import { INode } from './XmlParser';
+import { Relationships } from '../../src/Relationships';
+import { INode } from '../../src/XmlParser';
 
 describe('Relationships', () => {
     let relationships: Relationships, relationshipsNode: INode;

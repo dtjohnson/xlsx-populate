@@ -18,7 +18,7 @@ describe("Row", () => {
         Cell.prototype.find = jasmine.createSpy('find');
         Cell.prototype.style = jasmine.createSpy('style');
 
-        Row = proxyquire("./Row", {
+        Row = proxyquire("../../src/Row", {
             './Cell': Cell,
             '@noCallThru': true
         });

@@ -1,4 +1,4 @@
-import { FormulaError } from './FormulaError';
+import { FormulaError } from '../../src/FormulaError';
 
 describe('FormulaError', () => {
     describe('static', () => {
