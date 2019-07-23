@@ -1,7 +1,3 @@
-/**
- * @module xlsx-populate
- */
-
 import { INode, NodeChild } from './XmlParser';
 
 /**

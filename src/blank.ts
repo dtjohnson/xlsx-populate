@@ -1,7 +1,3 @@
-/**
- * @module xlsx-populate
- */
-
 /* tslint:disable */
 /**
  * Blank workbook serialized into Buffer.

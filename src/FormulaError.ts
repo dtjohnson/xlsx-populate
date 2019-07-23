@@ -1,8 +1,4 @@
 /**
- * @module xlsx-populate
- */
-
-/**
  * A formula error (e.g. #DIV/0!).
  */
 export class FormulaError {

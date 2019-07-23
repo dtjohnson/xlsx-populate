@@ -1,7 +1,4 @@
-/**
- * TODO: Deprecated
- * @module xlsx-populate
- */
+// TODO: Deprecated in favor of OverloadHandler
 
 import * as _ from 'lodash';
 

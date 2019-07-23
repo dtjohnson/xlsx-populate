@@ -1,7 +1,11 @@
 /**
- * @module xlsx-populate
+ * @ignore
  */
 
+
+/**
+ * Type selector
+ */
 type TypeSelector = undefined|string|(new (...args: any[]) => any);
 
 /**

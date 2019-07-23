@@ -1,7 +1,3 @@
-/**
- * @module xlsx-populate
- */
-
 import { INode } from './XmlParser';
 import * as xmlq from './xmlq';
 

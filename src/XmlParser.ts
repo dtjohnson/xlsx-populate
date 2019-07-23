@@ -1,7 +1,3 @@
-/**
- * @module xlsx-populate
- */
-
 import { SAXParser } from 'sax';
 
 // Regex to check if string is all whitespace.
