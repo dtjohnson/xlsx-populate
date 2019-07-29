@@ -14,7 +14,6 @@ export interface INode {
 
 /**
  * XML parser.
- * @ignore
  */
 export class XmlParser {
     /**
@@ -36,7 +35,7 @@ export class XmlParser {
             parser.onerror = reject;
 
             // On text nodes: If it is all whitespace, do nothing. Otherwise, try to convert to a number and add as a child.
-            parser.ontext = (text: string) => {
+            parser.ontext = text => {
                 if (allWhitespaceRegex.test(text)) {
                     if (current && current.attributes && current.attributes['xml:space'] === 'preserve') {
                         if (!current.children) current.children = [];
@@ -64,13 +63,13 @@ export class XmlParser {
             };
 
             // On close tag: Pop the stack.
-            parser.onclosetag = (_tagName: string) => {
+            parser.onclosetag = _tagName => {
                 stack.pop();
                 current = stack[stack.length - 1];
             };
 
             // On attribute: Try to convert the value to a number and add to the current node.
-            parser.onattribute = (attribute: { name: string; value: string }) => {
+            parser.onattribute = attribute => {
                 if (!current.attributes) current.attributes = {};
                 current.attributes[attribute.name] = this.covertToNumberIfNumber(attribute.value);
             };

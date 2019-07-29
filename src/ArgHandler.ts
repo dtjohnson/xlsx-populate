@@ -10,7 +10,6 @@ export interface ICase {
 
 /**
  * Method argument handler. Used for overloading methods.
- * @hidden
  */
 export class ArgHandler {
     private _name: string;

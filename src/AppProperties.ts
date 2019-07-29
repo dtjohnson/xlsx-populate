@@ -4,14 +4,13 @@ import * as xmlq from './xmlq';
 
 /**
  * App properties
- * @ignore
  */
 export class AppProperties {
     /**
      * Creates a new instance of AppProperties
      * @param node - The node.
      */
-    public constructor(private node: INode) {}
+    public constructor(private readonly node: INode) {}
 
     /**
      * Get a value indicating whether the workbook is secure or not.

@@ -10,7 +10,7 @@ export class ContentTypes {
      * Creates a new instance of ContentTypes
      * @param node - The node.
      */
-    public constructor(private node: INode) {}
+    public constructor(private readonly node: INode) {}
 
     /**
      * Add a new content type.

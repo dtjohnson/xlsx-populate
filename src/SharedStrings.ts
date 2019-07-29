@@ -2,53 +2,51 @@ import { INode, NodeChild } from './XmlParser';
 
 /**
  * The shared strings table.
- * @ignore
  */
 export class SharedStrings {
-    private _stringArray: (string|number|NodeChild[])[] = [];
-    private _indexMap: { [str: string]: number } = {};
-    private _node: INode;
+    private readonly stringArray: (string|number|NodeChild[])[] = [];
+    private readonly indexMap: { [str: string]: number } = {};
+    private readonly node: INode;
 
     /**
      * Constructs a new instance of SharedStrings.
      * @param node - The node.
      */
     public constructor(node?: INode) {
-        this._node = node || {
+        this.node = node || {
             name: 'sst',
             attributes: {
                 xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
             },
         };
 
-        if (this._node.attributes) {
-            delete this._node.attributes.count;
-            delete this._node.attributes.uniqueCount;
+        if (this.node.attributes) {
+            delete this.node.attributes.count;
+            delete this.node.attributes.uniqueCount;
         }
 
-        this._cacheExistingSharedStrings();
+        this.cacheExistingSharedStrings();
     }
 
     /**
      * Gets the index for a string
      * @param str - The string or rich text array.
      * @returns The index
-     * // TODO Handle Array.<{}>
      */
     public getIndexForString(str: string|number|INode[]): number {
         // If the string is found in the cache, return the index.
         const key = Array.isArray(str) ? JSON.stringify(str) : str;
-        let index = this._indexMap[key];
+        let index = this.indexMap[key];
         if (index >= 0) return index;
 
         // Otherwise, add it to the caches.
-        index = this._stringArray.length;
-        this._stringArray.push(str);
-        this._indexMap[key] = index;
+        index = this.stringArray.length;
+        this.stringArray.push(str);
+        this.indexMap[key] = index;
 
         // Append a new si node.
-        if (!this._node.children) this._node.children = [];
-        this._node.children.push({
+        if (!this.node.children) this.node.children = [];
+        this.node.children.push({
             name: 'si',
             children: Array.isArray(str) ? str : [
                 {
@@ -68,7 +66,7 @@ export class SharedStrings {
      * @returns The string
      */
     public getStringByIndex(index: number): string|number|NodeChild[] {
-        return this._stringArray[index];
+        return this.stringArray[index];
     }
 
     /**
@@ -76,15 +74,15 @@ export class SharedStrings {
      * @returns The XML object.
      */
     public toXml(): INode {
-        return this._node;
+        return this.node;
     }
 
     /**
      * Store any existing values in the caches.
      */
-    private _cacheExistingSharedStrings(): void {
-        if (this._node.children) {
-            this._node.children.forEach((child, i) => {
+    private cacheExistingSharedStrings(): void {
+        if (this.node.children) {
+            this.node.children.forEach((child, i) => {
                 // TODO: Need helper methods to make this less vebose
                 if (typeof child === 'string'
                     || typeof child === 'number'
@@ -100,12 +98,12 @@ export class SharedStrings {
                 const str = content.children[0];
                 if (content.name === 't' && content.children.length === 1
                     && (typeof str === 'string' || typeof str === 'number')) {
-                    this._stringArray.push(str);
-                    this._indexMap[str] = i;
+                    this.stringArray.push(str);
+                    this.indexMap[str] = i;
                 } else {
                     // TODO: Properly support rich text nodes in the future. For now just store the object as a placeholder.
-                    this._stringArray.push(child.children);
-                    this._indexMap[JSON.stringify(child.children)] = i;
+                    this.stringArray.push(child.children);
+                    this.indexMap[JSON.stringify(child.children)] = i;
                 }
             });
         }

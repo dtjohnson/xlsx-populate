@@ -24,7 +24,7 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "test": "jasmine-ts --config=test/unit/jasmine.json --project=test/tsconfig.json",
-    "test:watch": "nodemon -e js,ts -w src -x npm test",
+    "test:watch": "nodemon -e js,ts -w src -w test/unit -x npm test",
     "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json",
     "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json",
     "docs": "typedoc --mode file --out docs --excludePrivate --excludeNotExported src/index.ts",

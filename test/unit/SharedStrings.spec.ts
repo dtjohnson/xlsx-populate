@@ -31,7 +31,7 @@ describe('SharedStrings', () => {
     describe('constructor', () => {
         it('should create the node if needed', () => {
             const ss = new SharedStrings();
-            expect((ss as any)._node).toEqual({
+            expect((ss as any).node).toEqual({
                 name: 'sst',
                 attributes: {
                     xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
@@ -40,7 +40,7 @@ describe('SharedStrings', () => {
         });
 
         it('should clear the counts', () => {
-            expect((sharedStrings as any)._node.attributes).toEqual({
+            expect(sharedStrings['node'].attributes).toEqual({
                 xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
             });
         });
@@ -48,17 +48,16 @@ describe('SharedStrings', () => {
 
     describe('getIndexForString', () => {
         beforeEach(() => {
-            (sharedStrings as any)._stringArray = [
+            sharedStrings['stringArray'].length = 0;
+            sharedStrings['stringArray'].push(
                 'foo',
                 'bar',
                 [ { name: 'r' }, { name: 'r' } ],
-            ];
+            );
 
-            (sharedStrings as any)._indexMap = {
-                foo: 0,
-                bar: 1,
-                '[{"name":"r"},{"name":"r"}]': 2,
-            };
+            sharedStrings['indexMap'].foo = 0;
+            sharedStrings['indexMap'].bar = 1;
+            sharedStrings['indexMap']['[{"name":"r"},{"name":"r"}]'] = 2;
         });
 
         it('should return the index if the string already exists', () => {
@@ -69,13 +68,13 @@ describe('SharedStrings', () => {
 
         it("should create a new entry if the string doesn't exist", () => {
             expect(sharedStrings.getIndexForString('baz')).toBe(3);
-            expect((sharedStrings as any)._stringArray).toEqual([
+            expect(sharedStrings['stringArray']).toEqual([
                 'foo',
                 'bar',
                 [ { name: 'r' }, { name: 'r' } ],
                 'baz',
             ]);
-            expect((sharedStrings as any)._indexMap).toEqual({
+            expect(sharedStrings['indexMap']).toEqual({
                 foo: 0,
                 bar: 1,
                 '[{"name":"r"},{"name":"r"}]': 2,
@@ -95,13 +94,13 @@ describe('SharedStrings', () => {
 
         it("should create a new array entry if the array doesn't exist", () => {
             expect(sharedStrings.getIndexForString([ { name: 'r' } ])).toBe(3);
-            expect((sharedStrings as any)._stringArray).toEqual([
+            expect(sharedStrings['stringArray']).toEqual([
                 'foo',
                 'bar',
                 [ { name: 'r' }, { name: 'r' } ],
                 [ { name: 'r' } ],
             ]);
-            expect((sharedStrings as any)._indexMap).toEqual({
+            expect(sharedStrings['indexMap']).toEqual({
                 foo: 0,
                 bar: 1,
                 '[{"name":"r"},{"name":"r"}]': 2,
@@ -116,7 +115,8 @@ describe('SharedStrings', () => {
 
     describe('getStringByIndex', () => {
         it('should return the string at a given index', () => {
-            (sharedStrings as any)._stringArray = [ 'foo', 'bar', 'baz' ];
+            sharedStrings['stringArray'].length = 0;
+            sharedStrings['stringArray'].push('foo', 'bar', 'baz');
             expect(sharedStrings.getStringByIndex(0)).toBe('foo');
             expect(sharedStrings.getStringByIndex(1)).toBe('bar');
             expect(sharedStrings.getStringByIndex(2)).toBe('baz');
@@ -130,29 +130,28 @@ describe('SharedStrings', () => {
         });
     });
 
-    describe('_cacheExistingSharedStrings', () => {
+    describe('cacheExistingSharedStrings', () => {
         it('should cache the existing shared strings', () => {
-            (sharedStrings as any)._node.children = [
+            sharedStrings['node'].children = [
                 { name: 'si', children: [ { name: 't', children: [ 'foo' ] } ] },
                 { name: 'si', children: [ { name: 't', children: [ 'bar' ] } ] },
-                { name: 'si', children: [ { name: 'r', children: [ {} ] }, { name: 'r', children: [ {} ] } ] },
+                { name: 'si', children: [ { name: 'r', children: [ { name: 'x' } ] }, { name: 'r', children: [ { name: 'y' } ] } ] },
                 { name: 'si', children: [ { name: 't', children: [ 'baz' ] } ] },
             ];
 
-            (sharedStrings as any)._stringArray = [];
-            (sharedStrings as any)._indexMap = {};
-            (sharedStrings as any)._cacheExistingSharedStrings();
+            sharedStrings['stringArray'].length = 0;
+            sharedStrings['cacheExistingSharedStrings']();
 
-            expect((sharedStrings as any)._stringArray).toEqual([
+            expect(sharedStrings['stringArray']).toEqual([
                 'foo',
                 'bar',
-                [ { name: 'r', children: [ {} ] }, { name: 'r', children: [ {} ] } ],
+                [ { name: 'r', children: [ { name: 'x' } ] }, { name: 'r', children: [ { name: 'y' } ] } ],
                 'baz',
             ]);
-            expect((sharedStrings as any)._indexMap).toEqual({
+            expect(sharedStrings['indexMap']).toEqual({
                 foo: 0,
                 bar: 1,
-                '[{"name":"r","children":[{}]},{"name":"r","children":[{}]}]': 2,
+                '[{"name":"r","children":[{"name":"x"}]},{"name":"r","children":[{"name":"y"}]}]': 2,
                 baz: 3,
             });
         });

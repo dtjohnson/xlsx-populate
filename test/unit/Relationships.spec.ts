@@ -36,7 +36,7 @@ describe('Relationships', () => {
     describe('constructor', () => {
         it('should create the node if needed', () => {
             const r = new Relationships();
-            expect((r as any)._node).toEqual({
+            expect((r as any).node).toEqual({
                 name: 'Relationships',
                 attributes: {
                     xmlns: 'http://schemas.openxmlformats.org/package/2006/relationships',
@@ -47,7 +47,7 @@ describe('Relationships', () => {
         it('should set the next ID to 1 if no children', () => {
             relationshipsNode.children = [];
             const r = new Relationships(relationshipsNode);
-            expect((r as any)._nextId).toBe(1);
+            expect((r as any).nextId).toBe(1);
         });
 
         it('should set the next ID to last found ID + 1', () => {
@@ -57,7 +57,7 @@ describe('Relationships', () => {
                 { name: 'Relationship', attributes: { Id: 'rId3' } },
             ];
             const r = new Relationships(relationshipsNode);
-            expect((r as any)._nextId).toBe(4);
+            expect((r as any).nextId).toBe(4);
         });
     });
 

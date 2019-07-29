@@ -1,11 +1,3 @@
-/**
- * @ignore
- */
-
-
-/**
- * Type selector
- */
 type TypeSelector = undefined|string|(new (...args: any[]) => any);
 
 /**
@@ -18,7 +10,6 @@ interface ICase {
 
 /**
  * Handler used to simplify function overloading.
- * @hidden
  */
 export class OverloadHandler {
     /**

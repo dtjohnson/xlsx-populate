@@ -122,7 +122,7 @@
     "prefer-object-spread": true,
     "radix": true,
     "restrict-plus-operands": true,
-    "strict-boolean-expressions": true,
+    // "strict-boolean-expressions"
     "strict-type-predicates": true,
     "switch-default": true,
     "triple-equals": true,
@@ -207,7 +207,7 @@
     "prefer-template": true,
     "prefer-while": true,
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
-    "return-undefined": true,
+    // "return-undefined"
     "semicolon": { "options": ["always"] },
     "space-before-function-paren": {
       "options": {
@@ -303,9 +303,9 @@
       // all other rules (trailingUnderscore: forbid, format: camelCase) still apply
       {"type": "parameter", "modifiers": "unused", "leadingUnderscore": "allow"},
       // require leading underscores for private properties and methods, all other rules still apply
-      {"type": "member", "modifiers": "private", "leadingUnderscore": "allow"},
+      // {"type": "member", "modifiers": "private", "leadingUnderscore": "allow"},
       // same for protected
-      {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
+      // {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
       // exclicitly disable the format check only for method toJSON
       {"type": "method", "filter": "^toJSON$", "format": null},
       // enforce UPPER_CASE for all public static readonly(!) properties
