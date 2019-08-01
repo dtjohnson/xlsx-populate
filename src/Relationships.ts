@@ -10,7 +10,7 @@ export class Relationships {
     private nextId: number;
 
     /**
-     * Creates a new instance of _Relationships.
+     * Creates a new instance of Relationships.
      * @param node - The node.
      */
     public constructor(node?: INode) {

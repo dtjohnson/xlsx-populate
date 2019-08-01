@@ -5,24 +5,56 @@ const Cell = require("./Cell");
 const Row = require("./Row");
 const Column = require("./Column");
 const Range = require("./Range");
-const Relationships = require("./Relationships").Relationships;
+const { Relationships } = require("./Relationships");
 const xmlq = require("./xmlq");
-const regexify = require("./regexify").regexify;
+const { regexify } = require("./regexify");
 const addressConverter = require("./addressConverter");
-const ArgHandler = require("./ArgHandler").ArgHandler;
-const COLORS = require("./colors").COLORS;
-const PageBreaks = require('./PageBreaks');
+const { ArgHandler } = require("./ArgHandler");
+const { COLORS } = require("./colors");
+const { PageBreaks } = require('./PageBreaks');
 
 // Order of the nodes as defined by the spec.
 const nodeOrder = [
-    "sheetPr", "dimension", "sheetViews", "sheetFormatPr", "cols", "sheetData",
-    "sheetCalcPr", "sheetProtection", "autoFilter", "protectedRanges", "scenarios", "autoFilter",
-    "sortState", "dataConsolidate", "customSheetViews", "mergeCells", "phoneticPr",
-    "conditionalFormatting", "dataValidations", "hyperlinks", "printOptions",
-    "pageMargins", "pageSetup", "headerFooter", "rowBreaks", "colBreaks",
-    "customProperties", "cellWatches", "ignoredErrors", "smartTags", "drawing",
-    "drawingHF", "legacyDrawing", "legacyDrawingHF", "picture", "oleObjects", "controls", "webPublishItems", "tableParts",
-    "extLst"
+    "sheetPr",
+    "dimension",
+    "sheetViews",
+    "sheetFormatPr",
+    "cols",
+    "sheetData",
+    "sheetCalcPr",
+    "sheetProtection",
+    "autoFilter",
+    "protectedRanges",
+    "scenarios",
+    "autoFilter",
+    "sortState",
+    "dataConsolidate",
+    "customSheetViews",
+    "mergeCells",
+    "phoneticPr",
+    "conditionalFormatting",
+    "dataValidations",
+    "hyperlinks",
+    "printOptions",
+    "pageMargins",
+    "pageSetup",
+    "headerFooter",
+    "rowBreaks",
+    "colBreaks",
+    "customProperties",
+    "cellWatches",
+    "ignoredErrors",
+    "smartTags",
+    "drawing",
+    "drawingHF",
+    "legacyDrawing",
+    "legacyDrawingHF",
+    "picture",
+    "oleObjects",
+    "controls",
+    "webPublishItems",
+    "tableParts",
+    "extLst",
 ];
 
 /**
@@ -500,11 +532,11 @@ class Sheet {
     }
 
     /**
-     * Gets all page breaks.
-     * @returns {{}} the object holds both vertical and horizontal PageBreaks.
+     * Gets the horizontal page breaks.
+     * @returns {PageBreaks} horizontal PageBreaks.
      */
-    pageBreaks() {
-        return this._pageBreaks;
+    horizontalPageBreaks() {
+        return this._horizontalPageBreaks;
     }
 
     /**
@@ -512,15 +544,7 @@ class Sheet {
      * @returns {PageBreaks} vertical PageBreaks.
      */
     verticalPageBreaks() {
-        return this._pageBreaks.colBreaks;
-    }
-
-    /**
-     * Gets the horizontal page breaks.
-     * @returns {PageBreaks} horizontal PageBreaks.
-     */
-    horizontalPageBreaks() {
-        return this._pageBreaks.rowBreaks;
+        return this._verticalPageBreaks;
     }
 
     /* INTERNAL */
@@ -891,13 +915,11 @@ class Sheet {
             }, nodeOrder);
         }
 
-        // Add the PageBreaks nodes if needed.
-        ['colBreaks', 'rowBreaks'].forEach(name => {
-            const breaks = this[`_${name}Node`];
-            if (breaks.attributes.count) {
-                xmlq.insertInOrder(node, breaks, nodeOrder);
-            }
-        });
+        // Add the page break nodes if needed.
+        const rowBreaksNode = this._horizontalPageBreaks.toXml();
+        const colBreaksNode = this._verticalPageBreaks.toXml();
+        if (rowBreaksNode) xmlq.insertInOrder(node, rowBreaksNode, nodeOrder);
+        if (colBreaksNode) xmlq.insertInOrder(node, colBreaksNode, nodeOrder);
 
         return {
             id: this._idNode,
@@ -1495,25 +1517,8 @@ class Sheet {
         }
 
         // Create the pageBreaks
-        ['colBreaks', 'rowBreaks'].forEach(name => {
-            this[`_${name}Node`] = xmlq.findChild(this._node, name);
-            if (this[`_${name}Node`]) {
-                xmlq.removeChild(this._node, this[`_${name}Node`]);
-            } else {
-                this[`_${name}Node`] = {
-                    name,
-                    children: [],
-                    attributes: {
-                        count: 0,
-                        manualBreakCount: 0
-                    }
-                };
-            }
-        });
-        this._pageBreaks = {
-            colBreaks: new PageBreaks(this._colBreaksNode),
-            rowBreaks: new PageBreaks(this._rowBreaksNode)
-        };
+        this._horizontalPageBreaks = new PageBreaks(true, xmlq.findChild(this._node, 'rowBreaks'));
+        this._verticalPageBreaks = new PageBreaks(false, xmlq.findChild(this._node, 'colBreaks'));
     }
 }
 

@@ -18,7 +18,9 @@ describe("Sheet", () => {
         Column = jasmine.createSpy("Column");
         Cell = jasmine.createSpy("Cell");
         Cell.prototype.address = jasmine.createSpy("Cell.address").and.returnValue("ADDRESS");
-        PageBreaks = jasmine.createSpy("PageBreaks", ["add", "remove", "list"]);
+
+        PageBreaks = jasmine.createSpy("PageBreaks");
+        PageBreaks.prototype.toXml = jasmine.createSpy('PageBreaks.toXml');
 
         Relationships = jasmine.createSpy("Relationships");
         Relationships.prototype.findById = jasmine.createSpy("Relationships.findById").and.callFake(id => ({ attributes: { Target: `TARGET:${id}` } }));
@@ -30,6 +32,7 @@ describe("Sheet", () => {
             './Column': Column,
             './Cell': Cell,
             './Relationships': { Relationships },
+            './PageBreaks': { PageBreaks },
             '@noCallThru': true
         });
 
@@ -1262,6 +1265,21 @@ describe("Sheet", () => {
                 },
                 { name: 'sheetData', attributes: {}, children: [] }
             ]);
+
+            
+        });
+
+        describe("page breaks", () => {
+            it('should add the page breaks', () => {
+                PageBreaks.prototype.toXml.and.returnValue({ name: 'rowBreaks' }); 
+                expect(sheet.toXmls().sheet.children).toEqual([
+                    { name: 'sheetPr', attributes: {}, children: [] },
+                    { name: 'sheetFormatPr', attributes: {}, children: [] },
+                    { name: 'sheetData', attributes: {}, children: [] },
+                    { name: 'rowBreaks' },
+                    { name: 'rowBreaks' },
+                ]);
+            });
         });
 
         describe("printOptions", () => {
@@ -1686,6 +1704,32 @@ describe("Sheet", () => {
             expect(Relationships).toHaveBeenCalledWith("RELATIONSHIPS");
         });
 
+        it("should create horizontal page breaks", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", attributes: {}, children: [] },
+                    { name: "rowBreaks" },
+                ]
+            });
+
+            expect(sheet._horizontalPageBreaks).toEqual(jasmine.any(PageBreaks));
+            expect(PageBreaks).toHaveBeenCalledWith(true, { name: "rowBreaks" });
+        });
+
+        it("should create vertical page breaks", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", attributes: {}, children: [] },
+                    { name: "colBreaks" },
+                ]
+            });
+
+            expect(sheet._verticalPageBreaks).toEqual(jasmine.any(PageBreaks));
+            expect(PageBreaks).toHaveBeenCalledWith(false, { name: "colBreaks" });
+        });
+
         it("should delete the optional dimension node", () => {
             sheet._init({}, {}, {
                 attributes: {},
@@ -1945,35 +1989,17 @@ describe("Sheet", () => {
                 }
             });
         });
+
+        // it('should page the ')
     });
 
     describe("pageBreaks", () => {
-        it("should return an Object that holds vertical and horizontal page-breaks", () => {
-            const pageBreaks = sheet.pageBreaks();
-            expect(sheet.verticalPageBreaks()).toEqual(pageBreaks.colBreaks);
-            expect(sheet.horizontalPageBreaks()).toEqual(pageBreaks.rowBreaks);
+        it("should return horizontal page breaks", () => {
+            expect(sheet.horizontalPageBreaks()).toBe(sheet['_horizontalPageBreaks']);
         });
-        it("should return vertical page-breaks", () => {
-            expect(sheet.verticalPageBreaks().count).toBe(0);
-        });
-        it("should add a horizontal page-break", () => {
-            const pageBreaks = sheet.horizontalPageBreaks();
-            expect(pageBreaks.add(1)).toBe(pageBreaks);
-            expect(pageBreaks.count).toBe(1);
-        });
-        it("should return horizontal page-breaks", () => {
-            expect(sheet.horizontalPageBreaks().count).toBe(0);
-        });
-        it("should and then remove a vertical page-break", () => {
-            const pageBreaks = sheet.verticalPageBreaks();
-            expect(pageBreaks.add(1)).toBe(pageBreaks);
-            expect(pageBreaks.count).toBe(1);
-            expect(pageBreaks.remove(0)).toBe(pageBreaks);
-            expect(pageBreaks.count).toBe(0);
-        });
-        it("should return list of page-breaks ", () => {
-            expect(sheet.verticalPageBreaks().list.length).toBe(0);
-            expect(sheet.horizontalPageBreaks().list.length).toBe(0);
+
+        it("should return vertical page breaks", () => {
+            expect(sheet.verticalPageBreaks()).toBe(sheet['_verticalPageBreaks']);
         });
     });
 
