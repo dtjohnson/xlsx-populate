@@ -2222,6 +2222,7 @@ A RichText class that contains many [RichTextFragment](#RichTextFragment).
     * [.remove(index)](#RichText+remove) ⇒ [<code>RichText</code>](#RichText)
     * [.add(text, [styles], [index])](#RichText+add) ⇒ [<code>RichText</code>](#RichText)
     * [.clear()](#RichText+clear) ⇒ [<code>RichText</code>](#RichText)
+    * [.removeUnsupportedNodes()](#RichText+removeUnsupportedNodes) ⇒ <code>undefined</code>
 
 <a name="new_RichText_new"></a>
 
@@ -2323,6 +2324,12 @@ Clears this rich text
 
 **Kind**: instance method of [<code>RichText</code>](#RichText)  
 **Returns**: [<code>RichText</code>](#RichText) - the rich text instance  
+<a name="RichText+removeUnsupportedNodes"></a>
+
+#### richText.removeUnsupportedNodes() ⇒ <code>undefined</code>
+Remove all unsupported nodes (phoneticPr, rPh for Japanese language).
+
+**Kind**: instance method of [<code>RichText</code>](#RichText)  
 <a name="RichTextFragment"></a>
 
 ### RichTextFragment
