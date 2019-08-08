@@ -50,6 +50,18 @@ export function getChildAttribute(node: INode, name: string, attribute: string):
     if (child) return child.attributes && child.attributes[attribute];
 }
 
+export function getChildAttributeAsString(node: INode, name: string, attribute: string): undefined|string {
+    const val = getChildAttribute(node, name, attribute);
+    if (_.isNil(val)) return;
+    return String(val);
+}
+
+export function getChildAttributeAsNumber(node: INode, name: string, attribute: string): undefined|number {
+    const val = getChildAttribute(node, name, attribute);
+    if (_.isNil(val)) return;
+    return Number(val);
+}
+
 /**
  * Returns a value indicating whether the node has a child with the given name.
  * @param node - The parent node.
@@ -134,7 +146,7 @@ export function removeChild(node: INode, child: string|INode): void {
  * @param node - The node.
  * @param attributes - The attributes to set.
  */
-export function setAttributes(node: INode, attributes: { [index: string]: string|number }): void {
+export function setAttributes(node: INode, attributes: { [index: string]: string|number|undefined }): void {
     _.forOwn(attributes, (value: any, attribute: any) => {
         if (_.isNil(value)) {
             if (node.attributes) delete node.attributes[attribute];
@@ -152,7 +164,7 @@ export function setAttributes(node: INode, attributes: { [index: string]: string
  * @param attributes - The attributes to set.
  * @returns The child.
  */
-export function setChildAttributes(node: INode, name: string, attributes: { [index: string]: string|number }): undefined|INode {
+export function setChildAttributes(node: INode, name: string, attributes: { [index: string]: string|number|undefined }): undefined|INode {
     let child = findChild(node, name);
     _.forOwn(attributes, (value: any, attribute: any) => {
         if (_.isNil(value)) {

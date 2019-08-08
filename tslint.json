@@ -33,7 +33,7 @@
     "no-inferrable-types": [true, "ignore-params"],
     "no-internal-module": true,
     "no-magic-numbers": false, // Too annoying
-    "no-namespace": true,
+    // "no-namespace": true,
     "no-non-null-assertion": false, // Often necessary
     "no-parameter-reassignment": false, // Annoying to follow
     "no-reference": true,
@@ -171,7 +171,7 @@
     "file-name-casing": false, // Depends on the framework
     "import-spacing": true,
     "increment-decrement": false, // These are not as confusing as people claim
-    "interface-name": [true, "always-prefix"],
+    // "interface-name": [true, "always-prefix"],
     "interface-over-type-literal": true,
     "jsdoc-format": true,
     "match-default-export-name": false, // Not valuable as package maintainers can name whatever they want
@@ -303,7 +303,7 @@
       // all other rules (trailingUnderscore: forbid, format: camelCase) still apply
       {"type": "parameter", "modifiers": "unused", "leadingUnderscore": "allow"},
       // require leading underscores for private properties and methods, all other rules still apply
-      // {"type": "member", "modifiers": "private", "leadingUnderscore": "allow"},
+      {"type": "member", "modifiers": "private", "leadingUnderscore": "allow"},
       // same for protected
       // {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
       // exclicitly disable the format check only for method toJSON
@@ -315,7 +315,7 @@
       // abstract classes must have the prefix "Abstract". The following part of the name must be valid PascalCase
       {"type": "class", "modifiers": "abstract", "prefix": "Abstract"},
       // interface names must start with "I". The following part of the name must be valid PascalCase
-      {"type": "interface", "prefix": "I"},
+      // {"type": "interface", "prefix": "I"},
       // generic type parameters must start with "T"
       // most of the time it will only be T, which is totally valid, because an empty string conforms to the PascalCase check
       // By convention T, U and V are used for generics. You could enforce that with "regex": "^[TUV]$" and if you are care that much for performance, you could disable every other check by setting a falsy value
