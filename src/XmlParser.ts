@@ -4,11 +4,12 @@ import { SAXParser } from 'sax';
 const allWhitespaceRegex = /^\s+$/;
 
 export type NodeChild = INode|string|number;
+export interface NodeAttributes {
+    [index: string]: string|number;
+}
 export interface INode {
     name: string;
-    attributes?: {
-        [index: string]: string|number;
-    };
+    attributes?: NodeAttributes;
     children?: NodeChild[];
 }
 
