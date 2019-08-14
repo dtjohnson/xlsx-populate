@@ -1,15 +1,14 @@
-"use strict";
 
-const _ = require("lodash");
-const xmlq = require("./xmlq");
-const Style = require("./Style");
+import _ from 'lodash';
+import { Style } from './Style';
+import { INode } from './XmlParser';
+import * as xmlq from './xmlq';
 
 /**
  * Standard number format codes
  * Taken from http://polymathprogrammer.com/2011/02/15/built-in-styles-for-excel-open-xml/
- * @private
  */
-const STANDARD_CODES = {
+const STANDARD_CODES: { [id: number]: string } = {
     0: 'General',
     1: '0',
     2: '0.00',
@@ -37,115 +36,154 @@ const STANDARD_CODES = {
     46: '[h]:mm:ss',
     47: 'mmss.0',
     48: '##0.0E+0',
-    49: '@'
+    49: '@',
 };
 
 /**
  * The starting ID for custom number formats. The first 163 indexes are reserved.
- * @private
  */
 const STARTING_CUSTOM_NUMBER_FORMAT_ID = 164;
 
 /**
  * A style sheet.
- * @ignore
  */
-class StyleSheet {
+export class StyleSheet {
+    private static readonly Style = Style;
+
+    private readonly numFmtsNode: INode;
+    private readonly fontsNode: INode;
+    private readonly fillsNode: INode;
+    private readonly bordersNode: INode;
+    private readonly cellXfsNode: INode;
+
+    private readonly numberFormatCodesById: { [id: number]: string } = {};
+    private readonly numberFormatIdsByCode: { [code: string]: number|undefined } = {};
+
+    private nextNumFormatId = STARTING_CUSTOM_NUMBER_FORMAT_ID;
+
     /**
      * Creates an instance of _StyleSheet.
-     * @param {string} node - The style sheet node
+     * @param node - The style sheet node
      */
-    constructor(node) {
-        this._init(node);
-        this._cacheNumberFormats();
+    public constructor(private readonly node: INode) {
+        // Cache the refs to the collections. The number formats node might not exist.
+        const numFmtsNode = xmlq.findChild(this.node, 'numFmts');
+
+        // These should all be present.
+        this.fontsNode = xmlq.findChild(this.node, 'fonts')!;
+        this.fillsNode = xmlq.findChild(this.node, 'fills')!;
+        this.bordersNode = xmlq.findChild(this.node, 'borders')!;
+        this.cellXfsNode = xmlq.findChild(this.node, 'cellXfs')!;
+
+        if (numFmtsNode) {
+            this.numFmtsNode = numFmtsNode;
+        } else {
+            this.numFmtsNode = {
+                name: 'numFmts',
+                attributes: {},
+                children: [],
+            };
+
+            // Number formats need to be before the others.
+            xmlq.insertBefore(this.node, this.numFmtsNode, this.fontsNode);
+        }
+
+        // Remove the optional counts so we don't have to keep them up to date.
+        xmlq.setAttributes(this.numFmtsNode, { count: undefined });
+        xmlq.setAttributes(this.fontsNode, { count: undefined });
+        xmlq.setAttributes(this.fillsNode, { count: undefined });
+        xmlq.setAttributes(this.bordersNode, { count: undefined });
+        xmlq.setAttributes(this.cellXfsNode, { count: undefined });
+
+        this.cacheNumberFormats();
     }
 
     /**
      * Create a style.
-     * @param {number} [sourceId] - The source style ID to copy, if provided.
-     * @returns {Style} The style.
+     * @param sourceId - The source style ID to copy, if provided.
+     * @returns The style.
      */
-    createStyle(sourceId) {
-        let fontNode, fillNode, borderNode, xfNode;
-        if (sourceId >= 0) {
-            const sourceXfNode = this._cellXfsNode.children[sourceId];
+    public createStyle(sourceId?: number): Style {
+        let fontNode: INode|undefined, fillNode: INode|undefined, borderNode: INode|undefined, xfNode: INode|undefined;
+        if (!_.isNil(sourceId)) {
+            const sourceXfNode = this.cellXfsNode.children![sourceId] as INode;
             xfNode = _.cloneDeep(sourceXfNode);
 
-            if (sourceXfNode.attributes.applyFont) {
-                const fontId = sourceXfNode.attributes.fontId;
-                fontNode = _.cloneDeep(this._fontsNode.children[fontId]);
+            if (sourceXfNode.attributes && sourceXfNode.attributes.applyFont) {
+                const fontId = Number(sourceXfNode.attributes.fontId);
+                fontNode = _.cloneDeep(this.fontsNode.children![fontId] as INode);
             }
 
-            if (sourceXfNode.attributes.applyFill) {
-                const fillId = sourceXfNode.attributes.fillId;
-                fillNode = _.cloneDeep(this._fillsNode.children[fillId]);
+            if (sourceXfNode.attributes && sourceXfNode.attributes.applyFill) {
+                const fillId = Number(sourceXfNode.attributes.fillId);
+                fillNode = _.cloneDeep(this.fillsNode.children![fillId] as INode);
             }
 
-            if (sourceXfNode.attributes.applyBorder) {
-                const borderId = sourceXfNode.attributes.borderId;
-                borderNode = _.cloneDeep(this._bordersNode.children[borderId]);
+            if (sourceXfNode.attributes && sourceXfNode.attributes.applyBorder) {
+                const borderId = Number(sourceXfNode.attributes.borderId);
+                borderNode = _.cloneDeep(this.bordersNode.children![borderId] as INode);
             }
         }
 
-        if (!fontNode) fontNode = { name: "font", attributes: {}, children: [] };
-        this._fontsNode.children.push(fontNode);
+        if (!fontNode) fontNode = { name: 'font', attributes: {}, children: [] };
+        xmlq.appendChild(this.fontsNode, fontNode);
 
-        if (!fillNode) fillNode = { name: "fill", attributes: {}, children: [] };
-        this._fillsNode.children.push(fillNode);
+        if (!fillNode) fillNode = { name: 'fill', attributes: {}, children: [] };
+        xmlq.appendChild(this.fillsNode, fillNode);
 
         // The border sides must be in order
-        if (!borderNode) borderNode = { name: "border", attributes: {}, children: [] };
+        if (!borderNode) borderNode = { name: 'border', attributes: {}, children: [] };
         borderNode.children = [
-            xmlq.findChild(borderNode, "left") || { name: "left", attributes: {}, children: [] },
-            xmlq.findChild(borderNode, "right") || { name: "right", attributes: {}, children: [] },
-            xmlq.findChild(borderNode, "top") || { name: "top", attributes: {}, children: [] },
-            xmlq.findChild(borderNode, "bottom") || { name: "bottom", attributes: {}, children: [] },
-            xmlq.findChild(borderNode, "diagonal") || { name: "diagonal", attributes: {}, children: [] }
+            xmlq.findChild(borderNode, 'left') || { name: 'left', attributes: {}, children: [] },
+            xmlq.findChild(borderNode, 'right') || { name: 'right', attributes: {}, children: [] },
+            xmlq.findChild(borderNode, 'top') || { name: 'top', attributes: {}, children: [] },
+            xmlq.findChild(borderNode, 'bottom') || { name: 'bottom', attributes: {}, children: [] },
+            xmlq.findChild(borderNode, 'diagonal') || { name: 'diagonal', attributes: {}, children: [] },
         ];
-        this._bordersNode.children.push(borderNode);
+        xmlq.appendChild(this.bordersNode, borderNode);
 
-        if (!xfNode) xfNode = { name: "xf", attributes: {}, children: [] };
+        if (!xfNode) xfNode = { name: 'xf', attributes: {}, children: [] };
         _.assign(xfNode.attributes, {
-            fontId: this._fontsNode.children.length - 1,
-            fillId: this._fillsNode.children.length - 1,
-            borderId: this._bordersNode.children.length - 1,
+            fontId: this.fontsNode.children!.length - 1,
+            fillId: this.fillsNode.children!.length - 1,
+            borderId: this.bordersNode.children!.length - 1,
             applyFont: 1,
             applyFill: 1,
-            applyBorder: 1
+            applyBorder: 1,
         });
+        xmlq.appendChild(this.cellXfsNode, xfNode);
 
-        this._cellXfsNode.children.push(xfNode);
-
-        return new Style(this, this._cellXfsNode.children.length - 1, xfNode, fontNode, fillNode, borderNode);
+        const styleId = this.cellXfsNode.children!.length - 1;
+        return new StyleSheet.Style(this, styleId, xfNode, fontNode, fillNode, borderNode);
     }
 
     /**
      * Get the number format code for a given ID.
-     * @param {number} id - The number format ID.
-     * @returns {string} The format code.
+     * @param id - The number format ID.
+     * @returns The format code.
      */
-    getNumberFormatCode(id) {
-        return this._numberFormatCodesById[id];
+    public getNumberFormatCode(id: number): string {
+        return this.numberFormatCodesById[id];
     }
 
     /**
      * Get the nuumber format ID for a given code.
-     * @param {string} code - The format code.
-     * @returns {number} The number format ID.
+     * @param code - The format code.
+     * @returns The number format ID.
      */
-    getNumberFormatId(code) {
-        let id = this._numberFormatIdsByCode[code];
+    public getNumberFormatId(code: string): number {
+        let id = this.numberFormatIdsByCode[code];
         if (id === undefined) {
-            id = this._nextNumFormatId++;
-            this._numberFormatCodesById[id] = code;
-            this._numberFormatIdsByCode[code] = id;
+            id = this.nextNumFormatId++;
+            this.numberFormatCodesById[id] = code;
+            this.numberFormatIdsByCode[code] = id;
 
-            this._numFmtsNode.children.push({
+            xmlq.appendChild(this.numFmtsNode, {
                 name: 'numFmt',
                 attributes: {
                     numFmtId: id,
-                    formatCode: code
-                }
+                    formatCode: code,
+                },
             });
         }
 
@@ -154,80 +192,38 @@ class StyleSheet {
 
     /**
      * Convert the style sheet to an XML object.
-     * @returns {{}} The XML form.
-     * @ignore
+     * @returns The XML form.
      */
-    toXml() {
-        return this._node;
+    public toXml(): INode {
+        return this.node;
     }
 
     /**
      * Cache the number format codes
-     * @returns {undefined}
-     * @private
      */
-    _cacheNumberFormats() {
+    private cacheNumberFormats(): void {
         // Load the standard number format codes into the caches.
-        this._numberFormatCodesById = {};
-        this._numberFormatIdsByCode = {};
         for (const id in STANDARD_CODES) {
-            if (!STANDARD_CODES.hasOwnProperty(id)) continue;
+            if (!(id in STANDARD_CODES)) continue;
             const code = STANDARD_CODES[id];
-            this._numberFormatCodesById[id] = code;
-            this._numberFormatIdsByCode[code] = parseInt(id);
+            this.numberFormatCodesById[id] = code;
+            this.numberFormatIdsByCode[code] = parseInt(id, 10);
         }
-
-        // Set the next number format code.
-        this._nextNumFormatId = STARTING_CUSTOM_NUMBER_FORMAT_ID;
 
         // If there are custom number formats, cache them all and update the next num as needed.
-        this._numFmtsNode.children.forEach(node => {
-            const id = node.attributes.numFmtId;
-            const code = node.attributes.formatCode;
-            this._numberFormatCodesById[id] = code;
-            this._numberFormatIdsByCode[code] = id;
-            if (id >= this._nextNumFormatId) this._nextNumFormatId = id + 1;
+        (this.numFmtsNode.children || []).forEach(node => {
+            if (typeof node !== 'string' && typeof node !== 'number' && node.attributes) {
+                const id = Number(node.attributes.numFmtId);
+                const code = String(node.attributes.formatCode);
+                this.numberFormatCodesById[id] = code;
+                this.numberFormatIdsByCode[code] = id;
+                if (id >= this.nextNumFormatId) this.nextNumFormatId = id + 1;
+            }
         });
-    }
-
-    /**
-     * Initialize the style sheet node.
-     * @param {{}} [node] - The node
-     * @returns {undefined}
-     * @private
-     */
-    _init(node) {
-        this._node = node;
-
-        // Cache the refs to the collections.
-        this._numFmtsNode = xmlq.findChild(this._node, "numFmts");
-        this._fontsNode = xmlq.findChild(this._node, "fonts");
-        this._fillsNode = xmlq.findChild(this._node, "fills");
-        this._bordersNode = xmlq.findChild(this._node, "borders");
-        this._cellXfsNode = xmlq.findChild(this._node, "cellXfs");
-
-        if (!this._numFmtsNode) {
-            this._numFmtsNode = {
-                name: "numFmts",
-                attributes: {},
-                children: []
-            };
-
-            // Number formats need to be before the others.
-            xmlq.insertBefore(this._node, this._numFmtsNode, this._fontsNode);
-        }
-
-        // Remove the optional counts so we don't have to keep them up to date.
-        delete this._numFmtsNode.attributes.count;
-        delete this._fontsNode.attributes.count;
-        delete this._fillsNode.attributes.count;
-        delete this._bordersNode.attributes.count;
-        delete this._cellXfsNode.attributes.count;
     }
 }
 
-module.exports = StyleSheet;
-
+// tslint:disable
 /*
 xl/styles.xml
 

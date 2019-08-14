@@ -6,7 +6,8 @@
     ]
   },
   "include": [
-    "**/*.spec.ts"
+    "unit",
+    "../src"
   ],
   "exclude": []
 }

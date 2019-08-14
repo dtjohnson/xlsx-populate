@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import { Borders } from './Borders';
+import { StyleSheet } from './StyleSheet';
 import { Color, Fill, FillPattern, FontGenericFamily, FontScheme, GradientFill, GradientType, HorizontalAlignment,
-    NumberFormatSource, TextDirection, VerticalAlignment } from './types';
+    TextDirection, VerticalAlignment } from './types';
 import { getColor, setColor } from './utils';
 import { INode } from './XmlParser';
 import * as xmlq from './xmlq';
@@ -25,7 +26,7 @@ export class Style {
      * @param borderNode - The border node.
      */
     public constructor(
-        private readonly styleSheet: NumberFormatSource, // Stylesheet
+        private readonly styleSheet: StyleSheet,
         private readonly _id: number,
         private readonly xfNode: INode,
         private readonly fontNode: INode,

@@ -3,6 +3,41 @@
       "../tslint.json"
     ],
     "rules": {
-        "no-string-literal": false // Enable for access to private members
+        "no-string-literal": false, // Enable for access to private members
+        "naming-convention": [ // Taken from https://github.com/ajafff/tslint-consistent-codestyle/blob/master/docs/naming-convention.md#examples
+          true,
+          // forbid leading and trailing underscores and enforce camelCase on EVERY name. will be overridden by subtypes if needed
+          {"type": "default", "format": "camelCase", "leadingUnderscore": "forbid", "trailingUnderscore": "forbid"},
+          // require all global constants to be camelCase or UPPER_CASE
+          // all other variables and functions still need to be camelCase
+          {"type": "variable", "modifiers": ["global", "const"], "format": ["camelCase","UPPER_CASE"]},
+          // override the above format option for exported constants to allow only UPPER_CASE
+          {"type": "variable", "modifiers": ["export", "const"], "format": "UPPER_CASE"},
+          // require exported constant variables that are initialized with functions to be camelCase
+          {"type": "functionVariable", "modifiers": ["export", "const"], "format": "camelCase"},
+          // allow leading underscores for unused parameters, because `tsc --noUnusedParameters` will not flag underscore prefixed parameters
+          // all other rules (trailingUnderscore: forbid, format: camelCase) still apply
+          {"type": "parameter", "modifiers": "unused", "leadingUnderscore": "allow"},
+          // require leading underscores for private properties and methods, all other rules still apply
+          {"type": "member", "modifiers": "private", "leadingUnderscore": "allow"},
+          // same for protected
+          // {"type": "member", "modifiers": "protected", "leadingUnderscore": "require"},
+          // exclicitly disable the format check only for method toJSON
+          {"type": "method", "filter": "^toJSON$", "format": null},
+          // enforce UPPER_CASE for all public static readonly(!) properties
+          {"type": "property", "modifiers": ["public", "static", "const"], "format": "UPPER_CASE"},
+          // enforce PascalCase for classes, interfaces, enums, etc. Remember, there are still no underscores allowed.
+          {"type": "type", "format": "PascalCase"},
+          // abstract classes must have the prefix "Abstract". The following part of the name must be valid PascalCase
+          {"type": "class", "modifiers": "abstract", "prefix": "Abstract"},
+          // interface names must start with "I". The following part of the name must be valid PascalCase
+          // {"type": "interface", "prefix": "I"},
+          // generic type parameters must start with "T"
+          // most of the time it will only be T, which is totally valid, because an empty string conforms to the PascalCase check
+          // By convention T, U and V are used for generics. You could enforce that with "regex": "^[TUV]$" and if you are care that much for performance, you could disable every other check by setting a falsy value
+          {"type": "genericTypeParameter", "prefix": "T"},
+          // enum members must be in PascalCase. Without this config, enumMember would inherit UPPER_CASE from public static const property
+          {"type": "enumMember", "format": "PascalCase"}
+        ],
     }
 }

@@ -1,12 +1,12 @@
 import { Style } from '../../src/Style';
-import { NumberFormatSource } from '../../src/types';
+import { StyleSheet } from '../../src/StyleSheet';
 import { INode } from '../../src/XmlParser';
 
 describe('Style', () => {
-    let style: Style, styleSheet: jasmine.SpyObj<NumberFormatSource>, id, xfNode: INode, fontNode: INode, fillNode: INode, borderNode;
+    let style: Style, styleSheet: jasmine.SpyObj<StyleSheet>, id, xfNode: INode, fontNode: INode, fillNode: INode, borderNode;
 
     beforeEach(() => {
-        styleSheet = jasmine.createSpyObj<NumberFormatSource>('styleSheet', [ 'getNumberFormatCode', 'getNumberFormatId' ]);
+        styleSheet = jasmine.createSpyObj<StyleSheet>('styleSheet', [ 'getNumberFormatCode', 'getNumberFormatId' ]);
         id = 78;
         xfNode = { name: 'xf', attributes: {}, children: [] };
         fontNode = { name: 'font', attributes: {}, children: [] };

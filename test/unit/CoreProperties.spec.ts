@@ -1,7 +1,7 @@
 import { CoreProperties } from '../../src/CoreProperties';
 import { INode } from '../../src/XmlParser';
 
-fdescribe('CoreProperties', () => {
+describe('CoreProperties', () => {
     let coreProperties: CoreProperties, corePropertiesNode: INode;
 
     beforeEach(() => {

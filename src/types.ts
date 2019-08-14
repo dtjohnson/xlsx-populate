@@ -76,8 +76,3 @@ export interface DiagonalBorder extends Border {
     direction: DiagonalBorderDirection;
 }
 
-export interface NumberFormatSource {
-    getNumberFormatCode(id: number): string;
-
-    getNumberFormatId(code: string): number;
-}
