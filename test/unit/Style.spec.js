@@ -154,6 +154,30 @@ describe("Style", () => {
         });
     });
 
+    describe("fontGenericFamily", () => {
+        it("should get/set fontGenericFamily", () => {
+            expect(style.style("fontGenericFamily")).toBe(undefined);
+            style.style("fontGenericFamily", 1);
+            expect(style.style("fontGenericFamily")).toBe(1);
+            expect(fontNode.children).toEqualJson([{ name: 'family', attributes: { val: 1 }, children: [] }]);
+            style.style("fontGenericFamily", undefined);
+            expect(style.style("fontGenericFamily")).toBe(undefined);
+            expect(fontNode.children).toEqualJson([]);
+        });
+    });
+
+    describe("fontScheme", () => {
+        it("should get/set fontScheme", () => {
+            expect(style.style("fontScheme")).toBe(undefined);
+            style.style("fontScheme", 'minor');
+            expect(style.style("fontScheme")).toBe('minor');
+            expect(fontNode.children).toEqualJson([{ name: 'scheme', attributes: { val: 'minor' }, children: [] }]);
+            style.style("fontScheme", undefined);
+            expect(style.style("fontScheme")).toBe(undefined);
+            expect(fontNode.children).toEqualJson([]);
+        });
+    });
+
     describe("fontColor", () => {
         it("should get/set fontColor", () => {
             expect(style.style("fontColor")).toBe(undefined);

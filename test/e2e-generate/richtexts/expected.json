@@ -1,0 +1,18 @@
+{
+  "text": "hellotest123\n456\n789\n10\n11\n12",
+  "length": 29,
+  "rt1Text": "hello",
+  "rt2Bold": true,
+  "rt2FontFamily": "Arial",
+  "rt2Text": "test",
+  "rt3FontColor": 66047,
+  "rt3Italic": true,
+  "rt3Text": "123\n",
+  "rt4Text": "456\n",
+  "rt4Underline": 2,
+  "rt5Strikethrough": true,
+  "rt5Text": "789\n",
+  "rt6Subscript": true,
+  "rt6Text": "10\n11\n12",
+  "rt6Underline": -4119
+}

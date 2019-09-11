@@ -3,7 +3,7 @@
 const proxyquire = require("proxyquire");
 
 describe("Cell", () => {
-    let Cell, cell, cellNode, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
+    let Cell, cell, cellNode, RichText, row, sheet, workbook, sharedStrings, styleSheet, style, FormulaError, range;
 
     beforeEach(() => {
         FormulaError = jasmine.createSpyObj("FormulaError", ["getError"]);
@@ -11,6 +11,10 @@ describe("Cell", () => {
 
         Cell = proxyquire("../../lib/Cell", {
             './FormulaError': FormulaError,
+            '@noCallThru': true
+        });
+
+        RichText = proxyquire("../../lib/RichText", {
             '@noCallThru': true
         });
 
@@ -586,7 +590,8 @@ describe("Cell", () => {
         });
 
         it("should set a rich text value", () => {
-            cell._value = [{ name: 'r' }];
+            const rt = new RichText();
+            cell._value = rt;
 
             expect(cell.toXml()).toEqualJson({
                 name: 'c',
@@ -599,7 +604,7 @@ describe("Cell", () => {
                     children: [7]
                 }]
             });
-            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith([{ name: 'r' }]);
+            expect(sharedStrings.getIndexForString).toHaveBeenCalledWith(rt.toXml());
         });
 
         it("should set a true bool value", () => {

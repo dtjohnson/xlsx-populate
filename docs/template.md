@@ -47,7 +47,7 @@ XlsxPopulate.fromBlankAsync()
     .then(workbook => {
         // Modify the workbook.
         workbook.sheet("Sheet1").cell("A1").value("This is neat!");
-        
+
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
     });
@@ -64,12 +64,12 @@ XlsxPopulate.fromFileAsync("./Book1.xlsx")
     .then(workbook => {
         // Modify the workbook.
         const value = workbook.sheet("Sheet1").cell("A1").value();
-        
+
         // Log the value.
         console.log(value);
     });
 ```
-__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output. 
+__Note__: in cells that contain values calculated by formulas, Excel will store the calculated value in the workbook. The [value](#Cell+value) method will return the value of the cells at the time the workbook was saved. xlsx-populate will _not_ recalculate the values as you manipulate the workbook and will _not_ write the values to the output.
 
 ### Ranges
 xlsx-populate also supports ranges of cells to allow parsing/manipulation of multiple cells at once.
@@ -113,7 +113,7 @@ You can access rows and columns in order to change size, hide/show, or access ce
 // Get the B column, set its width and unhide it (assuming it was hidden).
 sheet.column("B").width(25).hidden(false);
 
-const cell = sheet.row(5).cell(3); // Returns the cell at C5. 
+const cell = sheet.row(5).cell(3); // Returns the cell at C5.
 ```
 
 ### Managing Sheets
@@ -227,7 +227,7 @@ You can search for occurrences of text in cells within the workbook or sheets an
 // Find all occurrences of the text "foo" in the workbook and replace with "bar".
 workbook.find("foo", "bar"); // Returns array of matched cells
 
-// Find the matches but don't replace. 
+// Find the matches but don't replace.
 workbook.find("foo");
 
 // Just look in the first sheet.
@@ -256,9 +256,9 @@ cell.style({ bold: true, italic: true });
 
 // Get a single style
 const bold = cell.style("bold"); // true
- 
+
 // Get multiple styles
-const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true } 
+const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true }
 ```
 
 Similarly for ranges:
@@ -290,9 +290,9 @@ sheet.column("A").style({ bold: true, italic: true });
 
 // Get a single style
 const bold = sheet.column(3).style("bold");
- 
+
 // Get multiple styles
-const styles = sheet.row(5).style(["bold", "italic"]); 
+const styles = sheet.row(5).style(["bold", "italic"]);
 ```
 Note that the row/column style behavior mirrors Excel. Setting a style on a column will apply that style to all existing cells and any new cells that are populated. Getting the row/column style will return only the styles that have been applied to the entire row/column, not the styles of every cell in the row or column.
 
@@ -339,6 +339,123 @@ You can also look up the desired format code in Excel:
 * Switch the category to "Custom" if it is not already.
 * The code in the "Type" box is the format you should copy.
 
+### Rich Texts
+You can read/write rich texts to cells.
+
+#### Supported styles
+`bold`, `italic`, `underline`, `strikethrough`, `subscript`, `fontSize`,
+`fontFamily`, `fontGenericFamily`, `fontScheme`, `fontColor`.
+See the [Style Reference](#style-reference) for the various options.
+
+#### Usage
+You can read and modify rich texts on an existing rich text cell:
+```js
+// assume A1 is a rich text cell
+const RichText = require('xlsx-Populate').RichText;
+const cell = workbook.sheet(0).cell('A1');
+cell.value() instanceof RichText // returns true
+const richtext = cell.value();
+// get the concatenate text
+richtext.text();
+
+// loop through each rich text fragment
+for (let i = 0; i < richtext.length; i++) {
+    const fragment = richtext.get(i);
+    // Get the style
+    fragment.style('bold');
+    // Get many styles
+    fragment.style(['bold', 'italic']);
+    // Set one style
+    fragment.style('bold', true);
+    // Set many styles
+    fragment.style({ 'bold': true, 'italic': true });
+    // Get the value
+    fragment.value();
+    // Set the value
+    fragment.value('hello');
+}
+
+// remove the first rich text fragment
+richtext.remove(0);
+
+// clear this rich texts
+richtext.clear();
+```
+
+How to set a cell to rich texts:
+```js
+const RichText = require('xlsx-Populate').RichText;
+const cell = workbook.sheet(0).cell('A1');
+// set a cell value to rich text
+cell.value(new RichText());
+
+// add two rich text fragments
+cell.value()
+    .add('hello ', { italic: true, bold: true })
+    .add('world!', { fontColor: 'FF0000' });
+````
+
+You can specify the index when adding rich text fragment.
+```js
+// add before the first fragment
+cell.value().add('text', { bold: true }, 0);
+// add before the second fragment
+cell.value().add('text', { bold: true }, 1);
+// add after the last fragment
+cell.value().add('text', { bold: true });
+```
+#### Notes
+We make a deep copy of the richtext instance when assign it to a cell, which
+means you can only modify the content of the richtext before calling `cell.value(richtext)`. 
+Any modification to the richtext instance after calling `cell.value(richtext)` will not
+save to the cell. i.e.
+```js
+const richtext = new RichText();
+richtext.add('hello');
+cell.value(richtext);
+cell.value().text(); // returns 'hello'
+
+richtext.add(' world')
+richtext.text(); // returns 'hello world' 
+cell.value().text(); // returns 'hello'
+cell.value() === richtext; // returns false
+
+cell.value().add(' world');
+cell.value().text(); // returns 'hello world'
+```
+
+This means you can create a rich text instance and assign it to any cells! Each cell does
+not share the same instance but creates a deep copy of the instance.
+```js
+const sheet = workbook.sheet(0);
+const richtext = new RichText();
+richtext.add('hello');
+const range = sheet.range("A1:C3");
+range.value(richtext);
+// they do not share the same instance
+sheet.cell('A1').value() === sheet.cell('C1').value() // returns false
+```
+
+You can get the rich text from a cell and set it to anoher cell.
+```js
+const richtext = cell1.value();
+cell2.value(richtext);
+cell1.value() === cell2.value() // returns false
+```
+
+Whenever you call `richtext.add(text, styles, index)`, we will detect if the given `text`
+contains line separators (`\n`, `\r`, `\r\n`), if it does, we will call
+`cell.style('wrapText', true)` for you. MS Excel needs wrapText to be true
+to have the new lines displayed, otherwise you will see the texts in one line.
+You may also need to set row height to have all lines displayed.
+```js
+cell.value()
+    // it support all line separators
+    .add('123\n456\r789\r\n10', { italic: true, fontColor: '123456' })
+// remember to set height to show the whole row
+workbook.sheet(0).row(1).height(100);
+```
+
 ### Dates
 
 Excel stores date/times as the number of days since 1/1/1900 ([sort of](https://en.wikipedia.org/wiki/Leap_year_bug)). It just applies a number formatting to make the number appear as a date. So to set a date value, you will need to also set a number format for a date if one doesn't already exist in the cell:
@@ -357,7 +474,7 @@ Data validation is also supported. To set/get/remove a cell data validation:
 // Set the data validation
 cell.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -385,7 +502,7 @@ Similarly for ranges:
 // Set all cells in range with a single shared data validation
 range.dataValidation({
     type: 'list',
-    allowBlank: false, 
+    allowBlank: false,
     showInputMessage: false,
     prompt: false,
     promptTitle: 'String',
@@ -426,7 +543,7 @@ workbook
             .value(5)
         .cell(0, 0)
             .style("underline", "double");
-        
+
 ```
 
 ### Hyperlinks
@@ -509,6 +626,31 @@ sheet.pageMargins('top', 1.1);
 const topPageMarginInInches = sheet.pageMargins('top'); // Returns 1.1
 ```
 
+### SheetView Panes
+SheetView Panes are accessed using the [Sheet.panes](#Sheet+panes) method.
+For convenience, we have [Sheet.freezePanes](#Sheet+freezePanes),
+[Sheet.splitPanes](#Sheet+splitPanes), [Sheet.resetPanes](#Sheet+resetPanes),
+and type [PaneOptions](#paneoptions--object).
+```js
+// access Pane options
+sheet.panes(); // return PaneOptions Object
+
+// manually Set Pane options, WARNING: setting wrong options may result in excel fails to open.
+const paneOptions = { state: 'frozen', topLeftCell: 'B2', xSplit: 1, ySplit: 1, activePane: 'bottomRight' }
+sheet.panes(paneOptions); // return PaneOptions Object
+
+// freeze panes (freeze first column and first two rows)
+sheet.freezePanes(1, 2);
+// OR
+sheet.freezePanes('B3');
+
+// split panes (Horizontal Split Position: 1000 / 20 pt, Vertical Split Position: 2000 / 20 pt)
+sheet.splitPanes(1000, 2000);
+
+// reset to normal panes (no freeze panes and split panes)
+sheet.resetPanes();
+```
+
 ### Serving from Express
 You can serve the workbook from [express](http://expressjs.com/) or other web servers with something like this:
 ```js
@@ -518,14 +660,14 @@ router.get("/download", function (req, res, next) {
         .then(workbook => {
             // Make edits.
             workbook.sheet(0).cell("A1").value("foo");
-            
+
             // Get the output
             return workbook.outputAsync();
         })
         .then(data => {
             // Set the output file name.
             res.attachment("output.xlsx");
-            
+
             // Send the workbook.
             res.send(data);
         })
@@ -621,7 +763,7 @@ workbook.toFileAsync("./out.xlsx", { password: "S3cret!" });
 ```
 The password option is supported in all output methods. N.B. Workbooks will only be encrypted if you supply a password when outputting even if they had a password when reading.
 
-Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.  
+Encryption support is also available in the browser, but take care! Any password you put in browser code can be read by anyone with access to your code. You should only use passwords that are supplied by the end-user. Also, the performance of encryption/decryption in the browser is far worse than with Node.js. IE, in particular, is extremely slow. xlsx-populate is bundled for browsers with and without encryption support as the encryption libraries increase the size of the bundle a lot.
 
 ## Missing Features
 There are many, many features of the XLSX format that are not yet supported. If your use case needs something that isn't supported
@@ -629,7 +771,7 @@ please open an issue to show your support. Better still, feel free to [contribut
 
 ## Submitting an Issue
 If you happen to run into a bug or an issue, please feel free to [submit an issue](https://github.com/dtjohnson/xlsx-populate/issues). I only ask that you please include sample JavaScript code that demonstrates the issue.
-If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue. 
+If the problem lies with modifying some template, it is incredibly difficult to debug the issue without the template. So please attach the template if possible. If you have confidentiality concerns, please attach a different workbook that exhibits the issue or you can send your workbook directly to [dtjohnson](https://github.com/dtjohnson) after creating the issue.
 
 ## Contributing
 
@@ -690,7 +832,7 @@ To make sure your code is consistent and high quality, please make sure to follo
  * Make sure all tests pass successfully.
  * Whenever possible, do not modify/break existing API behavior. This module adheres to the [semantic versioning standard](https://docs.npmjs.com/getting-started/semantic-versioning). So any breaking changes will require a major release.
  * If your feature needs more documentation than just the JSDoc output, please add to the docs/template.md README file.
- 
+
 
 ### Gulp Tasks
 
@@ -722,6 +864,8 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 |superscript|`boolean`|`true` for superscript, `false` for not superscript (cannot be combined with subscript)|
 |fontSize|`number`|Font size in points. Must be greater than 0.|
 |fontFamily|`string`|Name of font family.|
+|fontGenericFamily|`number`|1: Serif, 2: Sans Serif, 3: Monospace, |
+|fontScheme|`string`|`'minor'`\|`'major'`\|`'none'` |
 |fontColor|<code>Color&#124;string&#124;number</code>|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
 |horizontalAlignment|`string`|Horizontal alignment. Allowed values: `'left'`, `'center'`, `'right'`, `'fill'`, `'justify'`, `'centerContinuous'`, `'distributed'`|
 |justifyLastLine|`boolean`|a.k.a Justified Distributed. Only applies when horizontalAlignment === `'distributed'`. A boolean value indicating if the cells justified or distributed alignment should be used on the last line of text. (This is typical for East Asian alignments but not typical in other contexts.)|

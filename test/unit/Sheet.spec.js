@@ -360,6 +360,20 @@ describe("Sheet", () => {
             expect(sheet.name("a new name")).toBe(sheet);
             expect(sheet.name()).toBe("a new name");
         });
+
+        it("sheet name should be a string", () => {
+            idNode = {
+                name: 'sheet',
+                attributes: {
+                    name: 1,
+                    sheetId: '1',
+                    'r:id': 'rId1'
+                },
+                children: []
+            };
+            sheet = new Sheet(workbook, idNode, sheetNode);
+            expect(sheet.name()).toBe("1");
+        });
     });
 
     describe("range", () => {
@@ -1941,6 +1955,88 @@ describe("Sheet", () => {
         it("should return list of page-breaks ", () => {
             expect(sheet.verticalPageBreaks().list.length).toBe(0);
             expect(sheet.horizontalPageBreaks().list.length).toBe(0);
+        });
+    });
+
+    describe('Sheet.panes', () => {
+        it('should return undefined if pane node does not exist', () => {
+            expect(sheet.panes()).toBe(undefined);
+        });
+
+        it('should set freeze panes by xSplit and ySplit', () => {
+            sheet.freezePanes(1, 1);
+            expect(sheet.panes()).toEqualJson({
+                xSplit: 1,
+                ySplit: 1,
+                topLeftCell: "B2",
+                activePane: "bottomRight",
+                state: "frozen"
+            });
+        });
+
+        it('should set freeze panes by topLeftCell', () => {
+            sheet.freezePanes('B2');
+            expect(sheet.panes()).toEqualJson({
+                xSplit: 1,
+                ySplit: 1,
+                topLeftCell: "B2",
+                activePane: "bottomRight",
+                state: "frozen"
+            });
+        });
+
+        it('should have activePane=bottomLeft when freeze rows only', function () {
+            sheet.freezePanes('A3');
+            expect(sheet.panes().activePane).toBe('bottomLeft');
+            sheet.freezePanes(0, 2);
+            expect(sheet.panes().activePane).toBe('bottomLeft');
+        });
+
+        it('should have activePane=topRight when freeze columns only', function () {
+            sheet.freezePanes('C1');
+            expect(sheet.panes().activePane).toBe('topRight');
+            sheet.freezePanes(2, 0);
+            expect(sheet.panes().activePane).toBe('topRight');
+        });
+
+        it('should set split panes', () => {
+            sheet.splitPanes(2000, 1000);
+            expect(sheet.panes()).toEqualJson({
+                xSplit: 2000,
+                ySplit: 1000,
+                activePane: "bottomRight",
+                state: "split"
+            });
+        });
+
+        it('should reset panes', () => {
+            sheet.splitPanes(2000, 1000);
+            sheet.resetPanes();
+            expect(sheet.panes()).toBe(undefined);
+            expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
+            sheet.freezePanes(1, 1);
+            sheet.resetPanes();
+            expect(sheet.panes()).toBe(undefined);
+            expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
+            sheet.freezePanes('B2');
+            sheet.resetPanes();
+            expect(sheet.panes()).toBe(undefined);
+            expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
+        });
+
+        it('should remove pane attribute', () => {
+            sheet.splitPanes(2000, 1000);
+            sheet.panes(null);
+            expect(sheet.panes()).toBe(undefined);
+            expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
+            sheet.freezePanes(1, 1);
+            sheet.panes(null);
+            expect(sheet.panes()).toBe(undefined);
+            expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
+            sheet.freezePanes('B2');
+            sheet.panes(null);
+            expect(sheet.panes()).toBe(undefined);
+            expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
         });
     });
 });
