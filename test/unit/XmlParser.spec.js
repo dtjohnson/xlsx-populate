@@ -60,5 +60,35 @@ describe("XmlParser", () => {
                     });
                 });
         });
+
+        itAsync("should remove root element's namespace", () => {
+            const xml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<x:root>
+    <x:foo>bar</x:foo>
+    <foo>bar</foo>
+    <foo>
+        <x:bar>foo</x:bar>
+    </foo>
+</x:root>`;
+
+            return xmlParser.parseAsync(xml)
+                .then(node => {
+                    expect(node).toEqualJson({
+                        name: 'root',
+                        attributes: {},
+                        children: [
+                            { name: 'foo', attributes: {}, children: ["bar"] },
+                            { name: 'foo', attributes: {}, children: ["bar"] },
+                            {
+                                name: 'foo',
+                                attributes: {},
+                                children: [
+                                    { name: 'bar', attributes: {}, children: ["foo"] },
+                                ]
+                            }
+                        ]
+                    })
+                });
+        })
     });
 });

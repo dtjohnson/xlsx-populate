@@ -2227,7 +2227,10 @@ A RichText class that contains many [RichTextFragment](#RichTextFragment).
 <a name="new_RichText_new"></a>
 
 #### new RichText([node])
-Creates a new instance of RichText. If you get the instance by calling `Cell.value()`,adding a text contains line separator will trigger [Cell.style](Cell.style)('wrapText', true), whichwill make MS Excel show the new line. i.e. In MS Excel, Tap "alt+Enter" in a cell, the cellwill set wrap text to true automatically.
+Creates a new instance of RichText. If you get the instance by calling `Cell.value()`,
+adding a text contains line separator will trigger [Cell.style](Cell.style)('wrapText', true), which
+will make MS Excel show the new line. i.e. In MS Excel, Tap "alt+Enter" in a cell, the cell
+will set wrap text to true automatically.
 
 
 | Param | Type | Description |
@@ -2270,7 +2273,9 @@ Gets the instance with cell reference defined.
 <a name="RichText+copy"></a>
 
 #### richText.copy([cell]) ⇒ [<code>RichText</code>](#RichText)
-Returns a deep copy of this instance.If cell reference is provided, it checks line separators and calls`cell.style('wrapText', true)` when needed.
+Returns a deep copy of this instance.
+If cell reference is provided, it checks line separators and calls
+`cell.style('wrapText', true)` when needed.
 
 **Kind**: instance method of [<code>RichText</code>](#RichText)  
 **Returns**: [<code>RichText</code>](#RichText) - A deep copied instance  
@@ -3093,7 +3098,8 @@ Set the print option for the gridLines attribute value.
 <a name="Sheet+pageMargins"></a>
 
 #### sheet.pageMargins(attributeName) ⇒ <code>number</code>
-Get the page margin given a valid attribute name.If the value is not yet defined, then it will return the current preset value.
+Get the page margin given a valid attribute name.
+If the value is not yet defined, then it will return the current preset value.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>number</code> - the attribute value.  
@@ -3118,7 +3124,13 @@ Set the page margin (or override the preset) given an attribute name and a value
 <a name="Sheet+pageMarginsPreset"></a>
 
 #### sheet.pageMarginsPreset() ⇒ <code>string</code>
-Page margins preset is a set of page margins associated with a name.The page margin preset acts as a fallback when not explicitly defined by `Sheet.pageMargins`.If a sheet already contains page margins, it attempts to auto-detect, otherwise they are defined as the template preset.If no page margins exist, then the preset is undefined and will not be included in the output of `Sheet.toXmls`.Available presets include: normal, wide, narrow, template.Get the page margins preset name. The registered name of a predefined set of attributes.
+Page margins preset is a set of page margins associated with a name.
+The page margin preset acts as a fallback when not explicitly defined by `Sheet.pageMargins`.
+If a sheet already contains page margins, it attempts to auto-detect, otherwise they are defined as the template preset.
+If no page margins exist, then the preset is undefined and will not be included in the output of `Sheet.toXmls`.
+Available presets include: normal, wide, narrow, template.
+
+Get the page margins preset name. The registered name of a predefined set of attributes.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>string</code> - The preset name.  
@@ -3452,7 +3464,9 @@ Write the workbook to file. (Not supported in browsers.)
 <a name="Workbook+cloneSheet"></a>
 
 #### workbook.cloneSheet(from, name, [indexOrBeforeSheet]) ⇒ [<code>Sheet</code>](#Sheet)
-Add a new sheet to the workbook.**WARN:** this function has limits:  if you clone a sheet with some images or other things link outside the Sheet object, these things in the cloned sheet will be locked when you open in MS Excel app.
+Add a new sheet to the workbook.
+
+**WARN:** this function has limits:  if you clone a sheet with some images or other things link outside the Sheet object, these things in the cloned sheet will be locked when you open in MS Excel app.
 
 **Kind**: instance method of [<code>Workbook</code>](#Workbook)  
 **Returns**: [<code>Sheet</code>](#Sheet) - The new sheet.  
@@ -3565,7 +3579,11 @@ Convert an Excel number to a date.
 <a name="_"></a>
 
 ### _
-OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
+OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
+https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
+
+Helpful guidance also take from this Github project:
+https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
 <a name="PaneOptions"></a>
