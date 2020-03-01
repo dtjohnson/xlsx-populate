@@ -237,7 +237,7 @@ workbook.activeSheet("Sheet2");
 Excel supports creating defined names that refer to addresses, formulas, or constants. These defined names can be scoped
 to the entire workbook or just individual sheets. xlsx-populate supports looking up defined names that refer to cells or
 ranges. (Dereferencing other names will result in an error.) Defined names are particularly useful if you are populating
-data into a known template. Then you do need to know the exact location.
+data into a known template. Then you do not need to know the exact location.
 
 ```js
 // Look up workbook-scoped name and set the value to 5.
