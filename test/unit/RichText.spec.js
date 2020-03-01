@@ -316,7 +316,7 @@ describe("RichText", () => {
         expect(rt.get(1)._valueNode.attributes['xml:space']).toBe('preserve');
     });
 
-    it('it should save unsupported node', done => {
+    xit('it should save unsupported node', done => {
         XlsxPoplate.fromFileAsync('./test/files/issue-230.xlsx')
             .then(wb => {
                 expect(wb.sheet(0).cell('A1').value()._remainingNodes.length).toBe(5);
