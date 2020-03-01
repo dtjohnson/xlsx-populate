@@ -3522,7 +3522,7 @@ The Promise library.
 **Kind**: static property of [<code>XlsxPopulate</code>](#XlsxPopulate)  
 <a name="XlsxPopulate.MIME_TYPE"></a>
 
-#### XlsxPopulate.MIME_TYPE : <code>string</code>
+#### XlsxPopulate.MIME\_TYPE : <code>string</code>
 The XLSX mime type.
 
 **Kind**: static property of [<code>XlsxPopulate</code>](#XlsxPopulate)  
@@ -3599,7 +3599,6 @@ Convert an Excel number to a date.
 
 <a name="_"></a>
 
-### _
 OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
 https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
 

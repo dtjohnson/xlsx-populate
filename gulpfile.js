@@ -4,7 +4,6 @@
 
 const gulp = require('gulp');
 const browserify = require('browserify');
-const babelify = require('babelify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const rename = require('gulp-rename');
@@ -12,11 +11,10 @@ const uglifyjs = require('uglify-js');
 const uglifyComposer = require('gulp-uglify/composer');
 const sourcemaps = require('gulp-sourcemaps');
 const eslint = require("gulp-eslint");
-const runSequence = require('run-sequence').use(gulp);
 const jsdoc2md = require("jsdoc-to-markdown");
 const toc = require('markdown-toc');
-const Promise = require("bluebird");
-const fs = Promise.promisifyAll(require("fs"));
+const bluebird = require("bluebird");
+const fs = bluebird.promisifyAll(require("fs"));
 const karma = require('karma');
 const Jasmine = require("jasmine");
 
@@ -26,9 +24,9 @@ const uglify = uglifyComposer(uglifyjs, console);
 const BROWSERIFY_STANDALONE_NAME = "XlsxPopulate";
 const BABEL_CONFIG = {
     presets: [
-        ["env", {
+        ["@babel/preset-env", {
             targets: {
-                "browsers": ">0.5%"
+                browsers: ">0.5%"
             }
         }]
     ]
@@ -45,7 +43,7 @@ const PATHS = {
         bundle: "xlsx-populate.js",
         noEncryptionBundle: "xlsx-populate-no-encryption.js",
         sourceMap: "./",
-        encryptionIngores: ["./lib/Encryptor.js"]
+        encryptionIgnores: ["./lib/Encryptor.js"]
     },
     readme: {
         template: "./docs/template.md",
@@ -102,8 +100,8 @@ const runKarma = (files, cb) => {
         autoWatch: false,
         captureTimeout: 210000,
         browserDisconnectTolerance: 3,
-        browserDisconnectTimeout : 210000,
-        browserNoActivityTimeout : 210000
+        browserDisconnectTimeout: 210000,
+        browserNoActivityTimeout: 210000
     }, cb).start();
 };
 
@@ -135,56 +133,14 @@ const runBrowserify = (ignores, bundle) => {
         .pipe(gulp.dest(PATHS.browserify.base));
 };
 
-gulp.task('browser', ['browser-full', 'browser-no-encryption']);
+const blank = async () => {
+    const data = await fs.readFileAsync(PATHS.blank.workbook, "base64");
+    const template = await fs.readFileAsync(PATHS.blank.template, "utf8");
+    const output = template.replace("{{DATA}}", data);
+    return fs.writeFileAsync(PATHS.blank.build, output);
+};
 
-gulp.task('browser-full', ['blank'], () => {
-    return runBrowserify([], PATHS.browserify.bundle);
-});
-
-gulp.task('browser-no-encryption', ['blank'], () => {
-    return runBrowserify([PATHS.browserify.encryptionIngores], PATHS.browserify.noEncryptionBundle);
-});
-
-gulp.task("lint", () => {
-    return gulp
-        .src(PATHS.lint)
-        .pipe(eslint())
-        .pipe(eslint.format());
-});
-
-gulp.task("unit", cb => {
-    runJasmine(PATHS.jasmineConfigs.unit, cb);
-});
-
-gulp.task("e2e-generate", cb => {
-    runJasmine(PATHS.jasmineConfigs.e2eGenerate, cb);
-});
-
-gulp.task("e2e-parse", cb => {
-    runJasmine(PATHS.jasmineConfigs.e2eParse, cb);
-});
-
-gulp.task('e2e-browser', cb => {
-    runKarma(["./test/helpers/**/*.js", "./browser/xlsx-populate.js", "./test/e2e-browser/**/*.spec.js"], cb);
-});
-
-gulp.task('unit-browser', cb => {
-    runKarma(PATHS.karma, cb);
-});
-
-gulp.task("blank", () => {
-    return Promise
-        .all([
-            fs.readFileAsync(PATHS.blank.workbook, "base64"),
-            fs.readFileAsync(PATHS.blank.template, "utf8")
-        ])
-        .spread((data, template) => {
-            const output = template.replace("{{DATA}}", data);
-            return fs.writeFileAsync(PATHS.blank.build, output);
-        });
-});
-
-gulp.task("docs", () => {
+const docs = () => {
     return fs.readFileAsync(PATHS.readme.template, "utf8")
         .then(text => {
             const tocText = toc(text, { filter: str => str.indexOf('NOTOC-') === -1 }).content;
@@ -197,20 +153,64 @@ gulp.task("docs", () => {
                     return fs.writeFileAsync(PATHS.readme.build, text);
                 });
         });
+};
+
+const browserFull = gulp.series(blank, function browserFull() {
+    return runBrowserify([], PATHS.browserify.bundle);
 });
 
-gulp.task('watch', () => {
+const browserNoEncryption = gulp.series(blank, function browserNoEncryption() {
+    return runBrowserify([PATHS.browserify.encryptionIgnores], PATHS.browserify.noEncryptionBundle);
+});
+
+const browser = gulp.series(browserFull, browserNoEncryption);
+
+const lint = () => {
+    return gulp
+        .src(PATHS.lint)
+        .pipe(eslint())
+        .pipe(eslint.format());
+};
+
+const unit = cb => {
+    runJasmine(PATHS.jasmineConfigs.unit, cb);
+};
+
+const e2eGenerate = cb => {
+    runJasmine(PATHS.jasmineConfigs.e2eGenerate, cb);
+};
+
+const e2eParse = cb => {
+    runJasmine(PATHS.jasmineConfigs.e2eParse, cb);
+};
+
+const e2eBrowser = cb => {
+    runKarma(["./test/helpers/**/*.js", "./browser/xlsx-populate.js", "./test/e2e-browser/**/*.spec.js"], cb);
+};
+
+const unitBrowser = cb => {
+    runKarma(PATHS.karma, cb);
+};
+
+const watch = () => {
     // Only watch blank, unit, and docs for changes. Everything else is too slow or noisy.
-    gulp.watch([PATHS.blank.template, PATHS.blank.workbook], ['blank']);
-    gulp.watch(PATHS.unitTestSources, ["unit"]);
-    gulp.watch([PATHS.lib, PATHS.readme.template], ["docs"]);
-});
+    gulp.watch([PATHS.blank.template, PATHS.blank.workbook], blank);
+    gulp.watch(PATHS.unitTestSources, unit);
+    gulp.watch([PATHS.lib, PATHS.readme.template], docs);
+};
 
-gulp.task('build', cb => {
-    runSequence(["docs", "browser"], "lint", "unit", "unit-browser", "e2e-parse", "e2e-generate", "e2e-browser", cb);
-});
+const build = gulp.series(docs, browser, lint, unit, unitBrowser, e2eParse, e2eGenerate, e2eBrowser);
 
-gulp.task("default", cb => {
-    // Watch just the quick stuff to aid development.
-    runSequence("blank", ["unit", "docs"], "watch", cb);
-});
+const defaultTask = gulp.series(blank, unit, docs, watch);
+
+exports.blank = blank;
+exports.docs = docs;
+exports.browser = browser;
+exports.lint = lint;
+exports.unit = unit;
+exports['unit-browser'] = unitBrowser;
+exports['e2e-parse'] = e2eParse;
+exports['e2e-generate'] = e2eGenerate;
+exports['e2e-browser'] = e2eBrowser;
+exports.build = build;
+exports.default = defaultTask;
