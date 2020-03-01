@@ -246,19 +246,19 @@ workbook.find(/[a-z]+/g, match => match.toUpperCase());
 ### Styles
 xlsx-populate supports a wide range of cell formatting. See the [Style Reference](#style-reference) for the various options.
 
-To set/set a cell style:
+To get/set a cell style:
 ```js
-// Set a single style
-cell.style("bold", true);
-
-// Set multiple styles
-cell.style({ bold: true, italic: true });
-
 // Get a single style
 const bold = cell.style("bold"); // true
 
 // Get multiple styles
 const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true }
+
+// Set a single style
+cell.style("bold", true);
+
+// Set multiple styles
+cell.style({ bold: true, italic: true });
 ```
 
 Similarly for ranges:
