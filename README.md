@@ -281,19 +281,19 @@ workbook.find(/[a-z]+/g, match => match.toUpperCase());
 ### Styles
 xlsx-populate supports a wide range of cell formatting. See the [Style Reference](#style-reference) for the various options.
 
-To set/set a cell style:
+To get/set a cell style:
 ```js
-// Set a single style
-cell.style("bold", true);
-
-// Set multiple styles
-cell.style({ bold: true, italic: true });
-
 // Get a single style
 const bold = cell.style("bold"); // true
 
 // Get multiple styles
 const styles = cell.style(["bold", "italic"]); // { bold: true, italic: true }
+
+// Set a single style
+cell.style("bold", true);
+
+// Set multiple styles
+cell.style({ bold: true, italic: true });
 ```
 
 Similarly for ranges:
@@ -893,7 +893,7 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 | ------------- | ------------- | ----- |
 |bold|`boolean`|`true` for bold, `false` for not bold|
 |italic|`boolean`|`true` for italic, `false` for not italic|
-|underline|`boolean\|string`|`true` for single underline, `false` for no underline, `'double'` for double-underline|
+|underline|<code>boolean&#124;string</code>|`true` for single underline, `false` for no underline, `'double'` for double-underline|
 |strikethrough|`boolean`|`true` for strikethrough `false` for not strikethrough|
 |subscript|`boolean`|`true` for subscript, `false` for not subscript (cannot be combined with superscript)|
 |superscript|`boolean`|`true` for superscript, `false` for not superscript (cannot be combined with subscript)|
@@ -901,7 +901,7 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 |fontFamily|`string`|Name of font family.|
 |fontGenericFamily|`number`|1: Serif, 2: Sans Serif, 3: Monospace, |
 |fontScheme|`string`|`'minor'`\|`'major'`\|`'none'` |
-|fontColor|`Color\|string\|number`|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
+|fontColor|<code>Color&#124;string&#124;number</code>|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
 |horizontalAlignment|`string`|Horizontal alignment. Allowed values: `'left'`, `'center'`, `'right'`, `'fill'`, `'justify'`, `'centerContinuous'`, `'distributed'`|
 |justifyLastLine|`boolean`|a.k.a Justified Distributed. Only applies when horizontalAlignment === `'distributed'`. A boolean value indicating if the cells justified or distributed alignment should be used on the last line of text. (This is typical for East Asian alignments but not typical in other contexts.)|
 |indent|`number`|Number of indents. Must be greater than or equal to 0.|
@@ -915,12 +915,12 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 |rotateTextUp|`boolean`|Shortcut for textRotation of 90 degrees.|
 |rotateTextDown|`boolean`|Shortcut for textRotation of -90 degrees.|
 |verticalText|`boolean`|Special rotation that shows text vertical but individual letters are oriented normally. `true` to rotate, `false` to not rotate.|
-|fill|`SolidFill\|PatternFill\|GradientFill\|Color\|string\|number`|The cell fill. If Color, will set a solid fill with the color. If string, will set a solid RGB fill. If number, will set a solid theme color fill.|
-|border|`Borders\|Border\|string\|boolean}`|The border settings. If string, will set outside borders to given border style. If true, will set outside border style to `'thin'`.|
-|borderColor|`Color\|string\|number`|Color of the borders. If string, will set an RGB color. If number, will set a theme color.|
+|fill|<code>SolidFill&#124;PatternFill&#124;GradientFill&#124;Color&#124;string&#124;number</code>|The cell fill. If Color, will set a solid fill with the color. If string, will set a solid RGB fill. If number, will set a solid theme color fill.|
+|border|<code>Borders&#124;Border&#124;string&#124;boolean</code>|The border settings. If string, will set outside borders to given border style. If true, will set outside border style to `'thin'`.|
+|borderColor|<code>Color&#124;string&#124;number</code>|Color of the borders. If string, will set an RGB color. If number, will set a theme color.|
 |borderStyle|`string`|Style of the outside borders. Allowed values: `'hair'`, `'dotted'`, `'dashDotDot'`, `'dashed'`, `'mediumDashDotDot'`, `'thin'`, `'slantDashDot'`, `'mediumDashDot'`, `'mediumDashed'`, `'medium'`, `'thick'`, `'double'`|
-|leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder|`Border\|string\|boolean`|The border settings for the given side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|`Color\|string\|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
+|leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder|<code>Border&#124;string&#124;boolean</code>|The border settings for the given side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|<code>Color&#124;string&#124;number</code>|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |leftBorderStyle, rightBorderStyle, topBorderStyle, bottomBorderStyle, diagonalBorderStyle|`string`|Style of the given side.|
 |diagonalBorderDirection|`string`|Direction of the diagonal border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 |numberFormat|`string`|Number format code. See docs [here](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&rs=en-US&ad=US).|
@@ -939,11 +939,11 @@ An object representing all of the borders.
 
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
-|[left]|`Border\|string\|boolean`|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[right]|`Border\|string\|boolean`|The border settings for the right side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[top]|`Border\|string\|boolean`|The border settings for the top side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[bottom]|`Border\|string\|boolean`|The border settings for the bottom side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[diagonal]|`Border\|string\|boolean`|The border settings for the diagonal side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[left]|<code>Border&#124;string&#124;boolean</code>|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[right]|<code>Border&#124;string&#124;boolean</code>|The border settings for the right side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[top]|<code>Border&#124;string&#124;boolean</code>|The border settings for the top side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[bottom]|<code>Border&#124;string&#124;boolean</code>|The border settings for the bottom side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[diagonal]|<code>Border&#124;string&#124;boolean</code>|The border settings for the diagonal side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
 
 ### Border
 An object representing an individual border.
@@ -951,7 +951,7 @@ An object representing an individual border.
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |style|`string`|Style of the given border.|
-|color|`Color\|string\|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
+|color|<code>Color&#124;string&#124;number</code>|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |[direction]|`string`|For diagonal border, the direction of the border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 
 ### SolidFill
@@ -960,7 +960,7 @@ An object representing a solid fill.
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'solid'`||
-|color|`Color\|string\|number`|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
+|color|<code>Color&#124;string&#124;number</code>|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
 
 ### PatternFill
 An object representing a pattern fill.
@@ -969,8 +969,8 @@ An object representing a pattern fill.
 | ------------- | ------------- | ----- |
 |type|`'pattern'`||
 |pattern|`string`|Name of the pattern. Allowed values: `'gray125'`, `'darkGray'`, `'mediumGray'`, `'lightGray'`, `'gray0625'`, `'darkHorizontal'`, `'darkVertical'`, `'darkDown'`, `'darkUp'`, `'darkGrid'`, `'darkTrellis'`, `'lightHorizontal'`, `'lightVertical'`, `'lightDown'`, `'lightUp'`, `'lightGrid'`, `'lightTrellis'`.|
-|foreground|`Color\|string\|number`|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
-|background|`Color\|string\|number`|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
+|foreground|<code>Color&#124;string&#124;number</code>|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
+|background|<code>Color&#124;string&#124;number</code>|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
 
 ### GradientFill
 An object representing a gradient fill.
@@ -981,7 +981,7 @@ An object representing a gradient fill.
 |[gradientType]|`string`|Type of gradient. Allowed values: `'linear'` (default), `'path'`. With a path gradient, a path is drawn between the top, left, right, and bottom values and a graident is draw from that path to the outside of the cell.|
 |stops|`Array.<{}>`||
 |stops[].position|`number`|The position of the stop from 0 to 1.|
-|stops[].color|`Color\|string\|number`|Color of the stop. If string, will set an RGB color. If number, will set a theme color.|
+|stops[].color|<code>Color&#124;string&#124;number</code>|Color of the stop. If string, will set an RGB color. If number, will set a theme color.|
 |[angle]|`number`|If linear gradient, the angle of clockwise rotation of the gradient.|
 |[left]|`number`|If path gradient, the left position of the path as a percentage from 0 to 1.|
 |[right]|`number`|If path gradient, the right position of the path as a percentage from 0 to 1.|
@@ -2646,7 +2646,7 @@ A worksheet.
     * [.tabSelected()](#Sheet+tabSelected) ⇒ <code>boolean</code>
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ [<code>Sheet</code>](#Sheet)
     * [.rightToLeft()](#Sheet+rightToLeft) ⇒ <code>boolean</code>
-    * [.rightToLeft(selected)](#Sheet+rightToLeft) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.rightToLeft(rtl)](#Sheet+rightToLeft) ⇒ [<code>Sheet</code>](#Sheet)
     * [.usedRange()](#Sheet+usedRange) ⇒ [<code>Range</code>](#Range) \| <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ [<code>Workbook</code>](#Workbook)
     * [.pageBreaks()](#Sheet+pageBreaks) ⇒ <code>Object</code>
@@ -2980,7 +2980,7 @@ Sets whether this sheet is selected.
 <a name="Sheet+rightToLeft"></a>
 
 #### sheet.rightToLeft() ⇒ <code>boolean</code>
-Gets a value indicating whether this sheet is rtl.
+Gets a value indicating whether this sheet is rtl (Right To Left).
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>boolean</code> - True if rtl, false if ltr.  
@@ -2994,7 +2994,7 @@ Sets whether this sheet is rtl.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| rtl | <code>boolean</code> | True to rtl, false to ltr. |
+| rtl | <code>boolean</code> | True to rtl, false to ltr (Left To Right). |
 
 <a name="Sheet+usedRange"></a>
 
@@ -3260,8 +3260,8 @@ A workbook.
     * [.deleteSheet(sheet)](#Workbook+deleteSheet) ⇒ [<code>Workbook</code>](#Workbook)
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
     * [.moveSheet(sheet, [indexOrBeforeSheet])](#Workbook+moveSheet) ⇒ [<code>Workbook</code>](#Workbook)
-    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code>
-    * [.outputAsync([opts])](#Workbook+outputAsync) ⇒ <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code>
+    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
+    * [.outputAsync([opts])](#Workbook+outputAsync) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ [<code>Sheet</code>](#Sheet) \| <code>undefined</code>
     * [.sheets()](#Workbook+sheets) ⇒ [<code>Array.&lt;Sheet&gt;</code>](#Sheet)
     * [.property(name)](#Workbook+property) ⇒ <code>\*</code>
@@ -3369,11 +3369,11 @@ Move a sheet to a new position.
 
 <a name="Workbook+outputAsync"></a>
 
-#### workbook.outputAsync([type]) ⇒ <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code>
+#### workbook.outputAsync([type]) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
 Generates the workbook output.
 
 **Kind**: instance method of [<code>Workbook</code>](#Workbook)  
-**Returns**: <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code> - The data.  
+**Returns**: <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code> - The data.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3381,11 +3381,11 @@ Generates the workbook output.
 
 <a name="Workbook+outputAsync"></a>
 
-#### workbook.outputAsync([opts]) ⇒ <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code>
+#### workbook.outputAsync([opts]) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
 Generates the workbook output.
 
 **Kind**: instance method of [<code>Workbook</code>](#Workbook)  
-**Returns**: <code>string</code> \| <code>Uint8Array</code> \| <code>ArrayBuffer</code> \| <code>Blob</code> \| <code>Buffer</code> - The data.  
+**Returns**: <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code> - The data.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3599,6 +3599,7 @@ Convert an Excel number to a date.
 
 <a name="_"></a>
 
+### \_
 OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
 https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
 
