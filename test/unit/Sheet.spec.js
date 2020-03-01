@@ -579,6 +579,30 @@ describe("Sheet", () => {
         });
     });
 
+    describe("rightToLeft", () => {
+        let sheetViewNode;
+
+        beforeEach(() => {
+            sheetViewNode = { attributes: {} };
+            spyOn(sheet, "_getOrCreateSheetViewNode").and.returnValue(sheetViewNode);
+        });
+
+        it("should return rightToLeft state", () => {
+            expect(sheet.rightToLeft()).toBe(undefined);
+
+            sheetViewNode.attributes.rightToLeft = true;
+            expect(sheet.rightToLeft()).toBe(true);
+        });
+
+        it("should rtl/ltr the sheet", () => {
+            expect(sheet.rightToLeft(true)).toBe(sheet);
+            expect(sheetViewNode.attributes.rightToLeft).toBe(true);
+
+            expect(sheet.rightToLeft(false)).toBe(sheet);
+            expect(sheetViewNode.attributes.tabSelected).toBeUndefined();
+        });
+    });
+
     describe("usedRange", () => {
         beforeEach(() => {
             spyOn(sheet, "range").and.returnValue("RANGE");

@@ -2645,6 +2645,8 @@ A worksheet.
     * [.tabColor()](#Sheet+tabColor) ⇒ <code>Color</code> \| <code>string</code> \| <code>number</code>
     * [.tabSelected()](#Sheet+tabSelected) ⇒ <code>boolean</code>
     * [.tabSelected(selected)](#Sheet+tabSelected) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.rightToLeft()](#Sheet+rightToLeft) ⇒ <code>boolean</code>
+    * [.rightToLeft(selected)](#Sheet+rightToLeft) ⇒ [<code>Sheet</code>](#Sheet)
     * [.usedRange()](#Sheet+usedRange) ⇒ [<code>Range</code>](#Range) \| <code>undefined</code>
     * [.workbook()](#Sheet+workbook) ⇒ [<code>Workbook</code>](#Workbook)
     * [.pageBreaks()](#Sheet+pageBreaks) ⇒ <code>Object</code>
@@ -2974,6 +2976,25 @@ Sets whether this sheet is selected.
 | Param | Type | Description |
 | --- | --- | --- |
 | selected | <code>boolean</code> | True to select, false to deselected. |
+
+<a name="Sheet+rightToLeft"></a>
+
+#### sheet.rightToLeft() ⇒ <code>boolean</code>
+Gets a value indicating whether this sheet is rtl.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>boolean</code> - True if rtl, false if ltr.  
+<a name="Sheet+rightToLeft"></a>
+
+#### sheet.rightToLeft(rtl) ⇒ [<code>Sheet</code>](#Sheet)
+Sets whether this sheet is rtl.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| rtl | <code>boolean</code> | True to rtl, false to ltr. |
 
 <a name="Sheet+usedRange"></a>
 
@@ -3578,7 +3599,6 @@ Convert an Excel number to a date.
 
 <a name="_"></a>
 
-### \_
 OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
 https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
 
