@@ -858,7 +858,7 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 | ------------- | ------------- | ----- |
 |bold|`boolean`|`true` for bold, `false` for not bold|
 |italic|`boolean`|`true` for italic, `false` for not italic|
-|underline|`boolean\|string`|`true` for single underline, `false` for no underline, `'double'` for double-underline|
+|underline|<code>boolean&#124;string</code>|`true` for single underline, `false` for no underline, `'double'` for double-underline|
 |strikethrough|`boolean`|`true` for strikethrough `false` for not strikethrough|
 |subscript|`boolean`|`true` for subscript, `false` for not subscript (cannot be combined with superscript)|
 |superscript|`boolean`|`true` for superscript, `false` for not superscript (cannot be combined with subscript)|
@@ -866,7 +866,7 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 |fontFamily|`string`|Name of font family.|
 |fontGenericFamily|`number`|1: Serif, 2: Sans Serif, 3: Monospace, |
 |fontScheme|`string`|`'minor'`\|`'major'`\|`'none'` |
-|fontColor|`Color\|string\|number`|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
+|fontColor|<code>Color&#124;string&#124;number</code>|Color of the font. If string, will set an RGB color. If number, will set a theme color.|
 |horizontalAlignment|`string`|Horizontal alignment. Allowed values: `'left'`, `'center'`, `'right'`, `'fill'`, `'justify'`, `'centerContinuous'`, `'distributed'`|
 |justifyLastLine|`boolean`|a.k.a Justified Distributed. Only applies when horizontalAlignment === `'distributed'`. A boolean value indicating if the cells justified or distributed alignment should be used on the last line of text. (This is typical for East Asian alignments but not typical in other contexts.)|
 |indent|`number`|Number of indents. Must be greater than or equal to 0.|
@@ -880,12 +880,12 @@ xlsx-populate uses [gulp](https://github.com/gulpjs/gulp) as a build tool. There
 |rotateTextUp|`boolean`|Shortcut for textRotation of 90 degrees.|
 |rotateTextDown|`boolean`|Shortcut for textRotation of -90 degrees.|
 |verticalText|`boolean`|Special rotation that shows text vertical but individual letters are oriented normally. `true` to rotate, `false` to not rotate.|
-|fill|`SolidFill\|PatternFill\|GradientFill\|Color\|string\|number`|The cell fill. If Color, will set a solid fill with the color. If string, will set a solid RGB fill. If number, will set a solid theme color fill.|
-|border|`Borders\|Border\|string\|boolean}`|The border settings. If string, will set outside borders to given border style. If true, will set outside border style to `'thin'`.|
-|borderColor|`Color\|string\|number`|Color of the borders. If string, will set an RGB color. If number, will set a theme color.|
+|fill|<code>SolidFill&#124;PatternFill&#124;GradientFill&#124;Color&#124;string&#124;number</code>|The cell fill. If Color, will set a solid fill with the color. If string, will set a solid RGB fill. If number, will set a solid theme color fill.|
+|border|<code>Borders&#124;Border&#124;string&#124;boolean</code>|The border settings. If string, will set outside borders to given border style. If true, will set outside border style to `'thin'`.|
+|borderColor|<code>Color&#124;string&#124;number</code>|Color of the borders. If string, will set an RGB color. If number, will set a theme color.|
 |borderStyle|`string`|Style of the outside borders. Allowed values: `'hair'`, `'dotted'`, `'dashDotDot'`, `'dashed'`, `'mediumDashDotDot'`, `'thin'`, `'slantDashDot'`, `'mediumDashDot'`, `'mediumDashed'`, `'medium'`, `'thick'`, `'double'`|
-|leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder|`Border\|string\|boolean`|The border settings for the given side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|`Color\|string\|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
+|leftBorder, rightBorder, topBorder, bottomBorder, diagonalBorder|<code>Border&#124;string&#124;boolean</code>|The border settings for the given side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|leftBorderColor, rightBorderColor, topBorderColor, bottomBorderColor, diagonalBorderColor|<code>Color&#124;string&#124;number</code>|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |leftBorderStyle, rightBorderStyle, topBorderStyle, bottomBorderStyle, diagonalBorderStyle|`string`|Style of the given side.|
 |diagonalBorderDirection|`string`|Direction of the diagonal border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 |numberFormat|`string`|Number format code. See docs [here](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68?ui=en-US&rs=en-US&ad=US).|
@@ -904,11 +904,11 @@ An object representing all of the borders.
 
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
-|[left]|`Border\|string\|boolean`|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[right]|`Border\|string\|boolean`|The border settings for the right side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[top]|`Border\|string\|boolean`|The border settings for the top side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[bottom]|`Border\|string\|boolean`|The border settings for the bottom side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
-|[diagonal]|`Border\|string\|boolean`|The border settings for the diagonal side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[left]|<code>Border&#124;string&#124;boolean</code>|The border settings for the left side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[right]|<code>Border&#124;string&#124;boolean</code>|The border settings for the right side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[top]|<code>Border&#124;string&#124;boolean</code>|The border settings for the top side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[bottom]|<code>Border&#124;string&#124;boolean</code>|The border settings for the bottom side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
+|[diagonal]|<code>Border&#124;string&#124;boolean</code>|The border settings for the diagonal side. If string, will set border to the given border style. If true, will set border style to `'thin'`.|
 
 ### NOTOC-Border
 An object representing an individual border.
@@ -916,7 +916,7 @@ An object representing an individual border.
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |style|`string`|Style of the given border.|
-|color|`Color\|string\|number`|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
+|color|<code>Color&#124;string&#124;number</code>|Color of the given border. If string, will set an RGB color. If number, will set a theme color.|
 |[direction]|`string`|For diagonal border, the direction of the border(s) from left to right. Allowed values: `'up'`, `'down'`, `'both'`|
 
 ### NOTOC-SolidFill
@@ -925,7 +925,7 @@ An object representing a solid fill.
 |Property|Type|Description|
 | ------------- | ------------- | ----- |
 |type|`'solid'`||
-|color|`Color\|string\|number`|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
+|color|<code>Color&#124;string&#124;number</code>|Color of the fill. If string, will set an RGB color. If number, will set a theme color.|
 
 ### NOTOC-PatternFill
 An object representing a pattern fill.
@@ -934,8 +934,8 @@ An object representing a pattern fill.
 | ------------- | ------------- | ----- |
 |type|`'pattern'`||
 |pattern|`string`|Name of the pattern. Allowed values: `'gray125'`, `'darkGray'`, `'mediumGray'`, `'lightGray'`, `'gray0625'`, `'darkHorizontal'`, `'darkVertical'`, `'darkDown'`, `'darkUp'`, `'darkGrid'`, `'darkTrellis'`, `'lightHorizontal'`, `'lightVertical'`, `'lightDown'`, `'lightUp'`, `'lightGrid'`, `'lightTrellis'`.|
-|foreground|`Color\|string\|number`|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
-|background|`Color\|string\|number`|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
+|foreground|<code>Color&#124;string&#124;number</code>|Color of the foreground. If string, will set an RGB color. If number, will set a theme color.|
+|background|<code>Color&#124;string&#124;number</code>|Color of the background. If string, will set an RGB color. If number, will set a theme color.|
 
 ### NOTOC-GradientFill
 An object representing a gradient fill.
@@ -946,7 +946,7 @@ An object representing a gradient fill.
 |[gradientType]|`string`|Type of gradient. Allowed values: `'linear'` (default), `'path'`. With a path gradient, a path is drawn between the top, left, right, and bottom values and a graident is draw from that path to the outside of the cell.|
 |stops|`Array.<{}>`||
 |stops[].position|`number`|The position of the stop from 0 to 1.|
-|stops[].color|`Color\|string\|number`|Color of the stop. If string, will set an RGB color. If number, will set a theme color.|
+|stops[].color|<code>Color&#124;string&#124;number</code>|Color of the stop. If string, will set an RGB color. If number, will set a theme color.|
 |[angle]|`number`|If linear gradient, the angle of clockwise rotation of the gradient.|
 |[left]|`number`|If path gradient, the left position of the path as a percentage from 0 to 1.|
 |[right]|`number`|If path gradient, the right position of the path as a percentage from 0 to 1.|
