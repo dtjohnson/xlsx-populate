@@ -1626,6 +1626,44 @@ describe("Sheet", () => {
                 }
             ]);
         });
+
+        it("should add the headers", () => {
+            sheet._headers = {
+                odd: 'ODDHEADER',
+                even: 'EVENHEADER',
+                first: 'FIRSTPAGEHEADER'
+            };
+
+            expect(sheet.toXmls().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
+                { name: 'sheetFormatPr', attributes: {}, children: [] },
+                { name: 'sheetData', attributes: {}, children: [] },
+                {
+                    name: 'headerFooter',
+                    attributes: {},
+                    children: ['ODDHEADER', 'EVENHEADER', 'FIRSTPAGEHEADER']
+                }
+            ]);
+        });
+
+        it("should add the footers", () => {
+            sheet._footers = {
+                odd: 'ODDFOOTER',
+                even: 'EVENFOOTER',
+                first: 'FIRSTPAGEFOOTER'
+            };
+
+            expect(sheet.toXmls().sheet.children).toEqualJson([
+                { name: 'sheetPr', attributes: {}, children: [] },
+                { name: 'sheetFormatPr', attributes: {}, children: [] },
+                { name: 'sheetData', attributes: {}, children: [] },
+                {
+                    name: 'headerFooter',
+                    attributes: {},
+                    children: ['ODDFOOTER', 'EVENFOOTER', 'FIRSTPAGEFOOTER']
+                }
+            ]);
+        });
     });
 
     describe("updateMaxSharedFormulaId", () => {
@@ -1950,6 +1988,54 @@ describe("Sheet", () => {
                 }
             });
         });
+
+        it("should parse the headers", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", atrributes: {}, children: [] },
+                    {
+                        name: 'headerFooter',
+                        atrributes: {},
+                        children: [
+                            { name: 'oddHeader', attribute: {}, children: ['foo'] },
+                            { name: 'evenHeader', attribute: {}, children: ['bar'] },
+                            { name: 'firstHeader', attribute: {}, children: ['Page 1'] }
+                        ]
+                    }
+                ]
+            });
+
+            expect(sheet._headers).toEqualJson({
+                odd: { name: 'oddHeader', attribute: {}, children: ['foo'] },
+                even: { name: 'evenHeader', attribute: {}, children: ['bar'] },
+                first: { name: 'firstHeader', attribute: {}, children: ['Page 1'] }
+            });
+        });
+
+        it("should parse the footers", () => {
+            sheet._init({}, {}, {
+                attributes: {},
+                children: [
+                    { name: "sheetData", atrributes: {}, children: [] },
+                    {
+                        name: 'headerFooter',
+                        atrributes: {},
+                        children: [
+                            { name: 'oddFooter', attribute: {}, children: ['foo'] },
+                            { name: 'evenFooter', attribute: {}, children: ['bar'] },
+                            { name: 'firstFooter', attribute: {}, children: ['Page 1'] }
+                        ]
+                    }
+                ]
+            });
+
+            expect(sheet._footers).toEqualJson({
+                odd: { name: 'oddFooter', attribute: {}, children: ['foo'] },
+                even: { name: 'evenFooter', attribute: {}, children: ['bar'] },
+                first: { name: 'firstFooter', attribute: {}, children: ['Page 1'] }
+            });
+        });
     });
 
     describe("pageBreaks", () => {
@@ -2009,14 +2095,14 @@ describe("Sheet", () => {
             });
         });
 
-        it('should have activePane=bottomLeft when freeze rows only', function () {
+        it('should have activePane=bottomLeft when freeze rows only', () => {
             sheet.freezePanes('A3');
             expect(sheet.panes().activePane).toBe('bottomLeft');
             sheet.freezePanes(0, 2);
             expect(sheet.panes().activePane).toBe('bottomLeft');
         });
 
-        it('should have activePane=topRight when freeze columns only', function () {
+        it('should have activePane=topRight when freeze columns only', () => {
             sheet.freezePanes('C1');
             expect(sheet.panes().activePane).toBe('topRight');
             sheet.freezePanes(2, 0);
@@ -2061,6 +2147,166 @@ describe("Sheet", () => {
             sheet.panes(null);
             expect(sheet.panes()).toBe(undefined);
             expect(sheet._getOrCreateSheetViewNode().children.pane).toBe(undefined);
+        });
+    });
+
+    describe('headerFooterOptions', () => {
+        it("should return the headerFooterOptions attribute value", () => {
+            sheet._headerFooterNode = {
+                name: 'headerFooter',
+                attributes: {
+                    differentOddEven: 1,
+                    scaleWithDoc: 0
+                },
+                children: []
+            };
+            expect(sheet.headerFooterOptions('differentOddEven')).toBe(true);
+            expect(sheet.headerFooterOptions('differentFirst')).toBe(false);
+            expect(sheet.headerFooterOptions('scaleWithDoc')).toBe(false);
+
+            delete sheet._headerFooterNode.attributes.scaleWithDoc;
+            expect(sheet.headerFooterOptions('scaleWithDoc')).toBe(true);
+        });
+
+        
+        it("should add or update the headerFooterOptions attribute", () => {
+            sheet._headerFooterNode = {
+                name: 'headerFooter',
+                attributes: {
+                    scaleWithDoc: 0
+                },
+                children: []
+            };
+
+            expect(sheet.headerFooterOptions('scaleWithDoc', true)).toBe(sheet);
+            expect(sheet._headerFooterNode.attributes.scaleWithDoc).toBeUndefined();
+
+            expect(sheet.headerFooterOptions('differentOddEven', true)).toBe(sheet);
+            expect(sheet._headerFooterNode.attributes.differentOddEven).toBe(1);
+
+            expect(sheet.headerFooterOptions('alignWithMargins', false)).toBe(sheet);
+            expect(sheet._headerFooterNode.attributes.alignWithMargins).toBe(0);
+        });
+
+        it("should throw an error if attempting to access unsupported attributes", () => {
+            sheet._headerFooterNode = {
+                name: 'headerFooter',
+                attributes: {
+                    unsupportedAttribute: 'a value of some kind'
+                },
+                children: []
+            };
+
+            const theError = 'Sheet.headerFooterOptions: "unsupportedAttribute" is not supported.';
+            expect(() => sheet.headerFooterOptions('unsupportedAttribute')).toThrowError(Error, theError);
+            expect(() => sheet.headerFooterOptions('unsupportedAttribute', undefined)).toThrowError(Error, theError);
+            expect(() => sheet.headerFooterOptions('unsupportedAttribute', true)).toThrowError(Error, theError);
+
+            const theOtherError = 'Sheet.headerFooterOptions: "anotherUnsupportedAttribute" is not supported.';
+            expect(() => sheet.headerFooterOptions('anotherUnsupportedAttribute')).toThrowError(Error, theOtherError);
+            expect(() => sheet.headerFooterOptions('anotherUnsupportedAttribute', undefined)).toThrowError(Error, theOtherError);
+            expect(() => sheet.headerFooterOptions('anotherUnsupportedAttribute', true)).toThrowError(Error, theOtherError);
+        });
+
+        it("should remove a headerFooterOptions attribute", () => {
+            sheet._headerFooterNode = {
+                name: 'headerFooter',
+                attributes: {
+                    differentOddEven: 1,
+                    scaleWithDoc: 0
+                },
+                children: []
+            };
+
+            expect(sheet.headerFooterOptions('differentFirst', undefined)).toBe(sheet);
+            expect(sheet._headerFooterNode.attributes).toEqualJson({
+                differentOddEven: 1,
+                scaleWithDoc: 0
+            });
+
+            expect(sheet.headerFooterOptions('differentOddEven', undefined)).toBe(sheet);
+            expect(sheet._headerFooterNode.attributes).toEqualJson({
+                scaleWithDoc: 0
+            });
+
+            expect(sheet.headerFooterOptions('scaleWithDoc', undefined)).toBe(sheet);
+            expect(sheet._headerFooterNode.attributes).toEqualJson({});
+        });
+    });
+
+    describe('header', () => {
+        beforeEach(() => {
+            sheet._headers = {};
+        });
+
+        it("should get the headers", () => {
+            expect(sheet.header()).toBeUndefined();
+            sheet._headers.odd = { name: 'oddHeader', children: [] };
+            sheet._headers.odd.children[0] = "foo";
+            expect(sheet.header()).toBe('foo');
+
+            expect(sheet.header('first')).toBeUndefined();
+            sheet._headers.first = { name: 'firstHeader', children: [] };
+            sheet._headers.first.children[0] = "bar";
+            expect(sheet.header('first')).toBe('bar');
+        });
+
+        it("should clear the headers", () => {
+            sheet._headers.odd = { name: 'oddHeader', children: [] };
+            sheet._headers.odd.children[0] = "foo";
+            sheet.header('default', undefined);
+            expect(sheet._headers.odd).toBeUndefined();
+
+            sheet._headers.first = { name: 'firstHeader', children: [] };
+            sheet._headers.first.children[0] = "foo";
+            sheet.header('first', undefined);
+            expect(sheet._headers.first).toBeUndefined();
+        });
+
+        it("should set the headers values", () => {
+            sheet.header('default', 'foobar');
+            expect(sheet._headers.odd.children[0]).toBe('foobar');
+
+            sheet.header('first', 'foobar');
+            expect(sheet._headers.first.children[0]).toBe('foobar');
+        });
+    });
+
+    describe('footer', () => {
+        beforeEach(() => {
+            sheet._footers = {};
+        });
+
+        it("should get the footers", () => {
+            expect(sheet.footer()).toBeUndefined();
+            sheet._footers.odd = { name: 'oddfooter', children: [] };
+            sheet._footers.odd.children[0] = "foo";
+            expect(sheet.footer()).toBe('foo');
+
+            expect(sheet.footer('first')).toBeUndefined();
+            sheet._footers.first = { name: 'firstfooter', children: [] };
+            sheet._footers.first.children[0] = "bar";
+            expect(sheet.footer('first')).toBe('bar');
+        });
+
+        it("should clear the footers", () => {
+            sheet._footers.odd = { name: 'oddfooter', children: [] };
+            sheet._footers.odd.children[0] = "foo";
+            sheet.footer('default', undefined);
+            expect(sheet._footers.odd).toBeUndefined();
+
+            sheet._footers.first = { name: 'firstfooter', children: [] };
+            sheet._footers.first.children[0] = "foo";
+            sheet.footer('first', undefined);
+            expect(sheet._footers.first).toBeUndefined();
+        });
+
+        it("should set the footers values", () => {
+            sheet.footer('default', 'foobar');
+            expect(sheet._footers.odd.children[0]).toBe('foobar');
+
+            sheet.footer('first', 'foobar');
+            expect(sheet._footers.first.children[0]).toBe('foobar');
         });
     });
 });
