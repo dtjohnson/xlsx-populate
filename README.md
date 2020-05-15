@@ -2668,11 +2668,11 @@ A worksheet.
     * [.headerFooterOptions(attributeName)](#Sheet+headerFooterOptions) ⇒ <code>boolean</code>
     * [.headerFooterOptions(attributeName, attributeEnabled)](#Sheet+headerFooterOptions) ⇒ [<code>Sheet</code>](#Sheet)
     * [.header()](#Sheet+header) ⇒ <code>string</code> \| <code>undefined</code>
-    * [.header(locationName)](#Sheet+header) ⇒ <code>string</code> \| <code>undefined</code>
-    * [.header(locationName, value)](#Sheet+header) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.header(page)](#Sheet+header) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.header(page, value)](#Sheet+header) ⇒ [<code>Sheet</code>](#Sheet)
     * [.footer()](#Sheet+footer) ⇒ <code>string</code> \| <code>undefined</code>
-    * [.footer(locationName)](#Sheet+footer) ⇒ <code>string</code> \| <code>undefined</code>
-    * [.footer(locationName, value)](#Sheet+footer) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.footer(page)](#Sheet+footer) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.footer(page, value)](#Sheet+footer) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -3273,19 +3273,19 @@ Gets the value of the header for this sheet. If the differentOddEven attribute i
 **Returns**: <code>string</code> \| <code>undefined</code> - The value of the header.  
 <a name="Sheet+header"></a>
 
-#### sheet.header(locationName) ⇒ <code>string</code> \| <code>undefined</code>
-Gets the value of the header for this sheet given a location of the header.
+#### sheet.header(page) ⇒ <code>string</code> \| <code>undefined</code>
+Gets the value of the header for this sheet given a page of the header.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>string</code> \| <code>undefined</code> - The value of the header.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| locationName | <code>string</code> | The location of the header.   odd - The header that appears on the odd pages only. If differentOddEven is disabled this will be ignored.   even - The header that appears on the even pages only. If differentOddEven is disabled this will be ignored.   first - The header that appears on the first page only. If differentFirst is disabled this will be ignored.   default - The header that appears on every page if neither attributes are enabled. |
+| page | <code>string</code> | The page of the header.   odd - The header that appears on the odd pages only. If differentOddEven is disabled this will be ignored.   even - The header that appears on the even pages only. If differentOddEven is disabled this will be ignored.   first - The header that appears on the first page only. If differentFirst is disabled this will be ignored.   default - The header that appears on every page if neither attributes are enabled. |
 
 <a name="Sheet+header"></a>
 
-#### sheet.header(locationName, value) ⇒ [<code>Sheet</code>](#Sheet)
+#### sheet.header(page, value) ⇒ [<code>Sheet</code>](#Sheet)
 Sets the value of the header for this sheet.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
@@ -3293,7 +3293,7 @@ Sets the value of the header for this sheet.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| locationName | <code>string</code> | The location of the header. See get header for list of valid locations. |
+| page | <code>string</code> | The page of the header. See get header for list of valid pages. |
 | value | <code>string</code> \| <code>undefined</code> | The value to set. |
 
 <a name="Sheet+footer"></a>
@@ -3305,19 +3305,19 @@ Gets the value of the footer for this sheet. If the differentOddEven attribute i
 **Returns**: <code>string</code> \| <code>undefined</code> - The value of the footer.  
 <a name="Sheet+footer"></a>
 
-#### sheet.footer(locationName) ⇒ <code>string</code> \| <code>undefined</code>
-Gets the value of the footer for this sheet given a location of the footer.
+#### sheet.footer(page) ⇒ <code>string</code> \| <code>undefined</code>
+Gets the value of the footer for this sheet given a page of the footer.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>string</code> \| <code>undefined</code> - The value of the footer.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| locationName | <code>string</code> | The location of the footer.   odd - The footer that appears on the odd pages only. If differentOddEven is disabled this will be ignored.   even - The footer that appears on the even pages only. If differentOddEven is disabled this will be ignored.   first - The footer that appears on the first page only. If differentFirst is disabled this will be ignored.   default - The footer that appears on every page if neither attributes are enabled. |
+| page | <code>string</code> | The page of the footer.   odd - The footer that appears on the odd pages only. If differentOddEven is disabled this will be ignored.   even - The footer that appears on the even pages only. If differentOddEven is disabled this will be ignored.   first - The footer that appears on the first page only. If differentFirst is disabled this will be ignored.   default - The footer that appears on every page if neither attributes are enabled. |
 
 <a name="Sheet+footer"></a>
 
-#### sheet.footer(locationName, value) ⇒ [<code>Sheet</code>](#Sheet)
+#### sheet.footer(page, value) ⇒ [<code>Sheet</code>](#Sheet)
 Sets the value of the footer for this sheet.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
@@ -3325,7 +3325,7 @@ Sets the value of the footer for this sheet.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| locationName | <code>string</code> | The location of the footer. See get footer for list of valid locations. |
+| page | <code>string</code> | The page of the footer. See get footer for list of valid pages. |
 | value | <code>string</code> \| <code>undefined</code> | The value to set. |
 
 <a name="Workbook"></a>
