@@ -2227,10 +2227,7 @@ A RichText class that contains many [RichTextFragment](#RichTextFragment).
 <a name="new_RichText_new"></a>
 
 #### new RichText([node])
-Creates a new instance of RichText. If you get the instance by calling `Cell.value()`,
-adding a text contains line separator will trigger [Cell.style](Cell.style)('wrapText', true), which
-will make MS Excel show the new line. i.e. In MS Excel, Tap "alt+Enter" in a cell, the cell
-will set wrap text to true automatically.
+Creates a new instance of RichText. If you get the instance by calling `Cell.value()`,adding a text contains line separator will trigger [Cell.style](Cell.style)('wrapText', true), whichwill make MS Excel show the new line. i.e. In MS Excel, Tap "alt+Enter" in a cell, the cellwill set wrap text to true automatically.
 
 
 | Param | Type | Description |
@@ -2273,9 +2270,7 @@ Gets the instance with cell reference defined.
 <a name="RichText+copy"></a>
 
 #### richText.copy([cell]) ⇒ [<code>RichText</code>](#RichText)
-Returns a deep copy of this instance.
-If cell reference is provided, it checks line separators and calls
-`cell.style('wrapText', true)` when needed.
+Returns a deep copy of this instance.If cell reference is provided, it checks line separators and calls`cell.style('wrapText', true)` when needed.
 
 **Kind**: instance method of [<code>RichText</code>](#RichText)  
 **Returns**: [<code>RichText</code>](#RichText) - A deep copied instance  
@@ -2670,6 +2665,14 @@ A worksheet.
     * [.freezePanes(topLeftCell)](#Sheet+freezePanes) ⇒ [<code>Sheet</code>](#Sheet)
     * [.splitPanes(xSplit, ySplit)](#Sheet+splitPanes) ⇒ [<code>Sheet</code>](#Sheet)
     * [.resetPanes()](#Sheet+resetPanes) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.headerFooterOptions(attributeName)](#Sheet+headerFooterOptions) ⇒ <code>boolean</code>
+    * [.headerFooterOptions(attributeName, attributeEnabled)](#Sheet+headerFooterOptions) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.header()](#Sheet+header) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.header(page)](#Sheet+header) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.header(page, value)](#Sheet+header) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.footer()](#Sheet+footer) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.footer(page)](#Sheet+footer) ⇒ <code>string</code> \| <code>undefined</code>
+    * [.footer(page, value)](#Sheet+footer) ⇒ [<code>Sheet</code>](#Sheet)
 
 <a name="Sheet+active"></a>
 
@@ -3119,8 +3122,7 @@ Set the print option for the gridLines attribute value.
 <a name="Sheet+pageMargins"></a>
 
 #### sheet.pageMargins(attributeName) ⇒ <code>number</code>
-Get the page margin given a valid attribute name.
-If the value is not yet defined, then it will return the current preset value.
+Get the page margin given a valid attribute name.If the value is not yet defined, then it will return the current preset value.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>number</code> - the attribute value.  
@@ -3145,13 +3147,7 @@ Set the page margin (or override the preset) given an attribute name and a value
 <a name="Sheet+pageMarginsPreset"></a>
 
 #### sheet.pageMarginsPreset() ⇒ <code>string</code>
-Page margins preset is a set of page margins associated with a name.
-The page margin preset acts as a fallback when not explicitly defined by `Sheet.pageMargins`.
-If a sheet already contains page margins, it attempts to auto-detect, otherwise they are defined as the template preset.
-If no page margins exist, then the preset is undefined and will not be included in the output of `Sheet.toXmls`.
-Available presets include: normal, wide, narrow, template.
-
-Get the page margins preset name. The registered name of a predefined set of attributes.
+Page margins preset is a set of page margins associated with a name.The page margin preset acts as a fallback when not explicitly defined by `Sheet.pageMargins`.If a sheet already contains page margins, it attempts to auto-detect, otherwise they are defined as the template preset.If no page margins exist, then the preset is undefined and will not be included in the output of `Sheet.toXmls`.Available presets include: normal, wide, narrow, template.Get the page margins preset name. The registered name of a predefined set of attributes.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>string</code> - The preset name.  
@@ -3244,6 +3240,94 @@ resets to default sheet view panes.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>Sheet</code>](#Sheet) - The sheet  
+<a name="Sheet+headerFooterOptions"></a>
+
+#### sheet.headerFooterOptions(attributeName) ⇒ <code>boolean</code>
+Get the header and footer option given a valid header/footer option attribute.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| attributeName | <code>string</code> | Attribute name of the headerFooterOptions.   differentOddEven - Display a different header and footer for odd or even pages.   differentFirst - Display a different header and footer for the first page.   scaleWithDoc - The header and footer scales with document size.   alignWithMargins - The header and footer are aligned to page margins. |
+
+<a name="Sheet+headerFooterOptions"></a>
+
+#### sheet.headerFooterOptions(attributeName, attributeEnabled) ⇒ [<code>Sheet</code>](#Sheet)
+Set the header and footer option given a valid header/footer option attribute and a value.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| attributeName | <code>string</code> | Attribute name of the headerFooterOptions. See get header/footer option for list of valid attributes. |
+| attributeEnabled | <code>undefined</code> \| <code>boolean</code> | If `undefined` the attribute is set to default, otherwise the header/footer option is set. |
+
+<a name="Sheet+header"></a>
+
+#### sheet.header() ⇒ <code>string</code> \| <code>undefined</code>
+Gets the value of the header for this sheet. If the differentOddEven attribute is enabled gets the odd page header for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> \| <code>undefined</code> - The value of the header.  
+<a name="Sheet+header"></a>
+
+#### sheet.header(page) ⇒ <code>string</code> \| <code>undefined</code>
+Gets the value of the header for this sheet given a page of the header.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> \| <code>undefined</code> - The value of the header.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| page | <code>string</code> | The page of the header.   odd - The header that appears on the odd pages only. If differentOddEven is disabled this will be ignored.   even - The header that appears on the even pages only. If differentOddEven is disabled this will be ignored.   first - The header that appears on the first page only. If differentFirst is disabled this will be ignored.   default - The header that appears on every page if neither attributes are enabled. |
+
+<a name="Sheet+header"></a>
+
+#### sheet.header(page, value) ⇒ [<code>Sheet</code>](#Sheet)
+Sets the value of the header for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - This sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| page | <code>string</code> | The page of the header. See get header for list of valid pages. |
+| value | <code>string</code> \| <code>undefined</code> | The value to set. |
+
+<a name="Sheet+footer"></a>
+
+#### sheet.footer() ⇒ <code>string</code> \| <code>undefined</code>
+Gets the value of the footer for this sheet. If the differentOddEven attribute is enabled gets the odd page footer for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> \| <code>undefined</code> - The value of the footer.  
+<a name="Sheet+footer"></a>
+
+#### sheet.footer(page) ⇒ <code>string</code> \| <code>undefined</code>
+Gets the value of the footer for this sheet given a page of the footer.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>string</code> \| <code>undefined</code> - The value of the footer.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| page | <code>string</code> | The page of the footer.   odd - The footer that appears on the odd pages only. If differentOddEven is disabled this will be ignored.   even - The footer that appears on the even pages only. If differentOddEven is disabled this will be ignored.   first - The footer that appears on the first page only. If differentFirst is disabled this will be ignored.   default - The footer that appears on every page if neither attributes are enabled. |
+
+<a name="Sheet+footer"></a>
+
+#### sheet.footer(page, value) ⇒ [<code>Sheet</code>](#Sheet)
+Sets the value of the footer for this sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - This sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| page | <code>string</code> | The page of the footer. See get footer for list of valid pages. |
+| value | <code>string</code> \| <code>undefined</code> | The value to set. |
+
 <a name="Workbook"></a>
 
 ### Workbook
@@ -3485,9 +3569,7 @@ Write the workbook to file. (Not supported in browsers.)
 <a name="Workbook+cloneSheet"></a>
 
 #### workbook.cloneSheet(from, name, [indexOrBeforeSheet]) ⇒ [<code>Sheet</code>](#Sheet)
-Add a new sheet to the workbook.
-
-**WARN:** this function has limits:  if you clone a sheet with some images or other things link outside the Sheet object, these things in the cloned sheet will be locked when you open in MS Excel app.
+Add a new sheet to the workbook.**WARN:** this function has limits:  if you clone a sheet with some images or other things link outside the Sheet object, these things in the cloned sheet will be locked when you open in MS Excel app.
 
 **Kind**: instance method of [<code>Workbook</code>](#Workbook)  
 **Returns**: [<code>Sheet</code>](#Sheet) - The new sheet.  
@@ -3600,11 +3682,7 @@ Convert an Excel number to a date.
 <a name="_"></a>
 
 ### \_
-OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:
-https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspx
-
-Helpful guidance also take from this Github project:
-https://github.com/nolze/ms-offcrypto-tool
+OOXML uses the CFB file format with Agile Encryption. The details of the encryption are here:https://msdn.microsoft.com/en-us/library/dd950165(v=office.12).aspxHelpful guidance also take from this Github project:https://github.com/nolze/ms-offcrypto-tool
 
 **Kind**: global constant  
 <a name="PaneOptions"></a>
