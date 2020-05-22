@@ -202,23 +202,23 @@ workbook.activeSheet("Sheet2");
 Excel supports creating defined names that refer to addresses, formulas, or constants. These defined names can be scoped
 to the entire workbook or just individual sheets. xlsx-populate supports looking up defined names that refer to cells or
 ranges. (Dereferencing other names will result in an error.) Defined names are particularly useful if you are populating
-data into a known template. Then you do not need to know the exact location.
+data into a known template. Then you do not need to know the exact location. The defined name must not contain spaces.
 
 ```js
 // Look up workbook-scoped name and set the value to 5.
-workbook.definedName("some name").value(5);
+workbook.definedName("someName").value(5);
 
 // Look of a name scoped to the first sheet and set the value to "foo".
-workbook.sheet(0).definedName("some other name").value("foo");
+workbook.sheet(0).definedName("someOtherName").value("foo");
 ```
 
 You can also create, modify, or delete defined names:
 ```js
 // Create/modify a workbook-scope defined name
-workbook.definedName("some name", "TRUE");
+workbook.definedName("someName", "Sheet1!$B$2");
 
 // Delete a sheet-scoped defined name:
-workbook.sheet(0).definedName("some name", null);
+workbook.sheet(0).definedName("someName", null);
 ```
 
 ### Find and Replace
