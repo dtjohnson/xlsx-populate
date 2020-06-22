@@ -124,7 +124,8 @@ describe("SharedStrings", () => {
                 { name: "si", children: [{ name: "t", children: ["bar"] }] },
                 { name: "si", children: [{ name: "r", children: [{}] }, { name: "r", children: [{}] }] },
                 { name: "si", children: [{ name: "t", children: ["baz"] }] },
-                { name: "si", children: [{ name: "t", children: [123] }] }
+                { name: "si", children: [{ name: "t", children: [123] }] },
+                { name: "si", children: [{ name: "t", children: [] }] }
             ];
 
             sharedStrings._stringArray = [];
@@ -136,14 +137,16 @@ describe("SharedStrings", () => {
                 "bar",
                 [{ name: "r", children: [{}] }, { name: "r", children: [{}] }],
                 "baz",
-                "123"
+                "123",
+                undefined
             ]);
             expect(sharedStrings._indexMap).toEqualJson({
                 foo: 0,
                 bar: 1,
                 '[{"name":"r","children":[{}]},{"name":"r","children":[{}]}]': 2,
                 baz: 3,
-                123: 4
+                123: 4,
+                undefined: 5
             });
         });
     });
