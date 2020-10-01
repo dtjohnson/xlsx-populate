@@ -386,7 +386,7 @@ See the [Style Reference](#style-reference) for the various options.
 You can read and modify rich texts on an existing rich text cell:
 ```js
 // assume A1 is a rich text cell
-const RichText = require('xlsx-Populate').RichText;
+const RichText = require('xlsx-populate').RichText;
 const cell = workbook.sheet(0).cell('A1');
 cell.value() instanceof RichText // returns true
 const richtext = cell.value();
