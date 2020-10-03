@@ -39,7 +39,7 @@ describe("ArgHandler", () => {
             .case("array", handlers.array)
             .case("date", handlers.date)
             .case("object", handlers.object)
-            .case("Style", handlers.Style)
+            .case(Style, handlers.Style)
             .case(["nil", 'nil', '*'], handlers['*']);
     });
 
