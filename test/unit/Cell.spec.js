@@ -9,8 +9,11 @@ describe("Cell", () => {
         FormulaError = jasmine.createSpyObj("FormulaError", ["getError"]);
         FormulaError.getError.and.returnValue("ERROR");
 
+        const Style = class {};
+
         Cell = proxyquire("../../lib/Cell", {
             './FormulaError': FormulaError,
+            './Style': Style,
             '@noCallThru': true
         });
 
@@ -18,7 +21,6 @@ describe("Cell", () => {
             '@noCallThru': true
         });
 
-        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue(4);
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);

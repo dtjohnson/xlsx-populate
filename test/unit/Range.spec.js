@@ -6,11 +6,13 @@ describe("Range", () => {
     let Range, range, startCell, endCell, sheet, style;
 
     beforeEach(() => {
+        const Style = class {};
+
         Range = proxyquire("../../lib/Range", {
+            './Style': Style,
             '@noCallThru': true
         });
 
-        const Style = class {}
         if (!Style.name) Style.name = "Style";
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
         style = new Style();

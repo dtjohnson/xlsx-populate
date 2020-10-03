@@ -7,11 +7,12 @@ describe("Column", () => {
     let Column, column, columnNode, sheet, style, styleSheet, workbook, existingRows, verticalPageBreaks;
 
     beforeEach(() => {
+        const Style = class {};
         Column = proxyquire("../../lib/Column", {
+            './Style': Style,
             '@noCallThru': true
         });
 
-        const Style = class {};
         if (!Style.name) Style.name = "Style";
         Style.prototype.id = jasmine.createSpy("Style.id").and.returnValue("STYLE_ID");
         Style.prototype.style = jasmine.createSpy("Style.style").and.callFake(name => `STYLE:${name}`);
