@@ -456,6 +456,11 @@ describe("Cell", () => {
             expect(cell.relativeCell).toHaveBeenCalledWith(1, 1);
             expect(range.value).toHaveBeenCalledWith([[1, 2], [3, 4]]);
         });
+
+        it("should sanitize the value", () => {
+            cell.value('foo�');
+            expect(cell._value).toBe('foo');
+        });
     });
 
     describe("workbook", () => {

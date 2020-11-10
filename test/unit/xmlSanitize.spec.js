@@ -23,6 +23,10 @@ describe("xmlSanitize", () => {
         expect(xmlSanitize('test💯\x00content')).toEqual('test💯content');
     });
 
+    it("should strip unicode replacement char", () => {
+        expect(xmlSanitize( 'Some �� Unicode characters')).toEqual('Some  Unicode characters');
+    });
+
     it("should leave line breaks", () => {
         expect(xmlSanitize('test💯\ncontent')).toEqual('test💯\ncontent');
     });

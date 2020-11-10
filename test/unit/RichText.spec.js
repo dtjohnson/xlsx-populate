@@ -58,6 +58,13 @@ describe("RichText", () => {
             cell.value(rt);
             expect(rt.get(0).style('bold')).toBe(true);
         });
+
+
+        it("should sanitize the value", () => {
+            const rt = new RichText();
+            rt.add('hello�');
+            expect(rt.get(0).value()).toBe('hello');
+        });
     });
 
     it("should clear the rich text", () => {
