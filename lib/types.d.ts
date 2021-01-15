@@ -41,12 +41,25 @@ declare namespace XlsxPopulate {
       sheet: Sheet | string | number,
       indexOrBeforeSheet?: number | string | Sheet
     ): Workbook;
-    outputAsync(
-      type?: string | Uint8Array | ArrayBuffer | Blob | Buffer
-    ): Promise<string | Uint8Array | ArrayBuffer | Blob | Buffer>;
-    outputAsync(
-      opts?: object
-    ): string | Uint8Array | ArrayBuffer | Blob | Buffer;
+    outputAsync(opts?: { password?: string }): Promise<Buffer>;
+    outputAsync(opts: { type: "base64"; password?: string }): Promise<string>;
+    outputAsync(opts: {
+      type: "binarystring";
+      password?: string;
+    }): Promise<string>;
+    outputAsync(opts: {
+      type: "uint8array";
+      password?: string;
+    }): Promise<Uint8Array>;
+    outputAsync(opts: {
+      type: "arraybuffer";
+      password?: string;
+    }): Promise<ArrayBuffer>;
+    outputAsync(opts: { type: "blob"; password?: string }): Promise<Blob>;
+    outputAsync(opts: {
+      type: "nodebuffer";
+      password?: string;
+    }): Promise<Buffer>;
     sheet(sheetNameOrIndex: number | string): Sheet;
     sheets(): Sheet[];
     property(name: string): any;

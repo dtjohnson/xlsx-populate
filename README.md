@@ -3268,7 +3268,6 @@ A workbook.
     * [.deleteSheet(sheet)](#Workbook+deleteSheet) ⇒ [<code>Workbook</code>](#Workbook)
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
     * [.moveSheet(sheet, [indexOrBeforeSheet])](#Workbook+moveSheet) ⇒ [<code>Workbook</code>](#Workbook)
-    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
     * [.outputAsync([opts])](#Workbook+outputAsync) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ [<code>Sheet</code>](#Sheet) \| <code>undefined</code>
     * [.sheets()](#Workbook+sheets) ⇒ [<code>Array.&lt;Sheet&gt;</code>](#Sheet)
@@ -3374,18 +3373,6 @@ Move a sheet to a new position.
 | --- | --- | --- |
 | sheet | [<code>Sheet</code>](#Sheet) \| <code>string</code> \| <code>number</code> | The sheet or name of sheet or index of sheet to move. |
 | [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
-
-<a name="Workbook+outputAsync"></a>
-
-#### workbook.outputAsync([type]) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
-Generates the workbook output.
-
-**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
-**Returns**: <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code> - The data.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [type] | <code>string</code> | The type of the data to return: base64, binarystring, uint8array, arraybuffer, blob, nodebuffer. Defaults to 'nodebuffer' in Node.js and 'blob' in browsers. |
 
 <a name="Workbook+outputAsync"></a>
 
