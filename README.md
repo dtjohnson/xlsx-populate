@@ -2440,6 +2440,7 @@ A row.
 
 * [Row](#Row)
     * [.address([opts])](#Row+address) ⇒ <code>string</code>
+    * [.cells()](#Row+cells) ⇒ [<code>Array.&lt;Cell&gt;</code>](#Cell)
     * [.cell(columnNameOrNumber)](#Row+cell) ⇒ [<code>Cell</code>](#Cell)
     * [.height()](#Row+height) ⇒ <code>undefined</code> \| <code>number</code>
     * [.height(height)](#Row+height) ⇒ [<code>Row</code>](#Row)
@@ -2469,6 +2470,13 @@ Get the address of the row.
 | [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
 | [opts.anchored] | <code>boolean</code> | Anchor the address. |
 
+<a name="Row+cells"></a>
+
+#### row.cells() ⇒ [<code>Array.&lt;Cell&gt;</code>](#Cell)
+Gets all cells from row in the workbook.
+
+**Kind**: instance method of [<code>Row</code>](#Row)  
+**Returns**: [<code>Array.&lt;Cell&gt;</code>](#Cell) - Cells of the row.  
 <a name="Row+cell"></a>
 
 #### row.cell(columnNameOrNumber) ⇒ [<code>Cell</code>](#Cell)
@@ -2619,6 +2627,7 @@ A worksheet.
     * [.active()](#Sheet+active) ⇒ <code>boolean</code>
     * [.active(active)](#Sheet+active) ⇒ [<code>Sheet</code>](#Sheet)
     * [.sharedFormulas()](#Sheet+sharedFormulas) ⇒ <code>boolean</code>
+    * [.rows()](#Sheet+rows) ⇒ [<code>Array.&lt;Row&gt;</code>](#Row)
     * [.activeCell()](#Sheet+activeCell) ⇒ [<code>Cell</code>](#Cell)
     * [.activeCell(cell)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
     * [.activeCell(rowNumber, columnNameOrNumber)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2698,6 +2707,13 @@ Gets a value indicating whether the sheet is the active sheet in the workbook.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: <code>boolean</code> - True if active, false otherwise.  
+<a name="Sheet+rows"></a>
+
+#### sheet.rows() ⇒ [<code>Array.&lt;Row&gt;</code>](#Row)
+Gets all rows from sheet in the workbook.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Array.&lt;Row&gt;</code>](#Row) - Rows of the sheet.  
 <a name="Sheet+activeCell"></a>
 
 #### sheet.activeCell() ⇒ [<code>Cell</code>](#Cell)

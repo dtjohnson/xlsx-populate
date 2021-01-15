@@ -113,6 +113,7 @@ declare namespace XlsxPopulate {
     ): Range;
     autoFilter(): Sheet;
     autoFilter(range: Range): Sheet;
+    rows(): Row[];
     row(rowNumber: number): Row;
     tabColor(): undefined | Color;
     tabColor(): Color | string | number;
@@ -150,6 +151,7 @@ declare namespace XlsxPopulate {
 
   class Row {
     address(opts?: object): string;
+    cells(): Cell[];
     cell(columnNameOrNumber: string | number): Cell;
     height(): undefined | number;
     height(height: number): Row;
