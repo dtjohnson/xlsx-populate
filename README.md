@@ -2618,6 +2618,7 @@ A worksheet.
 * [Sheet](#Sheet)
     * [.active()](#Sheet+active) ⇒ <code>boolean</code>
     * [.active(active)](#Sheet+active) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.sharedFormulas()](#Sheet+sharedFormulas) ⇒ <code>boolean</code>
     * [.activeCell()](#Sheet+activeCell) ⇒ [<code>Cell</code>](#Cell)
     * [.activeCell(cell)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
     * [.activeCell(rowNumber, columnNameOrNumber)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2690,6 +2691,13 @@ Make the sheet the active sheet in the workkbok.
 | --- | --- | --- |
 | active | <code>boolean</code> | Must be set to `true`. Deactivating directly is not supported. To deactivate, you should activate a different sheet instead. |
 
+<a name="Sheet+sharedFormulas"></a>
+
+#### sheet.sharedFormulas() ⇒ <code>boolean</code>
+Gets a value indicating whether the sheet is the active sheet in the workbook.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>boolean</code> - True if active, false otherwise.  
 <a name="Sheet+activeCell"></a>
 
 #### sheet.activeCell() ⇒ [<code>Cell</code>](#Cell)
