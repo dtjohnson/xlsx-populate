@@ -101,6 +101,9 @@ declare namespace XlsxPopulate {
     hidden(): boolean | string;
     hidden(hidden: boolean): Sheet;
     move(indexOrBeforeSheet?: number | string | Sheet): Sheet;
+    merged(): Range[];
+    merged(address: string): boolean;
+    merged(address: string, merged: boolean): Sheet;
     name(): string;
     name(name: string): Sheet;
     range(address: string): Range;

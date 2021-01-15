@@ -2665,6 +2665,7 @@ A worksheet.
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.merged()](#Sheet+merged) ⇒ [<code>Array.&lt;Range&gt;</code>](#Range)
     * [.printOptions(attributeName)](#Sheet+printOptions) ⇒ <code>boolean</code>
     * [.printOptions(attributeName, attributeEnabled)](#Sheet+printOptions) ⇒ [<code>Sheet</code>](#Sheet)
     * [.printGridLines()](#Sheet+printGridLines) ⇒ <code>boolean</code>
@@ -3098,6 +3099,13 @@ Set the hyperlink on the cell with the given address and options.
 | [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
 | [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
 
+<a name="Sheet+merged"></a>
+
+#### sheet.merged() ⇒ [<code>Array.&lt;Range&gt;</code>](#Range)
+Gets all merged cells of the Sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Array.&lt;Range&gt;</code>](#Range) - Ranges of merged cells of the sheet.  
 <a name="Sheet+printOptions"></a>
 
 #### sheet.printOptions(attributeName) ⇒ <code>boolean</code>
