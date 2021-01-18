@@ -3287,6 +3287,7 @@ A workbook.
     * [.activeSheet()](#Workbook+activeSheet) ⇒ [<code>Sheet</code>](#Sheet)
     * [.activeSheet(sheet)](#Workbook+activeSheet) ⇒ [<code>Workbook</code>](#Workbook)
     * [.addSheet(name, [indexOrBeforeSheet])](#Workbook+addSheet) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.definedName()](#Workbook+definedName) ⇒ <code>Array.&lt;string&gt;</code>
     * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> \| <code>string</code> \| [<code>Cell</code>](#Cell) \| [<code>Range</code>](#Range) \| [<code>Row</code>](#Row) \| [<code>Column</code>](#Column)
     * [.definedName(name, refersTo)](#Workbook+definedName) ⇒ [<code>Workbook</code>](#Workbook)
     * [.deleteSheet(sheet)](#Workbook+deleteSheet) ⇒ [<code>Workbook</code>](#Workbook)
@@ -3335,6 +3336,13 @@ Add a new sheet to the workbook.
 | name | <code>string</code> | The name of the sheet. Must be unique, less than 31 characters, and may not contain the following characters: \ / * [ ] : ? |
 | [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
+<a name="Workbook+definedName"></a>
+
+#### workbook.definedName() ⇒ <code>Array.&lt;string&gt;</code>
+Gets all defined names scoped to the workbook.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: <code>Array.&lt;string&gt;</code> - Collection of defined names.  
 <a name="Workbook+definedName"></a>
 
 #### workbook.definedName(name) ⇒ <code>undefined</code> \| <code>string</code> \| [<code>Cell</code>](#Cell) \| [<code>Range</code>](#Range) \| [<code>Row</code>](#Row) \| [<code>Column</code>](#Column)

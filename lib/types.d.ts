@@ -30,6 +30,7 @@ declare namespace XlsxPopulate {
     activeSheet(): Sheet;
     activeSheet(sheet: Sheet | string | number): Workbook;
     addSheet(name: string, indexOrBeforeSheet?: number | string | Sheet): Sheet;
+    definedName(): string[];
     definedName(name: string): undefined | string | Cell | Range | Row | Column;
     definedName(
       name: string,
