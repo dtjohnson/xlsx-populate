@@ -16,6 +16,7 @@
     "docs": "gulp docs",
     "prebuild": "yarn docs",
     "build": "gulp browser",
+    "prerelease": "yarn build",
     "release": "bash scripts/publish.sh"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
