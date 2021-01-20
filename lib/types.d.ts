@@ -151,6 +151,12 @@ declare namespace XlsxPopulate {
     pageMarginsPreset(): string;
     pageMarginsPreset(presetName: undefined | string): Sheet;
     pageMarginsPreset(presetName: string, presetAttributes: object): Sheet;
+    sharedFormulas(): Record<string, { ref: string; formula: string }>;
+    sharedFormulas(id: string): { ref: string; formula: string };
+    sharedFormulas(
+      id: string,
+      sharedFormula: { ref: string; formula: string }
+    ): Sheet;
   }
 
   class Row {

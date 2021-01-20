@@ -2626,7 +2626,9 @@ A worksheet.
 * [Sheet](#Sheet)
     * [.active()](#Sheet+active) ⇒ <code>boolean</code>
     * [.active(active)](#Sheet+active) ⇒ [<code>Sheet</code>](#Sheet)
-    * [.sharedFormulas()](#Sheet+sharedFormulas) ⇒ <code>boolean</code>
+    * [.sharedFormulas()](#Sheet+sharedFormulas) ⇒ <code>Object.&lt;string, {ref: string, formula: string}&gt;</code>
+    * [.sharedFormulas(id)](#Sheet+sharedFormulas) ⇒ <code>Object.&lt;{ref: string, formula: string}&gt;</code>
+    * [.sharedFormulas(id, sharedFormula)](#Sheet+sharedFormulas) ⇒ [<code>Sheet</code>](#Sheet)
     * [.rows()](#Sheet+rows) ⇒ [<code>Array.&lt;Row&gt;</code>](#Row)
     * [.activeCell()](#Sheet+activeCell) ⇒ [<code>Cell</code>](#Cell)
     * [.activeCell(cell)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2703,11 +2705,36 @@ Make the sheet the active sheet in the workkbok.
 
 <a name="Sheet+sharedFormulas"></a>
 
-#### sheet.sharedFormulas() ⇒ <code>boolean</code>
-Gets a value indicating whether the sheet is the active sheet in the workbook.
+#### sheet.sharedFormulas() ⇒ <code>Object.&lt;string, {ref: string, formula: string}&gt;</code>
+Get all the shared formulas in the sheet
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
-**Returns**: <code>boolean</code> - True if active, false otherwise.  
+**Returns**: <code>Object.&lt;string, {ref: string, formula: string}&gt;</code> - Dictionary of formulas  
+<a name="Sheet+sharedFormulas"></a>
+
+#### sheet.sharedFormulas(id) ⇒ <code>Object.&lt;{ref: string, formula: string}&gt;</code>
+Get a given shared formula.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>Object.&lt;{ref: string, formula: string}&gt;</code> - The shared formula  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The shared formula id |
+
+<a name="Sheet+sharedFormulas"></a>
+
+#### sheet.sharedFormulas(id, sharedFormula) ⇒ [<code>Sheet</code>](#Sheet)
+Set or update a given shared formula by its id
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The shared formula id |
+| sharedFormula | <code>Object.&lt;{ref: string, formula: string}&gt;</code> | The shared formula |
+
 <a name="Sheet+rows"></a>
 
 #### sheet.rows() ⇒ [<code>Array.&lt;Row&gt;</code>](#Row)
