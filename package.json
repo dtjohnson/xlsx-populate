@@ -1,6 +1,7 @@
 {
-  "name": "xlsx-populate-eyeseetea",
-  "version": "4.0.0",
+  "name": "@eyeseetea/xlsx-populate-eyeseetea",
+  "version": "4.0.0-beta.1",
+  "private": false,
   "description": "Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.",
   "license": "MIT",
   "main": "./lib/XlsxPopulate.js",
