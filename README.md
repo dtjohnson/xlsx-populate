@@ -2440,6 +2440,7 @@ A row.
 
 * [Row](#Row)
     * [.address([opts])](#Row+address) ⇒ <code>string</code>
+    * [.cells()](#Row+cells) ⇒ [<code>Array.&lt;Cell&gt;</code>](#Cell)
     * [.cell(columnNameOrNumber)](#Row+cell) ⇒ [<code>Cell</code>](#Cell)
     * [.height()](#Row+height) ⇒ <code>undefined</code> \| <code>number</code>
     * [.height(height)](#Row+height) ⇒ [<code>Row</code>](#Row)
@@ -2469,6 +2470,13 @@ Get the address of the row.
 | [opts.includeSheetName] | <code>boolean</code> | Include the sheet name in the address. |
 | [opts.anchored] | <code>boolean</code> | Anchor the address. |
 
+<a name="Row+cells"></a>
+
+#### row.cells() ⇒ [<code>Array.&lt;Cell&gt;</code>](#Cell)
+Gets all cells from row in the workbook.
+
+**Kind**: instance method of [<code>Row</code>](#Row)  
+**Returns**: [<code>Array.&lt;Cell&gt;</code>](#Cell) - Cells of the row.  
 <a name="Row+cell"></a>
 
 #### row.cell(columnNameOrNumber) ⇒ [<code>Cell</code>](#Cell)
@@ -2618,6 +2626,10 @@ A worksheet.
 * [Sheet](#Sheet)
     * [.active()](#Sheet+active) ⇒ <code>boolean</code>
     * [.active(active)](#Sheet+active) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.sharedFormulas()](#Sheet+sharedFormulas) ⇒ <code>Object.&lt;string, {ref: string, formula: string}&gt;</code>
+    * [.sharedFormulas(id)](#Sheet+sharedFormulas) ⇒ <code>Object.&lt;{ref: string, formula: string}&gt;</code>
+    * [.sharedFormulas(id, sharedFormula)](#Sheet+sharedFormulas) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.rows()](#Sheet+rows) ⇒ [<code>Array.&lt;Row&gt;</code>](#Row)
     * [.activeCell()](#Sheet+activeCell) ⇒ [<code>Cell</code>](#Cell)
     * [.activeCell(cell)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
     * [.activeCell(rowNumber, columnNameOrNumber)](#Sheet+activeCell) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2655,6 +2667,7 @@ A worksheet.
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.merged()](#Sheet+merged) ⇒ [<code>Array.&lt;Range&gt;</code>](#Range)
     * [.printOptions(attributeName)](#Sheet+printOptions) ⇒ <code>boolean</code>
     * [.printOptions(attributeName, attributeEnabled)](#Sheet+printOptions) ⇒ [<code>Sheet</code>](#Sheet)
     * [.printGridLines()](#Sheet+printGridLines) ⇒ <code>boolean</code>
@@ -2690,6 +2703,45 @@ Make the sheet the active sheet in the workkbok.
 | --- | --- | --- |
 | active | <code>boolean</code> | Must be set to `true`. Deactivating directly is not supported. To deactivate, you should activate a different sheet instead. |
 
+<a name="Sheet+sharedFormulas"></a>
+
+#### sheet.sharedFormulas() ⇒ <code>Object.&lt;string, {ref: string, formula: string}&gt;</code>
+Get all the shared formulas in the sheet
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>Object.&lt;string, {ref: string, formula: string}&gt;</code> - Dictionary of formulas  
+<a name="Sheet+sharedFormulas"></a>
+
+#### sheet.sharedFormulas(id) ⇒ <code>Object.&lt;{ref: string, formula: string}&gt;</code>
+Get a given shared formula.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>Object.&lt;{ref: string, formula: string}&gt;</code> - The shared formula  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The shared formula id |
+
+<a name="Sheet+sharedFormulas"></a>
+
+#### sheet.sharedFormulas(id, sharedFormula) ⇒ [<code>Sheet</code>](#Sheet)
+Set or update a given shared formula by its id
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| id | <code>string</code> | The shared formula id |
+| sharedFormula | <code>Object.&lt;{ref: string, formula: string}&gt;</code> | The shared formula |
+
+<a name="Sheet+rows"></a>
+
+#### sheet.rows() ⇒ [<code>Array.&lt;Row&gt;</code>](#Row)
+Gets all rows from sheet in the workbook.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Array.&lt;Row&gt;</code>](#Row) - Rows of the sheet.  
 <a name="Sheet+activeCell"></a>
 
 #### sheet.activeCell() ⇒ [<code>Cell</code>](#Cell)
@@ -3074,6 +3126,13 @@ Set the hyperlink on the cell with the given address and options.
 | [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
 | [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
 
+<a name="Sheet+merged"></a>
+
+#### sheet.merged() ⇒ [<code>Array.&lt;Range&gt;</code>](#Range)
+Gets all merged cells of the Sheet.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Array.&lt;Range&gt;</code>](#Range) - Ranges of merged cells of the sheet.  
 <a name="Sheet+printOptions"></a>
 
 #### sheet.printOptions(attributeName) ⇒ <code>boolean</code>
@@ -3255,12 +3314,12 @@ A workbook.
     * [.activeSheet()](#Workbook+activeSheet) ⇒ [<code>Sheet</code>](#Sheet)
     * [.activeSheet(sheet)](#Workbook+activeSheet) ⇒ [<code>Workbook</code>](#Workbook)
     * [.addSheet(name, [indexOrBeforeSheet])](#Workbook+addSheet) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.definedName()](#Workbook+definedName) ⇒ <code>Array.&lt;string&gt;</code>
     * [.definedName(name)](#Workbook+definedName) ⇒ <code>undefined</code> \| <code>string</code> \| [<code>Cell</code>](#Cell) \| [<code>Range</code>](#Range) \| [<code>Row</code>](#Row) \| [<code>Column</code>](#Column)
     * [.definedName(name, refersTo)](#Workbook+definedName) ⇒ [<code>Workbook</code>](#Workbook)
     * [.deleteSheet(sheet)](#Workbook+deleteSheet) ⇒ [<code>Workbook</code>](#Workbook)
     * [.find(pattern, [replacement])](#Workbook+find) ⇒ <code>boolean</code>
     * [.moveSheet(sheet, [indexOrBeforeSheet])](#Workbook+moveSheet) ⇒ [<code>Workbook</code>](#Workbook)
-    * [.outputAsync([type])](#Workbook+outputAsync) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
     * [.outputAsync([opts])](#Workbook+outputAsync) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
     * [.sheet(sheetNameOrIndex)](#Workbook+sheet) ⇒ [<code>Sheet</code>](#Sheet) \| <code>undefined</code>
     * [.sheets()](#Workbook+sheets) ⇒ [<code>Array.&lt;Sheet&gt;</code>](#Sheet)
@@ -3304,6 +3363,13 @@ Add a new sheet to the workbook.
 | name | <code>string</code> | The name of the sheet. Must be unique, less than 31 characters, and may not contain the following characters: \ / * [ ] : ? |
 | [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
 
+<a name="Workbook+definedName"></a>
+
+#### workbook.definedName() ⇒ <code>Array.&lt;string&gt;</code>
+Gets all defined names scoped to the workbook.
+
+**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
+**Returns**: <code>Array.&lt;string&gt;</code> - Collection of defined names.  
 <a name="Workbook+definedName"></a>
 
 #### workbook.definedName(name) ⇒ <code>undefined</code> \| <code>string</code> \| [<code>Cell</code>](#Cell) \| [<code>Range</code>](#Range) \| [<code>Row</code>](#Row) \| [<code>Column</code>](#Column)
@@ -3366,18 +3432,6 @@ Move a sheet to a new position.
 | --- | --- | --- |
 | sheet | [<code>Sheet</code>](#Sheet) \| <code>string</code> \| <code>number</code> | The sheet or name of sheet or index of sheet to move. |
 | [indexOrBeforeSheet] | <code>number</code> \| <code>string</code> \| [<code>Sheet</code>](#Sheet) | The index to move the sheet to or the sheet (or name of sheet) to move this sheet before. Omit this argument to move to the end of the workbook. |
-
-<a name="Workbook+outputAsync"></a>
-
-#### workbook.outputAsync([type]) ⇒ <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code>
-Generates the workbook output.
-
-**Kind**: instance method of [<code>Workbook</code>](#Workbook)  
-**Returns**: <code>Promise.&lt;(string\|Uint8Array\|ArrayBuffer\|Blob\|Buffer)&gt;</code> - The data.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [type] | <code>string</code> | The type of the data to return: base64, binarystring, uint8array, arraybuffer, blob, nodebuffer. Defaults to 'nodebuffer' in Node.js and 'blob' in browsers. |
 
 <a name="Workbook+outputAsync"></a>
 
