@@ -157,6 +157,27 @@ declare namespace XlsxPopulate {
       id: string,
       sharedFormula: { ref: string; formula: string }
     ): Sheet;
+    protected(): boolean;
+    protected(
+      password: string,
+      options?: Partial<{
+        objects: boolean;
+        scenarios: boolean;
+        selectLockedCells: boolean;
+        selectUnlockedCells: boolean;
+        formatCells: boolean;
+        formatColumns: boolean;
+        formatRows: boolean;
+        insertColumns: boolean;
+        insertRows: boolean;
+        insertHyperlinks: boolean;
+        deleteColumns: boolean;
+        deleteRows: boolean;
+        sort: boolean;
+        autoFilter: boolean;
+        pivotTables: boolean;
+      }>
+    ): Sheet;
   }
 
   class Row {
@@ -193,7 +214,7 @@ declare namespace XlsxPopulate {
     hyperlink(hyperlink: string | Cell | undefined): Cell;
     hyperlink(opts: Object | Cell): Cell;
     dataValidation(): object | undefined;
-    dataValidation(dataValidation: object | undefined): Cell;
+    dataValidation(dataValidation: string | object | undefined): Cell;
     tap(callback: Function): Cell;
     thru(callback: Function): any;
     rangeTo(cell: Cell | string): Range;
