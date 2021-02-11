@@ -2644,6 +2644,8 @@ A worksheet.
     * [.gridLinesVisible(selected)](#Sheet+gridLinesVisible) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hidden()](#Sheet+hidden) ⇒ <code>boolean</code> \| <code>string</code>
     * [.hidden(hidden)](#Sheet+hidden) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.protected()](#Sheet+protected) ⇒ <code>boolean</code>
+    * [.protected(password)](#Sheet+protected) ⇒ [<code>Sheet</code>](#Sheet)
     * [.move([indexOrBeforeSheet])](#Sheet+move) ⇒ [<code>Sheet</code>](#Sheet)
     * [.name()](#Sheet+name) ⇒ <code>string</code>
     * [.name(name)](#Sheet+name) ⇒ [<code>Sheet</code>](#Sheet)
@@ -2893,6 +2895,25 @@ Set whether the sheet is hidden or not.
 | Param | Type | Description |
 | --- | --- | --- |
 | hidden | <code>boolean</code> \| <code>string</code> | True to hide, false to show, and 'very' to make very hidden. |
+
+<a name="Sheet+protected"></a>
+
+#### sheet.protected() ⇒ <code>boolean</code>
+Gets a value indicating if the sheet is password protected or not.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: <code>boolean</code> - True if sheet has protection  
+<a name="Sheet+protected"></a>
+
+#### sheet.protected(password) ⇒ [<code>Sheet</code>](#Sheet)
+Set whether the sheet is password protected or not.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| password | <code>string</code> | Value to protect sheet modifications. |
 
 <a name="Sheet+move"></a>
 
