@@ -128,6 +128,7 @@ declare namespace XlsxPopulate {
     pageBreaks(): Object;
     verticalPageBreaks(): PageBreaks;
     horizontalPageBreaks(): PageBreaks;
+    comment(address: string, comment: Comment | undefined): Sheet;
     hyperlink(address: string): string | undefined;
     hyperlink(address: string, hyperlink: string, internal?: boolean): Sheet;
     hyperlink(address: string, opts: object | Cell): Sheet;
@@ -210,6 +211,7 @@ declare namespace XlsxPopulate {
     find(pattern: string | RegExp, replacement?: string | Function): boolean;
     formula(): string;
     formula(formula: string): Cell;
+    comment(comment: Comment | undefined): Cell;
     hyperlink(): string | undefined;
     hyperlink(hyperlink: string | Cell | undefined): Cell;
     hyperlink(opts: Object | Cell): Cell;
@@ -390,6 +392,12 @@ declare namespace XlsxPopulate {
     right?: number;
     top?: number;
     bottom?: number;
+  }
+
+  class Comment {
+    text: string;
+    width: string;
+    height: string;
   }
 
   class FormulaError {
