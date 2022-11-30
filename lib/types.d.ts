@@ -129,6 +129,7 @@ declare namespace XlsxPopulate {
     verticalPageBreaks(): PageBreaks;
     horizontalPageBreaks(): PageBreaks;
     comment(address: string, comment: Comment | undefined): Sheet;
+    conditionalFormatting(address: string, conditionalFormatting: ConditionalFormatting | undefined): Sheet;
     hyperlink(address: string): string | undefined;
     hyperlink(address: string, hyperlink: string, internal?: boolean): Sheet;
     hyperlink(address: string, opts: object | Cell): Sheet;
@@ -398,6 +399,13 @@ declare namespace XlsxPopulate {
     text: string;
     width: string;
     height: string;
+  }
+
+  class ConditionalFormatting {
+    type: string;
+    formula: string;
+    priority: number;
+    style: Style;
   }
 
   class FormulaError {

@@ -2683,6 +2683,7 @@ A worksheet.
     * [.verticalPageBreaks()](#Sheet+verticalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
     * [.horizontalPageBreaks()](#Sheet+horizontalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
     * [.comment(address, opts)](#Sheet+comment) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.conditionalFormatting(address)](#Sheet+conditionalFormatting) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
@@ -3136,6 +3137,18 @@ Set the comment on the cell with the given address.
 | [opts.text] | <code>string</code> | The comment text to set. |
 | [opts.width] | <code>string</code> | Comment box width. |
 | [opts.height] | <code>string</code> | Comment box height. |
+
+<a name="Sheet+conditionalFormatting"></a>
+
+#### sheet.conditionalFormatting(address) ⇒ [<code>Sheet</code>](#Sheet)
+Set the conditional Formatting on the cell with the given address.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the commented cell. |
 
 <a name="Sheet+hyperlink"></a>
 
