@@ -1072,6 +1072,7 @@ A cell
         * [.hyperlink()](#Cell+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
         * [.hyperlink(hyperlink)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
         * [.hyperlink(opts)](#Cell+hyperlink) ⇒ [<code>Cell</code>](#Cell)
+        * [.comment(opts)](#Cell+comment) ⇒ [<code>Cell</code>](#Cell)
         * [.dataValidation()](#Cell+dataValidation) ⇒ <code>object</code> \| <code>undefined</code>
         * [.dataValidation(dataValidation)](#Cell+dataValidation) ⇒ [<code>Cell</code>](#Cell)
         * [.tap(callback)](#Cell+tap) ⇒ [<code>Cell</code>](#Cell)
@@ -1225,6 +1226,21 @@ Set the hyperlink options on the cell.
 | [opts.tooltip] | <code>string</code> | Additional text to help the user understand more about the hyperlink. |
 | [opts.email] | <code>string</code> | Email address, ignored if opts.hyperlink is set. |
 | [opts.emailSubject] | <code>string</code> | Email subject, ignored if opts.hyperlink is set. |
+
+<a name="Cell+comment"></a>
+
+#### cell.comment(opts) ⇒ [<code>Cell</code>](#Cell)
+Set or clear the comment on the cell.
+
+**Kind**: instance method of [<code>Cell</code>](#Cell)  
+**Returns**: [<code>Cell</code>](#Cell) - The cell.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| opts | <code>Object</code> \| <code>undefined</code> | Options or undefined (remove comment). |
+| [opts.text] | <code>string</code> | The comment text to set. |
+| [opts.width] | <code>string</code> | Comment box width. |
+| [opts.height] | <code>string</code> | Comment box height. |
 
 <a name="Cell+dataValidation"></a>
 
@@ -2666,6 +2682,8 @@ A worksheet.
     * [.pageBreaks()](#Sheet+pageBreaks) ⇒ <code>Object</code>
     * [.verticalPageBreaks()](#Sheet+verticalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
     * [.horizontalPageBreaks()](#Sheet+horizontalPageBreaks) ⇒ [<code>PageBreaks</code>](#PageBreaks)
+    * [.comment(address, opts)](#Sheet+comment) ⇒ [<code>Sheet</code>](#Sheet)
+    * [.conditionalFormatting(address)](#Sheet+conditionalFormatting) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address)](#Sheet+hyperlink) ⇒ <code>string</code> \| <code>undefined</code>
     * [.hyperlink(address, hyperlink, [internal])](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
     * [.hyperlink(address, opts)](#Sheet+hyperlink) ⇒ [<code>Sheet</code>](#Sheet)
@@ -3104,6 +3122,34 @@ Gets the horizontal page breaks.
 
 **Kind**: instance method of [<code>Sheet</code>](#Sheet)  
 **Returns**: [<code>PageBreaks</code>](#PageBreaks) - horizontal PageBreaks.  
+<a name="Sheet+comment"></a>
+
+#### sheet.comment(address, opts) ⇒ [<code>Sheet</code>](#Sheet)
+Set the comment on the cell with the given address.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the commented cell. |
+| opts | <code>Object</code> \| <code>undefined</code> | Options or undefined (remove comment). |
+| [opts.text] | <code>string</code> | The comment text to set. |
+| [opts.width] | <code>string</code> | Comment box width. |
+| [opts.height] | <code>string</code> | Comment box height. |
+
+<a name="Sheet+conditionalFormatting"></a>
+
+#### sheet.conditionalFormatting(address) ⇒ [<code>Sheet</code>](#Sheet)
+Set the conditional Formatting on the cell with the given address.
+
+**Kind**: instance method of [<code>Sheet</code>](#Sheet)  
+**Returns**: [<code>Sheet</code>](#Sheet) - The sheet.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| address | <code>string</code> | The address of the commented cell. |
+
 <a name="Sheet+hyperlink"></a>
 
 #### sheet.hyperlink(address) ⇒ <code>string</code> \| <code>undefined</code>
