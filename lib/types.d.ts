@@ -233,6 +233,7 @@ declare namespace XlsxPopulate {
     style(style: Style): Cell;
     value(): string | boolean | number | Date | undefined;
     value(value: string | boolean | number | null | undefined): Cell;
+    value(value: (string | boolean | number | null | undefined | Date)[][]): Cell;
     value(): Range;
     workbook(): Workbook;
     addHorizontalPageBreak(): Cell;
