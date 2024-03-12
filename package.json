@@ -1,22 +1,11 @@
 {
-  "name": "xlsx-populate",
-  "version": "1.21.0",
+  "name": "@eyeseetea/xlsx-populate",
+  "version": "4.2.0",
+  "private": false,
   "description": "Excel XLSX parser/generator written in JavaScript with Node.js and browser support, jQuery/d3-style method chaining, and a focus on keeping existing workbook features and styles in tact.",
-  "keywords": [
-    "excel",
-    "workbook",
-    "xlsx",
-    "parse",
-    "generate",
-    "populate",
-    "template",
-    "browser",
-    "style",
-    "formatting",
-    "encryption",
-    "password"
-  ],
-  "main": "lib/XlsxPopulate.js",
+  "license": "MIT",
+  "main": "./lib/XlsxPopulate.js",
+  "types": "./lib/types.d.ts",
   "browser": {
     "XlsxPopulate": "./browser/xlsx-populate.js"
   },
@@ -25,14 +14,17 @@
     "e2e-generate": "jasmine JASMINE_CONFIG_PATH=test/e2e-generate/jasmine.json",
     "e2e-parse": "jasmine JASMINE_CONFIG_PATH=test/e2e-parse/jasmine.json",
     "test:windows": "npm-run-all test e2e-parse e2e-generate",
-    "docs": "gulp docs"
+    "docs": "gulp docs",
+    "prebuild": "yarn docs",
+    "build": "gulp browser",
+    "prerelease": "yarn build",
+    "release": "bash scripts/publish.sh"
   },
   "author": "Dave T. Johnson <dave@dtjohnson.net>",
   "contributors": [
     "Eddie Corrigall <eddiecorrigall@gmail.com>",
     "Alan Doyle <alandoyle95@gmail.com>"
   ],
-  "license": "MIT",
   "dependencies": {
     "cfb": "^1.1.3",
     "jszip": "^3.2.2",
@@ -41,9 +33,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dtjohnson/xlsx-populate.git"
+    "url": "https://github.com/EyeSeeTea/xlsx-populate.git"
   },
-  "bugs": "https://github.com/dtjohnson/xlsx-populate/issues",
+  "bugs": "https://github.com/EyeSeeTea/xlsx-populate/issues",
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "@babel/preset-env": "^7.8.6",
